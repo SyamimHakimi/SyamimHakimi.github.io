@@ -66,7 +66,7 @@ class ThemeMode {
     // Read active menu mode value
     const activeMenuItem: HTMLElement | null =
       this.menu?.querySelector(
-        '[data-kt-element="mode"][data-kt-value="' + menuMode + '"]'
+        '[data-kt-element="mode"][data-kt-value="' + menuMode + '"]',
       ) || null;
 
     // Enable switching state
@@ -99,7 +99,7 @@ class ThemeMode {
   public getMenuMode = (): Mode | "" => {
     const menuModeParam = this.getParamName("menu");
     const menuItem = this.menu?.querySelector(
-      '.active[data-kt-element="mode"]'
+      '.active[data-kt-element="mode"]',
     );
     const dataKTValue = menuItem?.getAttribute("data-kt-value");
     if (dataKTValue) {
@@ -130,7 +130,7 @@ class ThemeMode {
   private getActiveMenuItem = (): HTMLElement | null => {
     return (
       this.menu?.querySelector(
-        '[data-kt-element="mode"][data-kt-value="' + this.getMenuMode() + '"]'
+        '[data-kt-element="mode"][data-kt-value="' + this.getMenuMode() + '"]',
       ) || null
     );
   };
@@ -139,7 +139,7 @@ class ThemeMode {
     const menuModeParam = this.getParamName("menu");
     const menuMode = item.getAttribute("data-kt-value");
     const activeItem = this.menu?.querySelector(
-      '.active[data-kt-element="mode"]'
+      '.active[data-kt-element="mode"]',
     );
     if (activeItem) {
       activeItem.classList.remove("active");
@@ -179,11 +179,11 @@ class ThemeMode {
           ) {
             item.setAttribute(
               "data-kt-img-light",
-              item.getAttribute("src") || ""
+              item.getAttribute("src") || "",
             );
             item.setAttribute(
               "src",
-              item.getAttribute("data-kt-img-dark") || ""
+              item.getAttribute("data-kt-img-dark") || "",
             );
           } else if (
             this.getMode() === "light" &&
@@ -191,11 +191,11 @@ class ThemeMode {
           ) {
             item.setAttribute(
               "data-kt-img-dark",
-              item.getAttribute("src") || ""
+              item.getAttribute("src") || "",
             );
             item.setAttribute(
               "src",
-              item.getAttribute("data-kt-img-light") || ""
+              item.getAttribute("data-kt-img-light") || "",
             );
           }
         } else {
@@ -205,7 +205,7 @@ class ThemeMode {
           ) {
             item.setAttribute(
               "data-kt-img-light",
-              item.getAttribute("src") || ""
+              item.getAttribute("src") || "",
             );
             item.style.backgroundImage =
               "url('" + item.getAttribute("data-kt-img-dark") + "')";
@@ -215,7 +215,7 @@ class ThemeMode {
           ) {
             item.setAttribute(
               "data-kt-img-dark",
-              item.getAttribute("src") || ""
+              item.getAttribute("src") || "",
             );
             item.style.backgroundImage =
               "url('" + item.getAttribute("data-kt-img-light") + "')";
@@ -238,7 +238,7 @@ class ThemeMode {
 
   public init = () => {
     this.menu = document.querySelector<HTMLElement>(
-      '[data-kt-element="theme-mode-menu"]'
+      '[data-kt-element="theme-mode-menu"]',
     );
     this.element = document.documentElement;
 

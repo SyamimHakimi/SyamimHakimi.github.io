@@ -20,7 +20,7 @@ export class EventHandlerUtil {
     name: string,
     handlers: {
       [handlerId: string]: EventMeta;
-    }
+    },
   ): void {
     EventHandlerUtil.store[name] = handlers;
   }
@@ -36,7 +36,7 @@ export class EventHandlerUtil {
   private static setEventMetaByNameAndHandlerId(
     name: string,
     handlerId: string,
-    meta: EventMeta
+    meta: EventMeta,
   ): void {
     if (EventHandlerUtil.store[name]) {
       EventHandlerUtil.store[name][handlerId] = meta;
@@ -48,7 +48,7 @@ export class EventHandlerUtil {
 
   private static getEventMetaByHandlerId(
     name: string,
-    handlerId: string
+    handlerId: string,
   ): EventMeta | undefined {
     const handlersIds = EventHandlerUtil.store[name];
     if (!handlersIds) {
@@ -60,7 +60,7 @@ export class EventHandlerUtil {
   private static setFiredByNameAndHandlerId(
     name: string,
     handerId: string,
-    fired: boolean
+    fired: boolean,
   ): void {
     const meta = EventHandlerUtil.getEventMetaByHandlerId(name, handerId);
     if (!meta) {
@@ -75,7 +75,7 @@ export class EventHandlerUtil {
     element: HTMLElement,
     name: string,
     callback: Function,
-    one: boolean = false
+    one: boolean = false,
   ): string {
     const handlerId = getUniqueIdWithPrefix("event");
     const data = DataUtil.get(element, name);
@@ -98,7 +98,7 @@ export class EventHandlerUtil {
   private static removeEvent(
     element: HTMLElement,
     name: string,
-    handerId: string
+    handerId: string,
   ) {
     DataUtil.removeOne(element, name, handerId);
     const handlersIds = EventHandlerUtil.store[name];
@@ -113,7 +113,7 @@ export class EventHandlerUtil {
     element: HTMLElement,
     name: string,
     target?: any,
-    e?: Event
+    e?: Event,
   ): boolean {
     let returnValue = true;
     if (!DataUtil.has(element, name)) {
@@ -153,7 +153,7 @@ export class EventHandlerUtil {
   public static on = function (
     element: HTMLElement,
     name: string,
-    callBack: Function
+    callBack: Function,
   ): void {
     EventHandlerUtil.addEvent(element, name, callBack, false);
   };
@@ -161,7 +161,7 @@ export class EventHandlerUtil {
   public static one(
     element: HTMLElement,
     name: string,
-    callBack: Function
+    callBack: Function,
   ): void {
     EventHandlerUtil.addEvent(element, name, callBack, true);
   }
@@ -169,7 +169,7 @@ export class EventHandlerUtil {
   public static off(
     element: HTMLElement,
     name: string,
-    handerId: string
+    handerId: string,
   ): void {
     EventHandlerUtil.removeEvent(element, name, handerId);
   }

@@ -96,7 +96,6 @@ export default defineComponent({
     const onSubmitForgotPassword = async (values: any) => {
       values = values as string;
 
-      // eslint-disable-next-line
       submitButton.value!.disabled = true;
       // Activate loading indicator
       submitButton.value?.setAttribute("data-kt-indicator", "on");
@@ -132,8 +131,8 @@ export default defineComponent({
       }
 
       submitButton.value?.removeAttribute("data-kt-indicator");
-      // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+
+      submitButton.value!.disabled = false;
     };
 
     return {

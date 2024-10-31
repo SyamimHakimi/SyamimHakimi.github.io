@@ -486,7 +486,12 @@ export default defineComponent({
     };
 
     const load = (
-      current: "main" | "empty" | "advanced-options" | "preferences" | "results"
+      current:
+        | "main"
+        | "empty"
+        | "advanced-options"
+        | "preferences"
+        | "results",
     ) => {
       loading.value = true;
       setTimeout(() => {
@@ -501,7 +506,7 @@ export default defineComponent({
     };
 
     const setState = (
-      curr: "main" | "empty" | "advanced-options" | "preferences" | "results"
+      curr: "main" | "empty" | "advanced-options" | "preferences" | "results",
     ) => {
       state.value = curr;
     };

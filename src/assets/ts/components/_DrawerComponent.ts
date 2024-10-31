@@ -15,7 +15,7 @@ export class DrawerStore {
 
   public static set(
     instanceId: string,
-    drawerComponentObj: DrawerComponent
+    drawerComponentObj: DrawerComponent,
   ): void {
     if (DrawerStore.has(instanceId)) {
       return;
@@ -117,10 +117,10 @@ class DrawerComponent {
 
     // Reset state
     const hasBaseClass = this.element.classList.contains(
-      `${this.options.baseClass}-on`
+      `${this.options.baseClass}-on`,
     );
     const bodyCanvasAttr = String(
-      document.body.getAttribute(`data-kt-drawer-${this.name}-`)
+      document.body.getAttribute(`data-kt-drawer-${this.name}-`),
     );
 
     if (hasBaseClass === true && bodyCanvasAttr === "on") {
@@ -352,7 +352,7 @@ class DrawerComponent {
             drawer.hide();
           }
         }
-      }
+      },
     );
   };
 
@@ -366,7 +366,7 @@ class DrawerComponent {
         () => {
           // Locate and update Drawer instances on window resize
           const elements = document.body.querySelectorAll(
-            '[data-kt-drawer="true"]'
+            '[data-kt-drawer="true"]',
           );
           elements.forEach((el) => {
             const item = el as HTMLElement;
@@ -377,7 +377,7 @@ class DrawerComponent {
             }
           });
         },
-        200
+        200,
       );
     });
   }

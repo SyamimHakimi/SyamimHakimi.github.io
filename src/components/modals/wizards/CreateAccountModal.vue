@@ -775,7 +775,7 @@
                         <img
                           :src="
                             getAssetPath(
-                              '/media/svg/card-logos/american-express.svg'
+                              '/media/svg/card-logos/american-express.svg',
                             )
                           "
                           alt=""
@@ -1141,7 +1141,7 @@ export default defineComponent({
 
     onMounted(() => {
       _stepperObj.value = StepperComponent.createInsance(
-        createAccountRef.value as HTMLElement
+        createAccountRef.value as HTMLElement,
       );
     });
 

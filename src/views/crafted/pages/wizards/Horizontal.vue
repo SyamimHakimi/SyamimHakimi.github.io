@@ -211,7 +211,7 @@ export default defineComponent({
 
     onMounted(() => {
       _stepperObj.value = StepperComponent.createInsance(
-        horizontalWizardRef.value as HTMLElement
+        horizontalWizardRef.value as HTMLElement,
       );
     });
 

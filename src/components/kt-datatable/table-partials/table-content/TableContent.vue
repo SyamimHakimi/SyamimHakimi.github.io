@@ -84,7 +84,7 @@ export default defineComponent({
             allSelectedItems.value.push(item[props.checkboxLabel]);
           }
         });
-      }
+      },
     );
 
     // eslint-disable-next-line
@@ -118,7 +118,7 @@ export default defineComponent({
         if (currentValue) {
           emit("on-items-select", currentValue);
         }
-      }
+      },
     );
 
     onMounted(() => {

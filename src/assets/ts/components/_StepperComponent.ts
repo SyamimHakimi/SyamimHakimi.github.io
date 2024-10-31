@@ -45,16 +45,16 @@ class StepperComponent {
 
     // Elements
     this.steps = this.element.querySelectorAll(
-      '[data-kt-stepper-element="nav"]'
+      '[data-kt-stepper-element="nav"]',
     );
     this.btnNext = this.element.querySelector(
-      '[data-kt-stepper-action="next"]'
+      '[data-kt-stepper-action="next"]',
     );
     this.btnPrev = this.element.querySelector(
-      '[data-kt-stepper-action="previous"]'
+      '[data-kt-stepper-action="previous"]',
     );
     this.btnSubmit = this.element.querySelector(
-      '[data-kt-stepper-action="submit"]'
+      '[data-kt-stepper-action="submit"]',
     );
 
     // Variables
@@ -126,13 +126,13 @@ class StepperComponent {
               EventHandlerUtil.trigger(
                 this.element,
                 `stepper.${stepDirection}`,
-                e
+                e,
               );
               return;
             }
           }
         }
-      }
+      },
     );
   };
 
@@ -142,7 +142,7 @@ class StepperComponent {
 
   private getStepContent = (index: number) => {
     const content = this.element.querySelectorAll(
-      '[data-kt-stepper-element="content"]'
+      '[data-kt-stepper-element="content"]',
     );
     if (!content) {
       return false;
@@ -183,7 +183,7 @@ class StepperComponent {
 
     // Step Items
     const elements = this.element.querySelectorAll(
-      '[data-kt-stepper-element="nav"], [data-kt-stepper-element="content"], [data-kt-stepper-element="info"]'
+      '[data-kt-stepper-element="nav"], [data-kt-stepper-element="content"], [data-kt-stepper-element="info"]',
     );
 
     if (!elements || elements.length <= 0) {
@@ -208,7 +208,7 @@ class StepperComponent {
           ElementStyleUtil.set(
             element,
             "animationDuration",
-            this.options.animationSpeed
+            this.options.animationSpeed,
           );
 
           const animation =
@@ -317,7 +317,7 @@ class StepperComponent {
   }
 
   public static getInstance(
-    element: HTMLElement
+    element: HTMLElement,
   ): StepperComponent | undefined {
     if (element !== null && StepperComponent.hasInstace(element)) {
       const data = DataUtil.get(element, "stepper");
@@ -341,7 +341,7 @@ class StepperComponent {
 
   public static createInsance = (
     element: HTMLElement,
-    options: IStepperOptions = defaultStepperOptions
+    options: IStepperOptions = defaultStepperOptions,
   ): StepperComponent | null => {
     if (!element) {
       return null;

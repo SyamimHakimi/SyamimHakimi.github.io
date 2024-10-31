@@ -4,7 +4,7 @@ export class DataUtil {
   public static set(
     instance: HTMLElement | undefined,
     key: string,
-    data: unknown
+    data: unknown,
   ): void {
     if (!instance) {
       return;
@@ -50,7 +50,7 @@ export class DataUtil {
     }
 
     const updateEventsIds = (eventsIds as string[]).filter(
-      (f) => f !== eventId
+      (f) => f !== eventId,
     );
     DataUtil.set(instance, key, updateEventsIds);
   }

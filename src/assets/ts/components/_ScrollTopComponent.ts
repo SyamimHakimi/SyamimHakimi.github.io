@@ -100,7 +100,7 @@ class ScrollTopComponent {
 
   // Static methods
   public static getInstance = (
-    el: HTMLElement
+    el: HTMLElement,
   ): ScrollTopComponent | undefined => {
     const scrollTop = DataUtil.get(el, "scrolltop");
     if (scrollTop) {
@@ -121,7 +121,7 @@ class ScrollTopComponent {
 
   public static createInsance = (
     selector: string,
-    options: IScrollTopOptions = defaultScrollTopOptions
+    options: IScrollTopOptions = defaultScrollTopOptions,
   ): ScrollTopComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {

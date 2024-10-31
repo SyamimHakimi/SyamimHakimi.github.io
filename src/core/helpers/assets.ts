@@ -4,13 +4,13 @@ import { useThemeStore } from "@/stores/theme";
 export const getIllustrationsPath = (illustrationName: string): string => {
   const extension = illustrationName.substring(
     illustrationName.lastIndexOf("."),
-    illustrationName.length
+    illustrationName.length,
   );
   const illustration =
     useThemeStore().mode == "dark"
       ? `${illustrationName.substring(
           0,
-          illustrationName.lastIndexOf(".")
+          illustrationName.lastIndexOf("."),
         )}-dark`
       : illustrationName.substring(0, illustrationName.lastIndexOf("."));
   return (

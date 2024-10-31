@@ -69,7 +69,7 @@ export default defineComponent({
       () => props.checkboxEnabledValue,
       (currentValue) => {
         checked.value = currentValue;
-      }
+      },
     );
 
     const selectAll = () => {

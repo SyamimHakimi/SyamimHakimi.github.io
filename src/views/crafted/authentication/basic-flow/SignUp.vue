@@ -264,7 +264,6 @@ export default defineComponent({
       // Clear existing errors
       store.logout();
 
-      // eslint-disable-next-line
       submitButton.value!.disabled = true;
 
       // Activate indicator
@@ -303,7 +302,7 @@ export default defineComponent({
       }
 
       submitButton.value?.removeAttribute("data-kt-indicator");
-      // eslint-disable-next-line
+
       submitButton.value!.disabled = false;
     };
 

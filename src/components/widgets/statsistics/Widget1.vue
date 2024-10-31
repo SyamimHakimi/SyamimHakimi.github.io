@@ -4,7 +4,7 @@
     :class="widgetClasses"
     :style="{
       backgroundImage: `url(${getAssetPath(
-        '/media/svg/shapes/' + background
+        '/media/svg/shapes/' + background,
       )})`,
     }"
     class="card bgi-no-repeat"

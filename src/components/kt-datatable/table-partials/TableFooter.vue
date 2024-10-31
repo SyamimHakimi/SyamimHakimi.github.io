@@ -52,14 +52,14 @@ export default defineComponent({
       () => props.count,
       () => {
         page.value = 1;
-      }
+      },
     );
 
     watch(
       () => inputItemsPerPage.value,
       () => {
         page.value = 1;
-      }
+      },
     );
 
     onMounted(() => {

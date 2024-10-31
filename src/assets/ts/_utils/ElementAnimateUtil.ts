@@ -8,7 +8,7 @@ export class ElementAnimateUtil {
     to: number,
     duration: number,
     update: Function,
-    complete?: Function
+    complete?: Function,
   ) {
     /**
      * TinyAnimate.easings
@@ -59,7 +59,7 @@ export class ElementAnimateUtil {
   public static animateClass(
     element: HTMLElement,
     animationName: string,
-    callBack?: Function
+    callBack?: Function,
   ): void {
     const animateClasses = animationName.split(" ");
     animateClasses.forEach((cssClass) => element.classList.add(cssClass));
@@ -91,7 +91,7 @@ export class ElementAnimateUtil {
   public static scrollTo(
     element: HTMLElement | null,
     offset: number,
-    duration: number = 500
+    duration: number = 500,
   ) {
     let targetPos = element ? getElementOffset(element).top : 0;
     let scrollPos =

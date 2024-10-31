@@ -7,7 +7,7 @@ export const THEME_MENU_MODE_LS_KEY = "kt_theme_mode_menu";
 
 export const useThemeStore = defineStore("theme", () => {
   const mode = ref<"light" | "dark" | "system">(
-    localStorage.getItem(THEME_MODE_LS_KEY) as "light" | "dark" | "system"
+    localStorage.getItem(THEME_MODE_LS_KEY) as "light" | "dark" | "system",
   );
 
   function setThemeMode(payload: "light" | "dark" | "system") {

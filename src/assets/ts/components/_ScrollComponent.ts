@@ -275,7 +275,7 @@ class ScrollComponent {
 
   public static createInstance = (
     element: HTMLElement,
-    options: ScrollOptions = defaultScrollOptions
+    options: ScrollOptions = defaultScrollOptions,
   ): ScrollComponent | undefined => {
     let scroll = ScrollComponent.getInstance(element);
     if (!scroll) {
@@ -308,7 +308,7 @@ class ScrollComponent {
           // Locate and update Drawer instances on window resize
           ScrollComponent.updateAll();
         },
-        200
+        200,
       );
     });
   }

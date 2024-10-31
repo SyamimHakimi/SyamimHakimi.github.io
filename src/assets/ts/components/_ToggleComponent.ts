@@ -32,7 +32,7 @@ class ToggleComponent {
     this.element = _element;
 
     const elementTargetAttr = this.element.getAttribute(
-      "data-kt-toggle-target"
+      "data-kt-toggle-target",
     );
     if (elementTargetAttr) {
       this.target = document.querySelector(elementTargetAttr);

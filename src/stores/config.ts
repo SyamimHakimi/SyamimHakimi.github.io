@@ -27,7 +27,7 @@ export const useConfigStore = defineStore("config", () => {
     config.value = initial.value = Object.assign(
       {},
       initial.value,
-      JSON.parse(window.localStorage.getItem(LS_CONFIG_NAME_KEY) || "{}")
+      JSON.parse(window.localStorage.getItem(LS_CONFIG_NAME_KEY) || "{}"),
     );
   }
 

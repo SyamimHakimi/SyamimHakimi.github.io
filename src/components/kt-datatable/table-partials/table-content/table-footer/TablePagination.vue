@@ -116,7 +116,7 @@ export default defineComponent({
     const endPage = computed(() => {
       return Math.min(
         startPage.value + props.maxVisibleButtons - 1,
-        props.totalPages
+        props.totalPages,
       );
     });
 

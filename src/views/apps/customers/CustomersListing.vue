@@ -252,7 +252,7 @@ export default defineComponent({
     const searchItems = () => {
       tableData.value.splice(0, tableData.value.length, ...initCustomers.value);
       if (search.value !== "") {
-        let results: Array<ICustomer> = [];
+        const results: Array<ICustomer> = [];
         for (let j = 0; j < tableData.value.length; j++) {
           if (searchingFunc(tableData.value[j], search.value)) {
             results.push(tableData.value[j]);
@@ -264,7 +264,7 @@ export default defineComponent({
     };
 
     const searchingFunc = (obj: any, value: string): boolean => {
-      for (let key in obj) {
+      for (const key in obj) {
         if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
           if (obj[key].indexOf(value) != -1) {
             return true;

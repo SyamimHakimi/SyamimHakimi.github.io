@@ -5,7 +5,7 @@
       class="card-body d-flex flex-column justify-content-between mt-9 bgi-no-repeat bgi-size-cover bgi-position-x-center pb-0"
       :style="`background-position: 100% 50%;
         background-image: url('${getAssetPath(
-          '/media/stock/900x600/42.png'
+          '/media/stock/900x600/42.png',
         )}');`"
     >
       <!--begin::Wrapper-->

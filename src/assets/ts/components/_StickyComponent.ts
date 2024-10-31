@@ -179,11 +179,11 @@ class StickyComponent {
       ElementStyleUtil.set(
         this.element,
         "animationDuration",
-        this.getOption("animationSpeed")
+        this.getOption("animationSpeed"),
       );
       ElementAnimateUtil.animateClass(
         this.element,
-        "animation " + this.getOption("animationClass")
+        "animation " + this.getOption("animationClass"),
       );
     }
 
@@ -274,7 +274,7 @@ class StickyComponent {
 
   public static createInsance = (
     selector: string,
-    options: StickyOptions = defaultStickyOptions
+    options: StickyOptions = defaultStickyOptions,
   ): StickyComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {

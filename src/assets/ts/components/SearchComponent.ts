@@ -65,7 +65,7 @@ class SearchComponent {
   constructor(
     _element: HTMLElement,
     _options: ISearchOptions,
-    _queries: ISearchQueries
+    _queries: ISearchQueries,
   ) {
     // Variables
     this.options = Object.assign(defaultSearchOptions, _options);
@@ -91,7 +91,7 @@ class SearchComponent {
     if (this.layout === "menu") {
       this.menuObject = new MenuComponent(
         this.contentElement,
-        defaultMenuOptions
+        defaultMenuOptions,
       );
     }
 
@@ -106,7 +106,7 @@ class SearchComponent {
 
   private _getElement = (name: string) => {
     return this.element.querySelector(
-      '[data-kt-search-element="' + name + '"]'
+      '[data-kt-search-element="' + name + '"]',
     );
   };
 
@@ -271,7 +271,7 @@ class SearchComponent {
         () => {
           this.update();
         },
-        200
+        200,
       );
     });
   }
@@ -440,7 +440,7 @@ class SearchComponent {
   // Static methods
   public static getInstance = (
     el: HTMLElement,
-    componentName: string = defaultSearchQueires.componentName
+    componentName: string = defaultSearchQueires.componentName,
   ) => {
     const Search = DataUtil.get(el, componentName);
     if (Search) {
@@ -453,7 +453,7 @@ class SearchComponent {
   public static createInstances = (
     selector: string = defaultSearchQueires.instanseQuery,
     options: ISearchOptions = defaultSearchOptions,
-    queries: ISearchQueries = defaultSearchQueires
+    queries: ISearchQueries = defaultSearchQueires,
   ) => {
     const elements = document.body.querySelectorAll(selector);
     elements.forEach((el) => {
@@ -468,7 +468,7 @@ class SearchComponent {
   public static createInsance = (
     selector: string = defaultSearchQueires.instanseQuery,
     options: ISearchOptions = defaultSearchOptions,
-    queries: ISearchQueries = defaultSearchQueires
+    queries: ISearchQueries = defaultSearchQueires,
   ): SearchComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {
@@ -483,13 +483,13 @@ class SearchComponent {
   };
 
   public static bootstrap = (
-    selector: string = defaultSearchQueires.instanseQuery
+    selector: string = defaultSearchQueires.instanseQuery,
   ) => {
     SearchComponent.createInstances(selector);
   };
 
   public static reinitialization = (
-    selector: string = defaultSearchQueires.instanseQuery
+    selector: string = defaultSearchQueires.instanseQuery,
   ) => {
     SearchComponent.createInstances(selector);
   };

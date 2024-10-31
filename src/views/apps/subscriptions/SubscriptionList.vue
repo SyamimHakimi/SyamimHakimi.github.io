@@ -424,7 +424,7 @@ export default defineComponent({
     const searchItems = () => {
       data.value.splice(0, data.value.length, ...initData.value);
       if (search.value !== "") {
-        let results: Array<ISubscription> = [];
+        const results: Array<ISubscription> = [];
         for (let j = 0; j < initData.value.length; j++) {
           if (searchingFunc(initData.value[j], search.value)) {
             results.push(initData.value[j]);
@@ -436,7 +436,7 @@ export default defineComponent({
     };
 
     const searchingFunc = (obj: any, value: string): boolean => {
-      for (let key in obj) {
+      for (const key in obj) {
         if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
           if (obj[key].toLowerCase().indexOf(value.toLowerCase()) != -1) {
             return true;

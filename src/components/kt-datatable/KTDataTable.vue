@@ -75,7 +75,7 @@ export default defineComponent({
       (val) => {
         currentPage.value = 1;
         emit("on-items-per-page-change", val);
-      }
+      },
     );
 
     const pageChange = (page: number) => {
@@ -88,7 +88,7 @@ export default defineComponent({
         if (props.data.length <= itemsInTable.value) {
           return props.data;
         } else {
-          let sliceFrom = (currentPage.value - 1) * itemsInTable.value;
+          const sliceFrom = (currentPage.value - 1) * itemsInTable.value;
           return props.data.slice(sliceFrom, sliceFrom + itemsInTable.value);
         }
       }

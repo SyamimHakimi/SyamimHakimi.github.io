@@ -68,7 +68,7 @@ export default defineComponent({
   components: {},
   setup() {
     const chartRef = ref<typeof VueApexCharts | null>(null);
-    let chart: ApexOptions = {};
+    const chart: ApexOptions = {};
     const store = useThemeStore();
 
     const series = [

@@ -164,7 +164,7 @@ export default defineComponent({
   },
   setup(props) {
     const chartRef = ref<typeof VueApexCharts | null>(null);
-    let chart: ApexOptions = {};
+    const chart: ApexOptions = {};
     const store = useThemeStore();
 
     const series = [
@@ -207,7 +207,7 @@ export default defineComponent({
 
 const chartOptions = (
   color: string = "primary",
-  height: string = "auto"
+  height: string = "auto",
 ): ApexOptions => {
   const labelColor = getCSSVariableValue("--bs-gray-800");
   const strokeColor = getCSSVariableValue("--bs-gray-300");

@@ -45,7 +45,7 @@ class ImageInputComponent {
   constructor(
     _element: HTMLElement,
     _options: IImageInputOptions,
-    _queries: IImageInputQueries
+    _queries: IImageInputQueries,
   ) {
     // Variables
     this.options = Object.assign(defaultImageInputOptions, _options);
@@ -103,7 +103,7 @@ class ImageInputComponent {
         if (this.wrapperElement && e.target) {
           this.wrapperElement.style.setProperty(
             "background-image",
-            `url('${e.target.result}')`
+            `url('${e.target.result}')`,
           );
         }
       };
@@ -203,7 +203,7 @@ class ImageInputComponent {
   // Static methods
   public static getInstance = (
     el: HTMLElement,
-    componentName: string = defaultImageInputQueires.componentName
+    componentName: string = defaultImageInputQueires.componentName,
   ): ImageInputComponent | undefined => {
     const ImageInput = DataUtil.get(el, componentName);
     if (ImageInput) {
@@ -214,7 +214,7 @@ class ImageInputComponent {
   public static createInstances = (
     selector: string = defaultImageInputQueires.instanseQuery,
     options: IImageInputOptions = defaultImageInputOptions,
-    queries: IImageInputQueries = defaultImageInputQueires
+    queries: IImageInputQueries = defaultImageInputQueires,
   ) => {
     const elements = document.body.querySelectorAll(selector);
     elements.forEach((el) => {
@@ -229,7 +229,7 @@ class ImageInputComponent {
   public static createInsance = (
     selector: string = defaultImageInputQueires.instanseQuery,
     options: IImageInputOptions = defaultImageInputOptions,
-    queries: IImageInputQueries = defaultImageInputQueires
+    queries: IImageInputQueries = defaultImageInputQueires,
   ): ImageInputComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {
@@ -244,13 +244,13 @@ class ImageInputComponent {
   };
 
   public static bootstrap = (
-    selector: string = defaultImageInputQueires.instanseQuery
+    selector: string = defaultImageInputQueires.instanseQuery,
   ) => {
     ImageInputComponent.createInstances(selector);
   };
 
   public static reinitialization = (
-    selector: string = defaultImageInputQueires.instanseQuery
+    selector: string = defaultImageInputQueires.instanseQuery,
   ) => {
     ImageInputComponent.createInstances(selector);
   };

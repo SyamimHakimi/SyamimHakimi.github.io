@@ -1,5 +1,3 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable no-useless-escape */
 import { DataUtil } from "../_utils/index";
 
 export interface IPasswordMeterOptions {
@@ -49,7 +47,7 @@ class PasswordMeterComponent {
   constructor(
     _element: HTMLElement,
     _options: IPasswordMeterOptions,
-    _queries: IPasswordMeterQueries
+    _queries: IPasswordMeterQueries,
   ) {
     this.element = _element;
     this.options = Object.assign(defaultPasswordMeterOptions, _options);
@@ -60,10 +58,10 @@ class PasswordMeterComponent {
     // Elements
     this.inputElement = this.element.querySelector(this.queries.inputQuery);
     this.visibilityElement = this.element.querySelector(
-      this.queries.visibilityQuery
+      this.queries.visibilityQuery,
     );
     this.highlightElement = this.element.querySelector(
-      this.queries.highlightQuery
+      this.queries.highlightQuery,
     );
 
     // Event Handlers
@@ -89,11 +87,11 @@ class PasswordMeterComponent {
   private visitbility() {
     if (this.visibilityElement && this.inputElement) {
       const visibleIcon = this.visibilityElement.querySelector(
-        "i:not(.d-none), .svg-icon:not(.d-none)"
+        "i:not(.d-none), .svg-icon:not(.d-none)",
       );
 
       const hiddenIcon = this.visibilityElement.querySelector(
-        "i.d-none, .svg-icon.d-none"
+        "i.d-none, .svg-icon.d-none",
       );
 
       const typeAttr = this.inputElement.getAttribute("type") || "";
@@ -226,7 +224,7 @@ class PasswordMeterComponent {
   // Static methods
   public static getInstance = (
     el: HTMLElement,
-    componentName: string = defaultPasswordMeterQueires.componentName
+    componentName: string = defaultPasswordMeterQueires.componentName,
   ): PasswordMeterComponent | undefined => {
     const passwordMeter = DataUtil.get(el, componentName);
     if (passwordMeter) {
@@ -237,7 +235,7 @@ class PasswordMeterComponent {
   public static createInstances = (
     selector: string = defaultPasswordMeterQueires.instanseQuery,
     options: IPasswordMeterOptions = defaultPasswordMeterOptions,
-    queries: IPasswordMeterQueries = defaultPasswordMeterQueires
+    queries: IPasswordMeterQueries = defaultPasswordMeterQueires,
   ) => {
     const elements = document.body.querySelectorAll(selector);
     elements.forEach((el) => {
@@ -252,7 +250,7 @@ class PasswordMeterComponent {
   public static createInsance = (
     selector: string = defaultPasswordMeterQueires.instanseQuery,
     options: IPasswordMeterOptions = defaultPasswordMeterOptions,
-    queries: IPasswordMeterQueries = defaultPasswordMeterQueires
+    queries: IPasswordMeterQueries = defaultPasswordMeterQueires,
   ): PasswordMeterComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {
@@ -267,13 +265,13 @@ class PasswordMeterComponent {
   };
 
   public static bootstrap = (
-    selector: string = defaultPasswordMeterQueires.instanseQuery
+    selector: string = defaultPasswordMeterQueires.instanseQuery,
   ) => {
     PasswordMeterComponent.createInstances(selector);
   };
 
   public static reinitialization = (
-    selector: string = defaultPasswordMeterQueires.instanseQuery
+    selector: string = defaultPasswordMeterQueires.instanseQuery,
   ) => {
     PasswordMeterComponent.createInstances(selector);
   };

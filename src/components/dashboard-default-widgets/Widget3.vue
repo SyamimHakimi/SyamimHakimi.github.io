@@ -125,13 +125,13 @@ export default defineComponent({
   setup(props, { expose }) {
     const initChart = () => {
       expose();
-      var el = document.getElementById("kt_card_widget_17_chart");
+      const el = document.getElementById("kt_card_widget_17_chart");
 
       if (!el) {
         return;
       }
 
-      var options = {
+      const options = {
         size: el.getAttribute("data-kt-size")
           ? parseInt(el.getAttribute("data-kt-size") as string)
           : 70,
@@ -144,10 +144,10 @@ export default defineComponent({
         //percent:  el.getAttribute('data-kt-percent') ,
       };
 
-      var canvas = document.createElement("canvas");
-      var span = document.createElement("span");
+      const canvas = document.createElement("canvas");
+      const span = document.createElement("span");
 
-      var ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
       canvas.width = canvas.height = options.size;
 
       el.appendChild(span);
@@ -157,12 +157,12 @@ export default defineComponent({
       ctx.rotate((-1 / 2 + options.rotate / 180) * Math.PI); // rotate -90 deg
 
       //imd = ctx.getImageData(0, 0, 240, 240);
-      var radius = (options.size - options.lineWidth) / 2;
+      const radius = (options.size - options.lineWidth) / 2;
 
-      var drawCircle = function (
+      const drawCircle = function (
         color: string,
         lineWidth: number,
-        percent: number
+        percent: number,
       ) {
         percent = Math.min(Math.max(0, percent || 1), 1);
         ctx.beginPath();
@@ -178,12 +178,12 @@ export default defineComponent({
       drawCircle(
         getCSSVariableValue("--bs-primary"),
         options.lineWidth,
-        100 / 150
+        100 / 150,
       );
       drawCircle(
         getCSSVariableValue("--bs-success"),
         options.lineWidth,
-        100 / 250
+        100 / 250,
       );
     };
 

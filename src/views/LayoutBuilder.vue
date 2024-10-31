@@ -301,7 +301,7 @@
                       <span
                         :style="{
                           backgroundImage: `url(${getAssetPath(
-                            '/media/illustrations/sketchy-1/1.png'
+                            '/media/illustrations/sketchy-1/1.png',
                           )})`,
                         }"
                         class="d-block h-200px w-100 bgi-no-repeat bgi-size-contain bgi-position-center"
@@ -331,7 +331,7 @@
                       <span
                         :style="{
                           backgroundImage: `url(${getAssetPath(
-                            '/media/illustrations/sigma-1/1.png'
+                            '/media/illustrations/sigma-1/1.png',
                           )})`,
                         }"
                         class="d-block h-200px w-100 bgi-no-repeat bgi-size-contain bgi-position-center"
@@ -361,7 +361,7 @@
                       <span
                         :style="{
                           backgroundImage: `url(${getAssetPath(
-                            '/media/illustrations/dozzy-1/1.png'
+                            '/media/illustrations/dozzy-1/1.png',
                           )})`,
                         }"
                         class="d-block h-200px w-100 bgi-no-repeat bgi-size-contain bgi-position-center"
@@ -391,7 +391,7 @@
                       <span
                         :style="{
                           backgroundImage: `url(${getAssetPath(
-                            '/media/illustrations/unitedpalms-1/1.png'
+                            '/media/illustrations/unitedpalms-1/1.png',
                           )})`,
                         }"
                         class="d-block h-200px w-100 bgi-no-repeat bgi-size-contain bgi-position-center"
@@ -587,7 +587,7 @@ export default defineComponent({
     onMounted(() => {
       // set the tab from previous
       tabIndex.value = parseInt(
-        localStorage.getItem(LS_BUILDER_TAB_NAME) || "0"
+        localStorage.getItem(LS_BUILDER_TAB_NAME) || "0",
       );
     });
 

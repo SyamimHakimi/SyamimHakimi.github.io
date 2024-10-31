@@ -9,7 +9,7 @@
       class="d-flex flex-column flex-center bgi-no-repeat rounded-top px-9 py-10"
       :style="{
         backgroundImage: `url(${getAssetPath(
-          '/media/misc/menu-header-bg.jpg'
+          '/media/misc/menu-header-bg.jpg',
         )})`,
       }"
     >

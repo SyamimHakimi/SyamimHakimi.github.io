@@ -76,25 +76,25 @@ class MenuComponent {
   // Set external trigger element
   private _setTriggerElement = () => {
     const target = document.querySelector(
-      `[data-kt-menu-target="#${this.element.getAttribute("id")}"`
+      `[data-kt-menu-target="#${this.element.getAttribute("id")}"`,
     );
 
     if (target) {
       this.triggerElement = target as HTMLElement;
     } else if (this.element.closest("[data-kt-menu-trigger]")) {
       this.triggerElement = this.element.closest(
-        "[data-kt-menu-trigger]"
+        "[data-kt-menu-trigger]",
       ) as HTMLElement;
     } else if (
       this.element.parentNode &&
       getElementChild(
         this.element.parentNode as HTMLElement,
-        "[data-kt-menu-trigger]"
+        "[data-kt-menu-trigger]",
       )
     ) {
       const child = getElementChild(
         this.element.parentNode as HTMLElement,
-        "[data-kt-menu-trigger]"
+        "[data-kt-menu-trigger]",
       );
       if (child) {
         this.triggerElement = child;
@@ -128,7 +128,7 @@ class MenuComponent {
 
   // Get item element
   private _getItemElement = (
-    _element: HTMLElement
+    _element: HTMLElement,
   ): HTMLElement | undefined => {
     // Element is the external trigger element
     if (this._isTriggerElement(_element)) {
@@ -148,7 +148,7 @@ class MenuComponent {
 
     // Item is parent of element
     const item = _element.closest<HTMLElement>(
-      ".menu-item[data-kt-menu-trigger]"
+      ".menu-item[data-kt-menu-trigger]",
     );
     if (item) {
       return item;
@@ -177,7 +177,7 @@ class MenuComponent {
     }
 
     const parentItem = sub.closest<HTMLElement>(
-      ".menu-item[data-kt-menu-trigger]"
+      ".menu-item[data-kt-menu-trigger]",
     );
     if (sub && parentItem) {
       return parentItem;
@@ -268,7 +268,7 @@ class MenuComponent {
     if (selector) {
       //element = selector.querySelector('.show.menu-item[data-kt-menu-trigger]');
       const element = selector.querySelector<HTMLElement>(
-        ".menu-item[data-kt-menu-trigger]"
+        ".menu-item[data-kt-menu-trigger]",
       );
       if (element) {
         return element;
@@ -472,7 +472,7 @@ class MenuComponent {
       const popper = createPopper(
         reference as Element | VirtualElement,
         sub,
-        this._getDropdownPopperConfig(item)
+        this._getDropdownPopperConfig(item),
       );
       DataUtil.set(item, "popper", popper);
     }
@@ -592,7 +592,7 @@ class MenuComponent {
   // Hide all shown accordions of item
   private _hideAccordions = (item: HTMLElement) => {
     const itemsToHide = this.element.querySelectorAll(
-      ".show[data-kt-menu-trigger]"
+      ".show[data-kt-menu-trigger]",
     );
     if (itemsToHide && itemsToHide.length > 0) {
       for (let i = 0, len = itemsToHide.length; i < len; i++) {
@@ -640,7 +640,7 @@ class MenuComponent {
   // Update all item state classes if item sub type changed
   private _update = () => {
     const items = this.element.querySelectorAll(
-      ".menu-item[data-kt-menu-trigger]"
+      ".menu-item[data-kt-menu-trigger]",
     );
     items.forEach((el) => this._reset(el as HTMLElement));
   };
@@ -931,7 +931,7 @@ class MenuComponent {
   // Hide all dropdowns and skip one if provided
   public static hideDropdowns = (skip: HTMLElement | undefined) => {
     const items = document.querySelectorAll<HTMLElement>(
-      ".show.menu-dropdown[data-kt-menu-trigger]"
+      ".show.menu-dropdown[data-kt-menu-trigger]",
     );
 
     if (items && items.length > 0) {
@@ -959,7 +959,7 @@ class MenuComponent {
 
   public static updateDropdowns = () => {
     const items = document.querySelectorAll(
-      ".show.menu-dropdown[data-kt-menu-trigger]"
+      ".show.menu-dropdown[data-kt-menu-trigger]",
     );
     if (items && items.length > 0) {
       for (let i = 0, len = items.length; i < len; i++) {
@@ -989,14 +989,13 @@ class MenuComponent {
     // Dropdown handler
     document.addEventListener("click", (e) => {
       const menuItems = document.querySelectorAll(
-        '.show.menu-dropdown[data-kt-menu-trigger]:not([data-kt-menu-static="true"])'
+        '.show.menu-dropdown[data-kt-menu-trigger]:not([data-kt-menu-static="true"])',
       );
       if (menuItems && menuItems.length > 0) {
         for (let i = 0; i < menuItems.length; i++) {
           const item = menuItems[i] as HTMLElement;
           const menuObj = MenuComponent.getInstance(item) as MenuComponent;
           if (menuObj && menuObj.getItemSubType(item) === "dropdown") {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const menu = menuObj.getElement();
             const sub = menuObj.getItemSubElement(item) as HTMLElement;
             if (item === e.target || item.contains(e.target as HTMLElement)) {
@@ -1025,7 +1024,7 @@ class MenuComponent {
         if (menu) {
           return menu.click(this, e);
         }
-      }
+      },
     );
 
     // // Link handler
@@ -1039,7 +1038,7 @@ class MenuComponent {
         if (menu && menu.link) {
           return menu.link(this, e);
         }
-      }
+      },
     );
 
     // Dismiss handler
@@ -1052,7 +1051,7 @@ class MenuComponent {
         if (menu) {
           return menu.dismiss(this, e);
         }
-      }
+      },
     );
 
     // Mouseover handler
@@ -1065,7 +1064,7 @@ class MenuComponent {
         if (menu && menu.getItemSubType(this) === "dropdown") {
           return menu.mouseover(this, e);
         }
-      }
+      },
     );
 
     // Mouseout handler
@@ -1078,7 +1077,7 @@ class MenuComponent {
         if (menu && menu.getItemSubType(this) === "dropdown") {
           return menu.mouseout(this, e);
         }
-      }
+      },
     );
 
     // Resize handler
@@ -1096,7 +1095,7 @@ class MenuComponent {
             }
           });
         },
-        200
+        200,
       );
     });
   };
@@ -1112,7 +1111,7 @@ class MenuComponent {
 
   public static createInsance = (
     selector: string,
-    options: MenuOptions = defaultMenuOptions
+    options: MenuOptions = defaultMenuOptions,
   ): MenuComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {

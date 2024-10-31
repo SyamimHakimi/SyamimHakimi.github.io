@@ -7,7 +7,7 @@ export class DOMEventHandlerUtil {
     element: HTMLElement,
     selector: string,
     eventName: string,
-    callBack: any
+    callBack: any,
   ): string {
     const eventId = getUniqueIdWithPrefix("DOMEvent");
     DOMEventHandlerUtil.store.set(eventId, (e: Event) => {
@@ -34,7 +34,7 @@ export class DOMEventHandlerUtil {
   public static off(
     element: HTMLElement,
     eventName: string,
-    eventId: string
+    eventId: string,
   ): void {
     const funcFromStore = DOMEventHandlerUtil.store.get(eventId);
     if (!funcFromStore) {
@@ -48,7 +48,7 @@ export class DOMEventHandlerUtil {
   public static one(
     element: HTMLElement,
     eventName: string,
-    callBack: Function
+    callBack: Function,
   ): void {
     element.addEventListener(eventName, function calee(e) {
       // remove event

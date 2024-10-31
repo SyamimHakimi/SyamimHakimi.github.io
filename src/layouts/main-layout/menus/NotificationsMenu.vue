@@ -8,7 +8,7 @@
     <div
       class="d-flex flex-column bgi-no-repeat rounded-top"
       :style="`background-image: url('${getAssetPath(
-        '/media/misc/menu-header-bg.jpg'
+        '/media/misc/menu-header-bg.jpg',
       )}')`"
     >
       <!--begin::Title-->

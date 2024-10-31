@@ -22,7 +22,7 @@ function getCSS(el: HTMLElement, styleProp: string) {
 
 function getCSSVariableValue(variableName: string) {
   let hex = getComputedStyle(document.documentElement).getPropertyValue(
-    variableName
+    variableName,
   );
   if (hex && hex.length > 0) {
     hex = hex.trim();
@@ -196,7 +196,7 @@ function insertAfterElement(el: HTMLElement, referenceNode: HTMLElement) {
 
 function isElementHasClasses(
   element: HTMLElement,
-  classesStr: string
+  classesStr: string,
 ): boolean {
   const classes = classesStr.split(" ");
   for (let i = 0; i < classes.length; i++) {
@@ -231,7 +231,7 @@ function throttle(timer: number | undefined, func: Function, delay?: number) {
 
 function getElementChildren(
   element: HTMLElement,
-  selector: string
+  selector: string,
 ): Array<HTMLElement> | null {
   if (!element || !element.childNodes) {
     return null;
@@ -254,7 +254,7 @@ function getElementChildren(
 
 function getElementChild(
   element: HTMLElement,
-  selector: string
+  selector: string,
 ): HTMLElement | null {
   const children = getElementChildren(element, selector);
   return children ? children[0] : null;
@@ -292,7 +292,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
     DataUtil.set(
       el,
       "slide-padding-top",
-      ElementStyleUtil.get(el, "padding-top")
+      ElementStyleUtil.get(el, "padding-top"),
     );
   }
 
@@ -303,7 +303,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
     DataUtil.set(
       el,
       "slide-padding-bottom",
-      ElementStyleUtil.get(el, "padding-bottom")
+      ElementStyleUtil.get(el, "padding-bottom"),
     );
   }
 
@@ -328,7 +328,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         speed,
         function (value: number) {
           el.style.paddingTop = calcPaddingTop - value + "px";
-        }
+        },
       );
     }
 
@@ -339,7 +339,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         speed,
         function (value: number) {
           el.style.paddingBottom = calcPaddingBottom - value + "px";
-        }
+        },
       );
     }
 
@@ -357,7 +357,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         if (typeof callback === "function") {
           callback();
         }
-      }
+      },
     );
   } else if (dir === "down") {
     // down
@@ -374,7 +374,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         },
         function () {
           el.style.paddingTop = "";
-        }
+        },
       );
     }
 
@@ -388,7 +388,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         },
         function () {
           el.style.paddingBottom = "";
-        }
+        },
       );
     }
 
@@ -407,7 +407,7 @@ function slide(el: HTMLElement, dir: string, speed: number, callback: any) {
         if (typeof callback === "function") {
           callback();
         }
-      }
+      },
     );
   }
 }
@@ -471,7 +471,7 @@ function colorLighten(color: string, amount: number) {
   amount = parseInt(((255 * amount) / 100).toString());
   return (color = `#${addLight(color.substring(0, 2), amount)}${addLight(
     color.substring(2, 4),
-    amount
+    amount,
   )}${addLight(color.substring(4, 6), amount)}`);
 }
 
@@ -491,10 +491,10 @@ function colorDarken(color: string, amount: number) {
 
   return (color = `#${subtractLight(
     color.substring(0, 2),
-    amount
+    amount,
   )}${subtractLight(color.substring(2, 4), amount)}${subtractLight(
     color.substring(4, 6),
-    amount
+    amount,
   )}`);
 }
 

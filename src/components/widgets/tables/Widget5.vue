@@ -219,7 +219,7 @@
                         <img
                           :src="
                             getAssetPath(
-                              '/media/svg/brand-logos/kickstarter.svg'
+                              '/media/svg/brand-logos/kickstarter.svg',
                             )
                           "
                           class="h-50 align-self-center"
@@ -423,7 +423,7 @@
                         <img
                           :src="
                             getAssetPath(
-                              '/media/svg/brand-logos/kickstarter.svg'
+                              '/media/svg/brand-logos/kickstarter.svg',
                             )
                           "
                           class="h-50 align-self-center"

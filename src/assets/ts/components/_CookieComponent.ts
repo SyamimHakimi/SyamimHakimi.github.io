@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 // DOCS: https://javascript.info/cookie
 export class CookieComponent {
   /**
@@ -12,8 +11,8 @@ export class CookieComponent {
       new RegExp(
         "(?:^|; )" +
           name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-          "=([^;]*)"
-      )
+          "=([^;]*)",
+      ),
     );
     return matches ? decodeURIComponent(matches[1]) : undefined;
   }
@@ -30,7 +29,7 @@ export class CookieComponent {
   public static set(
     name: string,
     value: string | number | boolean,
-    cookieOptions: any
+    cookieOptions: any,
   ): void {
     const options = {
       path: "/",

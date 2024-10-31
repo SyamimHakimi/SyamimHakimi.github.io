@@ -51,7 +51,7 @@ export default defineComponent({
   setup() {
     const newEvent = () => {
       const modal = new Modal(
-        document.getElementById("kt_modal_add_event") as Element
+        document.getElementById("kt_modal_add_event") as Element,
       );
       modal.show();
     };

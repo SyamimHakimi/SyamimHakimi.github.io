@@ -12,7 +12,7 @@ export class SwapperStore {
 
   public static set(
     instanceId: string,
-    drawerComponentObj: SwapperComponent
+    drawerComponentObj: SwapperComponent,
   ): void {
     if (SwapperStore.has(instanceId)) {
       return;
@@ -73,7 +73,7 @@ class SwapperComponent {
   constructor(
     _element: HTMLElement,
     _options: ISwapperOptions,
-    _queries: ISwapperQueries
+    _queries: ISwapperQueries,
   ) {
     this.element = _element;
     this.options = Object.assign(defaultSwapperOptions, _options);
@@ -147,7 +147,7 @@ class SwapperComponent {
   // Static methods
   public static getInstance = (
     el: HTMLElement,
-    componentName: string = defaultSwapperQueires.componentName
+    componentName: string = defaultSwapperQueires.componentName,
   ): SwapperComponent | null => {
     const place = SwapperStore.get(el.id);
     if (place) {
@@ -160,7 +160,7 @@ class SwapperComponent {
   public static createInstances = (
     selector: string = defaultSwapperQueires.instanseQuery,
     options: ISwapperOptions = defaultSwapperOptions,
-    queries: ISwapperQueries = defaultSwapperQueires
+    queries: ISwapperQueries = defaultSwapperQueires,
   ) => {
     const elements = document.body.querySelectorAll(selector);
     elements.forEach((el) => {
@@ -175,7 +175,7 @@ class SwapperComponent {
   public static createInsance = (
     selector: string = defaultSwapperQueires.instanseQuery,
     options: ISwapperOptions = defaultSwapperOptions,
-    queries: ISwapperQueries = defaultSwapperQueires
+    queries: ISwapperQueries = defaultSwapperQueires,
   ): SwapperComponent | undefined => {
     const element = document.body.querySelector(selector);
     if (!element) {
@@ -190,13 +190,13 @@ class SwapperComponent {
   };
 
   public static bootstrap = (
-    selector: string = defaultSwapperQueires.instanseQuery
+    selector: string = defaultSwapperQueires.instanseQuery,
   ) => {
     SwapperComponent.createInstances(selector);
   };
 
   public static reinitialization = (
-    selector: string = defaultSwapperQueires.instanseQuery
+    selector: string = defaultSwapperQueires.instanseQuery,
   ) => {
     SwapperComponent.createInstances(selector);
   };
@@ -210,7 +210,7 @@ window.addEventListener("resize", function () {
     () => {
       // Locate and update Offcanvas instances on window resize
       const elements = document.querySelectorAll(
-        defaultSwapperQueires.instanseQuery
+        defaultSwapperQueires.instanseQuery,
       );
       elements.forEach((el) => {
         const place = SwapperComponent.getInstance(el as HTMLElement);
@@ -219,7 +219,7 @@ window.addEventListener("resize", function () {
         }
       });
     },
-    200
+    200,
   );
 });
 

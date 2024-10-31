@@ -50,7 +50,7 @@
           class="bgi-no-repeat bgi-size-cover rounded min-h-250px mb-5"
           :style="{
             backgroundImage: `url(${getAssetPath(
-              '/media/stock/900x600/20.jpg'
+              '/media/stock/900x600/20.jpg',
             )})`,
           }"
         ></div>

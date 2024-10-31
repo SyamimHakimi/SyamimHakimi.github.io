@@ -20,7 +20,6 @@ function getUniqueIdWithPrefix(prefix: string | undefined): string {
   return `${prefix}${result}`;
 }
 
-/* eslint-disable no-useless-escape */
 function stringSnakeToCamel(str: string): string {
   return str.replace(/(\-\w)/g, function (m) {
     return m[1].toUpperCase();

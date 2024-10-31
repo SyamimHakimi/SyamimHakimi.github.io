@@ -76,7 +76,7 @@ export default defineComponent({
     const path = computed(() => route.path);
 
     const setMode = (mode: "dark" | "light" | "system") => {
-      let configMode = mode;
+      const configMode = mode;
 
       storeConfig.setLayoutConfigProperty("general.mode", configMode);
 

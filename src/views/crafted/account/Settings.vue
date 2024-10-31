@@ -46,7 +46,7 @@
                 data-kt-image-input="true"
                 :style="{
                   backgroundImage: `url(${getAssetPath(
-                    '/media/avatars/blank.png'
+                    '/media/avatars/blank.png',
                   )})`,
                 }"
               >

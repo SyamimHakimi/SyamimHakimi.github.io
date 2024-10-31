@@ -196,7 +196,6 @@ export default defineComponent({
       store.logout();
 
       if (submitButton.value) {
-        // eslint-disable-next-line
         submitButton.value!.disabled = true;
         // Activate indicator
         submitButton.value.setAttribute("data-kt-indicator", "on");
@@ -237,8 +236,8 @@ export default defineComponent({
 
       //Deactivate indicator
       submitButton.value?.removeAttribute("data-kt-indicator");
-      // eslint-disable-next-line
-        submitButton.value!.disabled = false;
+
+      submitButton.value!.disabled = false;
     };
 
     return {

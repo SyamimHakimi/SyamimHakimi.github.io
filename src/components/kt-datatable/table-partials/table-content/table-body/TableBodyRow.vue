@@ -58,7 +58,7 @@ export default defineComponent({
         } else {
           selectedItems.value = [];
         }
-      }
+      },
     );
 
     const onChange = () => {

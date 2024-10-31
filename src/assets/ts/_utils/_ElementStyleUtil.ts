@@ -3,7 +3,7 @@ export class ElementStyleUtil {
     element: HTMLElement,
     property: string,
     value?: any,
-    important?: boolean
+    important?: boolean,
   ) {
     if (important) {
       element.style.setProperty(property, value, "important");
