@@ -178,68 +178,6 @@
           </div>
         </template>
       </template>
-
-      <div class="menu-item">
-        <a
-          class="menu-link"
-          href="https://preview.keenthemes.com/metronic8/vue/docs/#/utilities"
-        >
-          <span class="menu-icon">
-            <i
-              v-if="asideMenuIcons === 'bootstrap'"
-              class="bi bi-arrow-right fs-8"
-            ></i>
-            <KTIcon
-              v-if="asideMenuIcons === 'keenthemes'"
-              icon-name="black-right"
-              icon-class="fs-5"
-            />
-          </span>
-          <span class="menu-title">{{ translate("components") }}</span>
-        </a>
-      </div>
-
-      <div class="menu-item">
-        <a
-          class="menu-link"
-          href="https://preview.keenthemes.com/metronic8/vue/docs/#/doc-overview"
-        >
-          <span class="menu-icon">
-            <i
-              v-if="asideMenuIcons === 'bootstrap'"
-              class="bi bi-arrow-right fs-8"
-            ></i>
-            <KTIcon
-              v-if="asideMenuIcons === 'keenthemes'"
-              icon-name="black-right"
-              icon-class="fs-5"
-            />
-          </span>
-          <span class="menu-title">{{ translate("documentation") }}</span>
-        </a>
-      </div>
-
-      <div class="menu-item">
-        <a
-          class="menu-link"
-          href="https://preview.keenthemes.com/metronic8/vue/docs/#/changelog"
-        >
-          <span class="menu-icon">
-            <i
-              v-if="asideMenuIcons === 'bootstrap'"
-              class="bi bi-arrow-right fs-8"
-            ></i>
-            <KTIcon
-              v-if="asideMenuIcons === 'keenthemes'"
-              icon-name="black-right"
-              icon-class="fs-5"
-            />
-          </span>
-          <span class="menu-title"
-            >{{ translate("changelog") }} v{{ version }}</span
-          >
-        </a>
-      </div>
     </div>
     <!--end::Menu-->
   </div>

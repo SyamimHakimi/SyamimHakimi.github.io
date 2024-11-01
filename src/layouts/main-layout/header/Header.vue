@@ -40,12 +40,6 @@
       <div
         class="d-flex align-items-stretch justify-content-between flex-lg-grow-1"
       >
-        <!--begin::Navbar-->
-        <div class="d-flex align-items-stretch" id="kt_header_nav">
-          <KTMenu></KTMenu>
-        </div>
-        <!--end::Navbar-->
-
         <!--begin::Topbar-->
         <div class="d-flex align-items-stretch flex-shrink-0">
           <KTTopbar></KTTopbar>
@@ -64,7 +58,6 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent } from "vue";
 import KTTopbar from "@/layouts/main-layout/header/Topbar.vue";
 import PageTitle from "@/layouts/main-layout/page-title/PageTitle.vue";
-import KTMenu from "@/layouts/main-layout/header/Menu.vue";
 
 import {
   asideDisplay,
@@ -78,7 +71,6 @@ export default defineComponent({
   name: "KTHeader",
   components: {
     KTTopbar,
-    KTMenu,
     PageTitle,
   },
   setup() {
