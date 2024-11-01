@@ -7,37 +7,6 @@
     </div>
     <!--end::Search-->
 
-    <!--begin::Activities-->
-    <div class="d-flex align-items-center ms-3 ms-lg-4">
-      <!--begin::drawer toggle-->
-      <div
-        class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline w-40px h-40px position-relative"
-        id="kt_activities_toggle"
-      >
-        <KTIcon icon-name="notification-bing" icon-class="fs-1" />
-      </div>
-      <!--end::drawer toggle-->
-    </div>
-    <!--end::Activities-->
-
-    <!--begin::Chat-->
-    <div class="d-flex align-items-center ms-3 ms-lg-4">
-      <!--begin::Menu wrapper-->
-      <div
-        class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline w-40px h-40px position-relative"
-        id="kt_drawer_chat_toggle"
-      >
-        <KTIcon icon-name="message-text-2" icon-class="fs-1" />
-
-        <span
-          class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
-        >
-        </span>
-      </div>
-      <!--end::Menu wrapper-->
-    </div>
-    <!--end::Chat-->
-
     <!--begin::Theme mode-->
     <div class="d-flex align-items-center ms-3 ms-lg-4">
       <!--begin::Menu toggle-->
@@ -58,15 +27,6 @@
       <KTThemeModeSwitcher></KTThemeModeSwitcher>
     </div>
     <!--end::Theme mode-->
-
-    <div class="d-flex align-items-center ms-3 ms-lg-4 d-xxl-none">
-      <button
-        class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline w-40px h-40px2"
-        id="kt_sidebar_toggler"
-      >
-        <KTIcon icon-name="setting-2" icon-class="fs-1" />
-      </button>
-    </div>
   </div>
   <!--end::Toolbar wrapper-->
 </template>
