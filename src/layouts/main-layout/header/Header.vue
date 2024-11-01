@@ -38,7 +38,7 @@
 
       <!--begin::Wrapper-->
       <div
-        class="d-flex align-items-stretch justify-content-between flex-lg-grow-1"
+        class="d-flex align-items-stretch justify-content-end flex-lg-grow-1"
       >
         <!--begin::Topbar-->
         <div class="d-flex align-items-stretch flex-shrink-0">
