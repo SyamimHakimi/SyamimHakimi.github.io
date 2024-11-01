@@ -3,7 +3,6 @@ import {
   createWebHashHistory,
   type RouteRecordRaw,
 } from "vue-router";
-import { useAuthStore } from "@/stores/auth";
 import { useConfigStore } from "@/stores/config";
 
 const routes: Array<RouteRecordRaw> = [
@@ -31,39 +30,6 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           pageTitle: "Gallery",
           breadcrumbs: ["Gallery"],
-        },
-      },
-    ],
-  },
-  {
-    path: "/",
-    component: () => import("@/layouts/AuthLayout.vue"),
-    children: [
-      {
-        path: "/sign-in",
-        name: "sign-in",
-        component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
-        meta: {
-          pageTitle: "Sign In",
-        },
-      },
-      {
-        path: "/sign-up",
-        name: "sign-up",
-        component: () =>
-          import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
-        meta: {
-          pageTitle: "Sign Up",
-        },
-      },
-      {
-        path: "/password-reset",
-        name: "password-reset",
-        component: () =>
-          import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
-        meta: {
-          pageTitle: "Password reset",
         },
       },
     ],
@@ -103,7 +69,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
   const configStore = useConfigStore();
 
   // current page view title
@@ -112,19 +77,20 @@ router.beforeEach((to, from, next) => {
   // reset config to initial state
   configStore.resetLayoutConfig();
 
-  // verify auth token before each page change
-  authStore.verifyAuth();
-
-  // before page access check if page requires authentication
-  if (to.meta.middleware == "auth") {
-    if (authStore.isAuthenticated) {
-      next();
-    } else {
-      next({ name: "sign-in" });
-    }
-  } else {
-    next();
-  }
+  // // verify auth token before each page change
+  // authStore.verifyAuth();
+  //
+  // // before page access check if page requires authentication
+  // if (to.meta.middleware == "auth") {
+  //   if (authStore.isAuthenticated) {
+  //     next();
+  //   } else {
+  //     next({ name: "sign-in" });
+  //   }
+  // } else {
+  //   next();
+  // }
+  next();
 
   // Scroll page to top on every route change
   window.scrollTo({

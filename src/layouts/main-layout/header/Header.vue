@@ -27,13 +27,13 @@
         <router-link to="/dashboard" class="d-flex align-items-center">
           <img
             alt="Logo"
-            :src="getAssetPath('media/logos/light-default.svg')"
-            class="h-20px logo theme-light-show"
+            :src="getAssetPath('media/logos/light-large.svg')"
+            class="h-25px logo theme-light-show"
           />
           <img
             alt="Logo"
-            :src="getAssetPath('media/logos/dark-default.svg')"
-            class="h-20px logo theme-dark-show"
+            :src="getAssetPath('media/logos/dark-large.svg')"
+            class="h-25px logo theme-dark-show"
           />
         </router-link>
         <!--end::Logo-->
