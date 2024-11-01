@@ -60,9 +60,11 @@ import { computed, defineComponent } from "vue";
 import { useThemeStore } from "@/stores/theme";
 import { useConfigStore } from "@/stores/config";
 import { useRoute } from "vue-router";
+import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 
 export default defineComponent({
   name: "kt-theme-switcher",
+  components: { KTIcon },
   component: {},
   setup() {
     const storeTheme = useThemeStore();

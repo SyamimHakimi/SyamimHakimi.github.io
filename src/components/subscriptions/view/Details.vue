@@ -168,7 +168,6 @@
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </a>
-                  <UserMenu></UserMenu>
                   <!--end::Action-->
                 </td>
               </tr>
@@ -192,7 +191,6 @@
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </a>
-                  <UserMenu></UserMenu>
                   <!--end::Action-->
                 </td>
               </tr>
@@ -213,13 +211,10 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import UserMenu from "@/layouts/main-layout/menus/UserAccountMenu.vue";
 
 export default defineComponent({
   name: "kt-details",
-  components: {
-    UserMenu,
-  },
+  components: {},
   setup() {
     return {
       getAssetPath,

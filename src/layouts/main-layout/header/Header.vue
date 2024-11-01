@@ -27,26 +27,19 @@
         <router-link to="/dashboard" class="d-flex align-items-center">
           <img
             alt="Logo"
-            :src="getAssetPath('media/logos/demo3.svg')"
-            class="h-20px"
+            :src="getAssetPath('media/logos/light-default.svg')"
+            class="h-20px logo theme-light-show"
+          />
+          <img
+            alt="Logo"
+            :src="getAssetPath('media/logos/dark-default.svg')"
+            class="h-20px logo theme-dark-show"
           />
         </router-link>
         <!--end::Logo-->
       </div>
 
       <PageTitle />
-
-      <!--begin::Wrapper-->
-      <div
-        class="d-flex align-items-stretch justify-content-end flex-lg-grow-1"
-      >
-        <!--begin::Topbar-->
-        <div class="d-flex align-items-stretch flex-shrink-0">
-          <KTTopbar></KTTopbar>
-        </div>
-        <!--end::Topbar-->
-      </div>
-      <!--end::Wrapper-->
     </div>
     <!--end::Container-->
   </div>
@@ -56,7 +49,6 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent } from "vue";
-import KTTopbar from "@/layouts/main-layout/header/Topbar.vue";
 import PageTitle from "@/layouts/main-layout/page-title/PageTitle.vue";
 
 import {
@@ -66,11 +58,12 @@ import {
   headerLeft,
   headerWidthFluid,
 } from "@/core/helpers/config";
+import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 
 export default defineComponent({
   name: "KTHeader",
   components: {
-    KTTopbar,
+    KTIcon,
     PageTitle,
   },
   setup() {

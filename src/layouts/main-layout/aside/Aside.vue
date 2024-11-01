@@ -17,13 +17,13 @@
       <router-link to="/dashboard">
         <img
           alt="Logo"
-          :src="getAssetPath('media/logos/demo3.svg')"
-          class="h-20px logo theme-light-show"
+          :src="getAssetPath('media/logos/light-default.svg')"
+          class="h-20px theme-light-show"
         />
         <img
           alt="Logo"
-          :src="getAssetPath('media/logos/demo3-dark.svg')"
-          class="h-20px logo theme-dark-show"
+          :src="getAssetPath('media/logos/dark-default.svg')"
+          class="h-20px theme-dark-show"
         />
       </router-link>
       <!--end::Logo-->
@@ -43,44 +43,58 @@
         <!--begin::Wrapper-->
         <div class="d-flex align-items-center">
           <!--begin::Avatar-->
-          <div class="symbol symbol-circle symbol-40px">
-            <img :src="getAssetPath('media/avatars/300-1.jpg')" alt="photo" />
+          <div class="symbol symbol-square symbol-40px">
+            <img
+              alt="Logo"
+              :src="getAssetPath('media/logos/dark-small-square-300.png')"
+              class="theme-light-show"
+            />
+            <img
+              alt="Logo"
+              :src="getAssetPath('media/logos/light-small-square-300.png')"
+              class="theme-dark-show"
+            />
           </div>
           <!--end::Avatar-->
 
           <!--begin::User info-->
-          <div class="ms-2">
+          <div class="ms-3">
             <!--begin::Name-->
-            <a
-              href="#"
-              class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1"
-              >Paul Melone</a
-            >
+            <span class="text-gray-800 fs-6 fw-bold lh-1">Syamim Hakimi</span>
             <!--end::Name-->
 
             <!--begin::Major-->
             <span class="text-muted fw-semobold d-block fs-7 lh-1"
-              >Python Dev</span
+              >Software Developer</span
             >
             <!--end::Major-->
           </div>
           <!--end::User info-->
         </div>
-        <!--end::Wrapper-->
-
-        <!--begin::User menu-->
-        <div class="ms-1">
-          <div
-            class="btn btn-sm btn-icon btn-active-color-primary position-relative me-n2"
-            data-kt-menu-trigger="click"
-            data-kt-menu-overflow="true"
-            data-kt-menu-placement="top-end"
+        <!--begin::Theme mode-->
+        <div class="d-flex align-items-center ms-3 ms-lg-4">
+          <!--begin::Menu toggle-->
+          <a
+            href="#"
+            class="btn btn-icon btn-color-gray-700 btn-active-color-primary btn-outline w-40px h-40px"
+            data-kt-menu-trigger="{default:'click', lg: 'hover'}"
+            data-kt-menu-attach="parent"
+            data-kt-menu-placement="bottom-end"
           >
-            <KTIcon icon-name="setting-2" icon-class="fs-1" />
-          </div>
-          <UserMenu />
+            <KTIcon
+              icon-name="night-day"
+              icon-class="theme-light-show fs-2 fs-md-1"
+            />
+            <KTIcon
+              icon-name="moon"
+              icon-class="theme-dark-show fs-2 fs-md-1"
+            />
+          </a>
+          <!--begin::Menu toggle-->
+          <KTThemeModeSwitcher></KTThemeModeSwitcher>
         </div>
-        <!--end::User menu-->
+        <!--end::Theme mode-->
+        <!--end::Wrapper-->
       </div>
       <!--end::User panel-->
     </div>
@@ -94,14 +108,16 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import { useI18n } from "vue-i18n";
 import KTMenu from "@/layouts/main-layout/aside/Menu.vue";
-import UserMenu from "@/layouts/main-layout/menus/UserAccountMenu.vue";
 import { asideTheme } from "@/core/helpers/config";
+import KTThemeModeSwitcher from "@/layouts/main-layout/theme-mode/ThemeModeSwitcher.vue";
+import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 
 export default defineComponent({
   name: "KTAside",
   components: {
+    KTIcon,
+    KTThemeModeSwitcher,
     KTMenu,
-    UserMenu,
   },
   props: {
     lightLogo: String,

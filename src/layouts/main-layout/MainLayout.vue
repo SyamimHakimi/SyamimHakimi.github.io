@@ -21,8 +21,6 @@
         <div class="content flex-row-fluid" id="kt_content_container">
           <router-view />
         </div>
-
-        <KTSidebar v-if="displaySidebar" />
       </div>
       <!-- end:: Content -->
       <KTFooter />
@@ -41,7 +39,6 @@ import {
 } from "vue";
 import { useRoute } from "vue-router";
 import KTAside from "@/layouts/main-layout/aside/Aside.vue";
-import KTSidebar from "@/layouts/main-layout/sidebar/Sidebar.vue";
 import KTHeader from "@/layouts/main-layout/header/Header.vue";
 import KTFooter from "@/layouts/main-layout/footer/Footer.vue";
 import { reinitializeComponents } from "@/core/plugins/keenthemes";
@@ -62,7 +59,6 @@ export default defineComponent({
   name: "master-layout",
   components: {
     KTAside,
-    KTSidebar,
     KTHeader,
     KTFooter,
   },

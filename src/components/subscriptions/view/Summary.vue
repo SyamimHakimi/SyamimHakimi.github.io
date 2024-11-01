@@ -31,7 +31,6 @@
         >
           <KTIcon icon-name="dots-horizontal" icon-class="fs-3" />
         </a>
-        <UserMenu></UserMenu>
         <!--end::More options-->
       </div>
       <!--end::Card toolbar-->
@@ -192,13 +191,9 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import UserMenu from "@/layouts/main-layout/menus/UserAccountMenu.vue";
 
 export default defineComponent({
   name: "kt-summary",
-  components: {
-    UserMenu,
-  },
   setup() {
     return {
       getAssetPath,

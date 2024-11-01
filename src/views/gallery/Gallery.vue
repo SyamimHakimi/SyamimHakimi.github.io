@@ -1,7 +1,7 @@
 <template>
   <LayoutGrids>
     <template v-slot:gridColumns>
-      <div class="col-xl-6 col-xxl-4">
+      <div class="col-md-6 col-xxl-4">
         <!--begin::Child-->
         <CardGallery
           title="box."
@@ -10,7 +10,7 @@
         />
         <!--end::Child-->
       </div>
-      <div class="col-xl-6 col-xxl-4">
+      <div class="col-md-6 col-xxl-4">
         <!--begin::Child-->
         <CardGallery
           title="sunset."
