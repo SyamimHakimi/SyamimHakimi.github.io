@@ -21,7 +21,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="card" :class="widgetClasses">
+  <div class="card mb-5 mb-xl-10" :class="widgetClasses">
     <!--begin::Header-->
     <div v-if="hasHeader" class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
@@ -35,7 +35,7 @@ export default defineComponent({
     <!--end::Header-->
 
     <!--begin::Body-->
-    <div class="card-body py-3">
+    <div class="card-body">
       <slot name="cardBody" />
     </div>
     <!--begin::Body-->

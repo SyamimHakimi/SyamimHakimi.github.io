@@ -1,18 +1,38 @@
 <template>
-  <CardContainer widget-classes="mb-5 mb-xl-10" />
+  <LayoutGrids>
+    <template v-slot:gridColumns>
+      <div class="col-xl-6 col-xxl-4">
+        <!--begin::Child-->
+        <CardGallery
+          title="box."
+          date-posted="01 November 24"
+          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
+        />
+        <!--end::Child-->
+      </div>
+      <div class="col-xl-6 col-xxl-4">
+        <!--begin::Child-->
+        <CardGallery
+          title="sunset."
+          date-posted="01 November 24"
+          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
+        />
+        <!--end::Child-->
+      </div>
+    </template>
+  </LayoutGrids>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from "vue";
 import LayoutService from "@/core/services/LayoutService";
 import { LS_CONFIG_NAME_KEY } from "@/stores/config";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardGallery from "@/components-new/cards/CardGallery.vue";
+import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
 
 export default defineComponent({
   name: "main-dashboard",
-  components: {
-    CardContainer,
-  },
+  components: { LayoutGrids, CardGallery },
   setup() {
     onMounted(() => {
       if (!localStorage.getItem(LS_CONFIG_NAME_KEY)) {
