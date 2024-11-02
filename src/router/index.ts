@@ -8,20 +8,62 @@ import { useConfigStore } from "@/stores/config";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/dashboard",
+    redirect: "/photography_journey",
     component: () => import("@/layouts/main-layout/MainLayout.vue"),
     meta: {
       middleware: "auth",
     },
     children: [
       {
-        path: "/dashboard",
-        name: "dashboard",
-        component: () => import("@/views/dashboard/Dashboard.vue"),
+        path: "/photography_journey",
+        name: "photography_journey",
+        component: () =>
+          import("@/views/photography-journey/PhotographyJourney.vue"),
         meta: {
-          pageTitle: "Dashboard",
-          breadcrumbs: ["Dashboards"],
+          pageTitle: "Photography Journey",
+          breadcrumbs: ["Photography Journey"],
         },
+      },
+      {
+        path: "/services",
+        name: "services",
+        component: () => import("@/views/services/Services.vue"),
+        meta: {
+          pageTitle: "Services",
+          breadcrumbs: ["Services"],
+        },
+      },
+      {
+        path: "/portfolio",
+        name: "portfolio",
+        component: () => import("@/views/portfolio/PortfolioLayout.vue"),
+        meta: {
+          breadcrumbs: ["Portfolio"],
+        },
+        children: [
+          {
+            path: "/portfolio/personal_projects",
+            name: "portfolio-personal-projects",
+            component: () =>
+              import(
+                "@/views/portfolio/personal-projects/PersonalProjects.vue"
+              ),
+            meta: {
+              pageTitle: "Personal Projects",
+              breadcrumbs: ["Portfolio", "Personal Projects"],
+            },
+          },
+          {
+            path: "/portfolio/experience",
+            name: "portfolio-experience",
+            component: () =>
+              import("@/views/portfolio/experience/Experience.vue"),
+            meta: {
+              pageTitle: "Experience",
+              breadcrumbs: ["Portfolio", "Experience"],
+            },
+          },
+        ],
       },
       {
         path: "/gallery",
@@ -30,6 +72,15 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           pageTitle: "Gallery",
           breadcrumbs: ["Gallery"],
+        },
+      },
+      {
+        path: "/about_me",
+        name: "about_me",
+        component: () => import("@/views/about-me/AboutMe.vue"),
+        meta: {
+          pageTitle: "About Me",
+          breadcrumbs: ["About Me"],
         },
       },
     ],
@@ -63,66 +114,19 @@ const routes: Array<RouteRecordRaw> = [
   },
 ];
 
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const configStore = useConfigStore();
-
-  // current page view title
-  document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
-
-  // reset config to initial state
-  configStore.resetLayoutConfig();
-
-  // // verify auth token before each page change
-  // authStore.verifyAuth();
-  //
-  // // before page access check if page requires authentication
-  // if (to.meta.middleware == "auth") {
-  //   if (authStore.isAuthenticated) {
-  //     next();
-  //   } else {
-  //     next({ name: "sign-in" });
-  //   }
-  // } else {
-  //   next();
-  // }
-  next();
-
-  // Scroll page to top on every route change
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
-});
-
-export default router;
-
-// import {
-//   createRouter,
-//   createWebHashHistory,
-//   type RouteRecordRaw,
-// } from "vue-router";
-// import { useAuthStore } from "@/stores/auth";
-// import { useConfigStore } from "@/stores/config";
-//
 // const routes: Array<RouteRecordRaw> = [
 //   {
 //     path: "/",
-//     redirect: "/dashboard",
+//     redirect: "/photography-journey",
 //     component: () => import("@/layouts/main-layout/MainLayout.vue"),
 //     meta: {
 //       middleware: "auth",
 //     },
 //     children: [
 //       {
-//         path: "/dashboard",
-//         name: "dashboard",
-//         component: () => import("@/views/Dashboard.vue"),
+//         path: "/photography-journey",
+//         name: "photography-journey",
+//         component: () => import("@/views/PhotographyJourney.vue"),
 //         meta: {
 //           pageTitle: "Dashboard",
 //           breadcrumbs: ["Dashboards"],
@@ -511,48 +515,6 @@ export default router;
 //   },
 //   {
 //     path: "/",
-//     component: () => import("@/layouts/AuthLayout.vue"),
-//     children: [
-//       {
-//         path: "/sign-in",
-//         name: "sign-in",
-//         component: () =>
-//           import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
-//         meta: {
-//           pageTitle: "Sign In",
-//         },
-//       },
-//       {
-//         path: "/sign-up",
-//         name: "sign-up",
-//         component: () =>
-//           import("@/views/crafted/authentication/basic-flow/SignUp.vue"),
-//         meta: {
-//           pageTitle: "Sign Up",
-//         },
-//       },
-//       {
-//         path: "/password-reset",
-//         name: "password-reset",
-//         component: () =>
-//           import("@/views/crafted/authentication/basic-flow/PasswordReset.vue"),
-//         meta: {
-//           pageTitle: "Password reset",
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     path: "/multi-step-sign-up",
-//     name: "multi-step-sign-up",
-//     component: () =>
-//       import("@/views/crafted/authentication/MultiStepSignUp.vue"),
-//     meta: {
-//       pageTitle: "Multi-step Sign up",
-//     },
-//   },
-//   {
-//     path: "/",
 //     component: () => import("@/layouts/SystemLayout.vue"),
 //     children: [
 //       {
@@ -579,42 +541,42 @@ export default router;
 //     redirect: "/404",
 //   },
 // ];
-//
-// const router = createRouter({
-//   history: createWebHashHistory(),
-//   routes,
-// });
-//
-// router.beforeEach((to, from, next) => {
-//   const authStore = useAuthStore();
-//   const configStore = useConfigStore();
-//
-//   // current page view title
-//   document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
-//
-//   // reset config to initial state
-//   configStore.resetLayoutConfig();
-//
-//   // verify auth token before each page change
-//   authStore.verifyAuth();
-//
-//   // before page access check if page requires authentication
-//   if (to.meta.middleware == "auth") {
-//     if (authStore.isAuthenticated) {
-//       next();
-//     } else {
-//       next({ name: "sign-in" });
-//     }
-//   } else {
-//     next();
-//   }
-//
-//   // Scroll page to top on every route change
-//   window.scrollTo({
-//     top: 0,
-//     left: 0,
-//     behavior: "smooth",
-//   });
-// });
-//
-// export default router;
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const configStore = useConfigStore();
+
+  // current page view title
+  document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
+
+  // reset config to initial state
+  configStore.resetLayoutConfig();
+
+  // // verify auth token before each page change
+  // authStore.verifyAuth();
+  //
+  // // before page access check if page requires authentication
+  // if (to.meta.middleware == "auth") {
+  //   if (authStore.isAuthenticated) {
+  //     next();
+  //   } else {
+  //     next({ name: "sign-in" });
+  //   }
+  // } else {
+  //   next();
+  // }
+  next();
+
+  // Scroll page to top on every route change
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
+});
+
+export default router;

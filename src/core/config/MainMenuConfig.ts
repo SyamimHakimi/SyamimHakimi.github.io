@@ -10,8 +10,14 @@ export interface MenuItem {
 
 const MainMenuConfig: Array<MenuItem> = [
   {
-    heading: "Dashboard",
-    route: "/dashboard",
+    heading: "Photography Journey",
+    route: "/photography_journey",
+    keenthemesIcon: "black-right",
+    bootstrapIcon: "bi-arrow-right",
+  },
+  {
+    heading: "Services",
+    route: "/services",
     keenthemesIcon: "black-right",
     bootstrapIcon: "bi-arrow-right",
   },
@@ -22,14 +28,14 @@ const MainMenuConfig: Array<MenuItem> = [
     bootstrapIcon: "bi-arrow-right",
     pages: [
       {
-        heading: "Personal Projects",
-        route: "/personal_projects",
+        heading: "Experience",
+        route: "/portfolio/experience",
         keenthemesIcon: "element-plus",
         bootstrapIcon: "bi-arrow-right",
       },
       {
-        heading: "Experience",
-        route: "/experience",
+        heading: "Personal Projects",
+        route: "/portfolio/personal_projects",
         keenthemesIcon: "element-plus",
         bootstrapIcon: "bi-arrow-right",
       },
@@ -51,20 +57,10 @@ const MainMenuConfig: Array<MenuItem> = [
 
 export default MainMenuConfig;
 
-// export interface MenuItem {
-//   heading?: string;
-//   sectionTitle?: string;
-//   route?: string;
-//   pages?: Array<MenuItem>;
-//   keenthemesIcon?: string;
-//   bootstrapIcon?: string;
-//   sub?: Array<MenuItem>;
-// }
-//
 // const MainMenuConfig: Array<MenuItem> = [
 //   {
-//     heading: "dashboard",
-//     route: "/dashboard",
+//     heading: "photography-journey",
+//     route: "/photography-journey",
 //     keenthemesIcon: "black-right",
 //     bootstrapIcon: "bi-arrow-right",
 //   },

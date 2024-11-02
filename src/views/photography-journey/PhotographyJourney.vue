@@ -1,6 +1,12 @@
 <template>
   <!--begin::Row-->
   <div class="row gy-5 g-xl-10">
+    <!--    PHOTOGRAPHY STATISTICS src/components/widgets/mixed/Widget6.vue-->
+    <!--    Focal Length Frequency src/components/widgets/mixed/Widget12.vue-->
+    <!--    ????? src/components/widgets/mixed/Widget13.vue-->
+    <!--    Experience Summary src/components/widgets/mixed/Widget14.vue-->
+    <!--  Photography Theme src/components/widgets/statsistics/Widget4.vue-->
+
     <!--begin::Col-->
     <div class="col-xl-4">
       <MixedWidget12
