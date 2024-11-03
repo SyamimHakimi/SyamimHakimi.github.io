@@ -4,7 +4,7 @@
     <!--begin::Title-->
     <h3 class="fw-bold my-2">
       My Contacts
-      <span class="fs-6 text-gray-400 fw-semobold ms-1">(59)</span>
+      <span class="fs-6 text-gray-400 fw-semibold ms-1">(59)</span>
     </h3>
     <!--end::Title-->
 
@@ -159,7 +159,7 @@
 
   <!--begin::Pagination-->
   <div class="d-flex flex-stack flex-wrap pt-10">
-    <div class="fs-6 fw-semobold text-gray-700">
+    <div class="fs-6 fw-semibold text-gray-700">
       Showing 1 to 10 of 50 entries
     </div>
 

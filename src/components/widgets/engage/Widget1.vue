@@ -15,7 +15,7 @@
           <!--end::Title-->
 
           <!--begin::Text-->
-          <div class="text-center text-gray-600 fs-6 fw-semobold pt-4 pb-1">
+          <div class="text-center text-gray-600 fs-6 fw-semibold pt-4 pb-1">
             They stoping you from amazing poorly about drive.<br />
             Outlines keep you honest.
           </div>

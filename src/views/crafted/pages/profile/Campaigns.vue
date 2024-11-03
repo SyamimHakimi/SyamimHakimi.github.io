@@ -2,7 +2,7 @@
   <!--begin::Campaigns toolbar-->
   <div class="d-flex flex-wrap flex-stack my-5">
     <!--begin::Title-->
-    <h2 class="fw-semobold my-2">
+    <h2 class="fw-semibold my-2">
       Campaigns
       <span class="fs-4 text-gray-400 ms-1">30 Days</span>
     </h2>
@@ -172,7 +172,7 @@
 
   <!--begin::Pagination-->
   <div class="d-flex flex-stack flex-wrap pt-10">
-    <div class="fs-6 fw-semobold text-gray-700">
+    <div class="fs-6 fw-semibold text-gray-700">
       Showing 1 to 10 of 50 entries
     </div>
 

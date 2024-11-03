@@ -95,7 +95,7 @@
                     <!--end::Title-->
 
                     <!--begin::Notice-->
-                    <div class="text-gray-400 fw-semobold fs-6">
+                    <div class="text-gray-400 fw-semibold fs-6">
                       If you need more info, please check out
                       <a href="#" class="link-primary fw-bold">Help Page</a>.
                     </div>
@@ -129,11 +129,11 @@
                           />
 
                           <!--begin::Info-->
-                          <span class="d-block fw-semobold text-start">
+                          <span class="d-block fw-semibold text-start">
                             <span class="text-dark fw-bold d-block fs-4 mb-2">
                               Personal Account
                             </span>
-                            <span class="text-gray-400 fw-semobold fs-6"
+                            <span class="text-gray-400 fw-semibold fs-6"
                               >If you need more info, please check it out</span
                             >
                           </span>
@@ -164,11 +164,11 @@
                           />
 
                           <!--begin::Info-->
-                          <span class="d-block fw-semobold text-start">
+                          <span class="d-block fw-semibold text-start">
                             <span class="text-dark fw-bold d-block fs-4 mb-2"
                               >Corporate Account</span
                             >
-                            <span class="text-gray-400 fw-semobold fs-6"
+                            <span class="text-gray-400 fw-semibold fs-6"
                               >Create corporate account to mane users</span
                             >
                           </span>
@@ -197,7 +197,7 @@
                     <!--end::Title-->
 
                     <!--begin::Notice-->
-                    <div class="text-gray-400 fw-semobold fs-6">
+                    <div class="text-gray-400 fw-semibold fs-6">
                       If you need more info, please check out
                       <a href="#" class="link-primary fw-bold">Help Page</a>.
                     </div>
@@ -374,7 +374,7 @@
                               class="fw-bold text-gray-800 text-hover-primary fs-5"
                               >Company Account</span
                             >
-                            <span class="fs-6 fw-semobold text-gray-400"
+                            <span class="fs-6 fw-semibold text-gray-400"
                               >Use images to enhance your post flow</span
                             >
                           </span>
@@ -419,7 +419,7 @@
                               class="fw-bold text-gray-800 text-hover-primary fs-5"
                               >Developer Account</span
                             >
-                            <span class="fs-6 fw-semobold text-gray-400"
+                            <span class="fs-6 fw-semibold text-gray-400"
                               >Use images to your post time</span
                             >
                           </span>
@@ -465,7 +465,7 @@
                               class="fw-bold text-gray-800 text-hover-primary fs-5"
                               >Testing Account</span
                             >
-                            <span class="fs-6 fw-semobold text-gray-400"
+                            <span class="fs-6 fw-semibold text-gray-400"
                               >Use images to enhance time travel rivers</span
                             >
                           </span>
@@ -508,7 +508,7 @@
                     <!--end::Title-->
 
                     <!--begin::Notice-->
-                    <div class="text-gray-400 fw-semobold fs-6">
+                    <div class="text-gray-400 fw-semibold fs-6">
                       If you need more info, please check out
                       <a href="#" class="link-primary fw-bold">Help Page</a>.
                     </div>
@@ -555,7 +555,7 @@
                             <div class='fw-bold'>INCBANK **** 1245 STATEMENT</div>
                         </div>
 
-                        <div class='d-flex flex-stack fw-semobold text-gray-600'>
+                        <div class='d-flex flex-stack fw-semibold text-gray-600'>
                             <div>Amount</div>
                             <div>Transaction</div>
                         </div>
@@ -661,7 +661,7 @@
                   <!--begin::Input group-->
                   <div class="fv-row mb-0">
                     <!--begin::Label-->
-                    <label class="fs-6 fw-semobold form-label required"
+                    <label class="fs-6 fw-semibold form-label required"
                       >Contact Email</label
                     >
                     <!--end::Label-->
@@ -695,7 +695,7 @@
                     <!--end::Title-->
 
                     <!--begin::Notice-->
-                    <div class="text-gray-400 fw-semobold fs-6">
+                    <div class="text-gray-400 fw-semibold fs-6">
                       If you need more info, please check out
                       <a href="#" class="text-primary fw-bold">Help Page</a>.
                     </div>
@@ -707,7 +707,7 @@
                   <div class="d-flex flex-column mb-7 fv-row">
                     <!--begin::Label-->
                     <label
-                      class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+                      class="d-flex align-items-center fs-6 fw-semibold form-label mb-2"
                     >
                       <span class="required">Name On Card</span>
                       <i
@@ -735,7 +735,7 @@
                   <!--begin::Input group-->
                   <div class="d-flex flex-column mb-7 fv-row">
                     <!--begin::Label-->
-                    <label class="required fs-6 fw-semobold form-label mb-2"
+                    <label class="required fs-6 fw-semibold form-label mb-2"
                       >Card Number</label
                     >
                     <!--end::Label-->
@@ -793,7 +793,7 @@
                     <!--begin::Col-->
                     <div class="col-md-8 fv-row">
                       <!--begin::Label-->
-                      <label class="required fs-6 fw-semobold form-label mb-2"
+                      <label class="required fs-6 fw-semibold form-label mb-2"
                         >Expiration Date</label
                       >
                       <!--end::Label-->
@@ -865,7 +865,7 @@
                     <div class="col-md-4 fv-row">
                       <!--begin::Label-->
                       <label
-                        class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+                        class="d-flex align-items-center fs-6 fw-semibold form-label mb-2"
                       >
                         <span class="required">CVV</span>
                         <i
@@ -912,10 +912,10 @@
                   <div class="d-flex flex-stack">
                     <!--begin::Label-->
                     <div class="me-5">
-                      <label class="fs-6 fw-semobold form-label"
+                      <label class="fs-6 fw-semibold form-label"
                         >Save Card for further billing?</label
                       >
-                      <div class="fs-7 fw-semobold text-gray-400">
+                      <div class="fs-7 fw-semibold text-gray-400">
                         If you need more info, please check budget planning
                       </div>
                     </div>
@@ -931,7 +931,7 @@
                         value="1"
                         checked
                       />
-                      <span class="form-check-label fw-semobold text-gray-400">
+                      <span class="form-check-label fw-semibold text-gray-400">
                         Save Card
                       </span>
                     </label>
@@ -954,7 +954,7 @@
                     <!--end::Title-->
 
                     <!--begin::Notice-->
-                    <div class="text-gray-400 fw-semobold fs-6">
+                    <div class="text-gray-400 fw-semibold fs-6">
                       If you need more info, please
                       <router-link to="/sign-in" class="link-primary fw-bold"
                         >Sign In</router-link
@@ -988,7 +988,7 @@
                       <!--begin::Wrapper-->
                       <div class="d-flex flex-stack flex-grow-1">
                         <!--begin::Content-->
-                        <div class="fw-semobold">
+                        <div class="fw-semibold">
                           <h4 class="text-gray-800 fw-bold">
                             We need your attention!
                           </h4>
@@ -1225,7 +1225,7 @@ export default defineComponent({
         confirmButtonText: "Ok, got it!",
         heightAuto: false,
         customClass: {
-          confirmButton: "btn fw-semobold btn-light-primary",
+          confirmButton: "btn fw-semibold btn-light-primary",
         },
       }).then(() => {
         hideModal(createAccountModalRef.value);

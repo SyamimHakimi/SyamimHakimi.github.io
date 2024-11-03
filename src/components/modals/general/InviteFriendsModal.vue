@@ -32,7 +32,7 @@
             <!--end::Title-->
 
             <!--begin::Description-->
-            <div class="text-gray-400 fw-semobold fs-5">
+            <div class="text-gray-400 fw-semibold fs-5">
               If you need more info, please check out
               <a href="#" class="link-primary fw-bold">FAQ Page</a>.
             </div>
@@ -54,7 +54,7 @@
           <!--begin::Separator-->
           <div class="separator d-flex flex-center mb-8">
             <span
-              class="text-uppercase bg-body fs-7 fw-semobold text-gray-400 px-3"
+              class="text-uppercase bg-body fs-7 fw-semibold text-gray-400 px-3"
               >or</span
             >
           </div>
@@ -72,7 +72,7 @@
           <!--begin::Users-->
           <div class="mb-10">
             <!--begin::Heading-->
-            <div class="fs-6 fw-semobold mb-2">Your Invitations</div>
+            <div class="fs-6 fw-semibold mb-2">Your Invitations</div>
             <!--end::Heading-->
 
             <!--begin::List-->
@@ -90,7 +90,7 @@
                       <span
                         v-else
                         :class="`bg-light-${user.state} text-${user.state}`"
-                        class="symbol-label fw-semobold"
+                        class="symbol-label fw-semibold"
                       >
                         {{ user.name.charAt(0) }}
                       </span>
@@ -105,7 +105,7 @@
                         >{{ user.name }}</a
                       >
 
-                      <div class="fw-semobold text-gray-400">
+                      <div class="fw-semibold text-gray-400">
                         {{ user.email }}
                       </div>
                     </div>
@@ -138,7 +138,7 @@
           <!--begin::Notice-->
           <div class="d-flex flex-stack">
             <!--begin::Label-->
-            <div class="me-5 fw-semobold">
+            <div class="me-5 fw-semibold">
               <label class="fs-6">Adding Users by Team Members</label>
               <div class="fs-7 text-gray-400">
                 If you need more info, please check budget planning
@@ -157,7 +157,7 @@
                 checked
               />
 
-              <span class="form-check-label fw-semobold text-gray-400">
+              <span class="form-check-label fw-semibold text-gray-400">
                 Allowed
               </span>
             </label>

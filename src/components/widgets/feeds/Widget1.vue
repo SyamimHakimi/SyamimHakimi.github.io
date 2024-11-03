@@ -19,7 +19,7 @@
               >Grace Green</a
             >
 
-            <span class="text-gray-400 fw-semobold"
+            <span class="text-gray-400 fw-semibold"
               >PHP, SQLite, Artisan CLI</span
             >
           </div>

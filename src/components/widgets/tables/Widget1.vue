@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Tasks Overview</span>
 
-        <span class="text-muted fw-semobold fs-7">Pending 10 tasks</span>
+        <span class="text-muted fw-semibold fs-7">Pending 10 tasks</span>
       </h3>
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -64,7 +64,7 @@
                     class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                     >{{ item.info.title }}</a
                   >
-                  <span class="text-muted fw-semobold d-block fs-7">{{
+                  <span class="text-muted fw-semibold d-block fs-7">{{
                     item.info.description
                   }}</span>
                 </td>
@@ -72,7 +72,7 @@
                 <td>
                   <div class="d-flex flex-column w-100 me-2">
                     <div class="d-flex flex-stack mb-2">
-                      <span class="text-muted me-2 fs-7 fw-semobold">
+                      <span class="text-muted me-2 fs-7 fw-semibold">
                         {{ item.progress.value }}%
                       </span>
                     </div>

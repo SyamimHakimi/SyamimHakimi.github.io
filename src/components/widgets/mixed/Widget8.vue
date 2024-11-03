@@ -21,7 +21,7 @@
               {{ title }}
             </a>
 
-            <span class="text-muted fw-semobold">
+            <span class="text-muted fw-semibold">
               {{ date }}
             </span>
           </div>

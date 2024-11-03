@@ -19,7 +19,7 @@
       <!--begin::Input group-->
       <div class="mb-10">
         <!--begin::Label-->
-        <label class="form-label fw-semobold">Status:</label>
+        <label class="form-label fw-semibold">Status:</label>
         <!--end::Label-->
 
         <!--begin::Input-->
@@ -41,7 +41,7 @@
       <!--begin::Input group-->
       <div class="mb-10">
         <!--begin::Label-->
-        <label class="form-label fw-semobold">Member Type:</label>
+        <label class="form-label fw-semibold">Member Type:</label>
         <!--end::Label-->
 
         <!--begin::Options-->
@@ -81,7 +81,7 @@
       <!--begin::Input group-->
       <div class="mb-10">
         <!--begin::Label-->
-        <label class="form-label fw-semobold">Notifications:</label>
+        <label class="form-label fw-semibold">Notifications:</label>
         <!--end::Label-->
 
         <!--begin::Switch-->

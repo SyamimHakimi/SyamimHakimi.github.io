@@ -20,7 +20,7 @@
                 <img v-if="reply.avatar" :src="reply.avatar" alt="user" />
                 <div
                   v-else
-                  class="symbol-label bg-light-success fs-3 fw-semobold text-success text-uppercase"
+                  class="symbol-label bg-light-success fs-3 fw-semibold text-success text-uppercase"
                 >
                   {{ reply.author[0] }}
                 </div>
@@ -31,10 +31,10 @@
               <div
                 class="d-flex flex-column align-items-start justify-content-center"
               >
-                <span class="text-gray-800 fs-7 fw-semobold lh-1 mb-2">{{
+                <span class="text-gray-800 fs-7 fw-semibold lh-1 mb-2">{{
                   reply.author
                 }}</span>
-                <span class="text-muted fs-8 fw-semobold lh-1">{{
+                <span class="text-muted fs-8 fw-semibold lh-1">{{
                   reply.date
                 }}</span>
               </div>
@@ -93,33 +93,33 @@
     <div class="d-flex flex-center mb-0">
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2"
         >1</a
       >
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2 active"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2 active"
         >2</a
       >
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2"
         >3</a
       >
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2"
         >4</a
       >
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2"
         >5</a
       >
-      <span class="text-muted fw-semobold fs-6 mx-2">..</span>
+      <span class="text-muted fw-semibold fs-6 mx-2">..</span>
       <a
         href="#"
-        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semobold fs-6 mx-2"
+        class="btn btn-icon btn-light btn-active-light-primary h-30px w-30px fw-semibold fs-6 mx-2"
         >19</a
       >
     </div>

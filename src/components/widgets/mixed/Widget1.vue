@@ -32,7 +32,7 @@
 
         <!--begin::Balance-->
         <div class="d-flex text-center flex-column text-white pt-8">
-          <span class="fw-semobold fs-7">You Balance</span>
+          <span class="fw-semibold fs-7">You Balance</span>
           <span class="fw-bold fs-2x pt-1">$37,562.00</span>
         </div>
         <!--end::Balance-->
@@ -67,7 +67,7 @@
                   class="fs-5 text-gray-800 text-hover-primary fw-bold"
                   >{{ item.title }}</a
                 >
-                <div class="text-gray-400 fw-semobold fs-7">
+                <div class="text-gray-400 fw-semibold fs-7">
                   {{ item.description }}
                 </div>
               </div>

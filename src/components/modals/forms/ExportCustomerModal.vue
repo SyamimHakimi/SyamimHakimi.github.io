@@ -39,7 +39,7 @@
             <!--begin::Input group-->
             <div class="fv-row mb-10">
               <!--begin::Label-->
-              <label class="fs-5 fw-semobold form-label mb-5"
+              <label class="fs-5 fw-semibold form-label mb-5"
                 >Select Date Range:</label
               >
               <!--end::Label-->
@@ -56,7 +56,7 @@
             <!--begin::Input group-->
             <div class="fv-row mb-10">
               <!--begin::Label-->
-              <label class="fs-5 fw-semobold form-label mb-5"
+              <label class="fs-5 fw-semibold form-label mb-5"
                 >Select Export Format:</label
               >
               <!--end::Label-->
@@ -75,7 +75,7 @@
             <!--begin::Row-->
             <div class="row fv-row mb-15">
               <!--begin::Label-->
-              <label class="fs-5 fw-semobold form-label mb-5"
+              <label class="fs-5 fw-semibold form-label mb-5"
                 >Payment Type:</label
               >
               <!--end::Label-->

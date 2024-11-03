@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Recent Users</span>
 
-        <span class="text-muted fw-semobold fs-7">More than 500 new users</span>
+        <span class="text-muted fw-semibold fs-7">More than 500 new users</span>
       </h3>
 
       <!--begin::Toolbar-->

@@ -5,7 +5,7 @@
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Authors Earnings</span>
-        <span class="text-muted mt-1 fw-semobold fs-7"
+        <span class="text-muted mt-1 fw-semibold fs-7"
           >More than 400 new authors</span
         >
       </h3>
@@ -88,12 +88,12 @@
                           class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                           >{{ item1.user.name }}</a
                         >
-                        <span class="text-muted fw-semobold d-block">{{
+                        <span class="text-muted fw-semibold d-block">{{
                           item1.user.position
                         }}</span>
                       </td>
                       <td>
-                        <span class="text-muted fw-semobold d-block fs-7"
+                        <span class="text-muted fw-semibold d-block fs-7"
                           >Paid</span
                         >
                         <span class="text-dark fw-bold d-block fs-5">{{

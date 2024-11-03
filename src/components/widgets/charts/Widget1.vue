@@ -7,7 +7,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Recent Statistics</span>
 
-        <span class="text-muted fw-semobold fs-7"
+        <span class="text-muted fw-semibold fs-7"
           >More than 400 new members</span
         >
       </h3>

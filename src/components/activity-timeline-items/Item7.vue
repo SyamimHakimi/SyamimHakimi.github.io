@@ -18,7 +18,7 @@
       <!--begin::Timeline heading-->
       <div class="pe-3 mb-5">
         <!--begin::Title-->
-        <div class="fs-5 fw-semobold mb-2">You have received a new order:</div>
+        <div class="fs-5 fw-semibold mb-2">You have received a new order:</div>
         <!--end::Title-->
 
         <!--begin::Description-->
@@ -58,7 +58,7 @@
           <!--begin::Wrapper-->
           <div class="d-flex flex-stack flex-grow-1 flex-wrap flex-md-nowrap">
             <!--begin::Content-->
-            <div class="mb-3 mb-md-0 fw-semobold">
+            <div class="mb-3 mb-md-0 fw-semibold">
               <h4 class="text-gray-800 fw-bold">
                 Database Backup Process Completed!
               </h4>

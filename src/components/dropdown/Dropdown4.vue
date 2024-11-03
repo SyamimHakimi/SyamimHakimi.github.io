@@ -1,7 +1,7 @@
 <template>
   <!--begin::Menu 3-->
   <div
-    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semobold w-200px py-3"
+    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3"
     data-kt-menu="true"
   >
     <!--begin::Heading-->

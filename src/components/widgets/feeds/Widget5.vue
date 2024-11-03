@@ -19,7 +19,7 @@
               >Sam Logan</a
             >
 
-            <span class="text-gray-400 fw-semobold">Mango, Java, Python</span>
+            <span class="text-gray-400 fw-semibold">Mango, Java, Python</span>
           </div>
           <!--end::Info-->
         </div>

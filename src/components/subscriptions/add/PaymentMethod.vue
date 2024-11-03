@@ -73,7 +73,7 @@
           >
             <div class="d-flex flex-wrap py-5">
               <div class="flex-equal me-5">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">Name</td>
@@ -104,7 +104,7 @@
               </div>
 
               <div class="flex-equal">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">
@@ -198,7 +198,7 @@
           <div id="kt_create_new_payment_method_2" class="collapse fs-6 ps-10">
             <div class="d-flex flex-wrap py-5">
               <div class="flex-equal me-5">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">Name</td>
@@ -229,7 +229,7 @@
               </div>
 
               <div class="flex-equal">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">
@@ -327,7 +327,7 @@
           <div id="kt_create_new_payment_method_3" class="collapse fs-6 ps-10">
             <div class="d-flex flex-wrap py-5">
               <div class="flex-equal me-5">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">Name</td>
@@ -360,7 +360,7 @@
               </div>
 
               <div class="flex-equal">
-                <table class="table table-flush fw-semobold gy-1">
+                <table class="table table-flush fw-semibold gy-1">
                   <tbody>
                     <tr>
                       <td class="text-muted min-w-125px w-125px">

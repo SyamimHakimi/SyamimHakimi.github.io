@@ -4,7 +4,7 @@
     <!--begin::Title-->
     <h3 class="fw-bold my-2">
       My Documents
-      <span class="fs-6 text-gray-400 fw-semobold ms-1">100+ resources</span>
+      <span class="fs-6 text-gray-400 fw-semibold ms-1">100+ resources</span>
     </h3>
     <!--end::Title-->
 

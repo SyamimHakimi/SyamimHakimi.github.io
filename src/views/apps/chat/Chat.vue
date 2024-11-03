@@ -70,7 +70,7 @@
                       class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2"
                       >{{ item.name }}</a
                     >
-                    <div class="fw-semobold text-gray-400">
+                    <div class="fw-semibold text-gray-400">
                       {{ item.email }}
                     </div>
                   </div>
@@ -173,7 +173,7 @@
                   <span
                     class="badge badge-success badge-circle w-10px h-10px me-1"
                   ></span>
-                  <span class="fs-7 fw-semobold text-gray-400">Active</span>
+                  <span class="fs-7 fw-semibold text-gray-400">Active</span>
                 </div>
                 <!--end::Info-->
               </template>

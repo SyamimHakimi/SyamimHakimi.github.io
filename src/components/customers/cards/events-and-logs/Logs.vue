@@ -28,7 +28,7 @@
       <div class="table-responsive">
         <!--begin::Table-->
         <table
-          class="table align-middle table-row-dashed fw-semobold text-gray-600 fs-6 gy-5"
+          class="table align-middle table-row-dashed fw-semibold text-gray-600 fs-6 gy-5"
           id="kt_table_customers_logs"
         >
           <!--begin::Table body-->

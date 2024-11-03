@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold text-dark">Trends</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7">Latest tech trends</span>
+        <span class="text-muted mt-1 fw-semibold fs-7">Latest tech trends</span>
       </h3>
 
       <div class="card-toolbar">
@@ -51,7 +51,7 @@
                 >{{ item.title }}</a
               >
 
-              <span class="text-muted fw-semobold d-block fs-7">{{
+              <span class="text-muted fw-semibold d-block fs-7">{{
                 item.text
               }}</span>
             </div>

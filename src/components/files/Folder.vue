@@ -24,7 +24,7 @@
         <!--end::Name-->
 
         <!--begin::Description-->
-        <div class="fs-7 fw-semobold text-gray-400 mt-auto">7 files</div>
+        <div class="fs-7 fw-semibold text-gray-400 mt-auto">7 files</div>
         <!--end::Description-->
       </div>
       <!--end::Card body-->

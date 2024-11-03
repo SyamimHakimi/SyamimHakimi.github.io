@@ -13,7 +13,7 @@
       <div class="card-toolbar m-0">
         <!--begin::Tab nav-->
         <ul
-          class="nav nav-stretch fs-5 fw-semobold nav-line-tabs nav-line-tabs-2x border-transparent"
+          class="nav nav-stretch fs-5 fw-semibold nav-line-tabs nav-line-tabs-2x border-transparent"
           role="tablist"
         >
           <li class="nav-item" role="presentation">

@@ -12,7 +12,7 @@
         {{ title }}
       </div>
 
-      <div :class="`text-inverse-${color}`" class="fw-semobold fs-7">
+      <div :class="`text-inverse-${color}`" class="fw-semibold fs-7">
         {{ description }}
       </div>
     </div>

@@ -11,7 +11,7 @@
 
     <!--begin::Body-->
     <div class="card-body py-0">
-      <div class="fs-5 fw-semobold text-gray-500 mb-4">
+      <div class="fs-5 fw-semibold text-gray-500 mb-4">
         Last 30 day earnings calculated. Apart from arranging the order of
         topics.
       </div>
@@ -33,7 +33,7 @@
               >
               <KTIcon icon-name="arrow-up" icon-class="fs-1 text-success" />
             </span>
-            <span class="fs-6 fw-semobold text-muted d-block lh-1 pt-2"
+            <span class="fs-6 fw-semibold text-muted d-block lh-1 pt-2"
               >Net Earnings</span
             >
           </div>
@@ -49,7 +49,7 @@
               >%
               <KTIcon icon-name="arrow-down" icon-class="fs-1 text-danger" />
             </span>
-            <span class="fs-6 fw-semobold text-muted d-block lh-1 pt-2"
+            <span class="fs-6 fw-semibold text-muted d-block lh-1 pt-2"
               >Change</span
             >
           </div>
@@ -68,7 +68,7 @@
               >
               <span class="text-primary">--</span>
             </span>
-            <span class="fs-6 fw-semobold text-muted d-block lh-1 pt-2"
+            <span class="fs-6 fw-semibold text-muted d-block lh-1 pt-2"
               >Fees</span
             >
           </div>

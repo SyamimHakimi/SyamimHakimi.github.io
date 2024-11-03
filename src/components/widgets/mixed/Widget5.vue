@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Trends</span>
 
-        <span class="text-muted fw-semobold fs-7">Latest trends</span>
+        <span class="text-muted fw-semibold fs-7">Latest trends</span>
       </h3>
 
       <div class="card-toolbar">
@@ -62,7 +62,7 @@
               <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold"
                 >Top Authors</a
               >
-              <div class="fs-7 text-muted fw-semobold mt-1">
+              <div class="fs-7 text-muted fw-semibold mt-1">
                 Ricky Hunt, Sandra Trepp
               </div>
             </div>
@@ -71,7 +71,7 @@
           <!--end::Section-->
 
           <!--begin::Label-->
-          <div class="badge badge-light fw-semobold py-4 px-3">+82$</div>
+          <div class="badge badge-light fw-semibold py-4 px-3">+82$</div>
           <!--end::Label-->
         </div>
         <!--end::Item-->
@@ -97,14 +97,14 @@
               <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold"
                 >Top Sales</a
               >
-              <div class="fs-7 text-muted fw-semobold mt-1">PitStop Emails</div>
+              <div class="fs-7 text-muted fw-semibold mt-1">PitStop Emails</div>
             </div>
             <!--end::Title-->
           </div>
           <!--end::Section-->
 
           <!--begin::Label-->
-          <div class="badge badge-light fw-semobold py-4 px-3">+82$</div>
+          <div class="badge badge-light fw-semibold py-4 px-3">+82$</div>
           <!--end::Label-->
         </div>
         <!--end::Item-->
@@ -131,14 +131,14 @@
                 >Top Engagement</a
               >
 
-              <div class="fs-7 text-muted fw-semobold mt-1">KT.com</div>
+              <div class="fs-7 text-muted fw-semibold mt-1">KT.com</div>
             </div>
             <!--end::Title-->
           </div>
           <!--end::Section-->
 
           <!--begin::Label-->
-          <div class="badge badge-light fw-semobold py-4 px-3">+82$</div>
+          <div class="badge badge-light fw-semibold py-4 px-3">+82$</div>
           <!--end::Label-->
         </div>
         <!--end::Item-->

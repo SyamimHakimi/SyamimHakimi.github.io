@@ -5,7 +5,7 @@
     <div class="card-header align-items-center border-0 mt-4">
       <h3 class="card-title align-items-start flex-column">
         <span class="fw-bold mb-2 text-dark">Activities</span>
-        <span class="text-muted fw-semobold fs-7">890,344 Sales</span>
+        <span class="text-muted fw-semibold fs-7">890,344 Sales</span>
       </h3>
 
       <div class="card-toolbar">
@@ -123,7 +123,7 @@
           <!--end::Badge-->
 
           <!--begin::Desc-->
-          <div class="timeline-content fw-semobold text-gray-800 ps-3">
+          <div class="timeline-content fw-semibold text-gray-800 ps-3">
             New order placed <a href="#" class="text-primary">#XF-2356</a>.
           </div>
           <!--end::Desc-->
@@ -163,7 +163,7 @@
           <!--end::Badge-->
 
           <!--begin::Desc-->
-          <div class="timeline-content fw-semobold text-gray-800 ps-3">
+          <div class="timeline-content fw-semibold text-gray-800 ps-3">
             New order placed <a href="#" class="text-primary">#XF-2356</a>.
           </div>
           <!--end::Desc-->

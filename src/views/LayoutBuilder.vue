@@ -25,7 +25,7 @@
 
       <!--begin::Description-->
       <div class="ms-6">
-        <p class="list-unstyled text-gray-600 fw-semobold fs-6 p-0 m-0">
+        <p class="list-unstyled text-gray-600 fw-semibold fs-6 p-0 m-0">
           The layout builder is to assist your set and configure your preferred
           project layout specifications and preview it in real time and export
           the HTML template with its includable partials of this demo. The
@@ -43,7 +43,7 @@
     <!--begin::Header-->
     <div class="card-header card-header-stretch">
       <ul
-        class="nav nav-stretch nav-line-tabs fw-semobold border-0"
+        class="nav nav-stretch nav-line-tabs fw-semibold border-0"
         role="tablist"
         id="kt_layout_builder_tabs"
         ref="kt_layout_builder_tabs"
@@ -536,7 +536,7 @@
               @click="reset($event)"
               type="button"
               id="kt_layout_builder_reset"
-              class="btn btn-active-light btn-color-muted fw-semobold"
+              class="btn btn-active-light btn-color-muted fw-semibold"
             >
               Reset
             </button>

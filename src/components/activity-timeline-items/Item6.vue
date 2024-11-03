@@ -18,7 +18,7 @@
       <!--begin::Timeline heading-->
       <div class="pe-3 mb-5">
         <!--begin::Title-->
-        <div class="fs-5 fw-semobold mb-2">
+        <div class="fs-5 fw-semibold mb-2">
           New case <a href="#" class="text-primary fw-bold me-1">#67890</a>
           is assigned to you in Multi-platform Database Design project
         </div>

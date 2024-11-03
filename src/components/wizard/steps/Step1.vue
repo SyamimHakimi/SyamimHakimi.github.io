@@ -15,7 +15,7 @@
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-semobold fs-6">
+      <div class="text-gray-400 fw-semibold fs-6">
         If you need more info, please check out
         <a href="#" class="link-primary fw-bold">Help Page</a>.
       </div>
@@ -44,11 +44,11 @@
             <KTIcon icon-name="address-book" icon-class="fs-3x me-5" />
 
             <!--begin::Info-->
-            <span class="d-block fw-semobold text-start">
+            <span class="d-block fw-semibold text-start">
               <span class="text-dark fw-bold d-block fs-4 mb-2">
                 Personal Account
               </span>
-              <span class="text-gray-400 fw-semobold fs-6"
+              <span class="text-gray-400 fw-semibold fs-6"
                 >If you need more info, please check it out</span
               >
             </span>
@@ -75,11 +75,11 @@
             <KTIcon icon-name="briefcase" icon-class="fs-3x me-5" />
 
             <!--begin::Info-->
-            <span class="d-block fw-semobold text-start">
+            <span class="d-block fw-semibold text-start">
               <span class="text-dark fw-bold d-block fs-4 mb-2"
                 >Corporate Account</span
               >
-              <span class="text-gray-400 fw-semobold fs-6"
+              <span class="text-gray-400 fw-semibold fs-6"
                 >Create corporate account to mane users</span
               >
             </span>

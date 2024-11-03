@@ -32,7 +32,7 @@
           <!--begin::Options-->
           <div :class="[state !== '' && 'd-none']">
             <!--begin::Notice-->
-            <p class="text-gray-400 fs-5 fw-semobold mb-10">
+            <p class="text-gray-400 fs-5 fw-semibold mb-10">
               In addition to your username and password, you’ll have to enter a
               code (delivered via app or SMS) to log into your account.
             </p>
@@ -56,11 +56,11 @@
               >
                 <KTIcon icon-name="setting-2" icon-class="fs-4x me-4" />
 
-                <span class="d-block fw-semobold text-start">
+                <span class="d-block fw-semibold text-start">
                   <span class="text-dark fw-bold d-block fs-3"
                     >Authenticator Apps</span
                   >
-                  <span class="text-gray-400 fw-semobold fs-6">
+                  <span class="text-gray-400 fw-semibold fs-6">
                     Get codes from an app like Google Authenticator, Microsoft
                     Authenticator, Authy or 1Password.
                   </span>
@@ -83,9 +83,9 @@
               >
                 <KTIcon icon-name="message-text-2" icon-class="fs-4x me-4" />
 
-                <span class="d-block fw-semobold text-start">
+                <span class="d-block fw-semibold text-start">
                   <span class="text-dark fw-bold d-block fs-3">SMS</span>
-                  <span class="text-gray-400 fw-semobold fs-6"
+                  <span class="text-gray-400 fw-semibold fs-6"
                     >We will send a code via SMS if you need to use your backup
                     login method.</span
                   >
@@ -110,7 +110,7 @@
             <!--end::Heading-->
 
             <!--begin::Description-->
-            <div class="text-gray-500 fw-semobold fs-6 mb-10">
+            <div class="text-gray-500 fw-semibold fs-6 mb-10">
               Using an authenticator app like
               <a
                 href="https://support.google.com/accounts/answer/1066447?hl=en"
@@ -153,7 +153,7 @@
               <!--begin::Wrapper-->
               <div class="d-flex flex-stack flex-grow-1">
                 <!--begin::Content-->
-                <div class="fw-semobold">
+                <div class="fw-semibold">
                   <div class="fs-6 text-gray-600">
                     If you having trouble using the QR code, select manual entry
                     on your app, and enter your username and the code:
@@ -229,7 +229,7 @@
             <!--end::Heading-->
 
             <!--begin::Notice-->
-            <div class="text-gray-400 fw-semobold mb-10">
+            <div class="text-gray-400 fw-semibold mb-10">
               Enter your mobile phone number with country code and we will send
               you a verification code upon request.
             </div>

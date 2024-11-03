@@ -11,7 +11,7 @@
               >Generate Reports</a
             >
 
-            <div class="text-muted fs-7 fw-semobold">
+            <div class="text-muted fs-7 fw-semibold">
               Finance and accounting reports
             </div>
           </div>

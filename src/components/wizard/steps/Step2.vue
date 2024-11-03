@@ -8,7 +8,7 @@
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-semobold fs-6">
+      <div class="text-gray-400 fw-semibold fs-6">
         If you need more info, please check out
         <a href="#" class="link-primary fw-bold">Help Page</a>.
       </div>
@@ -174,7 +174,7 @@
               <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Company Account</span
               >
-              <span class="fs-6 fw-semobold text-gray-400"
+              <span class="fs-6 fw-semibold text-gray-400"
                 >Use images to enhance your post flow</span
               >
             </span>
@@ -212,7 +212,7 @@
               <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Developer Account</span
               >
-              <span class="fs-6 fw-semobold text-gray-400"
+              <span class="fs-6 fw-semibold text-gray-400"
                 >Use images to your post time</span
               >
             </span>
@@ -254,7 +254,7 @@
               <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Testing Account</span
               >
-              <span class="fs-6 fw-semobold text-gray-400"
+              <span class="fs-6 fw-semibold text-gray-400"
                 >Use images to enhance time travel rivers</span
               >
             </span>

@@ -188,7 +188,7 @@ const formSubmit = () => {
     confirmButtonText: "Ok, got it!",
     heightAuto: false,
     customClass: {
-      confirmButton: "btn fw-semobold btn-light-primary",
+      confirmButton: "btn fw-semibold btn-light-primary",
     },
   }).then(() => {
     stepperObj.value?.goFirst();

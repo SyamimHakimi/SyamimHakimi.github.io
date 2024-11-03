@@ -42,7 +42,7 @@
               <!--end::Title-->
 
               <!--begin::Description-->
-              <div class="text-gray-400 fw-semobold fs-5">
+              <div class="text-gray-400 fw-semibold fs-5">
                 If you need more info, please check
                 <a href="#" class="fw-bold link-primary">Project Guidelines</a>.
               </div>
@@ -53,7 +53,7 @@
             <!--begin::Input group-->
             <div class="d-flex flex-column mb-8 fv-row">
               <!--begin::Label-->
-              <label class="d-flex align-items-center fs-6 fw-semobold mb-2">
+              <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
                 <span class="required">Target Title</span>
                 <i
                   class="fas fa-exclamation-circle ms-2 fs-7"
@@ -77,7 +77,7 @@
             <div class="row g-9 mb-8">
               <!--begin::Col-->
               <div class="col-md-6 fv-row">
-                <label class="required fs-6 fw-semobold mb-2">Assign</label>
+                <label class="required fs-6 fw-semibold mb-2">Assign</label>
 
                 <el-form-item prop="assign">
                   <el-select
@@ -105,7 +105,7 @@
 
               <!--begin::Col-->
               <div class="col-md-6 fv-row">
-                <label class="required fs-6 fw-semobold mb-2">Due Date</label>
+                <label class="required fs-6 fw-semibold mb-2">Due Date</label>
 
                 <!--begin::Input-->
                 <div class="position-relative align-items-center">
@@ -130,7 +130,7 @@
 
             <!--begin::Input group-->
             <div class="d-flex flex-column mb-8">
-              <label class="fs-6 fw-semobold mb-2">Target Details</label>
+              <label class="fs-6 fw-semibold mb-2">Target Details</label>
 
               <el-form-item prop="targetDetails">
                 <el-input
@@ -147,7 +147,7 @@
             <!--begin::Input group-->
             <div class="d-flex flex-column mb-8 fv-row">
               <!--begin::Label-->
-              <label class="d-flex align-items-center fs-6 fw-semobold mb-2">
+              <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
                 <span class="required">Tags</span>
                 <i
                   class="fas fa-exclamation-circle ms-2 fs-7"
@@ -180,11 +180,11 @@
             <div class="d-flex flex-stack mb-8">
               <!--begin::Label-->
               <div class="me-5">
-                <label class="fs-6 fw-semobold"
+                <label class="fs-6 fw-semibold"
                   >Adding Users by Team Members</label
                 >
 
-                <div class="fs-7 fw-semobold text-gray-400">
+                <div class="fs-7 fw-semibold text-gray-400">
                   If you need more info, please check budget planning
                 </div>
               </div>
@@ -200,7 +200,7 @@
                   value="1"
                   checked
                 />
-                <span class="form-check-label fw-semobold text-gray-400">
+                <span class="form-check-label fw-semibold text-gray-400">
                   Allowed
                 </span>
               </label>
@@ -213,7 +213,7 @@
               <!--begin::Wrapper-->
               <div class="d-flex flex-stack">
                 <!--begin::Label-->
-                <div class="fw-semobold me-5">
+                <div class="fw-semibold me-5">
                   <label class="fs-6">Notifications</label>
 
                   <div class="fs-7 text-gray-400">
@@ -236,7 +236,7 @@
                       checked
                     />
 
-                    <span class="form-check-label fw-semobold"> Email </span>
+                    <span class="form-check-label fw-semibold"> Email </span>
                   </label>
                   <!--end::Checkbox-->
 
@@ -249,7 +249,7 @@
                       value="phone"
                     />
 
-                    <span class="form-check-label fw-semobold"> Phone </span>
+                    <span class="form-check-label fw-semibold"> Phone </span>
                   </label>
                   <!--end::Checkbox-->
                 </div>

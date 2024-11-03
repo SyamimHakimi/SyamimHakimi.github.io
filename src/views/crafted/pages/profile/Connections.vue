@@ -4,7 +4,7 @@
     <!--begin::Title-->
     <h3 class="fw-bold my-2">
       My Connections
-      <span class="fs-6 text-gray-400 fw-semobold ms-1">(29)</span>
+      <span class="fs-6 text-gray-400 fw-semibold ms-1">(29)</span>
     </h3>
     <!--end::Title-->
 

@@ -6,7 +6,7 @@
       <div class="d-flex flex-column mb-7 fv-row">
         <!--begin::Label-->
         <label
-          class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+          class="d-flex align-items-center fs-6 fw-semibold form-label mb-2"
         >
           <span class="required">Name On Card</span>
           <i
@@ -33,7 +33,7 @@
       <!--begin::Input group-->
       <div class="d-flex flex-column mb-7 fv-row">
         <!--begin::Label-->
-        <label class="required fs-6 fw-semobold form-label mb-2"
+        <label class="required fs-6 fw-semibold form-label mb-2"
           >Card Number</label
         >
         <!--end::Label-->
@@ -82,7 +82,7 @@
         <!--begin::Col-->
         <div class="col-md-8 fv-row">
           <!--begin::Label-->
-          <label class="required fs-6 fw-semobold form-label mb-2"
+          <label class="required fs-6 fw-semibold form-label mb-2"
             >Expiration Date</label
           >
           <!--end::Label-->
@@ -141,7 +141,7 @@
         <div class="col-md-4 fv-row">
           <!--begin::Label-->
           <label
-            class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+            class="d-flex align-items-center fs-6 fw-semibold form-label mb-2"
           >
             <span class="required">CVV</span>
             <i
@@ -185,10 +185,10 @@
       <div class="d-flex flex-stack">
         <!--begin::Label-->
         <div class="me-5">
-          <label class="fs-6 fw-semobold form-label"
+          <label class="fs-6 fw-semibold form-label"
             >Save Card for further billing?</label
           >
-          <div class="fs-7 fw-semobold text-gray-400">
+          <div class="fs-7 fw-semibold text-gray-400">
             If you need more info, please check budget planning
           </div>
         </div>
@@ -204,7 +204,7 @@
             name="saveCard"
             value="1"
           />
-          <span class="form-check-label fw-semobold text-gray-400">
+          <span class="form-check-label fw-semibold text-gray-400">
             Save Card
           </span>
         </label>

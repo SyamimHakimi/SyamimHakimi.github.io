@@ -34,7 +34,7 @@
               <!--end::Title-->
 
               <!--begin::Description-->
-              <div class="text-gray-400 fw-semobold fs-5">
+              <div class="text-gray-400 fw-semibold fs-5">
                 If you need more info, please check
                 <a href="#" class="link-primary fw-bold">Author Commision</a>.
               </div>
@@ -45,7 +45,7 @@
             <!--begin::Input group-->
             <div class="mb-10">
               <!--begin::Title-->
-              <h4 class="fs-5 fw-semobold text-gray-800">
+              <h4 class="fs-5 fw-semibold text-gray-800">
                 Share my referral link with friends
               </h4>
               <!--end::Title-->
@@ -109,11 +109,11 @@
             <div class="d-flex align-items-center mt-10">
               <!--begin::Label-->
               <div class="flex-grow-1">
-                <span class="fs-6 fw-semobold text-gray-800 d-block"
+                <span class="fs-6 fw-semibold text-gray-800 d-block"
                   >Adding Users by Team Members</span
                 >
 
-                <span class="fs-7 fw-semobold text-gray-400"
+                <span class="fs-7 fw-semibold text-gray-400"
                   >If you need more info, please check budget planning</span
                 >
               </div>

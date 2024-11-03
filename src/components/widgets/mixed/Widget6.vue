@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Sales Statistics</span>
 
-        <span class="text-muted fw-semobold fs-7">Recent sales statistics</span>
+        <span class="text-muted fw-semibold fs-7">Recent sales statistics</span>
       </h3>
 
       <div class="card-toolbar">
@@ -46,7 +46,7 @@
               <!--begin::Title-->
               <div>
                 <div class="fs-4 text-dark fw-bold">$2,034</div>
-                <div class="fs-7 text-muted fw-semobold">Author Sales</div>
+                <div class="fs-7 text-muted fw-semibold">Author Sales</div>
               </div>
               <!--end::Title-->
             </div>
@@ -70,7 +70,7 @@
               <!--begin::Title-->
               <div>
                 <div class="fs-4 text-dark fw-bold">$706</div>
-                <div class="fs-7 text-muted fw-semobold">Commision</div>
+                <div class="fs-7 text-muted fw-semibold">Commision</div>
               </div>
               <!--end::Title-->
             </div>
@@ -95,7 +95,7 @@
               <!--begin::Title-->
               <div>
                 <div class="fs-4 text-dark fw-bold">$49</div>
-                <div class="fs-7 text-muted fw-semobold">Average Bid</div>
+                <div class="fs-7 text-muted fw-semibold">Average Bid</div>
               </div>
               <!--end::Title-->
             </div>
@@ -116,7 +116,7 @@
               <!--begin::Title-->
               <div>
                 <div class="fs-4 text-dark fw-bold">$5.8M</div>
-                <div class="fs-7 text-muted fw-semobold">All Time Sales</div>
+                <div class="fs-7 text-muted fw-semibold">All Time Sales</div>
               </div>
               <!--end::Title-->
             </div>

@@ -64,7 +64,7 @@
             <!--end::Name-->
 
             <!--begin::Major-->
-            <span class="text-muted fw-semobold d-block fs-7 lh-1"
+            <span class="text-muted fw-semibold d-block fs-7 lh-1"
               >Software Developer</span
             >
             <!--end::Major-->

@@ -23,7 +23,7 @@
 
       <!--begin::Text-->
       <div
-        class="p-5 rounded bg-light-info text-dark fw-semobold mw-lg-400px text-start"
+        class="p-5 rounded bg-light-info text-dark fw-semibold mw-lg-400px text-start"
         data-kt-element="message-text"
       >
         {{ text }}

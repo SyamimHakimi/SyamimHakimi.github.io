@@ -50,7 +50,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="required fs-6 fw-semobold mb-2">Name</label>
+                <label class="required fs-6 fw-semibold mb-2">Name</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -68,7 +68,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-7">
                 <!--begin::Label-->
-                <label class="fs-6 fw-semobold mb-2">
+                <label class="fs-6 fw-semibold mb-2">
                   <span class="required">Email</span>
 
                   <i
@@ -90,7 +90,7 @@
               <!--begin::Input group-->
               <div class="fv-row mb-15">
                 <!--begin::Label-->
-                <label class="fs-6 fw-semobold mb-2">Description</label>
+                <label class="fs-6 fw-semibold mb-2">Description</label>
                 <!--end::Label-->
 
                 <!--begin::Input-->
@@ -125,7 +125,7 @@
                 <!--begin::Input group-->
                 <div class="d-flex flex-column mb-7 fv-row">
                   <!--begin::Label-->
-                  <label class="required fs-6 fw-semobold mb-2"
+                  <label class="required fs-6 fw-semibold mb-2"
                     >Address Line 1</label
                   >
                   <!--end::Label-->
@@ -141,7 +141,7 @@
                 <!--begin::Input group-->
                 <div class="d-flex flex-column mb-7 fv-row">
                   <!--begin::Label-->
-                  <label class="fs-6 fw-semobold mb-2">Address Line 2</label>
+                  <label class="fs-6 fw-semibold mb-2">Address Line 2</label>
                   <!--end::Label-->
 
                   <!--begin::Input-->
@@ -153,7 +153,7 @@
                 <!--begin::Input group-->
                 <div class="d-flex flex-column mb-7 fv-row">
                   <!--begin::Label-->
-                  <label class="required fs-6 fw-semobold mb-2">Town</label>
+                  <label class="required fs-6 fw-semibold mb-2">Town</label>
                   <!--end::Label-->
 
                   <!--begin::Input-->
@@ -169,7 +169,7 @@
                   <!--begin::Col-->
                   <div class="col-md-6 fv-row">
                     <!--begin::Label-->
-                    <label class="required fs-6 fw-semobold mb-2"
+                    <label class="required fs-6 fw-semibold mb-2"
                       >State / Province</label
                     >
                     <!--end::Label-->
@@ -185,7 +185,7 @@
                   <!--begin::Col-->
                   <div class="col-md-6 fv-row">
                     <!--begin::Label-->
-                    <label class="required fs-6 fw-semobold mb-2"
+                    <label class="required fs-6 fw-semibold mb-2"
                       >Post Code</label
                     >
                     <!--end::Label-->
@@ -203,7 +203,7 @@
                 <!--begin::Input group-->
                 <div class="d-flex flex-column mb-7 fv-row">
                   <!--begin::Label-->
-                  <label class="fs-6 fw-semobold mb-2">
+                  <label class="fs-6 fw-semibold mb-2">
                     <span class="required">Country</span>
 
                     <i
@@ -236,13 +236,13 @@
                     <!--begin::Label-->
                     <div class="me-5">
                       <!--begin::Label-->
-                      <label class="fs-6 fw-semobold"
+                      <label class="fs-6 fw-semibold"
                         >Use as a billing adderess?</label
                       >
                       <!--end::Label-->
 
                       <!--begin::Input-->
-                      <div class="fs-7 fw-semobold text-muted">
+                      <div class="fs-7 fw-semibold text-muted">
                         If you need more info, please check budget planning
                       </div>
                       <!--end::Input-->
@@ -266,7 +266,7 @@
 
                       <!--begin::Label-->
                       <span
-                        class="form-check-label fw-semobold text-muted"
+                        class="form-check-label fw-semibold text-muted"
                         for="kt_modal_add_customer_billing"
                       >
                         Yes

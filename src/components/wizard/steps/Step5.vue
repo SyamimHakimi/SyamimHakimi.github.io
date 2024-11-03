@@ -8,7 +8,7 @@
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-semobold fs-6">
+      <div class="text-gray-400 fw-semibold fs-6">
         If you need more info, please
         <router-link to="/sign-in" class="link-primary fw-bold"
           >Sign In</router-link
@@ -39,7 +39,7 @@
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack flex-grow-1">
           <!--begin::Content-->
-          <div class="fw-semobold">
+          <div class="fw-semibold">
             <h4 class="text-gray-800 fw-bold">We need your attention!</h4>
             <div class="fs-6 text-gray-600">
               To start using great tools, please, please

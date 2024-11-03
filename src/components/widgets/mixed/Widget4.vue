@@ -5,7 +5,7 @@
     <div class="card-header border-0 py-5">
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Action Needed</span>
-        <span class="text-muted fw-semobold fs-7"
+        <span class="text-muted fw-semibold fs-7"
           >Complete your profile setup</span
         >
       </h3>

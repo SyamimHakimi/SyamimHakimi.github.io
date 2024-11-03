@@ -8,7 +8,7 @@
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-semobold fs-6">
+      <div class="text-gray-400 fw-semibold fs-6">
         If you need more info, please check out
         <a href="#" class="link-primary fw-bold">Help Page</a>.
       </div>
@@ -124,7 +124,7 @@
     <!--begin::Input group-->
     <div class="fv-row mb-0">
       <!--begin::Label-->
-      <label class="fs-6 fw-semobold form-label required">Contact Email</label>
+      <label class="fs-6 fw-semibold form-label required">Contact Email</label>
       <!--end::Label-->
 
       <!--begin::Input-->

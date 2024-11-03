@@ -10,7 +10,7 @@
         <!--end::Title-->
 
         <!--begin::Description-->
-        <p class="text-gray-400 fs-4 fw-semobold mb-10">
+        <p class="text-gray-400 fs-4 fw-semibold mb-10">
           There are no subscriptions added yet.<br />
           Kickstart your business by adding a your first subscription
         </p>

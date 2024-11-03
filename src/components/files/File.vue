@@ -23,7 +23,7 @@
         <!--end::Name-->
 
         <!--begin::Description-->
-        <div class="fs-7 fw-semobold text-gray-400 mt-auto">
+        <div class="fs-7 fw-semibold text-gray-400 mt-auto">
           {{ createdAt }}
         </div>
         <!--end::Description-->

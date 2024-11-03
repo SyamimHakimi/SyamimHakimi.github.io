@@ -32,7 +32,7 @@
           <!--begin::Row-->
           <div class="flex-equal me-5">
             <!--begin::Details-->
-            <table class="table fs-6 fw-semobold gs-0 gy-2 gx-2 m-0">
+            <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2 m-0">
               <!--begin::Row-->
               <tr>
                 <td class="text-gray-400 min-w-175px w-175px">Bill to:</td>
@@ -77,7 +77,7 @@
           <!--begin::Row-->
           <div class="flex-equal">
             <!--begin::Details-->
-            <table class="table fs-6 fw-semobold gs-0 gy-2 gx-2 m-0">
+            <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2 m-0">
               <!--begin::Row-->
               <tr>
                 <td class="text-gray-400 min-w-175px w-175px">
@@ -147,7 +147,7 @@
             <!--end::Table head-->
 
             <!--begin::Table body-->
-            <tbody class="fw-semobold text-gray-800">
+            <tbody class="fw-semibold text-gray-800">
               <tr>
                 <td>
                   <label class="w-150px">Basic Bundle</label>

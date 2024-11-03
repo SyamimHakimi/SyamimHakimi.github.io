@@ -16,7 +16,7 @@
         <div v-else class="symbol symbol-65px symbol-circle mb-5">
           <span
             :class="`text-${color} bg-light-${color}`"
-            class="symbol-label fs-2x fw-semobold"
+            class="symbol-label fs-2x fw-semibold"
             >{{ initials }}</span
           >
           <div
@@ -35,7 +35,7 @@
         <!--end::Name-->
 
         <!--begin::Position-->
-        <div class="fw-semobold text-gray-400 mb-6">{{ position }}</div>
+        <div class="fw-semibold text-gray-400 mb-6">{{ position }}</div>
         <!--end::Position-->
 
         <!--begin::Info-->
@@ -45,7 +45,7 @@
             class="border border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3"
           >
             <div class="fs-6 fw-bold text-gray-700">{{ avgEarnings }}</div>
-            <div class="fw-semobold text-gray-400">Avg. Earnings</div>
+            <div class="fw-semibold text-gray-400">Avg. Earnings</div>
           </div>
           <!--end::Stats-->
 
@@ -54,7 +54,7 @@
             class="border border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3"
           >
             <div class="fs-6 fw-bold text-gray-700">{{ totalSales }}</div>
-            <div class="fw-semobold text-gray-400">Total Sales</div>
+            <div class="fw-semibold text-gray-400">Total Sales</div>
           </div>
           <!--end::Stats-->
         </div>

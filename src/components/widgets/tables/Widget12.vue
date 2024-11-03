@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Member Statistics</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7"
+        <span class="text-muted mt-1 fw-semibold fs-7"
           >Over 500 new members</span
         >
       </h3>
@@ -69,7 +69,7 @@
                         >{{ item.agent.name }}</a
                       >
                       <span
-                        class="text-muted fw-semobold text-muted d-block fs-7"
+                        class="text-muted fw-semibold text-muted d-block fs-7"
                         >{{ item.agent.skills }}</span
                       >
                     </div>
@@ -82,7 +82,7 @@
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.earnings.value }}</a
                   >
-                  <span class="text-muted fw-semobold text-muted d-block fs-7"
+                  <span class="text-muted fw-semibold text-muted d-block fs-7"
                     >{{ item.earnings.remarks }}></span
                   >
                 </td>
@@ -94,7 +94,7 @@
                     >{{ item.comission.value }}</a
                   >
                   <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    class="text-muted fw-semibold text-muted d-block fs-7"
                     >{{ item.comission.remarks }}</span
                   >
                 </td>
@@ -106,7 +106,7 @@
                     >{{ item.company.name }}</a
                   >
                   <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    class="text-muted fw-semibold text-muted d-block fs-7"
                     >{{ item.company.fields }}</span
                   >
                 </td>
@@ -124,7 +124,7 @@
                   </div>
 
                   <span
-                    class="text-muted fw-semobold text-muted d-block fs-7 mt-1"
+                    class="text-muted fw-semibold text-muted d-block fs-7 mt-1"
                     >{{ item.rating.remarks }}</span
                   >
                 </td>

@@ -32,7 +32,7 @@
         <!--end::Name-->
 
         <!--begin::Position-->
-        <div class="fw-semobold text-gray-400 mb-6">{{ position }}</div>
+        <div class="fw-semibold text-gray-400 mb-6">{{ position }}</div>
         <!--end::Position-->
 
         <!--begin::Info-->
@@ -42,7 +42,7 @@
             class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3"
           >
             <div class="fs-6 fw-bold text-gray-700">{{ avgEarnings }}</div>
-            <div class="fw-semobold text-gray-400">Avg. Earnings</div>
+            <div class="fw-semibold text-gray-400">Avg. Earnings</div>
           </div>
           <!--end::Stats-->
 
@@ -51,7 +51,7 @@
             class="border border-gray-300 border-dashed rounded min-w-125px py-3 mx-3 px-4 mb-3"
           >
             <div class="fs-6 fw-bold text-gray-700">{{ totalSales }}</div>
-            <div class="fw-semobold text-gray-400">Total Sales</div>
+            <div class="fw-semibold text-gray-400">Total Sales</div>
           </div>
           <!--end::Stats-->
         </div>

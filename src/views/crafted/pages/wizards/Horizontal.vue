@@ -293,7 +293,7 @@ export default defineComponent({
         confirmButtonText: "Ok, got it!",
         heightAuto: false,
         customClass: {
-          confirmButton: "btn fw-semobold btn-light-primary",
+          confirmButton: "btn fw-semibold btn-light-primary",
         },
       }).then(() => {
         window.location.reload();

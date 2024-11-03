@@ -46,7 +46,7 @@
               item.title
             }}</a>
 
-            <span class="text-muted fw-semobold d-block">{{ item.text }}</span>
+            <span class="text-muted fw-semibold d-block">{{ item.text }}</span>
           </div>
           <!--end::Title-->
 

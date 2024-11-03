@@ -13,7 +13,7 @@
         <div class="d-flex flex-column text-end">
           <span class="text-dark fw-bold fs-2">{{ change }}</span>
 
-          <span class="text-muted fw-semobold mt-1">{{ description }}</span>
+          <span class="text-muted fw-semibold mt-1">{{ description }}</span>
         </div>
       </div>
 

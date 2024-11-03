@@ -18,7 +18,7 @@
             <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold"
               >Carles Nilson</a
             >
-            <span class="text-gray-400 fw-semobold">Last week at 10:00 PM</span>
+            <span class="text-gray-400 fw-semibold">Last week at 10:00 PM</span>
           </div>
           <!--end::Info-->
         </div>

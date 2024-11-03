@@ -5,7 +5,7 @@
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold text-dark">Tasks Overview</span>
-        <span class="text-muted mt-1 fw-semobold fs-7">Pending 10 tasks</span>
+        <span class="text-muted mt-1 fw-semibold fs-7">Pending 10 tasks</span>
       </h3>
 
       <div class="card-toolbar">
@@ -50,7 +50,7 @@
               item.title
             }}</a>
 
-            <span class="text-muted fw-semobold">{{ item.description }}</span>
+            <span class="text-muted fw-semibold">{{ item.description }}</span>
           </div>
           <!--end::Text-->
         </div>

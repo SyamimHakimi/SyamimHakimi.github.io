@@ -33,7 +33,7 @@
             <!--begin::Title-->
             <div>
               <div class="fs-5 text-dark fw-bold lh-1">$50K</div>
-              <div class="fs-7 text-gray-600 fw-semobold">Sales</div>
+              <div class="fs-7 text-gray-600 fw-semibold">Sales</div>
             </div>
             <!--end::Title-->
           </div>
@@ -54,7 +54,7 @@
             <!--begin::Title-->
             <div>
               <div class="fs-5 text-dark fw-bold lh-1">$4,5K</div>
-              <div class="fs-7 text-gray-600 fw-semobold">Revenue</div>
+              <div class="fs-7 text-gray-600 fw-semibold">Revenue</div>
             </div>
             <!--end::Title-->
           </div>
@@ -75,7 +75,7 @@
             <!--begin::Title-->
             <div>
               <div class="fs-5 text-dark fw-bold lh-1">40</div>
-              <div class="fs-7 text-gray-600 fw-semobold">Tasks</div>
+              <div class="fs-7 text-gray-600 fw-semibold">Tasks</div>
             </div>
             <!--end::Title-->
           </div>
@@ -96,7 +96,7 @@
             <!--begin::Title-->
             <div>
               <div class="fs-5 text-dark fw-bold lh-1">$5.8M</div>
-              <div class="fs-7 text-gray-600 fw-semobold">Sales</div>
+              <div class="fs-7 text-gray-600 fw-semibold">Sales</div>
             </div>
             <!--end::Title-->
           </div>

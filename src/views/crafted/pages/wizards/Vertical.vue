@@ -27,7 +27,7 @@
               <div class="stepper-label">
                 <h3 class="stepper-title">Account Type</h3>
 
-                <div class="stepper-desc fw-semobold">
+                <div class="stepper-desc fw-semibold">
                   Setup Your Account Details
                 </div>
               </div>
@@ -53,7 +53,7 @@
               <!--begin::Label-->
               <div class="stepper-label">
                 <h3 class="stepper-title">Account Settings</h3>
-                <div class="stepper-desc fw-semobold">
+                <div class="stepper-desc fw-semibold">
                   Setup Your Account Settings
                 </div>
               </div>
@@ -78,7 +78,7 @@
               <!--begin::Label-->
               <div class="stepper-label">
                 <h3 class="stepper-title">Business Info</h3>
-                <div class="stepper-desc fw-semobold">
+                <div class="stepper-desc fw-semibold">
                   Your Business Related Info
                 </div>
               </div>
@@ -104,7 +104,7 @@
               <!--begin::Label-->
               <div class="stepper-label">
                 <h3 class="stepper-title">Billing Details</h3>
-                <div class="stepper-desc fw-semobold">
+                <div class="stepper-desc fw-semibold">
                   Set Your Payment Methods
                 </div>
               </div>
@@ -130,7 +130,7 @@
               <!--begin::Label-->
               <div class="stepper-label">
                 <h3 class="stepper-title">Completed</h3>
-                <div class="stepper-desc fw-semobold">Woah, we are here</div>
+                <div class="stepper-desc fw-semibold">Woah, we are here</div>
               </div>
               <!--end::Label-->
             </div>
@@ -396,7 +396,7 @@ export default defineComponent({
         confirmButtonText: "Ok, got it!",
         heightAuto: false,
         customClass: {
-          confirmButton: "btn fw-semobold btn-light-primary",
+          confirmButton: "btn fw-semibold btn-light-primary",
         },
       }).then(() => {
         window.location.reload();

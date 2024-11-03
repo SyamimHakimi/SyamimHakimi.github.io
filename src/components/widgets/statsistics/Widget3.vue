@@ -9,7 +9,7 @@
             title
           }}</a>
 
-          <span class="text-muted fw-semobold mt-1">{{ description }}</span>
+          <span class="text-muted fw-semibold mt-1">{{ description }}</span>
         </div>
 
         <span class="symbol symbol-50px">

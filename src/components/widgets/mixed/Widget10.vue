@@ -10,7 +10,7 @@
         <div class="me-2">
           <span class="fw-bold text-gray-800 d-block fs-3">Sales</span>
 
-          <span class="text-gray-400 fw-semobold">Oct 8 - Oct 26 21</span>
+          <span class="text-gray-400 fw-semibold">Oct 8 - Oct 26 21</span>
         </div>
 
         <div class="fw-bold fs-3" :class="`text-${chartColor}`">$15,300</div>

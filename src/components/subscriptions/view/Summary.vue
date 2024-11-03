@@ -60,7 +60,7 @@
             <!--end::Name-->
 
             <!--begin::Email-->
-            <a href="#" class="fw-semobold text-gray-600 text-hover-primary"
+            <a href="#" class="fw-semibold text-gray-600 text-hover-primary"
               >sean@dellito.com</a
             >
             <!--end::Email-->
@@ -88,7 +88,7 @@
           <!--end::Plan-->
 
           <!--begin::Price-->
-          <span class="fw-semobold text-gray-600">$149.99 / Year</span>
+          <span class="fw-semibold text-gray-600">$149.99 / Year</span>
           <!--end::Price-->
         </div>
         <!--end::Details-->
@@ -108,7 +108,7 @@
         <!--begin::Details-->
         <div class="mb-0">
           <!--begin::Card info-->
-          <div class="fw-semobold text-gray-600 d-flex align-items-center">
+          <div class="fw-semibold text-gray-600 d-flex align-items-center">
             Mastercard
 
             <img
@@ -120,7 +120,7 @@
           <!--end::Card info-->
 
           <!--begin::Card expiry-->
-          <div class="fw-semobold text-gray-600">Expires Dec 2024</div>
+          <div class="fw-semibold text-gray-600">Expires Dec 2024</div>
           <!--end::Card expiry-->
         </div>
         <!--end::Details-->
@@ -138,7 +138,7 @@
         <!--end::Title-->
 
         <!--begin::Details-->
-        <table class="table fs-6 fw-semobold gs-0 gy-2 gx-2">
+        <table class="table fs-6 fw-semibold gs-0 gy-2 gx-2">
           <!--begin::Row-->
           <tr class="">
             <td class="text-gray-400">Subscription ID:</td>

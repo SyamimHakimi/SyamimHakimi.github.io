@@ -39,7 +39,7 @@
               <!--end::Name-->
 
               <!--begin::Info-->
-              <div class="d-flex flex-wrap fw-semobold fs-6 mb-4 pe-2">
+              <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
                 <a
                   href="#"
                   class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
@@ -131,7 +131,7 @@
                   <!--end::Number-->
 
                   <!--begin::Label-->
-                  <div class="fw-semobold fs-6 text-gray-400">Earnings</div>
+                  <div class="fw-semibold fs-6 text-gray-400">Earnings</div>
                   <!--end::Label-->
                 </div>
                 <!--end::Stat-->
@@ -157,7 +157,7 @@
                   <!--end::Number-->
 
                   <!--begin::Label-->
-                  <div class="fw-semobold fs-6 text-gray-400">Projects</div>
+                  <div class="fw-semibold fs-6 text-gray-400">Projects</div>
                   <!--end::Label-->
                 </div>
                 <!--end::Stat-->
@@ -184,7 +184,7 @@
                   <!--end::Number-->
 
                   <!--begin::Label-->
-                  <div class="fw-semobold fs-6 text-gray-400">Success Rate</div>
+                  <div class="fw-semibold fs-6 text-gray-400">Success Rate</div>
                   <!--end::Label-->
                 </div>
                 <!--end::Stat-->
@@ -198,7 +198,7 @@
               class="d-flex align-items-center w-200px w-sm-300px flex-column mt-3"
             >
               <div class="d-flex justify-content-between w-100 mt-auto mb-2">
-                <span class="fw-semobold fs-6 text-gray-400"
+                <span class="fw-semibold fs-6 text-gray-400"
                   >Profile Compleation</span
                 >
                 <span class="fw-bold fs-6">50%</span>

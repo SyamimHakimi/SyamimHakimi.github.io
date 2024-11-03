@@ -24,7 +24,7 @@
       <!--begin::Row-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">Full Name</label>
+        <label class="col-lg-4 fw-semibold text-muted">Full Name</label>
         <!--end::Label-->
 
         <!--begin::Col-->
@@ -38,12 +38,12 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">Company</label>
+        <label class="col-lg-4 fw-semibold text-muted">Company</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8 fv-row">
-          <span class="fw-semobold fs-6">Keenthemes</span>
+          <span class="fw-semibold fs-6">Keenthemes</span>
         </div>
         <!--end::Col-->
       </div>
@@ -52,7 +52,7 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">
+        <label class="col-lg-4 fw-semibold text-muted">
           Contact Phone
           <i
             class="fas fa-exclamation-circle ms-1 fs-7"
@@ -75,12 +75,12 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">Company Site</label>
+        <label class="col-lg-4 fw-semibold text-muted">Company Site</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <a href="#" class="fw-semobold fs-6 text-dark text-hover-primary"
+          <a href="#" class="fw-semibold fs-6 text-dark text-hover-primary"
             >keenthemes.com</a
           >
         </div>
@@ -91,7 +91,7 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">
+        <label class="col-lg-4 fw-semibold text-muted">
           Country
           <i
             class="fas fa-exclamation-circle ms-1 fs-7"
@@ -112,7 +112,7 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">Communication</label>
+        <label class="col-lg-4 fw-semibold text-muted">Communication</label>
         <!--end::Label-->
 
         <!--begin::Col-->
@@ -126,12 +126,12 @@
       <!--begin::Input group-->
       <div class="row mb-10">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-semobold text-muted">Allow Changes</label>
+        <label class="col-lg-4 fw-semibold text-muted">Allow Changes</label>
         <!--begin::Label-->
 
         <!--begin::Label-->
         <div class="col-lg-8">
-          <span class="fw-semobold fs-6">Yes</span>
+          <span class="fw-semibold fs-6">Yes</span>
         </div>
         <!--begin::Label-->
       </div>
@@ -147,7 +147,7 @@
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack flex-grow-1">
           <!--begin::Content-->
-          <div class="fw-semobold">
+          <div class="fw-semibold">
             <h4 class="text-gray-800 fw-bold">We need your attention!</h4>
 
             <div class="fs-6 text-gray-600">
@@ -200,6 +200,12 @@
         widget-classes="card-xxl-stretch mb-5 mb-xl-10"
       ></KTTableWidget5>
     </div>
+
+    <div class="col-xl-6">
+      <KTListWidget8
+        widget-classes="card-xxl-stretch mb-5 mb-xl-10"
+      ></KTListWidget8>
+    </div>
     <!--end::Col-->
   </div>
   <!--end::Row-->
@@ -211,6 +217,7 @@ import { defineComponent } from "vue";
 import KTChartWidget1 from "@/components/widgets/charts/Widget1.vue";
 import KTListWidget5 from "@/components/widgets/lists/Widget5.vue";
 import KTTableWidget5 from "@/components/widgets/tables/Widget5.vue";
+import KTListWidget8 from "@/components/widgets/lists/Widget8.vue";
 import KTListWidget1 from "@/components/widgets/lists/Widget1.vue";
 
 export default defineComponent({
@@ -220,6 +227,7 @@ export default defineComponent({
     KTListWidget5,
     KTTableWidget5,
     KTListWidget1,
+    KTListWidget8,
   },
   setup() {
     return {

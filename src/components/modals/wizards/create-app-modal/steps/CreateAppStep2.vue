@@ -5,7 +5,7 @@
       <!--begin::Input group-->
       <div class="fv-row">
         <!--begin::Label-->
-        <label class="d-flex align-items-center fs-5 fw-semobold mb-4">
+        <label class="d-flex align-items-center fs-5 fw-semibold mb-4">
           <span class="required">Select Framework</span>
           <i
             class="fas fa-exclamation-circle ms-2 fs-7"

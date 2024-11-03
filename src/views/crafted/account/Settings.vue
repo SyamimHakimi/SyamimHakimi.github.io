@@ -33,7 +33,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label fw-semibold fs-6"
               >Avatar</label
             >
             <!--end::Label-->
@@ -98,7 +98,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Full Name</label
             >
             <!--end::Label-->
@@ -150,7 +150,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Company</label
             >
             <!--end::Label-->
@@ -177,7 +177,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+            <label class="col-lg-4 col-form-label fw-semibold fs-6">
               <span class="required">Contact Phone</span>
 
               <i
@@ -210,7 +210,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label fw-semibold fs-6"
               >Company Site</label
             >
             <!--end::Label-->
@@ -237,7 +237,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+            <label class="col-lg-4 col-form-label fw-semibold fs-6">
               <span class="required">Country</span>
 
               <i
@@ -253,7 +253,7 @@
               <Field
                 as="select"
                 name="country"
-                class="form-select form-select-solid form-select-lg fw-semobold"
+                class="form-select form-select-solid form-select-lg fw-semibold"
                 v-model="profileDetails.country"
               >
                 <option value="AF">Afghanistan</option>
@@ -527,7 +527,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Language</label
             >
             <!--end::Label-->
@@ -609,7 +609,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Time Zone</label
             >
             <!--end::Label-->
@@ -1076,7 +1076,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label required fw-semibold fs-6"
               >Currency</label
             >
             <!--end::Label-->
@@ -1118,7 +1118,7 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label fw-semibold fs-6"
               >Communication</label
             >
             <!--end::Label-->
@@ -1136,7 +1136,7 @@
                     name="communication[]"
                     type="checkbox"
                   />
-                  <span class="fw-semobold ps-2 fs-6"> Email </span>
+                  <span class="fw-semibold ps-2 fs-6"> Email </span>
                 </label>
                 <!--end::Option-->
 
@@ -1147,7 +1147,7 @@
                     name="communication[]"
                     type="checkbox"
                   />
-                  <span class="fw-semobold ps-2 fs-6"> Phone </span>
+                  <span class="fw-semibold ps-2 fs-6"> Phone </span>
                 </label>
                 <!--end::Option-->
               </div>
@@ -1160,7 +1160,7 @@
           <!--begin::Input group-->
           <div class="row mb-0">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6"
+            <label class="col-lg-4 col-form-label fw-semibold fs-6"
               >Allow Marketing</label
             >
             <!--begin::Label-->
@@ -1237,7 +1237,7 @@
         <div class="d-flex flex-wrap align-items-center mb-8">
           <div id="kt_signin_email" :class="{ 'd-none': emailFormDisplay }">
             <div class="fs-4 fw-bolder mb-1">Email Address</div>
-            <div class="fs-6 fw-semobold text-gray-600">
+            <div class="fs-6 fw-semibold text-gray-600">
               support@keenthemes.com
             </div>
           </div>
@@ -1265,7 +1265,7 @@
                     >
                     <Field
                       type="email"
-                      class="form-control form-control-lg form-control-solid fw-semobold fs-6"
+                      class="form-control form-control-lg form-control-solid fw-semibold fs-6"
                       id="emailaddress"
                       placeholder="Email Address"
                       name="emailaddress"
@@ -1287,7 +1287,7 @@
                     >
                     <Field
                       type="password"
-                      class="form-control form-control-lg form-control-solid fw-semobold fs-6"
+                      class="form-control form-control-lg form-control-solid fw-semibold fs-6"
                       name="confirmemailpassword"
                       id="confirmemailpassword"
                     />
@@ -1348,14 +1348,14 @@
             :class="{ 'd-none': passwordFormDisplay }"
           >
             <div class="fs-4 fw-bolder mb-1">Password</div>
-            <div class="fs-6 fw-semobold text-gray-600">************</div>
+            <div class="fs-6 fw-semibold text-gray-600">************</div>
           </div>
           <div
             id="kt_signin_password_edit"
             class="flex-row-fluid"
             :class="{ 'd-none': !passwordFormDisplay }"
           >
-            <div class="fs-6 fw-semobold text-gray-600 mb-4">
+            <div class="fs-6 fw-semibold text-gray-600 mb-4">
               Password must be at least 8 character and contain symbols
             </div>
 
@@ -1377,7 +1377,7 @@
                     >
                     <Field
                       type="password"
-                      class="form-control form-control-lg form-control-solid fw-semobold fs-6"
+                      class="form-control form-control-lg form-control-solid fw-semibold fs-6"
                       name="currentpassword"
                       id="currentpassword"
                     />
@@ -1397,7 +1397,7 @@
                     >
                     <Field
                       type="password"
-                      class="form-control form-control-lg form-control-solid fw-semobold fs-6"
+                      class="form-control form-control-lg form-control-solid fw-semibold fs-6"
                       name="newpassword"
                       id="newpassword"
                     />
@@ -1417,7 +1417,7 @@
                     >
                     <Field
                       type="password"
-                      class="form-control form-control-lg form-control-solid fw-semobold fs-6"
+                      class="form-control form-control-lg form-control-solid fw-semibold fs-6"
                       name="confirmpassword"
                       id="confirmpassword"
                     />
@@ -1509,7 +1509,7 @@
           <!--begin::Wrapper-->
           <div class="d-flex flex-stack flex-grow-1">
             <!--begin::Content-->
-            <div class="fw-semobold">
+            <div class="fw-semibold">
               <div class="fs-6 text-gray-600">
                 Two-factor authentication adds an extra layer of security to
                 your account. To log in, in you'll need to provide a 4 digit
@@ -1536,7 +1536,7 @@
                 <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                   >Google</a
                 >
-                <div class="fs-6 fw-semobold text-gray-400">
+                <div class="fs-6 fw-semibold text-gray-400">
                   Plan properly your workflow
                 </div>
               </div>
@@ -1570,7 +1570,7 @@
                 <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                   >Github</a
                 >
-                <div class="fs-6 fw-semobold text-gray-400">
+                <div class="fs-6 fw-semibold text-gray-400">
                   Keep eye on on your Repositories
                 </div>
               </div>
@@ -1604,7 +1604,7 @@
                 <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                   >Slack</a
                 >
-                <div class="fs-6 fw-semobold text-gray-400">
+                <div class="fs-6 fw-semibold text-gray-400">
                   Integrate Projects Discussions
                 </div>
               </div>
@@ -1928,7 +1928,7 @@
             <table
               class="table table-row-dashed border-gray-300 align-middle gy-6"
             >
-              <tbody class="fs-6 fw-semobold">
+              <tbody class="fs-6 fw-semibold">
                 <!--begin::Table row-->
                 <tr>
                   <td class="min-w-250px fs-4 fw-bold">Notifications</td>
@@ -2185,7 +2185,7 @@
             <!--begin::Wrapper-->
             <div class="d-flex flex-stack flex-grow-1">
               <!--begin::Content-->
-              <div class="fw-semobold">
+              <div class="fw-semibold">
                 <h4 class="text-gray-800 fw-bold">
                   You Are Deactivating Your Account
                 </h4>
@@ -2214,7 +2214,7 @@
               id="deactivate"
             />
             <label
-              class="form-check-label fw-semobold ps-2 fs-6"
+              class="form-check-label fw-semibold ps-2 fs-6"
               for="deactivate"
               >Confirm Account Deactivation</label
             >
@@ -2229,7 +2229,7 @@
             id="kt_account_deactivate_account_submit"
             ref="submitButton5"
             type="submit"
-            class="btn btn-danger fw-semobold"
+            class="btn btn-danger fw-semibold"
           >
             <span class="indicator-label"> Deactivate Account </span>
             <span class="indicator-progress">

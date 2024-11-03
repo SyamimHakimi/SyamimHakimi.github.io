@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Members Statistics</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7">Over 500 members</span>
+        <span class="text-muted mt-1 fw-semibold fs-7">Over 500 members</span>
       </h3>
 
       <div
@@ -93,7 +93,7 @@
                       >
 
                       <span
-                        class="text-muted fw-semobold text-muted d-block fs-7"
+                        class="text-muted fw-semibold text-muted d-block fs-7"
                         >{{ item.skills }}</span
                       >
                     </div>
@@ -107,7 +107,7 @@
                     >{{ item.companyName }}</a
                   >
                   <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    class="text-muted fw-semibold text-muted d-block fs-7"
                     >{{ item.companySkills }}</span
                   >
                 </td>
@@ -115,7 +115,7 @@
                 <td class="text-end">
                   <div class="d-flex flex-column w-100 me-2">
                     <div class="d-flex flex-stack mb-2">
-                      <span class="text-muted me-2 fs-7 fw-semobold">
+                      <span class="text-muted me-2 fs-7 fw-semibold">
                         {{ item.value }}%
                       </span>
                     </div>

@@ -30,7 +30,7 @@
       <div class="table-responsive">
         <!--begin::Table-->
         <table
-          class="table align-middle table-row-dashed fs-6 fw-semobold gy-4"
+          class="table align-middle table-row-dashed fs-6 fw-semibold gy-4"
           id="kt_subscription_products_table"
         >
           <!--begin::Table head-->

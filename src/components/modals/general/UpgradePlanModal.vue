@@ -29,7 +29,7 @@
           <div class="mb-13 text-center">
             <h1 class="mb-3">Upgrade a Plan</h1>
 
-            <div class="text-gray-400 fw-semobold fs-5">
+            <div class="text-gray-400 fw-semibold fs-5">
               If you need more info, please check
               <a href="#" class="link-primary fw-bold">Pricing Guidelines</a>.
             </div>
@@ -108,7 +108,7 @@
                               >{{ plan.label }}</span
                             >
                           </h2>
-                          <div class="fw-semobold opacity-50">
+                          <div class="fw-semibold opacity-50">
                             {{ plan.subTitle }}
                           </div>
                         </div>
@@ -168,7 +168,7 @@
                           What’s in Startup Plan?
                         </h2>
 
-                        <div class="text-gray-400 fw-semobold">
+                        <div class="text-gray-400 fw-semibold">
                           {{ plan.description }}
                         </div>
                       </div>
@@ -190,7 +190,7 @@
                             >
                               <template v-if="feature.supported">
                                 <span
-                                  class="fw-semobold fs-5 text-gray-700 flex-grow-1"
+                                  class="fw-semibold fs-5 text-gray-700 flex-grow-1"
                                 >
                                   {{ feature.title }}
                                 </span>
@@ -202,7 +202,7 @@
                               </template>
                               <template v-else>
                                 <span
-                                  class="fw-semobold fs-5 text-gray-400 flex-grow-1"
+                                  class="fw-semibold fs-5 text-gray-400 flex-grow-1"
                                 >
                                   {{ feature.title }}
                                 </span>

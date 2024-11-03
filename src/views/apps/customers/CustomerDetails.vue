@@ -25,7 +25,7 @@
             <!--end::Name-->
 
             <!--begin::Position-->
-            <div class="fs-5 fw-semobold text-muted mb-6">Software Enginer</div>
+            <div class="fs-5 fw-semibold text-muted mb-6">Software Enginer</div>
             <!--end::Position-->
 
             <!--begin::Info-->
@@ -38,7 +38,7 @@
                   <span class="w-75px">6,900</span>
                   <KTIcon icon-name="arrow-up" icon-class="fs-3 text-success" />
                 </div>
-                <div class="fw-semobold text-muted">Earnings</div>
+                <div class="fw-semibold text-muted">Earnings</div>
               </div>
               <!--end::Stats-->
 
@@ -53,7 +53,7 @@
                     icon-class="fs-3 text-danger"
                   />
                 </div>
-                <div class="fw-semobold text-muted">Tasks</div>
+                <div class="fw-semibold text-muted">Tasks</div>
               </div>
               <!--end::Stats-->
 
@@ -65,7 +65,7 @@
                   <span class="w-50px">500</span>
                   <KTIcon icon-name="arrow-up" icon-class="fs-3 text-success" />
                 </div>
-                <div class="fw-semobold text-muted">Hours</div>
+                <div class="fw-semibold text-muted">Hours</div>
               </div>
               <!--end::Stats-->
             </div>
@@ -174,7 +174,7 @@
             <!--begin::Wrapper-->
             <div class="d-flex flex-stack flex-grow-1">
               <!--begin::Content-->
-              <div class="fw-semobold">
+              <div class="fw-semibold">
                 <div class="fs-6 text-gray-700">
                   By connecting an account, you hereby agree to our
                   <a href="#" class="me-1">privacy policy</a>and
@@ -201,7 +201,7 @@
                   <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                     >Google</a
                   >
-                  <div class="fs-6 fw-semobold text-muted">
+                  <div class="fs-6 fw-semibold text-muted">
                     Plan properly your workflow
                   </div>
                 </div>
@@ -225,7 +225,7 @@
 
                   <!--begin::Label-->
                   <span
-                    class="form-check-label fw-semobold text-muted"
+                    class="form-check-label fw-semibold text-muted"
                     for="kt_modal_connected_accounts_google"
                   ></span>
                   <!--end::Label-->
@@ -250,7 +250,7 @@
                   <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                     >Github</a
                   >
-                  <div class="fs-6 fw-semobold text-muted">
+                  <div class="fs-6 fw-semibold text-muted">
                     Keep eye on on your Repositories
                   </div>
                 </div>
@@ -274,7 +274,7 @@
 
                   <!--begin::Label-->
                   <span
-                    class="form-check-label fw-semobold text-muted"
+                    class="form-check-label fw-semibold text-muted"
                     for="kt_modal_connected_accounts_github"
                   ></span>
                   <!--end::Label-->
@@ -299,7 +299,7 @@
                   <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
                     >Slack</a
                   >
-                  <div class="fs-6 fw-semobold text-muted">
+                  <div class="fs-6 fw-semibold text-muted">
                     Integrate Projects Discussions
                   </div>
                 </div>
@@ -321,7 +321,7 @@
 
                   <!--begin::Label-->
                   <span
-                    class="form-check-label fw-semobold text-muted"
+                    class="form-check-label fw-semibold text-muted"
                     for="kt_modal_connected_accounts_slack"
                   ></span>
                   <!--end::Label-->
@@ -349,7 +349,7 @@
     <div class="flex-lg-row-fluid ms-lg-15">
       <!--begin:::Tabs-->
       <ul
-        class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semobold mb-8"
+        class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-8"
       >
         <!--begin:::Tab item-->
         <li class="nav-item">

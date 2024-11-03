@@ -192,10 +192,11 @@ import { useRoute } from "vue-router";
 import { version } from "@/core/helpers/documentation";
 import { asideMenuIcons } from "@/core/helpers/config";
 import MainMenuConfig from "@/core/config/MainMenuConfig";
+import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 
 export default defineComponent({
   name: "kt-menu",
-  components: {},
+  components: { KTIcon },
   setup() {
     const { t, te } = useI18n();
     const route = useRoute();

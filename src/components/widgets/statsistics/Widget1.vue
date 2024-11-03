@@ -20,7 +20,7 @@
 
       <div class="fw-bold text-primary my-6">{{ time }}</div>
 
-      <p class="text-dark-75 fw-semobold fs-5 m-0">
+      <p class="text-dark-75 fw-semibold fs-5 m-0">
         <span v-html="description"></span>
       </p>
     </div>

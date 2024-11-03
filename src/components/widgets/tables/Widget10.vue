@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">New Products</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7"
+        <span class="text-muted mt-1 fw-semibold fs-7"
           >Over 500 new products</span
         >
       </h3>
@@ -80,7 +80,7 @@
 
                       <a
                         href="#"
-                        class="text-muted text-hover-primary fw-semobold text-muted d-block fs-7"
+                        class="text-muted text-hover-primary fw-semibold text-muted d-block fs-7"
                       >
                         <span class="text-dark">Email</span>:
                         {{ item.user.email }}
@@ -96,12 +96,12 @@
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.price }}</a
                   >
-                  <span class="text-muted fw-semobold text-muted d-block fs-7"
+                  <span class="text-muted fw-semibold text-muted d-block fs-7"
                     >Paid</span
                   >
                 </td>
 
-                <td class="text-muted fw-semobold text-end">
+                <td class="text-muted fw-semibold text-end">
                   {{ item.technologies }}
                 </td>
 

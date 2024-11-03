@@ -6,6 +6,8 @@ export default defineComponent({
   props: {
     cardTitle: { type: String, required: false },
     cardSubtitle: { type: String, required: false },
+    headerBorder: { type: Boolean, required: false, default: true },
+    inLayoutGrid: { type: Boolean, required: false, default: false },
     widgetClasses: { type: String, required: false },
   },
   setup(props) {
@@ -21,11 +23,25 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="card mb-5 mb-xl-10" :class="widgetClasses">
+  <div
+    class="card"
+    :class="{
+      'h-xl-100': inLayoutGrid,
+      'mb-5 mb-xl-10': !inLayoutGrid,
+      [widgetClasses + '']: widgetClasses,
+    }"
+  >
     <!--begin::Header-->
-    <div v-if="hasHeader" class="card-header border-0 pt-5">
+    <div
+      v-if="hasHeader"
+      class="card-header"
+      :class="{
+        'pt-5': cardSubtitle,
+        'border-0': !headerBorder,
+      }"
+    >
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bold fs-3 mb-1">{{ cardTitle }}</span>
+        <span class="card-label fw-bold fs-3">{{ cardTitle }}</span>
 
         <span v-if="cardSubtitle" class="text-muted mt-1 fw-semibold fs-7">{{
           cardSubtitle
@@ -35,7 +51,7 @@ export default defineComponent({
     <!--end::Header-->
 
     <!--begin::Body-->
-    <div class="card-body">
+    <div class="card-body" :class="{ 'pt-5': cardSubtitle && !headerBorder }">
       <slot name="cardBody" />
     </div>
     <!--begin::Body-->

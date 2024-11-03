@@ -14,7 +14,7 @@
     <!--begin::Card body-->
     <div class="card-body pt-0">
       <!--begin::Description-->
-      <div class="text-gray-500 fw-semobold fs-5 mb-5">
+      <div class="text-gray-500 fw-semibold fs-5 mb-5">
         Select or add a customer to a subscription:
       </div>
       <!--end::Description-->
@@ -36,7 +36,7 @@
           <!--end::Name-->
 
           <!--begin::Email-->
-          <a href="#" class="fw-semobold text-gray-600 text-hover-primary"
+          <a href="#" class="fw-semibold text-gray-600 text-hover-primary"
             >sean@dellito.com</a
           >
           <!--end::Email-->

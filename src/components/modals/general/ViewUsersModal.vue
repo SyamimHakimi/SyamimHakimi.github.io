@@ -32,7 +32,7 @@
             <!--end::Title-->
 
             <!--begin::Description-->
-            <div class="text-gray-400 fw-semobold fs-5">
+            <div class="text-gray-400 fw-semibold fs-5">
               If you need more info, please check out our
               <a href="#" class="link-primary fw-bold">Users Directory</a>.
             </div>
@@ -57,7 +57,7 @@
                       <span
                         v-else
                         :class="`bg-light-${user.state} text-${user.state}`"
-                        class="symbol-label fw-semobold"
+                        class="symbol-label fw-semibold"
                       >
                         {{ user.name.charAt(0) }}
                       </span>
@@ -73,14 +73,14 @@
                       >
                         {{ user.name }}
 
-                        <span class="badge badge-light fs-8 fw-semobold ms-2">
+                        <span class="badge badge-light fs-8 fw-semibold ms-2">
                           {{ user.position }}
                         </span>
                       </a>
                       <!--end::Name-->
 
                       <!--begin::Email-->
-                      <div class="fw-semobold text-gray-400">
+                      <div class="fw-semibold text-gray-400">
                         {{ user.email }}
                       </div>
                       <!--end::Email-->
@@ -113,7 +113,7 @@
           <!--begin::Notice-->
           <div class="d-flex justify-content-between">
             <!--begin::Label-->
-            <div class="fw-semobold">
+            <div class="fw-semibold">
               <label class="fs-6">Adding Users by Team Members</label>
 
               <div class="fs-7 text-gray-400">
@@ -133,7 +133,7 @@
                 checked
               />
 
-              <span class="form-check-label fw-semobold text-gray-400">
+              <span class="form-check-label fw-semibold text-gray-400">
                 Allowed
               </span>
             </label>

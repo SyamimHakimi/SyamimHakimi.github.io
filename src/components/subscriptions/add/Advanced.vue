@@ -34,7 +34,7 @@
           <!--begin::Table-->
           <table
             id="kt_create_new_custom_fields"
-            class="table align-middle table-row-dashed fw-semobold fs-6 gy-5"
+            class="table align-middle table-row-dashed fw-semibold fs-6 gy-5"
           >
             <!--begin::Table head-->
             <thead>

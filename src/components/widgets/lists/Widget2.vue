@@ -42,7 +42,7 @@
               item.name
             }}</a>
 
-            <span class="text-muted d-block fw-semobold">{{
+            <span class="text-muted d-block fw-semibold">{{
               item.description
             }}</span>
           </div>

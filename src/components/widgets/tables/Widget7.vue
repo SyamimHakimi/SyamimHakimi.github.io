@@ -6,7 +6,7 @@
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Latest Orders</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7"
+        <span class="text-muted mt-1 fw-semibold fs-7"
           >More than 100 new orders</span
         >
       </h3>
@@ -91,12 +91,12 @@
                           class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                           >{{ item1.info.title }}</a
                         >
-                        <span class="text-muted fw-semobold d-block fs-7">{{
+                        <span class="text-muted fw-semibold d-block fs-7">{{
                           item1.info.description
                         }}</span>
                       </td>
                       <td class="text-end">
-                        <span class="text-muted fw-semobold d-block fs-8"
+                        <span class="text-muted fw-semibold d-block fs-8"
                           >Ordered</span
                         >
 

@@ -7,7 +7,7 @@
       <!--end::Heading-->
 
       <!--begin::Description-->
-      <div class="text-muted fw-semobold fs-3">
+      <div class="text-muted fw-semibold fs-3">
         Submit your app to kickstart your project.
       </div>
       <!--end::Description-->

@@ -20,7 +20,7 @@
         <!--begin::Title-->
         <a
           href="#"
-          class="fs-5 fw-semobold text-gray-800 text-hover-primary mb-2"
+          class="fs-5 fw-semibold text-gray-800 text-hover-primary mb-2"
           >3 New Incoming Project Files:</a
         >
         <!--end::Title-->
@@ -63,7 +63,7 @@
             <!--end::Icon-->
 
             <!--begin::Info-->
-            <div class="ms-1 fw-semobold">
+            <div class="ms-1 fw-semibold">
               <!--begin::Desc-->
               <a href="#" class="fs-6 text-hover-primary fw-bold"
                 >Finance KPI App Guidelines</a
@@ -89,7 +89,7 @@
             <!--end::Icon-->
 
             <!--begin::Info-->
-            <div class="ms-1 fw-semobold">
+            <div class="ms-1 fw-semibold">
               <!--begin::Desc-->
               <a href="#" class="fs-6 text-hover-primary fw-bold"
                 >Client UAT Testing Results</a
@@ -115,7 +115,7 @@
             <!--end::Icon-->
 
             <!--begin::Info-->
-            <div class="ms-1 fw-semobold">
+            <div class="ms-1 fw-semibold">
               <!--begin::Desc-->
               <a href="#" class="fs-6 text-hover-primary fw-bold"
                 >Finance Reports</a
