@@ -4,7 +4,7 @@ import CardGallery from "@/components-new/cards/CardGallery.vue";
 import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
 
 export default defineComponent({
-  name: "main-dashboard",
+  name: "gallery-layout",
   components: { LayoutGrids, CardGallery },
   setup() {},
 });

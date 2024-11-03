@@ -7,7 +7,7 @@ import ListProfileFavouriteBoardgames from "@/components-new/lists/ListProfileFa
 import ListProfilePhotographyGear from "@/components-new/lists/ListProfilePhotographyGear.vue";
 
 export default defineComponent({
-  name: "account-overview",
+  name: "about-me-layout",
   components: {
     ListProfilePhotographyGear,
     ListProfileFavouriteBoardgames,
