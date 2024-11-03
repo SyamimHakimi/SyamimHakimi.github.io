@@ -51,8 +51,8 @@ export default defineComponent({
 
 <template>
   <CardContainer
-    card-title="Favourite Boardgames"
-    card-subtitle="My Personal Top 5 (With BGG Ratings)"
+    card-title="Photography Gear"
+    card-subtitle="Currently Owned"
     :header-border="false"
     :in-layout-grid="inLayoutGrid"
   >

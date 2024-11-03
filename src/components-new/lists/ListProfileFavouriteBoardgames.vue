@@ -94,7 +94,7 @@ export default defineComponent({
 
           <!--start::Rating-->
           <div
-            class="d-flex flex-grow-1 align-items-center justify-content-end ms-2"
+            class="d-flex flex-grow-1 align-items-center justify-content-end ms-3"
           >
             <span class="text-muted fw-bold me-2">{{ item.rating }}</span>
             <div class="rating">
