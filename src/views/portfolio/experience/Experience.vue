@@ -1,52 +1,95 @@
-<template>
-  <LayoutGrids>
-    <template v-slot:gridColumns>
-      <div class="col-md-6 col-xxl-4">
-        <!--begin::Child-->
-        <CardGallery
-          title="box."
-          date-posted="01 November 24"
-          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
-        />
-        <!--end::Child-->
-      </div>
-      <div class="col-md-6 col-xxl-4">
-        <!--begin::Child-->
-        <CardGallery
-          title="sunset."
-          date-posted="01 November 24"
-          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
-        />
-        <!--end::Child-->
-      </div>
-    </template>
-  </LayoutGrids>
-  <!--  Framework/Tech Stack Page src/views/crafted/pages/profile/Projects.vue-->
-  <!--  Software Journey Page src/views/crafted/pages/profile/Activity.vue-->
-</template>
-
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from "vue";
-import LayoutService from "@/core/services/LayoutService";
-import { LS_CONFIG_NAME_KEY } from "@/stores/config";
-import CardGallery from "@/components-new/cards/CardGallery.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import { defineComponent } from "vue";
+import ExperienceSection from "@/views/portfolio/experience/ExperienceSection.vue";
+import type { PortfolioSections } from "@/stores/portfolio";
 
 export default defineComponent({
-  name: "main-dashboard",
-  components: { LayoutGrids, CardGallery },
+  name: "experience-layout",
+  components: { ExperienceSection },
   setup() {
-    onMounted(() => {
-      if (!localStorage.getItem(LS_CONFIG_NAME_KEY)) {
-        LayoutService.enableSidebar();
-      }
-    });
+    const portfolioSections: Array<PortfolioSections> = [
+      {
+        title: "Languages",
+        experienceList: [
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+        ],
+      },
+      {
+        title: "Frameworks",
+        experienceList: [
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
 
-    onUnmounted(() => {
-      if (!localStorage.getItem(LS_CONFIG_NAME_KEY)) {
-        LayoutService.disableSidebar();
-      }
-    });
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+        ],
+      },
+      {
+        title: "Protocols",
+        experienceList: [
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+        ],
+      },
+    ];
+
+    return {
+      portfolioSections,
+    };
   },
 });
 </script>
+
+<template>
+  <template v-for="(item, index) in portfolioSections" :key="index">
+    <ExperienceSection :portfolio-sections="item" />
+  </template>
+  <!--  Software Journey Page src/views/crafted/pages/profile/Activity.vue-->
+</template>

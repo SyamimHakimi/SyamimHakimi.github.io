@@ -36,9 +36,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <nav
-    class="nav nav-pills nav-justified flex-column flex-sm-row mb-5 mb-lg-10"
-  >
+  <nav class="nav nav-pills nav-justified flex-column flex-sm-row mb-10">
     <TabsPortfolio
       v-for="(portfolioTab, index) in portfolioTabs"
       :key="index"
