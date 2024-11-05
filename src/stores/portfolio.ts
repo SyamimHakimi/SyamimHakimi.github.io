@@ -20,3 +20,21 @@ export interface PortfolioSections {
   title: string;
   experienceList: Array<PortfolioSectionsItem>;
 }
+
+export interface PersonalProjectsDescription {
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+export interface PersonalProjectsTechStack {
+  imgSrc: string;
+  title: string;
+  description: string;
+  link: string;
+}
+
+export interface PersonalProjects {
+  personalProjectsDescription: PersonalProjectsDescription;
+  personalProjectsTechStackList: Array<PersonalProjectsTechStack>;
+}

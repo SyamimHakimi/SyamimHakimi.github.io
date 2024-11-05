@@ -9,7 +9,7 @@ export default defineComponent({
   setup() {
     const portfolioSections: Array<PortfolioSections> = [
       {
-        title: "Languages",
+        title: "APIs",
         experienceList: [
           {
             iconImg: "media/svg/brand-logos/plurk.svg",
@@ -20,6 +20,20 @@ export default defineComponent({
             description:
               "Used mainly on back-end development for creating scripts and APIs",
           },
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
+        ],
+      },
+      {
+        title: "Protocols",
+        experienceList: [
           {
             iconImg: "media/svg/brand-logos/plurk.svg",
             link: "https://www.google.com",
@@ -65,8 +79,17 @@ export default defineComponent({
         ],
       },
       {
-        title: "Protocols",
+        title: "Languages",
         experienceList: [
+          {
+            iconImg: "media/svg/brand-logos/plurk.svg",
+            link: "https://www.google.com",
+            badgeText: "4 Years",
+            badgeColor: "success",
+            title: "Python",
+            description:
+              "Used mainly on back-end development for creating scripts and APIs",
+          },
           {
             iconImg: "media/svg/brand-logos/plurk.svg",
             link: "https://www.google.com",
@@ -91,5 +114,4 @@ export default defineComponent({
   <template v-for="(item, index) in portfolioSections" :key="index">
     <ExperienceSection :portfolio-sections="item" />
   </template>
-  <!--  Software Journey Page src/views/crafted/pages/profile/Activity.vue-->
 </template>

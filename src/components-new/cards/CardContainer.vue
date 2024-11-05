@@ -33,7 +33,7 @@ export default defineComponent({
     :href="link"
     class="card"
     :class="{
-      'h-xl-100': inLayoutGrid,
+      'h-100': inLayoutGrid,
       'mb-5 mb-xl-10': !inLayoutGrid,
       [widgetClasses + '']: widgetClasses,
     }"

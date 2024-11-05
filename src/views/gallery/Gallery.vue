@@ -19,6 +19,7 @@ export default defineComponent({
           title="box."
           date-posted="01 November 24"
           img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
+          :in-layout-grid="true"
         />
         <!--end::Child-->
       </div>
@@ -28,6 +29,7 @@ export default defineComponent({
           title="sunset."
           date-posted="01 November 24"
           img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
+          :in-layout-grid="true"
         />
         <!--end::Child-->
       </div>

@@ -10,13 +10,14 @@ export default defineComponent({
     title: { type: String, required: true },
     datePosted: { type: String, required: true },
     imgSrc: { type: String, required: true },
+    inLayoutGrid: { type: Boolean, required: false, default: false },
     widgetClasses: { type: String, required: false },
   },
 });
 </script>
 
 <template>
-  <CardContainer>
+  <CardContainer :in-layout-grid="inLayoutGrid">
     <template v-slot:cardBody>
       <div class="d-flex justify-content-center pb-4">
         <ImagesContainer :imgSrc="imgSrc" :border="true" />
