@@ -1,16 +1,16 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import PersonalProjectsDescription from "@/views/portfolio/personal-projects/PersonalProjectsDescription.vue";
-import PersonalProjectsTechStack from "@/views/portfolio/personal-projects/PersonalProjectsTechStack.vue";
+import CardPersonalProjectsDescription from "@/components-new/cards/CardPersonalProjectsDescription.vue";
+import CardPersonalProjectsTechStack from "@/components-new/cards/CardPersonalProjectsTechStack.vue";
 import type { PersonalProjects } from "@/stores/portfolio";
 
 export default defineComponent({
   name: "personal-projects",
   components: {
     LayoutGrids,
-    PersonalProjectsTechStack,
-    PersonalProjectsDescription,
+    CardPersonalProjectsTechStack,
+    CardPersonalProjectsDescription,
   },
   setup() {
     const personalProjects: PersonalProjects = {
@@ -58,7 +58,7 @@ export default defineComponent({
   <LayoutGrids>
     <template v-slot:gridColumns>
       <div class="col-md-4 col-lg-12 col-xl-4">
-        <PersonalProjectsDescription
+        <CardPersonalProjectsDescription
           :personal-projects-description="
             personalProjects.personalProjectsDescription
           "
@@ -66,7 +66,7 @@ export default defineComponent({
         />
       </div>
       <div class="col-md-8 col-lg-12 col-xl-8">
-        <PersonalProjectsTechStack
+        <CardPersonalProjectsTechStack
           :personal-projects-tech-stack-list="
             personalProjects.personalProjectsTechStackList
           "

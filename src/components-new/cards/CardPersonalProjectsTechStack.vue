@@ -6,7 +6,7 @@ import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 import type { PersonalProjectsTechStack } from "@/stores/portfolio";
 
 export default defineComponent({
-  name: "personal-projects-tech-stack",
+  name: "card-personal-projects-tech-stack",
   methods: { getAssetPath },
   components: { KTIcon, CardContainer },
   props: {

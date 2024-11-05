@@ -4,7 +4,7 @@ import CardContainer from "@/components-new/cards/CardContainer.vue";
 import type { PersonalProjectsDescription } from "@/stores/portfolio";
 
 export default defineComponent({
-  name: "personal-projects-description",
+  name: "card-personal-projects-description",
   components: { CardContainer },
   props: {
     personalProjectsDescription: {
