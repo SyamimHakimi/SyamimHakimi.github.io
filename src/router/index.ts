@@ -56,6 +56,17 @@ const routes: Array<RouteRecordRaw> = [
             },
           },
           {
+            path: "/services/database_management",
+            name: "services-database-management",
+            component: () =>
+              import(
+                "@/views/services/database_management/ServicesDatabaseManagement.vue"
+              ),
+            meta: {
+              breadcrumbs: ["Services", "Database Management"],
+            },
+          },
+          {
             path: "/services/web_app_development",
             name: "services-web_app_development",
             component: () =>

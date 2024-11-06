@@ -8,10 +8,6 @@ export default defineComponent({
   name: "card-services-description",
   components: { LayoutGrids, KTIcon, CardContainer },
   props: {
-    //   personalProjectsDescription: {
-    //     type: Object as () => PersonalProjectsDescription,
-    //     required: true,
-    //   },
     inLayoutGrid: { type: Boolean, required: false },
   },
   setup() {},
