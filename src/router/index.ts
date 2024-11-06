@@ -32,6 +32,41 @@ const routes: Array<RouteRecordRaw> = [
           pageTitle: "Services",
           breadcrumbs: ["Services"],
         },
+        children: [
+          {
+            path: "/services/api_development",
+            name: "services-api-development",
+            component: () =>
+              import(
+                "@/views/services/api_development/ServicesAPIDevelopment.vue"
+              ),
+            meta: {
+              breadcrumbs: ["Services", "API Development"],
+            },
+          },
+          {
+            path: "/services/api_integration",
+            name: "services-api-integration",
+            component: () =>
+              import(
+                "@/views/services/api_integration/ServicesAPIIntegration.vue"
+              ),
+            meta: {
+              breadcrumbs: ["Services", "API Integration"],
+            },
+          },
+          {
+            path: "/services/web_app_development",
+            name: "services-web_app_development",
+            component: () =>
+              import(
+                "@/views/services/web_app_development/ServicesWebAppDevelopment.vue"
+              ),
+            meta: {
+              breadcrumbs: ["Services", "Web Application Development"],
+            },
+          },
+        ],
       },
       {
         path: "/portfolio",

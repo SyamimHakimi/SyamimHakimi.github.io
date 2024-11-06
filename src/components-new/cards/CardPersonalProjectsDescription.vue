@@ -25,7 +25,7 @@ export default defineComponent({
         <div class="text-muted fs-3 fw-semibold mb-5">
           {{ personalProjectsDescription.subtitle }}
         </div>
-        <div class="fs-6 fw-normal text-muted">
+        <div class="fs-6 fw-normal text-gray-600">
           {{ personalProjectsDescription.description }}
         </div>
       </div>

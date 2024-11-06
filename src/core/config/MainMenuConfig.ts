@@ -17,7 +17,7 @@ const MainMenuConfig: Array<MenuItem> = [
   },
   {
     heading: "Services",
-    route: "/services",
+    route: "/services/api_development",
     keenthemesIcon: "black-right",
     bootstrapIcon: "bi-arrow-right",
   },
