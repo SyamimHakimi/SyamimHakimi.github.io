@@ -7,11 +7,16 @@ import MixedWidget14 from "@/components/widgets/mixed/Widget14.vue";
 import TablesWidget9 from "@/components/widgets/tables/Widget9.vue";
 import ListsWidget5 from "@/components/widgets/lists/Widget5.vue";
 import ListsWidget4 from "@/components/widgets/lists/Widget4.vue";
-import { LS_CONFIG_NAME_KEY } from "@/stores/config";
+import Widget6 from "@/components/widgets/mixed/Widget6.vue";
+import ChartsPhotographyStatistics from "@/components-new/charts/ChartsPhotographyStatistics.vue";
+import Widget12 from "@/components/widgets/mixed/Widget12.vue";
 
 export default defineComponent({
   name: "photography-journey-layout",
   components: {
+    Widget12,
+    ChartsPhotographyStatistics,
+    Widget6,
     MixedWidget12,
     MixedWidget13,
     MixedWidget14,
@@ -19,34 +24,24 @@ export default defineComponent({
     ListsWidget5,
     ListsWidget4,
   },
-  setup() {
-    onMounted(() => {
-      if (!localStorage.getItem(LS_CONFIG_NAME_KEY)) {
-        LayoutService.enableSidebar();
-      }
-    });
-
-    onUnmounted(() => {
-      if (!localStorage.getItem(LS_CONFIG_NAME_KEY)) {
-        LayoutService.disableSidebar();
-      }
-    });
-  },
+  setup() {},
 });
 </script>
 
 <template>
   <!--begin::Row-->
   <div class="row gy-5 g-xl-10">
-    <!--    PHOTOGRAPHY STATISTICS src/components/widgets/mixed/Widget6.vue-->
     <!--    Focal Length Frequency src/components/widgets/mixed/Widget12.vue-->
-    <!--    ????? src/components/widgets/mixed/Widget13.vue-->
-    <!--    Experience Summary src/components/widgets/mixed/Widget14.vue-->
+    <!--    Favourite recipe src/components/widgets/mixed/Widget13.vue-->
     <!--  Photography Theme src/components/widgets/statsistics/Widget4.vue-->
 
     <!--begin::Col-->
+    <div class="col-12">
+      <ChartsPhotographyStatistics chart-height="150" />
+    </div>
+
     <div class="col-xl-4">
-      <MixedWidget12
+      <Widget12
         widget-classes="card-xl-stretch mb-xl-10"
         widget-color="#F7D9E3"
         chart-height="100"

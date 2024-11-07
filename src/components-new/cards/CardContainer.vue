@@ -13,6 +13,7 @@ export default defineComponent({
     badgeColor: { type: String, required: false },
     link: { type: String, required: false },
     headerBorder: { type: Boolean, required: false, default: true },
+    bodyPadding: { type: Boolean, required: false, default: true },
     inLayoutGrid: { type: Boolean, required: false, default: false },
     widgetClasses: { type: String, required: false },
   },
@@ -81,7 +82,10 @@ export default defineComponent({
     <!--end::Header-->
 
     <!--begin::Body-->
-    <div class="card-body" :class="{ 'pt-5': cardSubtitle && !headerBorder }">
+    <div
+      class="card-body"
+      :class="{ 'pt-5': cardSubtitle && !headerBorder, 'p-0': !bodyPadding }"
+    >
       <slot name="cardBody" />
     </div>
     <!--begin::Body-->

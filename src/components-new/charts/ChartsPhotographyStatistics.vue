@@ -1,0 +1,271 @@
+<script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
+import { computed, defineComponent, onBeforeMount, ref, watch } from "vue";
+import { getCSSVariableValue } from "@/assets/ts/_utils";
+import type { ApexOptions } from "apexcharts";
+import type VueApexCharts from "vue3-apexcharts";
+import { useThemeStore } from "@/stores/theme";
+import CardContainer from "@/components-new/cards/CardContainer.vue";
+import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
+import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import type { PhotographyStatistic } from "@/stores/photography-journey";
+
+export default defineComponent({
+  name: "charts-photography-statistics",
+  components: {
+    LayoutGrids,
+    KTIcon,
+    CardContainer,
+  },
+  props: {
+    chartColor: String,
+    chartHeight: String,
+  },
+  setup(props) {
+    const chartRef = ref<typeof VueApexCharts | null>(null);
+    const chart: ApexOptions = {};
+    const store = useThemeStore();
+
+    const photographyStatistics: Array<PhotographyStatistic> = [
+      {
+        title: "Photos Posted",
+        value: "5",
+        icon: "bucket",
+        iconColor: "success",
+      },
+      {
+        title: "Photo Outings",
+        value: "3",
+        icon: "bucket",
+        iconColor: "warning",
+      },
+      {
+        title: "Favourite Photos",
+        value: "2",
+        icon: "bucket",
+        iconColor: "primary",
+      },
+      {
+        title: "Favourite Photo Lens ",
+        value: "5",
+        icon: "bucket",
+        iconColor: "danger",
+      },
+    ];
+
+    const series = [
+      {
+        name: "Photos Posted",
+        data: [3, 2, 4, 3, 5, 5],
+      },
+      {
+        name: "Favourite Photos",
+        data: [2, 1, 1, 0, 2, 1],
+      },
+    ];
+
+    const themeMode = computed(() => {
+      return store.mode;
+    });
+
+    onBeforeMount(() => {
+      Object.assign(chart, chartOptions(props.chartHeight));
+    });
+
+    const refreshChart = () => {
+      if (!chartRef.value) {
+        return;
+      }
+
+      Object.assign(chart, chartOptions(props.chartHeight));
+
+      chartRef.value.refresh();
+    };
+
+    watch(themeMode, () => {
+      refreshChart();
+    });
+
+    return {
+      photographyStatistics,
+      chart,
+      series,
+      chartRef,
+      getAssetPath,
+    };
+  },
+});
+
+const chartOptions = (height: string = "auto"): ApexOptions => {
+  const labelColor = getCSSVariableValue("--bs-gray-800");
+  const strokeColor = getCSSVariableValue("--bs-gray-300");
+  const baseColor = getCSSVariableValue(`--bs-success`);
+  const secondaryColor = getCSSVariableValue(`--bs-primary`);
+  const lightColor = getCSSVariableValue(`--bs-success-light`);
+  const secondaryLightColor = getCSSVariableValue(`--bs-primary-light`);
+
+  return {
+    chart: {
+      fontFamily: "inherit",
+      type: "area",
+      height: height,
+      toolbar: {
+        show: false,
+      },
+      zoom: {
+        enabled: false,
+      },
+      sparkline: {
+        enabled: true,
+      },
+    },
+    plotOptions: {},
+    legend: {
+      show: false,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    fill: {
+      type: "solid",
+      opacity: 1,
+    },
+    stroke: {
+      curve: "smooth",
+      show: true,
+      width: 3,
+      colors: [baseColor, secondaryColor],
+    },
+    xaxis: {
+      categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      labels: {
+        show: false,
+        style: {
+          colors: labelColor,
+          fontSize: "12px",
+        },
+      },
+      crosshairs: {
+        show: false,
+        position: "front",
+        stroke: {
+          color: strokeColor,
+          width: 1,
+          dashArray: 3,
+        },
+      },
+      tooltip: {
+        enabled: false,
+      },
+    },
+    yaxis: {
+      min: 0,
+      max: 6,
+      labels: {
+        show: false,
+        style: {
+          colors: labelColor,
+          fontSize: "12px",
+        },
+      },
+    },
+    states: {
+      normal: {
+        filter: {
+          type: "none",
+          value: 0,
+        },
+      },
+      hover: {
+        filter: {
+          type: "none",
+          value: 0,
+        },
+      },
+      active: {
+        allowMultipleDataPointsSelection: false,
+        filter: {
+          type: "none",
+          value: 0,
+        },
+      },
+    },
+    tooltip: {
+      style: {
+        fontSize: "12px",
+      },
+      y: {
+        formatter: function (val) {
+          return val + " Photos";
+        },
+      },
+    },
+    colors: [lightColor, secondaryLightColor],
+    markers: {
+      colors: [lightColor, secondaryLightColor],
+      strokeColors: [baseColor, secondaryColor],
+      strokeWidth: 3,
+    },
+  };
+};
+</script>
+
+<template>
+  <CardContainer
+    card-title="Photography Statistics"
+    card-subtitle="My Photography Journey"
+    :header-border="false"
+    :body-padding="false"
+  >
+    <template v-slot:cardBody>
+      <LayoutGrids class="card-px pt-5 pb-10">
+        <template v-slot:gridColumns>
+          <template
+            v-for="(photographyStatistic, index) in photographyStatistics"
+            :key="index"
+          >
+            <div class="col-6 col-xl-3">
+              <div class="d-flex align-items-center me-2">
+                <div class="symbol symbol-50px me-3">
+                  <div
+                    :class="`symbol-label bg-light-${photographyStatistic.iconColor}`"
+                  >
+                    <KTIcon
+                      :icon-name="photographyStatistic.icon"
+                      :icon-class="`fs-1 text-${photographyStatistic.iconColor}`"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div class="fs-4 text-dark fw-bold">
+                    {{ photographyStatistic.value }}
+                  </div>
+                  <div class="fs-7 text-muted fw-semibold">
+                    {{ photographyStatistic.title }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </template>
+      </LayoutGrids>
+
+      <apexchart
+        ref="chartRef"
+        class="card-rounded-bottom"
+        :options="chart"
+        :series="series"
+        :height="chartHeight"
+        type="area"
+      ></apexchart>
+      <!--end::Chart-->
+    </template>
+  </CardContainer>
+</template>
