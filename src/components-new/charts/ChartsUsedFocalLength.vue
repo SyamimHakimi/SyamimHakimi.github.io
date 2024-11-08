@@ -6,19 +6,15 @@ import type { ApexOptions } from "apexcharts";
 import type VueApexCharts from "vue3-apexcharts";
 import { useThemeStore } from "@/stores/theme";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
-import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
 import type { PhotographyStatistic } from "@/stores/photography-journey";
 
 export default defineComponent({
-  name: "charts-photography-statistics",
+  name: "charts-used-focal-length",
   components: {
-    LayoutGrids,
-    KTIcon,
     CardContainer,
   },
   props: {
-    chartHeight: { type: String, required: false, default: "150" },
+    chartHeight: { type: String, required: false, default: "100" },
   },
   setup(props) {
     const chartRef = ref<typeof VueApexCharts | null>(null);
@@ -55,11 +51,7 @@ export default defineComponent({
     const series = [
       {
         name: "Photos Posted",
-        data: [3, 2, 4, 3, 5, 5],
-      },
-      {
-        name: "Favourite Photos",
-        data: [2, 1, 1, 0, 2, 1],
+        data: [15, 25, 15, 40, 20, 50],
       },
     ];
 
@@ -87,6 +79,7 @@ export default defineComponent({
 
     return {
       photographyStatistics,
+      themeMode,
       chart,
       series,
       chartRef,
@@ -95,19 +88,26 @@ export default defineComponent({
   },
 });
 
-const chartOptions = (height: string = "auto"): ApexOptions => {
+const chartOptions = (chartHeight: string = "auto"): ApexOptions => {
   const labelColor = getCSSVariableValue("--bs-gray-800");
   const strokeColor = getCSSVariableValue("--bs-gray-300");
-  const baseColor = getCSSVariableValue(`--bs-success`);
-  const secondaryColor = getCSSVariableValue(`--bs-primary`);
-  const lightColor = getCSSVariableValue(`--bs-success-light`);
-  const secondaryLightColor = getCSSVariableValue(`--bs-primary-light`);
+  const baseColor = getCSSVariableValue(`--bs-primary`);
+  const lightColor = getCSSVariableValue(`--bs-primary-light`);
 
   return {
+    grid: {
+      show: false,
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    },
     chart: {
       fontFamily: "inherit",
       type: "area",
-      height: height,
+      height: chartHeight,
       toolbar: {
         show: false,
       },
@@ -126,19 +126,22 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
       enabled: false,
     },
     fill: {
-      type: "solid",
-      opacity: 1,
+      type: "gradient",
+      gradient: {
+        opacityFrom: 0.8,
+        opacityTo: 0,
+        stops: [20, 120, 120, 120],
+      },
     },
     stroke: {
       curve: "smooth",
       show: true,
-      width: 3,
-      colors: [baseColor, secondaryColor],
+      width: 2,
+      colors: ["#FFFFFF"],
     },
     xaxis: {
       categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
       axisBorder: {
-        strokeWidth: 0,
         show: false,
       },
       axisTicks: {
@@ -166,7 +169,7 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
     },
     yaxis: {
       min: 0,
-      max: 6,
+      max: 60,
       labels: {
         show: false,
         style: {
@@ -202,14 +205,14 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
       },
       y: {
         formatter: function (val) {
-          return val + " Photos";
+          return "$" + val + " thousands";
         },
       },
     },
-    colors: [lightColor, secondaryLightColor],
+    colors: [baseColor],
     markers: {
-      colors: [lightColor, secondaryLightColor],
-      strokeColors: [baseColor, secondaryColor],
+      colors: [lightColor],
+      strokeColors: [baseColor],
       strokeWidth: 3,
     },
   };
@@ -218,54 +221,30 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
 
 <template>
   <CardContainer
-    card-title="Photography Statistics"
-    card-subtitle="My Photography Journey"
+    card-title="Focal Length"
     :header-border="false"
-    :body-padding="false"
+    class="theme-dark-bg-body theme-light-bg-primary"
   >
     <template v-slot:cardBody>
-      <LayoutGrids class="card-px pt-5 pb-10">
-        <template v-slot:gridColumns>
-          <template
-            v-for="(photographyStatistic, index) in photographyStatistics"
-            :key="index"
-          >
-            <div class="col-6 col-xl-3">
-              <div class="d-flex align-items-center me-2">
-                <div class="symbol symbol-50px me-3">
-                  <div
-                    :class="`symbol-label bg-light-${photographyStatistic.iconColor}`"
-                  >
-                    <KTIcon
-                      :icon-name="photographyStatistic.icon"
-                      :icon-class="`fs-1 text-${photographyStatistic.iconColor}`"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div class="fs-4 text-dark fw-bold">
-                    {{ photographyStatistic.value }}
-                  </div>
-                  <div class="fs-7 text-muted fw-semibold">
-                    {{ photographyStatistic.title }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </template>
-        </template>
-      </LayoutGrids>
-
       <apexchart
         ref="chartRef"
-        class="card-rounded-bottom"
         :options="chart"
         :series="series"
         :height="chartHeight"
         type="area"
       ></apexchart>
-      <!--end::Chart-->
+
+      <!--begin::Stats-->
+      <div class="pt-2">
+        <span class="text-dark fw-bold fs-3x">560</span>
+        <span class="text-dark fw-bold fs-2x me-2">mm</span>
+        <!--end::Number-->
+
+        <!--begin::Text-->
+        <div class="text-dark fw-bold fs-6">Preferred Focal Length</div>
+        <!--end::Text-->
+      </div>
+      <!--end::Stats-->
     </template>
   </CardContainer>
 </template>

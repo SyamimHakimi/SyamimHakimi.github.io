@@ -20,6 +20,18 @@
 	.theme-light-bg-body {
 		background-color: var(--#{$prefix}body-bg) !important;	
 	}
+
+	.theme-light-bg-primary {
+		background-color: #{$bg-primary} !important;
+	}
+
+	.theme-light-bg-danger {
+		background-color: #{$bg-danger} !important;
+	}
+
+	.theme-light-bg-info {
+		background-color: #{$bg-info} !important;
+	}
 }
 
 // Dark mode

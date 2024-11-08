@@ -88,6 +88,11 @@ $dark-active: 					darken($gray-900, 3%) !default;
 $dark-light: 					$gray-200 !default; 
 $dark-inverse: 					$white !default;
 
+// Background colors
+$bg-primary:					#B2DBF9 !default;
+$bg-danger:						#F1BFCC !default;
+$bg-info:						#CBBCF4 !default;
+
 // Contextual colors
 $theme-colors: (
 	"light": $light,

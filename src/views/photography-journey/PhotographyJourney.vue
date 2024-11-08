@@ -10,10 +10,16 @@ import ListsWidget4 from "@/components/widgets/lists/Widget4.vue";
 import Widget6 from "@/components/widgets/mixed/Widget6.vue";
 import ChartsPhotographyStatistics from "@/components-new/charts/ChartsPhotographyStatistics.vue";
 import Widget12 from "@/components/widgets/mixed/Widget12.vue";
+import ChartsUsedFocalLength from "@/components-new/charts/ChartsUsedFocalLength.vue";
+import ChartsPhotographyTheme from "@/components-new/charts/ChartsPhotographyTheme.vue";
+import ChartsFujifilmRecipe from "@/components-new/charts/ChartsFujifilmRecipe.vue";
 
 export default defineComponent({
   name: "photography-journey-layout",
   components: {
+    ChartsFujifilmRecipe,
+    ChartsPhotographyTheme,
+    ChartsUsedFocalLength,
     Widget12,
     ChartsPhotographyStatistics,
     Widget6,
@@ -31,60 +37,25 @@ export default defineComponent({
 <template>
   <!--begin::Row-->
   <div class="row gy-5 g-xl-10">
-    <!--    Focal Length Frequency src/components/widgets/mixed/Widget12.vue-->
     <!--    Favourite recipe src/components/widgets/mixed/Widget13.vue-->
     <!--  Photography Theme src/components/widgets/statsistics/Widget4.vue-->
 
-    <!--begin::Col-->
     <div class="col-12">
-      <ChartsPhotographyStatistics chart-height="150" />
+      <ChartsPhotographyStatistics />
     </div>
 
     <div class="col-xl-4">
-      <Widget12
-        widget-classes="card-xl-stretch mb-xl-10"
-        widget-color="#F7D9E3"
-        chart-height="100"
-      />
+      <ChartsUsedFocalLength chart-height="100" />
     </div>
-    <!--end::Col-->
 
-    <!--begin::Col-->
     <div class="col-xl-4">
-      <MixedWidget13
-        widget-classes="card-xxl-stretch mb-xl-10"
-        widget-color="#CBF0F4"
-        chart-height="100"
-      />
+      <ChartsPhotographyTheme chart-height="100" />
     </div>
-    <!--end::Col-->
 
-    <!--begin::Col-->
     <div class="col-xl-4">
-      <MixedWidget14
-        widget-classes="card-xxl-stretch mb-5 mb-xl-10"
-        widget-color="#CBD4F4"
-      />
+      <ChartsFujifilmRecipe chart-height="100" />
     </div>
-    <!--end::Col-->
   </div>
-  <!--end::Row-->
 
   <TablesWidget9 widget-classes="mb-5 mb-xl-10" />
-
-  <!--begin::Row-->
-  <div class="row gy-5 g-xl-10">
-    <!--begin::Col-->
-    <div class="col-xxl-6">
-      <ListsWidget5 widget-classes="card-xl-stretch mb-xl-10" />
-    </div>
-    <!--end::Col-->
-
-    <!--begin::Col-->
-    <div class="col-xxl-6">
-      <ListsWidget4 widget-classes="card-xl-stretch mb-5 mb-xl-10" />
-    </div>
-    <!--end::Col-->
-  </div>
-  <!--end::Row-->
 </template>
