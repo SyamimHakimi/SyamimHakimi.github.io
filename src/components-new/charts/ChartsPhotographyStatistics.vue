@@ -19,6 +19,7 @@ export default defineComponent({
   },
   props: {
     chartHeight: { type: String, required: false, default: "150" },
+    inLayoutGrid: { type: Boolean, required: false, default: false },
   },
   setup(props) {
     const chartRef = ref<typeof VueApexCharts | null>(null);
@@ -222,6 +223,7 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
     card-subtitle="My Photography Journey"
     :header-border="false"
     :body-padding="false"
+    :in-layout-grid="inLayoutGrid"
   >
     <template v-slot:cardBody>
       <LayoutGrids class="card-px pt-5 pb-10">

@@ -15,6 +15,7 @@ export default defineComponent({
   },
   props: {
     chartHeight: { type: String, required: false, default: "100" },
+    inLayoutGrid: { type: Boolean, required: false, default: false },
   },
   setup(props) {
     const chartRef = ref<typeof VueApexCharts | null>(null);
@@ -224,6 +225,7 @@ const chartOptions = (chartHeight: string = "auto"): ApexOptions => {
     card-title="Focal Length"
     :header-border="false"
     class="theme-dark-bg-body theme-light-bg-primary"
+    :in-layout-grid="inLayoutGrid"
   >
     <template v-slot:cardBody>
       <apexchart
