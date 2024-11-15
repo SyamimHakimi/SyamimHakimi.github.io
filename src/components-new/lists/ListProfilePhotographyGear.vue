@@ -1,8 +1,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
-import type { ProfilePhotographyGear } from "@/stores/about-me";
+import { useAboutMeStore } from "@/stores/about-me";
 import { getAssetPath } from "@/core/helpers/assets";
+import { storeToRefs } from "pinia";
 
 export default defineComponent({
   name: "list-profile-photography-gear",
@@ -11,39 +12,11 @@ export default defineComponent({
     inLayoutGrid: { type: Boolean, required: false, default: true },
   },
   setup() {
-    const photographyGear: Array<ProfilePhotographyGear> = [
-      {
-        imgSrc: getAssetPath("media/stock/600x400/img-20.jpg"),
-        title: "X-E4",
-        type: "Camera",
-        color: "success",
-        brand: "Fujifilm",
-      },
-      {
-        imgSrc: getAssetPath("media/stock/600x400/img-19.jpg"),
-        title: "18-50mm F2.8 DC DN",
-        type: "Zoom Lens",
-        color: "primary",
-        brand: "Sigma",
-      },
-      {
-        imgSrc: getAssetPath("media/stock/600x400/img-25.jpg"),
-        title: "10-18mm F2.8 DC DN",
-        type: "Zoom Lens",
-        color: "primary",
-        brand: "Sigma",
-      },
-      {
-        imgSrc: getAssetPath("media/stock/600x400/img-24.jpg"),
-        title: "56mm F1.7 APS-C",
-        type: "Prime Lens",
-        color: "info",
-        brand: "Viltrox",
-      },
-    ];
+    const aboutMeStore = useAboutMeStore();
+    const { photographyGearsList } = storeToRefs(aboutMeStore);
 
     return {
-      photographyGear,
+      photographyGearsList,
     };
   },
 });
@@ -57,10 +30,10 @@ export default defineComponent({
     :in-layout-grid="inLayoutGrid"
   >
     <template v-slot:cardBody>
-      <template v-for="(item, index) in photographyGear" :key="index">
+      <template v-for="(item, index) in photographyGearsList" :key="index">
         <!--begin::Item-->
         <div
-          :class="{ 'mb-7': photographyGear.length - 1 !== index }"
+          :class="{ 'mb-7': index < photographyGearsList.length - 1 }"
           class="d-flex align-items-sm-center"
         >
           <!--begin::Symbol-->
@@ -78,9 +51,9 @@ export default defineComponent({
           <div class="d-flex flex-row-fluid flex-wrap align-items-center">
             <div class="flex-grow-1 me-2">
               <a
-                href="#"
+                :href="item.link"
                 class="text-gray-800 fw-bold text-hover-primary fs-6"
-                >{{ item.title }}</a
+                >{{ item.name }}</a
               >
 
               <span class="text-muted fw-semibold d-block pt-1">{{

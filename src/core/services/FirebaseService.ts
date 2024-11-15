@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
   collection,
+  doc,
   initializeFirestore,
   persistentLocalCache,
 } from "firebase/firestore";
@@ -21,5 +22,8 @@ const db = initializeFirestore(firebaseApp, {
 });
 
 // here we can export reusable database references
+export const favouriteBoardgamesRef = collection(db, "favourite-boardgames");
 export const servicesRef = collection(db, "services");
 export const socialMediaRef = collection(db, "social-media");
+export const photographyGearsRef = collection(db, "photography-gears");
+export const profileRef = doc(db, "profile", "ddIhV8IxV5DjciJY7UxW");
