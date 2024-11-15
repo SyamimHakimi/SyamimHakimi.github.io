@@ -2,7 +2,6 @@ import { query, where, orderBy } from "firebase/firestore";
 import { servicesRef } from "@/core/services/FirebaseService";
 import { firestoreDefaultConverter, useCollection } from "vuefire";
 import { defineStore } from "pinia";
-import { assignColorListThemeFirestore } from "@/core/helpers/global";
 
 export interface ServicesTab {
   routerTo: string;
@@ -45,9 +44,7 @@ function servicesTimelineList(servicesEnum: ServicesEnum) {
           description: snapshot.get("description"),
         };
       },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      toFirestore: (modelObject: TimelinesService) =>
-        firestoreDefaultConverter.toFirestore,
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
     }),
     {
       ssrKey: `Services-${ServicesEnum[servicesEnum]}`,

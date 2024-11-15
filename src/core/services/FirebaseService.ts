@@ -22,3 +22,4 @@ const db = initializeFirestore(firebaseApp, {
 
 // here we can export reusable database references
 export const servicesRef = collection(db, "services");
+export const socialMediaRef = collection(db, "social-media");
