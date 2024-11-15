@@ -1,47 +1,29 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import TimelinesServices from "@/components-new/timelines/TimelinesServices.vue";
-import type { TimelinesService } from "@/stores/services";
+import { useServiceStore } from "@/stores/services";
+import { storeToRefs } from "pinia";
+import { assignColorListThemeFirestore } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "services-web-app-development",
   components: { TimelinesServices },
   setup() {
-    const timelinesServices: Array<TimelinesService> = [
-      {
-        icon: "screen",
-        color: "success",
-        title: "Custom Web Application",
-        description:
-          "Creating web applications from scratch according to requirements",
-      },
-      {
-        icon: "questionnaire-tablet",
-        color: "warning",
-        title: "Forms and Validations",
-        description: "Comprehensive forms and validation for data entry",
-      },
-      {
-        icon: "security-user",
-        color: "primary",
-        title: "Access Management",
-        description: "Apply security roles for access management",
-      },
-      {
-        icon: "graph-3",
-        color: "danger",
-        title: "Detailed Dashboard",
-        description: "Provide relevant statistics in a single page",
-      },
-    ];
+    const servicesStore = useServiceStore();
+    const { servicesWebAppDevelopmentList } = storeToRefs(servicesStore);
+    assignColorListThemeFirestore(servicesWebAppDevelopmentList, "color");
+
+    watch(servicesWebAppDevelopmentList, () => {
+      assignColorListThemeFirestore(servicesWebAppDevelopmentList, "color");
+    });
 
     return {
-      timelinesServices,
+      servicesWebAppDevelopmentList,
     };
   },
 });
 </script>
 
 <template>
-  <TimelinesServices :timelines-services="timelinesServices" />
+  <TimelinesServices :timelines-services="servicesWebAppDevelopmentList" />
 </template>

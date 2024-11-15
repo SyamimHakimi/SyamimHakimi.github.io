@@ -10,6 +10,7 @@ import { useThemeStore } from "@/stores/theme";
 import { useBodyStore } from "@/stores/body";
 import { themeConfigValue } from "@/core/helpers/config";
 import { initializeComponents } from "@/core/plugins/keenthemes";
+import { useServiceStore } from "@/stores/services";
 
 export default defineComponent({
   name: "app",

@@ -1,7 +1,9 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import TimelinesServices from "@/components-new/timelines/TimelinesServices.vue";
-import type { TimelinesService } from "@/stores/services";
+import { useServiceStore } from "@/stores/services";
+import { storeToRefs } from "pinia";
+import { assignColorListThemeFirestore } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "services-api-integration",
@@ -9,36 +11,21 @@ export default defineComponent({
     TimelinesServices,
   },
   setup() {
-    const timelinesServices: Array<TimelinesService> = [
-      {
-        icon: "fasten",
-        color: "success",
-        title: "Integrate Third-Party APIs",
-        description:
-          "Seamlessly connect with APIs from payment gateways to in-house APIs",
-      },
-      {
-        icon: "kanban",
-        color: "warning",
-        title: "Meet Business Flow",
-        description: "Minor to none customization to current business flow",
-      },
-      {
-        icon: "arrows-loop",
-        color: "primary",
-        title: "Data Mapping",
-        description:
-          "Ensuring correct formatting during transfer of data to and from APIs",
-      },
-    ];
+    const servicesStore = useServiceStore();
+    const { servicesApiIntegrationList } = storeToRefs(servicesStore);
+    assignColorListThemeFirestore(servicesApiIntegrationList, "color");
+
+    watch(servicesApiIntegrationList, () => {
+      assignColorListThemeFirestore(servicesApiIntegrationList, "color");
+    });
 
     return {
-      timelinesServices,
+      servicesApiIntegrationList,
     };
   },
 });
 </script>
 
 <template>
-  <TimelinesServices :timelines-services="timelinesServices" />
+  <TimelinesServices :timelines-services="servicesApiIntegrationList" />
 </template>

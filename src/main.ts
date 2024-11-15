@@ -13,6 +13,8 @@ import { initApexCharts } from "@/core/plugins/apexcharts";
 import { initInlineSvg } from "@/core/plugins/inline-svg";
 import { initVeeValidate } from "@/core/plugins/vee-validate";
 import { initKtIcon } from "@/core/plugins/keenthemes";
+import { VueFire, VueFireAuth } from "vuefire";
+import { firebaseApp } from "@/core/services/FirebaseService";
 
 import "@/core/plugins/prismjs";
 
@@ -32,6 +34,15 @@ app.use(i18n);
 
 app.directive("tooltip", (el) => {
   new Tooltip(el);
+});
+
+app.use(VueFire, {
+  // imported above but could also just be created here
+  firebaseApp,
+  modules: [
+    // we will see other modules later on
+    VueFireAuth(),
+  ],
 });
 
 app.mount("#app");

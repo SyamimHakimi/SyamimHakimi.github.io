@@ -1,35 +1,29 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import TimelinesServices from "@/components-new/timelines/TimelinesServices.vue";
-import type { TimelinesService } from "@/stores/services";
+import { useServiceStore } from "@/stores/services";
+import { storeToRefs } from "pinia";
+import { assignColorListThemeFirestore } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "services-web-app-development",
   components: { TimelinesServices },
   setup() {
-    const timelinesServices: Array<TimelinesService> = [
-      {
-        icon: "external-drive",
-        color: "success",
-        title: "Designing SQL Database",
-        description: "Design to be scalable, efficient and easy to maintain",
-      },
-      {
-        icon: "arrow-up-down",
-        color: "warning",
-        title: "Data Migration",
-        description:
-          "Handling import and export tasks to enable compatibility with older data",
-      },
-    ];
+    const servicesStore = useServiceStore();
+    const { servicesDatabaseManagementList } = storeToRefs(servicesStore);
+    assignColorListThemeFirestore(servicesDatabaseManagementList, "color");
+
+    watch(servicesDatabaseManagementList, () => {
+      assignColorListThemeFirestore(servicesDatabaseManagementList, "color");
+    });
 
     return {
-      timelinesServices,
+      servicesDatabaseManagementList,
     };
   },
 });
 </script>
 
 <template>
-  <TimelinesServices :timelines-services="timelinesServices" />
+  <TimelinesServices :timelines-services="servicesDatabaseManagementList" />
 </template>

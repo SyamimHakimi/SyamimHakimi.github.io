@@ -224,6 +224,6 @@ export const illustrationsSet = computed(() => {
  * Scrolltop display
  * @returns {boolean}
  */
-export const scrolltopDispaly = computed(() => {
+export const scrollTopDisplay = computed(() => {
   return useConfigStore().getLayoutConfig("scrolltop.display");
 });

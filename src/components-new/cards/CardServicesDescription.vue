@@ -29,8 +29,7 @@ export default defineComponent({
             development. Whether you need to connect disparate systems or
             develop a custom web application from the ground up, I am dedicated
             to understanding your unique needs and providing reliable services.
-            Let’s collaborate to bring your ideas to life and drive your project
-            forward!
+            Let’s collaborate to bring your ideas to life!
           </div>
 
           <div class="notice bg-light rounded p-6">
