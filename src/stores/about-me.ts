@@ -54,7 +54,6 @@ function favouriteBoardgamesList() {
   return useCollection(
     queryCollection.withConverter<ProfileFavouriteBoardgames>({
       fromFirestore(snapshot): ProfileFavouriteBoardgames {
-        console.log(snapshot);
         return <ProfileFavouriteBoardgames>{
           title: snapshot.get("name"),
           link: snapshot.get("link"),
@@ -96,10 +95,23 @@ function socialMediaList() {
 }
 
 function profileDetails() {
-  return useDocument(profileRef, {
-    ssrKey: `Profile`,
-    once: true,
-  });
+  return useDocument(
+    profileRef.withConverter<ProfileDetails>({
+      fromFirestore(snapshot): ProfileDetails {
+        return <ProfileDetails>{
+          name: snapshot.get("Name"),
+          country: snapshot.get("Country"),
+          residing_country: snapshot.get("Residing Country"),
+          hobbies: snapshot.get("Hobbies"),
+        };
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Profile`,
+      once: true,
+    },
+  );
 }
 
 function photographyGearsList() {
