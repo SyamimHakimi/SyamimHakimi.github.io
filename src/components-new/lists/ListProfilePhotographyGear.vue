@@ -2,7 +2,6 @@
 import { defineComponent } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
 import { useAboutMeStore } from "@/stores/about-me";
-import { getAssetPath } from "@/core/helpers/assets";
 import { storeToRefs } from "pinia";
 
 export default defineComponent({

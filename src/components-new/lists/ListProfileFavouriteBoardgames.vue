@@ -1,7 +1,9 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
-import type { ProfileFavouriteBoardgames } from "@/stores/about-me";
+import { useAboutMeStore } from "@/stores/about-me";
+import { storeToRefs } from "pinia";
+import { assignColorListThemeFirestore } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "list-profile-favourite-boardgames",
@@ -10,48 +12,13 @@ export default defineComponent({
     inLayoutGrid: { type: Boolean, required: false, default: true },
   },
   setup() {
-    const favouriteBoardgamesList: Array<ProfileFavouriteBoardgames> = [
-      {
-        icon: "fa-1",
-        color: "success",
-        title: "A Fake Artist Goes to New York ",
-        description: "Bluffing, Deduction",
-        rating: 7.8,
-        ratingMax5: 7.8 / 2,
-      },
-      {
-        icon: "fa-2",
-        color: "warning",
-        title: "Heat: Pedal to the Metal",
-        description: "Racing",
-        rating: 8.3,
-        ratingMax5: 8.3 / 2,
-      },
-      {
-        icon: "fa-3",
-        color: "primary",
-        title: "Deception: Murder in Hong Kong ",
-        description: "Bluffing, Deduction",
-        rating: 8.8,
-        ratingMax5: 8.8 / 2,
-      },
-      {
-        icon: "fa-4",
-        color: "danger",
-        title: "Taco Cat Goat Cheese Pizza",
-        description: "Dexterity, Party Game",
-        rating: 6.1,
-        ratingMax5: 6.1 / 2,
-      },
-      {
-        icon: "fa-5",
-        color: "info",
-        title: "Patchwork",
-        description: "Strategy, Economic",
-        rating: 6.8,
-        ratingMax5: 6.8 / 2,
-      },
-    ];
+    const aboutMeStore = useAboutMeStore();
+    const { favouriteBoardgamesList } = storeToRefs(aboutMeStore);
+    assignColorListThemeFirestore(favouriteBoardgamesList, "color");
+
+    watch(favouriteBoardgamesList, () => {
+      assignColorListThemeFirestore(favouriteBoardgamesList, "color");
+    });
 
     return {
       favouriteBoardgamesList,
@@ -71,7 +38,7 @@ export default defineComponent({
       <template v-for="(item, index) in favouriteBoardgamesList" :key="index">
         <!--begin::Item-->
         <div
-          :class="{ 'mb-7': favouriteBoardgamesList.length - 1 !== index }"
+          :class="{ 'mb-7': index < favouriteBoardgamesList.length - 1 }"
           class="d-flex align-items-center"
         >
           <!--begin::Symbol-->
@@ -84,9 +51,11 @@ export default defineComponent({
 
           <!--begin::Text-->
           <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fs-6 fw-bold">{{
-              item.title
-            }}</a>
+            <a
+              :href="item.link"
+              class="text-dark text-hover-primary fs-6 fw-bold"
+              >{{ item.title }}</a
+            >
 
             <span class="text-muted fw-semibold">{{ item.description }}</span>
           </div>

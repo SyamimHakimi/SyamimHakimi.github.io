@@ -45,17 +45,23 @@ export interface SocialMedia {
 /* Firebase Queries */
 
 function favouriteBoardgamesList() {
-  const queryCollection = query(favouriteBoardgamesRef, orderBy("sorting"));
+  const queryCollection = query(
+    favouriteBoardgamesRef,
+    orderBy("score", "desc"),
+  );
+  let index = 1;
 
   return useCollection(
     queryCollection.withConverter<ProfileFavouriteBoardgames>({
       fromFirestore(snapshot): ProfileFavouriteBoardgames {
+        console.log(snapshot);
         return <ProfileFavouriteBoardgames>{
-          title: snapshot.get("title"),
+          title: snapshot.get("name"),
           link: snapshot.get("link"),
-          description: snapshot.get("description"),
-          rating: snapshot.get("rating"),
-          ratingMax5: snapshot.get("rating") / 2,
+          description: snapshot.get("tags"),
+          rating: snapshot.get("score"),
+          ratingMax5: snapshot.get("score") / 2,
+          icon: `fa-${index++}`,
         };
       },
       toFirestore: () => firestoreDefaultConverter.toFirestore,
