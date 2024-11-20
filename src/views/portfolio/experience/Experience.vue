@@ -1,107 +1,15 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ExperienceSection from "@/views/portfolio/experience/ExperienceSection.vue";
-import type { PortfolioSections } from "@/stores/portfolio";
+import { useExperienceStore } from "@/stores/portfolio";
+import { storeToRefs } from "pinia";
 
 export default defineComponent({
   name: "experience-layout",
   components: { ExperienceSection },
   setup() {
-    const portfolioSections: Array<PortfolioSections> = [
-      {
-        title: "APIs",
-        experienceList: [
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-        ],
-      },
-      {
-        title: "Protocols",
-        experienceList: [
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-        ],
-      },
-      {
-        title: "Frameworks",
-        experienceList: [
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-        ],
-      },
-      {
-        title: "Languages",
-        experienceList: [
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-          {
-            iconImg: "media/svg/brand-logos/plurk.svg",
-            link: "https://www.google.com",
-            badgeText: "4 Years",
-            badgeColor: "success",
-            title: "Python",
-            description:
-              "Used mainly on back-end development for creating scripts and APIs",
-          },
-        ],
-      },
-    ];
+    const experienceStore = useExperienceStore();
+    const { portfolioSections } = storeToRefs(experienceStore);
 
     return {
       portfolioSections,

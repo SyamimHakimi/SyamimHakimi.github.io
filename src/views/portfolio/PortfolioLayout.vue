@@ -16,7 +16,7 @@ export default defineComponent({
         iconColor: "light",
         color: "dark",
         title: "Experience",
-        description: "APIs, Languages, Frameworks, Protocols",
+        description: "Platforms, Protocols, Frameworks, Languages",
       },
       {
         routerTo: "/portfolio/personal_projects",

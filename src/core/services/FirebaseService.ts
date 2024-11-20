@@ -22,6 +22,23 @@ const db = initializeFirestore(firebaseApp, {
 });
 
 // here we can export reusable database references
+export const experienceRef = collection(db, "experience");
+export const experienceFrameworksRef = collection(
+  db,
+  "experience/frameworks/item",
+);
+export const experienceLanguagesRef = collection(
+  db,
+  "experience/languages/item",
+);
+export const experiencePlatformsRef = collection(
+  db,
+  "experience/platforms/item",
+);
+export const experienceProtocolsRef = collection(
+  db,
+  "experience/protocols/item",
+);
 export const favouriteBoardgamesRef = collection(db, "favourite-boardgames");
 export const servicesRef = collection(db, "services");
 export const socialMediaRef = collection(db, "social-media");

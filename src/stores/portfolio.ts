@@ -1,3 +1,19 @@
+import { firestoreDefaultConverter, useCollection } from "vuefire";
+import { orderBy, query } from "firebase/firestore";
+import {
+  experienceFrameworksRef,
+  experienceLanguagesRef,
+  experiencePlatformsRef,
+  experienceProtocolsRef,
+  experienceRef,
+} from "@/core/services/FirebaseService";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineStore } from "pinia";
+import {
+  durationToString,
+  getDurationFromTimestamp,
+} from "@/core/helpers/global";
+
 export interface PortfolioTabs {
   routerTo: string;
   icon: Array<string>;
@@ -38,3 +54,121 @@ export interface PersonalProjects {
   personalProjectsDescription: PersonalProjectsDescription;
   personalProjectsTechStackList: Array<PersonalProjectsTechStack>;
 }
+
+/* Enum */
+
+export enum ExperienceEnum {
+  Platforms = 1,
+  Protocols = 3,
+  Frameworks = 2,
+  Languages = 4,
+}
+
+/* Firebase Queries */
+
+function experienceFirebaseQuery(experienceEnum: ExperienceEnum) {
+  let itemRef = experienceRef;
+  switch (experienceEnum) {
+    case ExperienceEnum.Platforms: {
+      itemRef = experiencePlatformsRef;
+      break;
+    }
+    case ExperienceEnum.Protocols: {
+      itemRef = experienceProtocolsRef;
+      break;
+    }
+    case ExperienceEnum.Frameworks: {
+      itemRef = experienceFrameworksRef;
+      break;
+    }
+    case ExperienceEnum.Languages: {
+      itemRef = experienceLanguagesRef;
+      break;
+    }
+  }
+
+  return query(itemRef, orderBy("date-from"));
+}
+
+function experienceItemList(experienceEnum: ExperienceEnum) {
+  return useCollection(
+    experienceFirebaseQuery(
+      experienceEnum,
+    ).withConverter<PortfolioSectionsItem>({
+      fromFirestore(snapshot): PortfolioSectionsItem {
+        const dateFrom = snapshot.get("date-from");
+        const dateTo = snapshot.get("date-to");
+        const difference = getDurationFromTimestamp(dateFrom, dateTo);
+
+        let color = "success";
+        switch (difference.years) {
+          case 0: {
+            color = "warning";
+            break;
+          }
+          case 1: {
+            color = "info";
+            break;
+          }
+        }
+        console.log(snapshot.get("title"), color, difference);
+        console.log(getAssetPath(snapshot.get("img-src")));
+
+        return <PortfolioSectionsItem>{
+          iconImg: snapshot.get("img-src"),
+          link: snapshot.get("link"),
+          badgeText: durationToString(difference),
+          badgeColor: color,
+          title: snapshot.get("title"),
+          description: snapshot.get("description"),
+        };
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Experience-${ExperienceEnum[experienceEnum]}`,
+      once: true,
+    },
+  );
+}
+
+/* Pinia Store */
+
+export const useExperienceStore = defineStore("experience", {
+  state: function () {
+    const experiencePlatformsList = experienceItemList(
+      ExperienceEnum.Platforms,
+    );
+    const experienceProtocolsList = experienceItemList(
+      ExperienceEnum.Protocols,
+    );
+    const experienceFrameworksList = experienceItemList(
+      ExperienceEnum.Frameworks,
+    );
+    const experienceLanguagesList = experienceItemList(
+      ExperienceEnum.Languages,
+    );
+
+    return {
+      portfolioSections: [
+        {
+          title: "Platforms",
+          experienceList: experiencePlatformsList,
+        },
+        {
+          title: "Protocols",
+          experienceList: experienceProtocolsList,
+        },
+        {
+          title: "Frameworks",
+          experienceList: experienceFrameworksList,
+        },
+        {
+          title: "Languages",
+          experienceList: experienceLanguagesList,
+        },
+      ],
+      // portfolioSections: experiencePlatformsList,
+    };
+  },
+});

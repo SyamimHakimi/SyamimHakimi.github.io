@@ -53,9 +53,9 @@ export default defineComponent({
         <!--begin::Avatar-->
         <div
           v-if="iconImg"
-          class="align-self-center symbol symbol-50px w-50px bg-light me-3"
+          class="align-content-center align-self-center symbol symbol-50px h-50px w-50px bg-dark me-3"
         >
-          <img :src="getAssetPath(iconImg)" alt="icon" class="p-3" />
+          <img :src="getAssetPath(iconImg)" alt="icon" class="h-auto p-3" />
         </div>
         <!--end::Avatar-->
 
