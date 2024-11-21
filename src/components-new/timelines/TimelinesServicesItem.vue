@@ -8,7 +8,7 @@ export default defineComponent({
   components: { KTIcon },
   props: {
     timelinesServices: {
-      type: Object as () => TimelinesService,
+      type: Object as PropType<TimelinesService>,
       required: true,
     },
   },

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, type PropType } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
 import "@/core/helpers/global";
 import type { PortfolioSectionsItem } from "@/stores/portfolio";
@@ -9,7 +9,7 @@ export default defineComponent({
   components: { CardContainer },
   props: {
     portfolioSectionItem: {
-      type: Object as () => PortfolioSectionsItem,
+      type: Object as PropType<PortfolioSectionsItem>,
       required: true,
     },
     inLayoutGrid: { type: Boolean, required: false },

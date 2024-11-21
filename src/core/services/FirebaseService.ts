@@ -42,5 +42,6 @@ export const experienceProtocolsRef = collection(
 export const favouriteBoardgamesRef = collection(db, "favourite-boardgames");
 export const servicesRef = collection(db, "services");
 export const socialMediaRef = collection(db, "social-media");
+export const personalProjectsRef = doc(db, "projects", "XYdqe9OyXNSUEzZ8kqwn");
 export const photographyGearsRef = collection(db, "photography-gears");
 export const profileRef = doc(db, "profile", "ddIhV8IxV5DjciJY7UxW");

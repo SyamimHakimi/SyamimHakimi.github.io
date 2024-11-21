@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, type PropType } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
 import type { PersonalProjectsDescription } from "@/stores/portfolio";
 
@@ -8,8 +8,8 @@ export default defineComponent({
   components: { CardContainer },
   props: {
     personalProjectsDescription: {
-      type: Object as () => PersonalProjectsDescription,
-      required: true,
+      type: Object as PropType<PersonalProjectsDescription>,
+      required: false,
     },
     inLayoutGrid: { type: Boolean, required: false },
   },
@@ -21,12 +21,12 @@ export default defineComponent({
   <CardContainer :in-layout-grid="inLayoutGrid">
     <template v-slot:cardBody>
       <div class="fw-bold fs-1">
-        {{ personalProjectsDescription.title }}
+        {{ personalProjectsDescription?.title }}
         <div class="text-muted fs-3 fw-semibold mb-5">
-          {{ personalProjectsDescription.subtitle }}
+          {{ personalProjectsDescription?.subtitle }}
         </div>
         <div class="fs-6 fw-normal text-gray-600">
-          {{ personalProjectsDescription.description }}
+          {{ personalProjectsDescription?.description }}
         </div>
       </div>
     </template>

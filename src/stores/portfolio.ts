@@ -1,18 +1,24 @@
-import { firestoreDefaultConverter, useCollection } from "vuefire";
-import { orderBy, query } from "firebase/firestore";
+import {
+  type _RefFirestore,
+  firestoreDefaultConverter,
+  useCollection,
+  useDocument,
+} from "vuefire";
+import { collection, orderBy, query } from "firebase/firestore";
 import {
   experienceFrameworksRef,
   experienceLanguagesRef,
   experiencePlatformsRef,
   experienceProtocolsRef,
   experienceRef,
+  personalProjectsRef,
 } from "@/core/services/FirebaseService";
-import { getAssetPath } from "@/core/helpers/assets";
 import { defineStore } from "pinia";
 import {
   durationToString,
   getDurationFromTimestamp,
 } from "@/core/helpers/global";
+import { DocumentReference } from "@firebase/firestore";
 
 export interface PortfolioTabs {
   routerTo: string;
@@ -52,7 +58,7 @@ export interface PersonalProjectsTechStack {
 
 export interface PersonalProjects {
   personalProjectsDescription: PersonalProjectsDescription;
-  personalProjectsTechStackList: Array<PersonalProjectsTechStack>;
+  personalProjectsTechStackList: _RefFirestore<PersonalProjectsTechStack[]>;
 }
 
 /* Enum */
@@ -111,8 +117,6 @@ function experienceItemList(experienceEnum: ExperienceEnum) {
             break;
           }
         }
-        console.log(snapshot.get("title"), color, difference);
-        console.log(getAssetPath(snapshot.get("img-src")));
 
         return <PortfolioSectionsItem>{
           iconImg: snapshot.get("img-src"),
@@ -132,9 +136,53 @@ function experienceItemList(experienceEnum: ExperienceEnum) {
   );
 }
 
+function personalProjectsTechStackList(
+  docRef: DocumentReference,
+  path: string,
+) {
+  const techStackRef = query(collection(docRef, path), orderBy("sorting"));
+
+  return useCollection(
+    techStackRef.withConverter<PersonalProjectsTechStack>({
+      fromFirestore(snapshot): PersonalProjectsTechStack {
+        return <PersonalProjectsTechStack>{
+          imgSrc: snapshot.get("img-src"),
+          title: snapshot.get("title"),
+          description: snapshot.get("description"),
+          link: snapshot.get("link"),
+        };
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `PersonalProjects-TechStack`,
+      once: true,
+    },
+  );
+}
+
+function personalProjectDescription() {
+  return useDocument(
+    personalProjectsRef.withConverter<PersonalProjectsDescription>({
+      fromFirestore(snapshot): PersonalProjectsDescription {
+        return <PersonalProjectsDescription>{
+          title: snapshot.get("title"),
+          subtitle: snapshot.get("subtitle"),
+          description: snapshot.get("description"),
+        };
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `PersonalProjects`,
+      once: true,
+    },
+  );
+}
+
 /* Pinia Store */
 
-export const useExperienceStore = defineStore("experience", {
+export const usePortfolioStore = defineStore("portfolio", {
   state: function () {
     const experiencePlatformsList = experienceItemList(
       ExperienceEnum.Platforms,
@@ -168,7 +216,11 @@ export const useExperienceStore = defineStore("experience", {
           experienceList: experienceLanguagesList,
         },
       ],
-      // portfolioSections: experiencePlatformsList,
+      personalProjectsDescription: personalProjectDescription(),
+      personalProjectsTechStack: personalProjectsTechStackList(
+        personalProjectsRef,
+        "techstack",
+      ),
     };
   },
 });

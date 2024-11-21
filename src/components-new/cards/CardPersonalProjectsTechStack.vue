@@ -12,7 +12,7 @@ export default defineComponent({
   props: {
     personalProjectsTechStackList: {
       type: Array<PersonalProjectsTechStack>,
-      required: true,
+      required: false,
     },
     inLayoutGrid: { type: Boolean, required: false },
   },
@@ -33,12 +33,15 @@ export default defineComponent({
           <div class="d-flex">
             <img
               :src="getAssetPath(personalProjectsTechStack.imgSrc)"
-              class="w-30px me-6"
+              class="w-50px me-6"
               alt="logo"
             />
 
             <div class="d-flex flex-column">
-              <a href="#" class="fs-5 text-dark text-hover-primary fw-bold">
+              <a
+                :href="personalProjectsTechStack.link"
+                class="fs-5 text-dark text-hover-primary fw-bold"
+              >
                 {{ personalProjectsTechStack.title }}
               </a>
               <div class="fs-6 fw-semibold text-muted">
@@ -58,7 +61,7 @@ export default defineComponent({
         </div>
 
         <div
-          v-if="index < personalProjectsTechStackList.length - 1"
+          v-if="index < (personalProjectsTechStackList?.length ?? 1) - 1"
           class="separator separator-dashed my-5"
         ></div>
       </template>

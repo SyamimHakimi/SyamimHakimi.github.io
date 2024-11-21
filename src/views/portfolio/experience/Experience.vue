@@ -1,15 +1,15 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import ExperienceSection from "@/views/portfolio/experience/ExperienceSection.vue";
-import { useExperienceStore } from "@/stores/portfolio";
+import { usePortfolioStore } from "@/stores/portfolio";
 import { storeToRefs } from "pinia";
 
 export default defineComponent({
   name: "experience-layout",
   components: { ExperienceSection },
   setup() {
-    const experienceStore = useExperienceStore();
-    const { portfolioSections } = storeToRefs(experienceStore);
+    const portfolioStore = usePortfolioStore();
+    const { portfolioSections } = storeToRefs(portfolioStore);
 
     return {
       portfolioSections,
