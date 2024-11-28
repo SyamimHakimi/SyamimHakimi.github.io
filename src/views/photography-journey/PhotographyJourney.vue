@@ -6,12 +6,12 @@ import ChartsPhotographyTheme from "@/components-new/charts/ChartsPhotographyThe
 import ChartsFujifilmRecipe from "@/components-new/charts/ChartsFujifilmRecipe.vue";
 import TablesLatestPhotos from "@/components-new/tables/TablesLatestPhotos.vue";
 import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import CardExperience from "@/components-new/cards/CardExperience.vue";
+import { storeToRefs } from "pinia";
+import { usePhotographyJourneyStore } from "@/stores/photography-journey";
 
 export default defineComponent({
   name: "photography-journey-layout",
   components: {
-    CardExperience,
     LayoutGrids,
     TablesLatestPhotos,
     ChartsFujifilmRecipe,
@@ -19,7 +19,14 @@ export default defineComponent({
     ChartsUsedFocalLength,
     ChartsPhotographyStatistics,
   },
-  setup() {},
+  setup() {
+    const photographyJourneyStore = usePhotographyJourneyStore();
+    const { lensStats } = storeToRefs(photographyJourneyStore);
+
+    return {
+      lensStats,
+    };
+  },
 });
 </script>
 

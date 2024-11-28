@@ -8,7 +8,8 @@ import { useThemeStore } from "@/stores/theme";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
 import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import type { PhotographyStatistic } from "@/stores/photography-journey";
+import { usePhotographyJourneyStore } from "@/stores/photography-journey";
+import { storeToRefs } from "pinia";
 
 export default defineComponent({
   name: "charts-photography-statistics",
@@ -26,32 +27,8 @@ export default defineComponent({
     const chart: ApexOptions = {};
     const store = useThemeStore();
 
-    const photographyStatistics: Array<PhotographyStatistic> = [
-      {
-        title: "Photos Posted",
-        value: "5",
-        icon: "bucket",
-        iconColor: "success",
-      },
-      {
-        title: "Photo Outings",
-        value: "3",
-        icon: "bucket",
-        iconColor: "warning",
-      },
-      {
-        title: "Favourite Photos",
-        value: "2",
-        icon: "bucket",
-        iconColor: "primary",
-      },
-      {
-        title: "Favourite Photo Lens ",
-        value: "5",
-        icon: "bucket",
-        iconColor: "danger",
-      },
-    ];
+    const photographyJourneyStore = usePhotographyJourneyStore();
+    const { mainStats } = storeToRefs(photographyJourneyStore);
 
     const series = [
       {
@@ -87,7 +64,7 @@ export default defineComponent({
     });
 
     return {
-      photographyStatistics,
+      mainStats,
       chart,
       series,
       chartRef,
@@ -229,10 +206,10 @@ const chartOptions = (height: string = "auto"): ApexOptions => {
       <LayoutGrids class="card-px pt-5 pb-10">
         <template v-slot:gridColumns>
           <template
-            v-for="(photographyStatistic, index) in photographyStatistics"
+            v-for="(photographyStatistic, index) in mainStats"
             :key="index"
           >
-            <div class="col-6 col-xl-3">
+            <div class="col-6 col-xl-3 align-content-center">
               <div class="d-flex align-items-center me-2">
                 <div class="symbol symbol-50px me-3">
                   <div
