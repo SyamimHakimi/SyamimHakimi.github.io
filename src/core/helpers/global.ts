@@ -1,5 +1,5 @@
 import type { _RefFirestore } from "vuefire";
-import Timestamp = firebase.firestore.Timestamp;
+import { Timestamp } from "firebase/firestore";
 
 String.prototype.toTitleCase = function (): string {
   return this.replace(
@@ -64,4 +64,15 @@ export function durationToString(duration) {
   } else {
     return "0 Months"; // If both are 0
   }
+}
+
+export function convertToDate(mmYYYY: string): Date | null {
+  const [month, year] = mmYYYY.split("/").map(Number);
+
+  if (month < 1 || month > 12 || year < 1000) {
+    return null; // Handle invalid month/year inputs.
+  }
+
+  // Note: JS Date uses zero-based months (0 = January, 11 = December).
+  return new Date(year, month - 1, 1);
 }

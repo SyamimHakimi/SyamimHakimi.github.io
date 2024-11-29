@@ -24,29 +24,180 @@ export default defineComponent({
   },
   setup(props) {
     const chartRef = ref<typeof VueApexCharts | null>(null);
-    const chart: ApexOptions = {};
     const store = useThemeStore();
 
     const photographyJourneyStore = usePhotographyJourneyStore();
-    const { mainStats } = storeToRefs(photographyJourneyStore);
+    const { mainStats, photoStats, favPhotoStats } = storeToRefs(
+      photographyJourneyStore,
+    );
 
-    const series = [
-      {
-        name: "Photos Posted",
-        data: [3, 2, 4, 3, 5, 5],
-      },
-      {
-        name: "Favourite Photos",
-        data: [2, 1, 1, 0, 2, 1],
-      },
-    ];
+    const series = computed(() => {
+      const photoList = photoStats.value?.yAxis ?? [];
+      const favPhotoList = favPhotoStats.value?.yAxis ?? [];
+
+      const maxLength = Math.max(photoList.length, favPhotoList.length);
+
+      while (photoList.length < maxLength) {
+        photoList.push(0);
+      }
+      while (favPhotoList.length < maxLength) {
+        favPhotoList.push(0);
+      }
+
+      return [
+        {
+          name: "Photos Posted",
+          data: photoList,
+        },
+        {
+          name: "Favourite Photos",
+          data: favPhotoList,
+        },
+      ];
+    });
+
+    const labels = computed(() => {
+      const photoList = photoStats.value?.xAxis ?? [];
+      const favPhotoList = favPhotoStats.value?.xAxis ?? [];
+
+      let _list: Date[];
+      if (photoList.length > favPhotoList.length) _list = photoList;
+      else _list = favPhotoList;
+
+      return _list.map((date) => {
+        return date.toLocaleString("en-US", {
+          month: "short",
+          year: "numeric",
+        });
+      });
+    });
+
+    const chart = computed(() => {
+      const labelColor = getCSSVariableValue("--bs-gray-800");
+      const strokeColor = getCSSVariableValue("--bs-gray-300");
+      const baseColor = getCSSVariableValue(`--bs-success`);
+      const secondaryColor = getCSSVariableValue(`--bs-primary`);
+      const lightColor = getCSSVariableValue(`--bs-success-light`);
+      const secondaryLightColor = getCSSVariableValue(`--bs-primary-light`);
+
+      return <ApexOptions>{
+        chart: {
+          fontFamily: "inherit",
+          type: "area",
+          height: props.chartHeight,
+          toolbar: {
+            show: false,
+          },
+          zoom: {
+            enabled: false,
+          },
+          sparkline: {
+            enabled: true,
+          },
+        },
+        plotOptions: {},
+        legend: {
+          show: false,
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: "solid",
+          opacity: 1,
+        },
+        stroke: {
+          curve: "smooth",
+          show: true,
+          width: 3,
+          colors: [baseColor, secondaryColor],
+        },
+        xaxis: {
+          categories: labels.value,
+          axisBorder: {
+            strokeWidth: 0,
+            show: false,
+          },
+          axisTicks: {
+            show: false,
+          },
+          labels: {
+            show: false,
+            style: {
+              colors: labelColor,
+              fontSize: "12px",
+            },
+          },
+          crosshairs: {
+            show: false,
+            position: "front",
+            stroke: {
+              color: strokeColor,
+              width: 1,
+              dashArray: 3,
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          min: 0,
+          max: 6,
+          labels: {
+            show: false,
+            style: {
+              colors: labelColor,
+              fontSize: "12px",
+            },
+          },
+        },
+        states: {
+          normal: {
+            filter: {
+              type: "none",
+              value: 0,
+            },
+          },
+          hover: {
+            filter: {
+              type: "none",
+              value: 0,
+            },
+          },
+          active: {
+            allowMultipleDataPointsSelection: false,
+            filter: {
+              type: "none",
+              value: 0,
+            },
+          },
+        },
+        tooltip: {
+          style: {
+            fontSize: "12px",
+          },
+          y: {
+            formatter: function (val) {
+              return val + " Photos";
+            },
+          },
+        },
+        colors: [lightColor, secondaryLightColor],
+        markers: {
+          colors: [lightColor, secondaryLightColor],
+          strokeColors: [baseColor, secondaryColor],
+          strokeWidth: 3,
+        },
+      };
+    });
 
     const themeMode = computed(() => {
       return store.mode;
     });
 
     onBeforeMount(() => {
-      Object.assign(chart, chartOptions(props.chartHeight));
+      Object.assign(chart, chart.value);
     });
 
     const refreshChart = () => {
@@ -54,7 +205,7 @@ export default defineComponent({
         return;
       }
 
-      Object.assign(chart, chartOptions(props.chartHeight));
+      Object.assign(chart, chart.value);
 
       chartRef.value.refresh();
     };
@@ -72,126 +223,6 @@ export default defineComponent({
     };
   },
 });
-
-const chartOptions = (height: string = "auto"): ApexOptions => {
-  const labelColor = getCSSVariableValue("--bs-gray-800");
-  const strokeColor = getCSSVariableValue("--bs-gray-300");
-  const baseColor = getCSSVariableValue(`--bs-success`);
-  const secondaryColor = getCSSVariableValue(`--bs-primary`);
-  const lightColor = getCSSVariableValue(`--bs-success-light`);
-  const secondaryLightColor = getCSSVariableValue(`--bs-primary-light`);
-
-  return {
-    chart: {
-      fontFamily: "inherit",
-      type: "area",
-      height: height,
-      toolbar: {
-        show: false,
-      },
-      zoom: {
-        enabled: false,
-      },
-      sparkline: {
-        enabled: true,
-      },
-    },
-    plotOptions: {},
-    legend: {
-      show: false,
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    fill: {
-      type: "solid",
-      opacity: 1,
-    },
-    stroke: {
-      curve: "smooth",
-      show: true,
-      width: 3,
-      colors: [baseColor, secondaryColor],
-    },
-    xaxis: {
-      categories: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-      axisBorder: {
-        strokeWidth: 0,
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        style: {
-          colors: labelColor,
-          fontSize: "12px",
-        },
-      },
-      crosshairs: {
-        show: false,
-        position: "front",
-        stroke: {
-          color: strokeColor,
-          width: 1,
-          dashArray: 3,
-        },
-      },
-      tooltip: {
-        enabled: false,
-      },
-    },
-    yaxis: {
-      min: 0,
-      max: 6,
-      labels: {
-        show: false,
-        style: {
-          colors: labelColor,
-          fontSize: "12px",
-        },
-      },
-    },
-    states: {
-      normal: {
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-      hover: {
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-      active: {
-        allowMultipleDataPointsSelection: false,
-        filter: {
-          type: "none",
-          value: 0,
-        },
-      },
-    },
-    tooltip: {
-      style: {
-        fontSize: "12px",
-      },
-      y: {
-        formatter: function (val) {
-          return val + " Photos";
-        },
-      },
-    },
-    colors: [lightColor, secondaryLightColor],
-    markers: {
-      colors: [lightColor, secondaryLightColor],
-      strokeColors: [baseColor, secondaryColor],
-      strokeWidth: 3,
-    },
-  };
-};
 </script>
 
 <template>

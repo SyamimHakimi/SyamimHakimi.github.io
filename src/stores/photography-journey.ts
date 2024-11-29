@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
 import { firestoreDefaultConverter, useDocument } from "vuefire";
 import {
+  statisticsFavPhotoRef,
   statisticsLensRef,
   statisticsMainRef,
+  statisticsPhotoRef,
 } from "@/core/services/FirebaseService";
+import { convertToDate } from "@/core/helpers/global";
+import { QueryDocumentSnapshot } from "firebase/firestore";
 
 export interface PhotographyStatistic {
   title: string;
@@ -20,6 +24,16 @@ export interface PhotoItem {
   theme: string;
   focalLength: number;
   datePosted: string;
+}
+
+interface PhotographyLineChart {
+  key: Date;
+  value: number;
+}
+
+export interface StatLineChart {
+  xAxis: Array<Date>;
+  yAxis: Array<number>;
 }
 
 /* Enum */
@@ -63,6 +77,35 @@ const getStatisticByEnumKey = (enumKey: string) => {
   return PhotographyStatisticIcons.find((item) => item.order === orderValue);
 };
 
+function getLineChart(snapshot: QueryDocumentSnapshot): StatLineChart {
+  const _statLineChart = <StatLineChart>{
+    xAxis: Array<Date>(),
+    yAxis: Array<number>(),
+  };
+
+  const _tempList = Array<PhotographyLineChart>();
+  const _data = snapshot.data();
+  for (const value in _data) {
+    const _key = convertToDate(value);
+    if (_key) {
+      _tempList.push(<PhotographyLineChart>{
+        key: _key,
+        value: _data[value],
+      });
+    }
+  }
+  const sortedList = _tempList.sort(
+    (a, b) => a.key.getTime() - b.key.getTime(),
+  );
+
+  sortedList.forEach((item) => {
+    _statLineChart.xAxis.push(item.key);
+    _statLineChart.yAxis.push(item.value);
+  });
+
+  return _statLineChart;
+}
+
 /* Firebase Queries */
 
 function mainStats() {
@@ -101,6 +144,36 @@ function lensStats() {
   });
 }
 
+function photoStats() {
+  return useDocument(
+    statisticsPhotoRef.withConverter<StatLineChart>({
+      fromFirestore(snapshot): StatLineChart {
+        return getLineChart(snapshot);
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Stats-Photo`,
+      once: true,
+    },
+  );
+}
+
+function favPhotoStats() {
+  return useDocument(
+    statisticsFavPhotoRef.withConverter<StatLineChart>({
+      fromFirestore(snapshot): StatLineChart {
+        return getLineChart(snapshot);
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Stats-Fav-Photo`,
+      once: true,
+    },
+  );
+}
+
 /* Pinia Store */
 
 export const usePhotographyJourneyStore = defineStore("photography-journey", {
@@ -108,6 +181,8 @@ export const usePhotographyJourneyStore = defineStore("photography-journey", {
     return {
       mainStats: mainStats(),
       lensStats: lensStats(),
+      photoStats: photoStats(),
+      favPhotoStats: favPhotoStats(),
     };
   },
 });
