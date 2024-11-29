@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { firestoreDefaultConverter, useDocument } from "vuefire";
 import {
   statisticsFavPhotoRef,
+  statisticsFocalRef,
   statisticsLensRef,
   statisticsMainRef,
   statisticsPhotoRef,
@@ -26,14 +27,14 @@ export interface PhotoItem {
   datePosted: string;
 }
 
-interface PhotographyLineChart {
-  key: Date;
-  value: number;
+export interface StatChart<T> {
+  xAxis: Array<T>;
+  yAxis: Array<number>;
 }
 
-export interface StatLineChart {
-  xAxis: Array<Date>;
-  yAxis: Array<number>;
+interface ChartItem<T> {
+  key: T;
+  value: number;
 }
 
 /* Enum */
@@ -77,33 +78,56 @@ const getStatisticByEnumKey = (enumKey: string) => {
   return PhotographyStatisticIcons.find((item) => item.order === orderValue);
 };
 
-function getLineChart(snapshot: QueryDocumentSnapshot): StatLineChart {
-  const _statLineChart = <StatLineChart>{
+function getChart<T>(
+  snapshot: QueryDocumentSnapshot,
+  isDate: boolean = false,
+): StatChart<T> {
+  const _statLineChart = <StatChart<T>>{
     xAxis: Array<Date>(),
     yAxis: Array<number>(),
   };
 
-  const _tempList = Array<PhotographyLineChart>();
+  const _tempList = Array<ChartItem<T>>();
   const _data = snapshot.data();
   for (const value in _data) {
-    const _key = convertToDate(value);
+    const _key = isDate ? convertToDate(value) : value;
     if (_key) {
-      _tempList.push(<PhotographyLineChart>{
+      _tempList.push(<ChartItem<T>>{
         key: _key,
         value: _data[value],
       });
     }
   }
-  const sortedList = _tempList.sort(
-    (a, b) => a.key.getTime() - b.key.getTime(),
-  );
 
-  sortedList.forEach((item) => {
+  let _sortedList: ChartItem<T>[];
+  if (isDate) {
+    _sortedList = _tempList.sort((a, b) => {
+      return (a.key as Date).getTime() - (b.key as Date).getTime();
+    });
+  } else {
+    _sortedList = _tempList.sort((a, b) => {
+      if (a.key < b.key) return -1; // a comes before b
+      if (a.key > b.key) return 1; // a comes after b
+      return 0;
+    });
+  }
+
+  _sortedList.forEach((item) => {
     _statLineChart.xAxis.push(item.key);
     _statLineChart.yAxis.push(item.value);
   });
 
   return _statLineChart;
+}
+
+export function getMaxChart<T>(chart: StatChart<T> | undefined): T | undefined {
+  if (!chart) return undefined;
+
+  const maxIndex = chart.yAxis.reduce((maxIdx, currentValue, currentIndex) => {
+    return currentValue > chart[maxIdx] ? currentIndex : maxIdx;
+  }, 0);
+
+  return chart.xAxis[maxIndex];
 }
 
 /* Firebase Queries */
@@ -146,9 +170,9 @@ function lensStats() {
 
 function photoStats() {
   return useDocument(
-    statisticsPhotoRef.withConverter<StatLineChart>({
-      fromFirestore(snapshot): StatLineChart {
-        return getLineChart(snapshot);
+    statisticsPhotoRef.withConverter<StatChart<Date>>({
+      fromFirestore(snapshot): StatChart<Date> {
+        return getChart(snapshot, true);
       },
       toFirestore: () => firestoreDefaultConverter.toFirestore,
     }),
@@ -161,9 +185,9 @@ function photoStats() {
 
 function favPhotoStats() {
   return useDocument(
-    statisticsFavPhotoRef.withConverter<StatLineChart>({
-      fromFirestore(snapshot): StatLineChart {
-        return getLineChart(snapshot);
+    statisticsFavPhotoRef.withConverter<StatChart<Date>>({
+      fromFirestore(snapshot): StatChart<Date> {
+        return getChart(snapshot, true);
       },
       toFirestore: () => firestoreDefaultConverter.toFirestore,
     }),
@@ -174,12 +198,30 @@ function favPhotoStats() {
   );
 }
 
+function focalStats() {
+  return useDocument(
+    statisticsFocalRef.withConverter<StatChart<string>>({
+      fromFirestore(snapshot): StatChart<string> {
+        return getChart(snapshot);
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Stats-Focal`,
+      once: true,
+    },
+  );
+}
+
 /* Pinia Store */
 
 export const usePhotographyJourneyStore = defineStore("photography-journey", {
   state: function () {
+    const _focalStats = focalStats();
+
     return {
       mainStats: mainStats(),
+      focalStats: _focalStats,
       lensStats: lensStats(),
       photoStats: photoStats(),
       favPhotoStats: favPhotoStats(),

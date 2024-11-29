@@ -143,7 +143,7 @@ export default defineComponent({
         },
         yaxis: {
           min: 0,
-          max: 6,
+          max: Math.max(...(photoStats.value?.yAxis ?? [0])) + 1,
           labels: {
             show: false,
             style: {
