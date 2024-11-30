@@ -6,6 +6,8 @@ import {
   statisticsLensRef,
   statisticsMainRef,
   statisticsPhotoRef,
+  statisticsRecipeRef,
+  statisticsThemeRef,
 } from "@/core/services/FirebaseService";
 import { convertToDate } from "@/core/helpers/global";
 import { QueryDocumentSnapshot } from "firebase/firestore";
@@ -35,6 +37,11 @@ export interface StatChart<T> {
 interface ChartItem<T> {
   key: T;
   value: number;
+}
+
+interface XYItem<T> {
+  x: T;
+  y: number;
 }
 
 /* Enum */
@@ -81,6 +88,8 @@ const getStatisticByEnumKey = (enumKey: string) => {
 function getChart<T>(
   snapshot: QueryDocumentSnapshot,
   isDate: boolean = false,
+  sortValue: boolean = false,
+  asc: boolean = true,
 ): StatChart<T> {
   const _statLineChart = <StatChart<T>>{
     xAxis: Array<Date>(),
@@ -105,9 +114,12 @@ function getChart<T>(
       return (a.key as Date).getTime() - (b.key as Date).getTime();
     });
   } else {
+    const _key = sortValue ? "value" : "key";
+    const _order = asc ? -1 : 1;
+
     _sortedList = _tempList.sort((a, b) => {
-      if (a.key < b.key) return -1; // a comes before b
-      if (a.key > b.key) return 1; // a comes after b
+      if (a[_key] < b[_key]) return _order; // a comes before b
+      if (a[_key] > b[_key]) return -_order; // a comes after b
       return 0;
     });
   }
@@ -120,11 +132,28 @@ function getChart<T>(
   return _statLineChart;
 }
 
+export function convertXY<T>(
+  chart: StatChart<T> | undefined,
+): Array<XYItem<T>> | undefined {
+  if (!chart) return undefined;
+
+  const _list = Array<XYItem<T>>();
+
+  chart.xAxis.forEach((item, index) => {
+    _list.push({
+      x: item,
+      y: chart.yAxis[index],
+    });
+  });
+
+  return _list;
+}
+
 export function getMaxChart<T>(chart: StatChart<T> | undefined): T | undefined {
   if (!chart) return undefined;
 
   const maxIndex = chart.yAxis.reduce((maxIdx, currentValue, currentIndex) => {
-    return currentValue > chart[maxIdx] ? currentIndex : maxIdx;
+    return currentValue > chart.yAxis[maxIdx] ? currentIndex : maxIdx;
   }, 0);
 
   return chart.xAxis[maxIndex];
@@ -213,15 +242,45 @@ function focalStats() {
   );
 }
 
+function themeStats() {
+  return useDocument(
+    statisticsThemeRef.withConverter<StatChart<string>>({
+      fromFirestore(snapshot): StatChart<string> {
+        return getChart(snapshot);
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Stats-Theme`,
+      once: true,
+    },
+  );
+}
+
+function recipeStats() {
+  return useDocument(
+    statisticsRecipeRef.withConverter<StatChart<string>>({
+      fromFirestore(snapshot): StatChart<string> {
+        return getChart(snapshot, false, true, false);
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `Stats-Recipe`,
+      once: true,
+    },
+  );
+}
+
 /* Pinia Store */
 
 export const usePhotographyJourneyStore = defineStore("photography-journey", {
   state: function () {
-    const _focalStats = focalStats();
-
     return {
       mainStats: mainStats(),
-      focalStats: _focalStats,
+      focalStats: focalStats(),
+      themeStats: themeStats(),
+      recipeStats: recipeStats(),
       lensStats: lensStats(),
       photoStats: photoStats(),
       favPhotoStats: favPhotoStats(),
