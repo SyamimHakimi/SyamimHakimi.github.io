@@ -2,37 +2,42 @@
 import { defineComponent } from "vue";
 import CardGallery from "@/components-new/cards/CardGallery.vue";
 import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import { useGalleryStore } from "@/stores/gallery";
+import { storeToRefs } from "pinia";
+import { convertTimestampToDateString } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "gallery-layout",
+  methods: { convertTimestampToDateString },
   components: { LayoutGrids, CardGallery },
-  setup() {},
+  setup() {
+    const galleryStore = useGalleryStore();
+    const { galleryList } = storeToRefs(galleryStore);
+
+    return {
+      galleryList,
+    };
+  },
 });
 </script>
 
 <template>
   <LayoutGrids>
     <template v-slot:gridColumns>
-      <div class="col-md-6 col-xxl-4">
-        <!--begin::Child-->
-        <CardGallery
-          title="box."
-          date-posted="01 November 24"
-          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
-          :in-layout-grid="true"
-        />
-        <!--end::Child-->
-      </div>
-      <div class="col-md-6 col-xxl-4">
-        <!--begin::Child-->
-        <CardGallery
-          title="sunset."
-          date-posted="01 November 24"
-          img-src="https://24ai.tech/en/wp-content/uploads/sites/3/2023/10/01_product_1_sdelat-kvadratnym-5-scaled.jpg"
-          :in-layout-grid="true"
-        />
-        <!--end::Child-->
-      </div>
+      <template v-for="(photoItem, index) in galleryList" :key="index">
+        <div class="col-md-6 col-xxl-4">
+          <!--begin::Child-->
+          <CardGallery
+            :title="photoItem.title"
+            :theme="photoItem.theme"
+            :recipe="photoItem.recipe"
+            :date-posted="convertTimestampToDateString(photoItem.datePosted)"
+            :img-src="photoItem.imgSrc"
+            :in-layout-grid="true"
+          />
+          <!--end::Child-->
+        </div>
+      </template>
     </template>
   </LayoutGrids>
 </template>

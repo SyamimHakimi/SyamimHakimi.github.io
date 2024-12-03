@@ -303,7 +303,7 @@ function latestPhotos() {
       toFirestore: () => firestoreDefaultConverter.toFirestore,
     }),
     {
-      ssrKey: `FavouriteBoardgames`,
+      ssrKey: `Stat-Gallery`,
       once: true,
     },
   );

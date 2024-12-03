@@ -76,3 +76,11 @@ export function convertToDate(mmYYYY: string): Date | null {
   // Note: JS Date uses zero-based months (0 = January, 11 = December).
   return new Date(year, month - 1, 1);
 }
+
+export function convertTimestampToDateString(timestamp: Timestamp): string {
+  return timestamp.toDate().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}

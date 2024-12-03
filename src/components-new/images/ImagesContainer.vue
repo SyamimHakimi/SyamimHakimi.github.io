@@ -43,7 +43,7 @@ export default defineComponent({
     @error="handleImageError"
     alt=""
     class="mw-100"
-    :class="border ? 'border' : ''"
+    :class="border ? 'border rounded' : ''"
   />
   <!--  <p v-else class="ki-duotone ki-question fs-4x" :class="required ? 'text-danger' : ''">-->
   <!--      ERROR NO IMAGE-->

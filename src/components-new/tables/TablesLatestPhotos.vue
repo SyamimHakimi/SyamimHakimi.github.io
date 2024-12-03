@@ -1,18 +1,13 @@
 <script lang="ts">
-import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import CardContainer from "@/components-new/cards/CardContainer.vue";
 import { usePhotographyJourneyStore } from "@/stores/photography-journey";
 import { storeToRefs } from "pinia";
-import { Timestamp } from "firebase/firestore";
+import { convertTimestampToDateString } from "@/core/helpers/global";
 
 export default defineComponent({
   name: "tables-latest-photos",
-  computed: {
-    Timestamp() {
-      return Timestamp;
-    },
-  },
+  methods: { convertTimestampToDateString },
   components: { CardContainer },
   props: {
     inLayoutGrid: { type: Boolean, required: false, default: false },
@@ -23,7 +18,6 @@ export default defineComponent({
 
     return {
       latestPhotos,
-      getAssetPath,
     };
   },
 });
@@ -74,7 +68,7 @@ export default defineComponent({
                   {{ photoItem.focalLength }}mm
                 </td>
                 <td class="text-muted fs-5">
-                  {{ photoItem.datePosted.toDate().toLocaleDateString() }}
+                  {{ convertTimestampToDateString(photoItem.datePosted) }}
                 </td>
               </tr>
             </template>
