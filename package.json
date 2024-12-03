@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "homepage": "https://SyamimHakimi.github.io/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d dist"
   },
   "dependencies": {
     "@eslint/compat": "^1.2.2",
@@ -71,6 +74,7 @@
     "array-sort": "^1.0.0",
     "eslint": "^9.13.0",
     "eslint-plugin-vue": "^9.30.0",
+    "gh-pages": "^6.2.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.3.3",
     "sass": "1.80.5",
