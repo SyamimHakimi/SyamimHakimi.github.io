@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { firestoreDefaultConverter, useDocument } from "vuefire";
+import { firestoreDefaultConverter, useCollection, useDocument } from "vuefire";
 import {
+  photosRef,
   statisticsFavPhotoRef,
   statisticsFocalRef,
   statisticsLensRef,
@@ -10,7 +11,14 @@ import {
   statisticsThemeRef,
 } from "@/core/services/FirebaseService";
 import { convertToDate } from "@/core/helpers/global";
-import { QueryDocumentSnapshot } from "firebase/firestore";
+import {
+  where,
+  orderBy,
+  query,
+  limit,
+  QueryDocumentSnapshot,
+  type Timestamp,
+} from "firebase/firestore";
 
 export interface PhotographyStatistic {
   title: string;
@@ -23,10 +31,10 @@ export interface PhotographyStatistic {
 export interface PhotoItem {
   imgSrc: string;
   title: string;
-  isFavourite: boolean;
+  recipe: string;
   theme: string;
   focalLength: number;
-  datePosted: string;
+  datePosted: Timestamp;
 }
 
 export interface StatChart<T> {
@@ -56,26 +64,26 @@ export enum MainStatsOrderEnum {
 const PhotographyStatisticIcons = [
   {
     order: MainStatsOrderEnum.total_photos,
-    title: "Photos Posted",
-    icon: "bucket",
+    title: "Photos Published",
+    icon: "picture",
     iconColor: "success",
   },
   {
     order: MainStatsOrderEnum.total_outings,
-    title: "Photo Outings",
-    icon: "bucket",
+    title: "Date Posted",
+    icon: "calendar",
     iconColor: "warning",
   },
   {
     order: MainStatsOrderEnum.total_fav_photos,
     title: "Favourite Photos",
-    icon: "bucket",
+    icon: "like-2",
     iconColor: "primary",
   },
   {
     order: MainStatsOrderEnum.favourite_photo_lens,
     title: "Favourite Photo Lens ",
-    icon: "bucket",
+    icon: "cube-2",
     iconColor: "danger",
   },
 ];
@@ -272,6 +280,35 @@ function recipeStats() {
   );
 }
 
+function latestPhotos() {
+  const queryCollection = query(
+    photosRef,
+    where("favourite", "==", true),
+    orderBy("date", "desc"),
+    limit(5),
+  );
+
+  return useCollection(
+    queryCollection.withConverter<PhotoItem>({
+      fromFirestore(snapshot): PhotoItem {
+        return <PhotoItem>{
+          imgSrc: snapshot.get("link"),
+          title: snapshot.get("title"),
+          recipe: snapshot.get("recipe"),
+          theme: snapshot.get("theme"),
+          focalLength: snapshot.get("focal_length"),
+          datePosted: snapshot.get("date"),
+        };
+      },
+      toFirestore: () => firestoreDefaultConverter.toFirestore,
+    }),
+    {
+      ssrKey: `FavouriteBoardgames`,
+      once: true,
+    },
+  );
+}
+
 /* Pinia Store */
 
 export const usePhotographyJourneyStore = defineStore("photography-journey", {
@@ -284,6 +321,7 @@ export const usePhotographyJourneyStore = defineStore("photography-journey", {
       lensStats: lensStats(),
       photoStats: photoStats(),
       favPhotoStats: favPhotoStats(),
+      latestPhotos: latestPhotos(),
     };
   },
 });

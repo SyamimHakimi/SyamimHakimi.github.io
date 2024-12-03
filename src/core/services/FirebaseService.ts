@@ -41,6 +41,7 @@ export const experienceProtocolsRef = collection(
 );
 export const favouriteBoardgamesRef = collection(db, "favourite-boardgames");
 export const personalProjectsRef = doc(db, "projects", "XYdqe9OyXNSUEzZ8kqwn");
+export const photosRef = collection(db, "photos");
 export const photographyGearsRef = collection(db, "photography-gears");
 export const profileRef = doc(db, "profile", "ddIhV8IxV5DjciJY7UxW");
 export const servicesRef = collection(db, "services");
@@ -49,7 +50,6 @@ export const statisticsFavPhotoRef = doc(db, "statistics", "fav-photo-stats");
 export const statisticsFocalRef = doc(db, "statistics", "focal-stats");
 export const statisticsLensRef = doc(db, "statistics", "lens_stats");
 export const statisticsMainRef = doc(db, "statistics", "stats");
-export const statisticsOutingRef = doc(db, "statistics", "outing-stats");
 export const statisticsPhotoRef = doc(db, "statistics", "photo-stats");
 export const statisticsRecipeRef = doc(db, "statistics", "recipe-stats");
 export const statisticsThemeRef = doc(db, "statistics", "theme-stats");
