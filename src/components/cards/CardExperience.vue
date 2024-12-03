@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import "@/core/helpers/global";
 import type { PortfolioSectionsItem } from "@/stores/portfolio";
 

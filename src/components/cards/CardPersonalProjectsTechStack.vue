@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import { getAssetPath } from "@/core/helpers/assets";
 import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 import type { PersonalProjectsTechStack } from "@/stores/portfolio";

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
 import { storeToRefs } from "pinia";
 import { useAboutMeStore } from "@/stores/about-me";
 

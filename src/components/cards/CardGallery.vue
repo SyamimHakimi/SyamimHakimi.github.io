@@ -1,8 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
-import ImagesContainer from "@/components-new/images/ImagesContainer.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
+import ImagesContainer from "@/components/images/ImagesContainer.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
 
 export default defineComponent({
   name: "card-gallery",

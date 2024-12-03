@@ -70,7 +70,7 @@ const PhotographyStatisticIcons = [
   },
   {
     order: MainStatsOrderEnum.total_outings,
-    title: "Date Posted",
+    title: "Days Posted",
     icon: "calendar",
     iconColor: "warning",
   },
