@@ -5,7 +5,7 @@ import { getCSSVariableValue } from "@/assets/ts/_utils";
 import type { ApexOptions } from "apexcharts";
 import type VueApexCharts from "vue3-apexcharts";
 import { useThemeStore } from "@/stores/theme";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import {
   getMaxChart,
   usePhotographyJourneyStore,

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import { usePhotographyJourneyStore } from "@/stores/photography-journey";
 import { storeToRefs } from "pinia";
 import { convertTimestampToDateString } from "@/core/helpers/global";

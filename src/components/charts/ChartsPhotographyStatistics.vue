@@ -5,9 +5,9 @@ import { getCSSVariableValue } from "@/assets/ts/_utils";
 import type { ApexOptions } from "apexcharts";
 import type VueApexCharts from "vue3-apexcharts";
 import { useThemeStore } from "@/stores/theme";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
 import { usePhotographyJourneyStore } from "@/stores/photography-journey";
 import { storeToRefs } from "pinia";
 
