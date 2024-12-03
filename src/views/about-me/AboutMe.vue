@@ -1,10 +1,10 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import CardProfile from "@/components-new/cards/CardProfile.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import ListProfileFavouriteBoardgames from "@/components-new/lists/ListProfileFavouriteBoardgames.vue";
-import ListProfilePhotographyGear from "@/components-new/lists/ListProfilePhotographyGear.vue";
+import CardProfile from "@/components/cards/CardProfile.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
+import ListProfileFavouriteBoardgames from "@/components/lists/ListProfileFavouriteBoardgames.vue";
+import ListProfilePhotographyGear from "@/components/lists/ListProfilePhotographyGear.vue";
 
 export default defineComponent({
   name: "about-me-layout",

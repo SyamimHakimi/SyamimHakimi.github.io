@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardServicesDescription from "@/components-new/cards/CardServicesDescription.vue";
-import NavsServices from "@/components-new/navs/NavsServices.vue";
+import CardServicesDescription from "@/components/cards/CardServicesDescription.vue";
+import NavsServices from "@/components/navs/NavsServices.vue";
 
 export default defineComponent({
   name: "services-layout",

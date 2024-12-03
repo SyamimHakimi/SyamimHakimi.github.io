@@ -1,11 +1,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import ChartsPhotographyStatistics from "@/components-new/charts/ChartsPhotographyStatistics.vue";
-import ChartsUsedFocalLength from "@/components-new/charts/ChartsUsedFocalLength.vue";
-import ChartsPhotographyTheme from "@/components-new/charts/ChartsPhotographyTheme.vue";
-import ChartsFujifilmRecipe from "@/components-new/charts/ChartsFujifilmRecipe.vue";
-import TablesLatestPhotos from "@/components-new/tables/TablesLatestPhotos.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import ChartsPhotographyStatistics from "@/components/charts/ChartsPhotographyStatistics.vue";
+import ChartsUsedFocalLength from "@/components/charts/ChartsUsedFocalLength.vue";
+import ChartsPhotographyTheme from "@/components/charts/ChartsPhotographyTheme.vue";
+import ChartsFujifilmRecipe from "@/components/charts/ChartsFujifilmRecipe.vue";
+import TablesLatestPhotos from "@/components/tables/TablesLatestPhotos.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
 import { storeToRefs } from "pinia";
 import { usePhotographyJourneyStore } from "@/stores/photography-journey";
 

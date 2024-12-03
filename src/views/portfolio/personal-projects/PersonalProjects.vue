@@ -1,8 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import CardPersonalProjectsDescription from "@/components-new/cards/CardPersonalProjectsDescription.vue";
-import CardPersonalProjectsTechStack from "@/components-new/cards/CardPersonalProjectsTechStack.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
+import CardPersonalProjectsDescription from "@/components/cards/CardPersonalProjectsDescription.vue";
+import CardPersonalProjectsTechStack from "@/components/cards/CardPersonalProjectsTechStack.vue";
 import { usePortfolioStore } from "@/stores/portfolio";
 import { storeToRefs } from "pinia";
 

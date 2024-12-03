@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, watch } from "vue";
 import { useServiceStore } from "@/stores/services";
-import TimelinesServices from "@/components-new/timelines/TimelinesServices.vue";
+import TimelinesServices from "@/components/timelines/TimelinesServices.vue";
 import { storeToRefs } from "pinia";
 import { assignColorListThemeFirestore } from "@/core/helpers/global";
 

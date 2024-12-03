@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import TabsPortfolio from "@/components-new/tabs/TabsPortfolio.vue";
+import TabsPortfolio from "@/components/tabs/TabsPortfolio.vue";
 import type { PortfolioTabs } from "@/stores/portfolio";
 
 export default defineComponent({

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import CardGallery from "@/components-new/cards/CardGallery.vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
+import CardGallery from "@/components/cards/CardGallery.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
 import { useGalleryStore } from "@/stores/gallery";
 import { storeToRefs } from "pinia";
 import { convertTimestampToDateString } from "@/core/helpers/global";

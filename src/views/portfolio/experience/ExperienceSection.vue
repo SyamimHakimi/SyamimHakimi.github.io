@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from "vue";
-import LayoutGrids from "@/components-new/layouts/LayoutGrids.vue";
-import CardExperience from "@/components-new/cards/CardExperience.vue";
+import LayoutGrids from "@/components/layouts/LayoutGrids.vue";
+import CardExperience from "@/components/cards/CardExperience.vue";
 import type { PortfolioSections } from "@/stores/portfolio";
 
 export default defineComponent({
