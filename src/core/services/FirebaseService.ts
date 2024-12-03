@@ -7,7 +7,7 @@ import {
 } from "firebase/firestore";
 
 export const firebaseApp = initializeApp({
-  apiKey: "AIzaSyCtMbO_nLN_vPiSCrKdL72Ewts3QdsTdvE",
+  apiKey: "",
   authDomain: "portfolio-9e62d.firebaseapp.com",
   projectId: "portfolio-9e62d",
   storageBucket: "portfolio-9e62d.firebasestorage.app",
