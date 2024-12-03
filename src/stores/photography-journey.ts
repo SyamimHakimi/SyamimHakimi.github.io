@@ -35,6 +35,7 @@ export interface PhotoItem {
   theme: string;
   focalLength: number;
   datePosted: Timestamp;
+  documentId: string;
 }
 
 export interface StatChart<T> {
@@ -169,7 +170,14 @@ export function getMaxChart<T>(chart: StatChart<T> | undefined): T | undefined {
 
 /* Firebase Queries */
 
-function mainStats() {
+function mainStats(raw: boolean = false) {
+  if (raw) {
+    return useDocument(statisticsMainRef, {
+      ssrKey: `Stats-Main`,
+      once: true,
+    });
+  }
+
   return useDocument(
     statisticsMainRef.withConverter<Array<PhotographyStatistic>>({
       fromFirestore(snapshot): Array<PhotographyStatistic> {
@@ -196,6 +204,13 @@ function mainStats() {
       once: true,
     },
   );
+}
+
+function mainStatsRaw() {
+  return useDocument(statisticsMainRef, {
+    ssrKey: `Stats-Main`,
+    once: true,
+  });
 }
 
 function lensStats() {
@@ -298,6 +313,7 @@ function latestPhotos() {
           theme: snapshot.get("theme"),
           focalLength: snapshot.get("focal_length"),
           datePosted: snapshot.get("date"),
+          documentId: snapshot.id,
         };
       },
       toFirestore: () => firestoreDefaultConverter.toFirestore,
@@ -315,6 +331,7 @@ export const usePhotographyJourneyStore = defineStore("photography-journey", {
   state: function () {
     return {
       mainStats: mainStats(),
+      mainStatsRaw: mainStatsRaw(),
       focalStats: focalStats(),
       themeStats: themeStats(),
       recipeStats: recipeStats(),

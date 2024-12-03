@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, watch } from "vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 import { useAboutMeStore } from "@/stores/about-me";
 import { storeToRefs } from "pinia";
 import { assignColorListThemeFirestore } from "@/core/helpers/global";
