@@ -1,18 +1,42 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onServerPrefetch } from "vue";
 import ExperienceSection from "@/views/portfolio/experience/ExperienceSection.vue";
 import { usePortfolioStore } from "@/stores/portfolio";
 import { storeToRefs } from "pinia";
+import { usePendingPromises } from "vuefire";
 
 export default defineComponent({
   name: "experience-layout",
   components: { ExperienceSection },
   setup() {
     const portfolioStore = usePortfolioStore();
-    const { portfolioSections } = storeToRefs(portfolioStore);
+    onServerPrefetch(() => usePendingPromises());
+    const {
+      experiencePlatformsList,
+      experienceProtocolsList,
+      experienceFrameworksList,
+      experienceLanguagesList,
+    } = storeToRefs(portfolioStore);
 
     return {
-      portfolioSections,
+      portfolioSections: [
+        {
+          title: "Platforms",
+          experienceList: experiencePlatformsList,
+        },
+        {
+          title: "Protocols",
+          experienceList: experienceProtocolsList,
+        },
+        {
+          title: "Frameworks",
+          experienceList: experienceFrameworksList,
+        },
+        {
+          title: "Languages",
+          experienceList: experienceLanguagesList,
+        },
+      ],
     };
   },
 });

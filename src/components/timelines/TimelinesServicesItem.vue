@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, type PropType } from "vue";
 import KTIcon from "@/core/helpers/kt-icon/KTIcon.vue";
 import type { TimelinesService } from "@/stores/services";
 

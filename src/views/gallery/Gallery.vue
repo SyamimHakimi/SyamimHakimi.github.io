@@ -11,6 +11,7 @@ import { storeToRefs } from "pinia";
 import { convertTimestampToDateString } from "@/core/helpers/global";
 import PaginateGallery from "@/components/paginate/PaginateGallery.vue";
 import { usePhotographyJourneyStore } from "@/stores/photography-journey";
+import { usePendingPromises } from "vuefire";
 
 export default defineComponent({
   name: "gallery-layout",
@@ -42,11 +43,13 @@ export default defineComponent({
         item = galleryList.value[galleryList.value.length - 1];
       }
 
-      if (item && mode)
-        galleryList.value = (
-          await fetchPaginateGalleryList(item.documentId, mode)
-        ).value;
-      currentPage.value = page;
+      if (item && mode) {
+        const newList = await fetchPaginateGalleryList(item.documentId, mode);
+        await usePendingPromises();
+        galleryList.value.length = 0;
+        galleryList.value = newList.value;
+        currentPage.value = page;
+      }
     }
 
     return {

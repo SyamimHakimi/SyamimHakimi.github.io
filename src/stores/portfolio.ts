@@ -19,6 +19,7 @@ import {
   getDurationFromTimestamp,
 } from "@/core/helpers/global";
 import { DocumentReference } from "@firebase/firestore";
+import { ref } from "vue";
 
 export interface PortfolioTabs {
   routerTo: string;
@@ -40,7 +41,7 @@ export interface PortfolioSectionsItem {
 
 export interface PortfolioSections {
   title: string;
-  experienceList: Array<PortfolioSectionsItem>;
+  experienceList: _RefFirestore<PortfolioSectionsItem[]>;
 }
 
 export interface PersonalProjectsDescription {
@@ -132,6 +133,7 @@ function experienceItemList(experienceEnum: ExperienceEnum) {
     {
       ssrKey: `Experience-${ExperienceEnum[experienceEnum]}`,
       once: true,
+      wait: true,
     },
   );
 }
@@ -186,36 +188,22 @@ export const usePortfolioStore = defineStore("portfolio", {
   state: function () {
     const experiencePlatformsList = experienceItemList(
       ExperienceEnum.Platforms,
-    );
+    ).value;
     const experienceProtocolsList = experienceItemList(
       ExperienceEnum.Protocols,
-    );
+    ).value;
     const experienceFrameworksList = experienceItemList(
       ExperienceEnum.Frameworks,
-    );
-    const experienceLanguagesList = experienceItemList(
-      ExperienceEnum.Languages,
+    ).value;
+    const experienceLanguagesList = ref(
+      experienceItemList(ExperienceEnum.Languages),
     );
 
     return {
-      portfolioSections: [
-        {
-          title: "Platforms",
-          experienceList: experiencePlatformsList,
-        },
-        {
-          title: "Protocols",
-          experienceList: experienceProtocolsList,
-        },
-        {
-          title: "Frameworks",
-          experienceList: experienceFrameworksList,
-        },
-        {
-          title: "Languages",
-          experienceList: experienceLanguagesList,
-        },
-      ],
+      experiencePlatformsList: experienceItemList(ExperienceEnum.Platforms),
+      experienceProtocolsList: experienceItemList(ExperienceEnum.Protocols),
+      experienceFrameworksList: experienceItemList(ExperienceEnum.Frameworks),
+      experienceLanguagesList: experienceItemList(ExperienceEnum.Languages),
       personalProjectsDescription: personalProjectDescription(),
       personalProjectsTechStack: personalProjectsTechStackList(
         personalProjectsRef,

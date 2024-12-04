@@ -1,14 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import objectPath from "object-path";
-import type LayoutConfigTypes from "@/core/config/LayoutConfigTypes";
+import type { LayoutConfig } from "@/core/config/LayoutConfigTypes";
 import layoutConfig from "@/core/config/DefaultLayoutConfig";
 
 export const LS_CONFIG_NAME_KEY = "config_" + import.meta.env.VITE_APP_DEMO;
 
 export const useConfigStore = defineStore("config", () => {
-  const config = ref<LayoutConfigTypes>(layoutConfig);
-  const initial = ref<LayoutConfigTypes>(layoutConfig);
+  const config = ref<LayoutConfig>(layoutConfig);
+  const initial = ref<LayoutConfig>(layoutConfig);
 
   function getLayoutConfig(path: string, defaultValue?: string) {
     return objectPath.get(config.value, path, defaultValue);
