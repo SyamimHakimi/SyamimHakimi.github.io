@@ -4,7 +4,6 @@ import { Tooltip } from "bootstrap";
 import App from "./App.vue";
 
 import router from "./router";
-import ElementPlus from "element-plus";
 import i18n from "@/core/plugins/i18n";
 
 //imports for app initialization
@@ -22,7 +21,6 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-app.use(ElementPlus);
 
 ApiService.init(app);
 initApexCharts(app);

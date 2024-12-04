@@ -25,7 +25,7 @@ export default defineComponent({
   <LayoutGrids>
     <template v-slot:gridColumns>
       <template
-        v-for="(item, index) in portfolioSections.experienceList"
+        v-for="(item, index) in portfolioSections.experienceList.value"
         :key="index"
       >
         <div class="col-md-6 col-xl-4">

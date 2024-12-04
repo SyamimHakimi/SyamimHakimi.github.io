@@ -170,14 +170,7 @@ export function getMaxChart<T>(chart: StatChart<T> | undefined): T | undefined {
 
 /* Firebase Queries */
 
-function mainStats(raw: boolean = false) {
-  if (raw) {
-    return useDocument(statisticsMainRef, {
-      ssrKey: `Stats-Main`,
-      once: true,
-    });
-  }
-
+function mainStats() {
   return useDocument(
     statisticsMainRef.withConverter<Array<PhotographyStatistic>>({
       fromFirestore(snapshot): Array<PhotographyStatistic> {

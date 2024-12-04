@@ -10,7 +10,6 @@ import { useThemeStore } from "@/stores/theme";
 import { useBodyStore } from "@/stores/body";
 import { themeConfigValue } from "@/core/helpers/config";
 import { initializeComponents } from "@/core/plugins/keenthemes";
-import { useServiceStore } from "@/stores/services";
 
 export default defineComponent({
   name: "app",
@@ -59,7 +58,6 @@ export default defineComponent({
 @import "dropzone/dist/dropzone.css";
 @import "@vueform/multiselect/themes/default.css";
 @import "prism-themes/themes/prism-shades-of-purple.css";
-@import "element-plus/dist/index.css";
 
 // Main demo style scss
 @import "assets/keenicons/duotone/style.css";

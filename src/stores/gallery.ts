@@ -20,7 +20,7 @@ export const limitGallery = 6;
 
 // async
 
-function fetchGalleryList(
+export function fetchGalleryList(
   docSnap: DocumentSnapshot | undefined = undefined,
   mode: "next" | "back" | undefined = undefined,
 ) {
@@ -33,8 +33,6 @@ function fetchGalleryList(
   );
 
   if (docSnap && mode) {
-    // const docSnap = await getDoc(doc(photosRef, lastDocId));
-
     queryCollection = query(
       photosRef,
       where("favourite", "==", true),
@@ -43,7 +41,6 @@ function fetchGalleryList(
       limit(limitGallery),
     );
   }
-  console.log(queryCollection);
 
   return useCollection(
     queryCollection.withConverter<PhotoItem>({

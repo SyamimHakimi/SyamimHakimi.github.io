@@ -1,6 +1,6 @@
-import type LayoutConfigTypes from "@/core/config/LayoutConfigTypes";
+import type { LayoutConfig } from "@/core/config/LayoutConfigTypes";
 
-const config: LayoutConfigTypes = {
+const config: LayoutConfig = {
   general: {
     mode: "system",
     iconsType: "duotone",

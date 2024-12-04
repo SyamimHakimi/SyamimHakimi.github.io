@@ -1,8 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import type { TimelinesService } from "@/stores/services";
-import TimelinesServicesItem from "@/components-new/timelines/TimelinesServicesItem.vue";
-import CardContainer from "@/components-new/cards/CardContainer.vue";
+import TimelinesServicesItem from "@/components/timelines/TimelinesServicesItem.vue";
+import CardContainer from "@/components/cards/CardContainer.vue";
 
 export default defineComponent({
   name: "timelines-services",
