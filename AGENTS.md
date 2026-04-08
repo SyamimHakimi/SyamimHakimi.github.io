@@ -133,7 +133,7 @@ Every phase that writes or modifies logic must include unit tests.
 **What to test:**
 - All Vue island components: prop validation, emitted events, key conditional rendering
 - All utility functions and composables in `src/lib/`
-- Content collection schema validation: test valid and invalid fixture data
+- Firestore runtime schema validation: test valid and invalid fixture data against the Zod validators
 - Any function with non-trivial branching logic
 
 **What not to test:**
@@ -154,10 +154,10 @@ Every phase that writes or modifies code must include documentation.
 
 | Code type               | Required documentation                                                     |
 |-------------------------|----------------------------------------------------------------------------|
-| Astro page              | Comment at top describing what collection it queries and the page purpose  |
+| Astro page              | Comment at top describing the page purpose and which island/composable(s) it hosts |
 | Astro layout            | JSDoc on props (title, description, slot contracts)                        |
 | Vue island component    | JSDoc on props, emits, and why it is an island (not static Astro)          |
-| Content collection schema | TSDoc on each field explaining type and expected values                  |
+| Firestore data model / validator | TSDoc on each field explaining type and expected values            |
 | Utility / helper        | JSDoc with `@param` and `@returns`                                         |
 | New env variable        | Entry in `.env.example` with a comment explaining the expected value       |
 | `astro.config.mjs` change | Inline comment explaining the config option and why it was set           |
@@ -171,7 +171,7 @@ Comments explain *why*, not *what*. No comments on self-evident code.
 
 1. Non-owning agent checks out the branch and reviews all changed files
 2. Reviewer checks: acceptance criteria met, tests pass, docs present, no scope creep,
-   no new `any` types, `npm run build` and `npm run lint` pass
+   no new `any` types, `npm run build` and `npm run lint:check` pass
 3. Reviewer writes verdict in the phase's Gate 4 section in `HANDOFF.md`:
    - `APPROVED` — ready to merge
    - `REQUEST CHANGES` — list each issue with file + line reference
@@ -183,11 +183,38 @@ Reviewer should complete review in the same working session when notified.
 
 ---
 
-## Branch Naming Convention
+## Branching Strategy
 
+This project uses **GitHub Flow**: `main` is always deployable; all work happens on
+short-lived branches merged back via PR. There is no `develop` branch.
+
+**Branch types:**
+
+| Prefix | Use |
+|--------|-----|
+| `feat/` | New capability (most phases) |
+| `fix/` | Bug fix within or outside a phase |
+| `docs/` | Documentation-only phase (e.g. A0) |
+| `refactor/` | Restructuring with no behaviour change |
+| `chore/` | Tooling, deps, CI config (e.g. A6, A7) |
+| `hotfix/` | Urgent production fix — bypasses Gate 2, still needs Gate 4 |
+
+**Naming pattern:** `<type>/phase-a<N>-<short-description>`
+- All lowercase, hyphens as separators, no spaces
+- Keep `<short-description>` under 30 characters
+- Agent identity goes in the PR body, not the branch name
+
+**Examples:**
 ```
-claude/phase-<slug>     # Branches owned by Claude
-codex/phase-<slug>      # Branches owned by Codex
+docs/phase-a0-architecture-spike
+feat/phase-a1-baseline-audit-firestore-export
+feat/phase-a2-firebase-sdk-data-models
+feat/phase-a3-route-layout-rebuild
+feat/phase-a4-design-system-tailwind
+feat/phase-a5-vue-islands
+chore/phase-a6-seo-hosting-security
+chore/phase-a7-testing-performance-hardening
+hotfix/fix-gallery-pagination-cursor
 ```
 
 Always create a new branch before starting. Never commit directly to `main`.
@@ -197,14 +224,14 @@ Always create a new branch before starting. Never commit directly to `main`.
 ## Handoff Protocol
 
 **Starting a phase** (after APPROVED):
-1. `git checkout -b <agent>/phase-<slug>`
+1. `git checkout -b <type>/phase-a<N>-<short-description>`
 2. Update phase entry in `HANDOFF.md`: STATUS → `IN PROGRESS`
 3. Commit the `HANDOFF.md` update as the first commit
 
 **Finishing a phase:**
 1. `npm test` — all tests pass
 2. `npm run build` — exits 0
-3. `npm run lint` — exits 0
+3. `npm run lint:check` — exits 0
 4. Self-check documentation requirements
 5. Update `HANDOFF.md`: STATUS → `REVIEW READY`, add change summary, tag reviewer
 6. Push branch and open a PR against `main` — do NOT merge yet; wait for Gate 4 APPROVED
@@ -232,12 +259,31 @@ Always create a new branch before starting. Never commit directly to `main`.
 3. **Never touch files owned by the other agent's active phase.**
 4. **Every phase must include unit tests for all new/modified logic.**
 5. **Every phase must include documentation for all new/modified public API.**
-6. **`npm run build`, `npm run lint`, and `npm test` must all pass before REVIEW READY.**
+6. **`npm run build`, `npm run lint:check`, and `npm test` must all pass before REVIEW READY.**
 7. **Do not add dependencies** without listing them in the phase plan first.
 8. **Do not remove dependencies** without verifying no remaining imports.
 9. **Do not introduce `any` types.**
-10. **Commit messages:** `<type>(phase-A<N>): <description>`
-    e.g. `feat(phase-A4): add Tailwind dark mode token system`
+10. **Commit messages** follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+    ```
+    <type>(<scope>): <subject>          ← 72 chars max, imperative mood, lowercase
+    <blank line>
+    <body>                              ← optional; explain WHY, wrap at 72 chars
+    <blank line>
+    <footer>                            ← optional; Closes #N, BREAKING CHANGE:, Co-Authored-By:
+    ```
+
+    **Types:** `feat` `fix` `docs` `style` `refactor` `test` `chore` `ci` `perf` `build`
+    **Scope:** phase slug, e.g. `phase-a4`, or component name, e.g. `gallery-grid`
+    **Breaking change:** append `!` after type/scope — `feat(phase-a2)!:` — and add
+    `BREAKING CHANGE: <description>` footer
+    **Examples:**
+    ```
+    feat(phase-a4): add tailwind dark mode token system
+    fix(gallery-grid): correct cursor reset on filter change
+    docs(phase-a0): add architecture decision record for firestore runtime model
+    chore(phase-a6): split deploy.yml into isolated jobs with failure policy
+    ```
 
 ---
 
@@ -281,7 +327,7 @@ Do not modify these without explicit coverage in the approved phase plan:
 - [ ] Unit tests written and passing (`npm test`)
 - [ ] Documentation written for all new/modified public API
 - [ ] `npm run build` exits 0
-- [ ] `npm run lint` exits 0
+- [ ] `npm run lint:check` exits 0
 - [ ] No new `any` types
 - [ ] `HANDOFF.md` updated to REVIEW READY with change summary
 

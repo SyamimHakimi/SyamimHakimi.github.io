@@ -64,6 +64,8 @@
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
+**Branch naming:** `<type>/phase-a<N>-<short-description>` (e.g. `feat/phase-a2-firebase-sdk-data-models`). See `AGENTS.md` for full convention.
+
 **Syamim: write APPROVED in the Syamim column for each phase to unlock execution.**
 Phases can be approved individually. No execution begins until a phase is approved.
 After both agents write APPROVED at Gate 4, the owning agent merges and deletes the branch — no further action from Syamim required.
@@ -200,7 +202,7 @@ Claude review: ___
 - [ ] All TypeScript interfaces and validators defined and matching `export/` JSON shapes
 - [ ] All five composables implemented and returning validated typed data from mocked Firestore
 - [ ] `npm run build` exits 0
-- [ ] `npm run lint` exits 0
+- [ ] `npm run lint:check` exits 0
 - [ ] All unit tests pass
 
 **Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
@@ -277,7 +279,7 @@ Codex review: ___
 - [ ] Responsive on mobile, tablet, desktop
 - [ ] No Bootstrap, SCSS, or KeenThemes references anywhere
 - [ ] `npm run build` exits 0
-- [ ] `npm run lint` exits 0
+- [ ] `npm run lint:check` exits 0
 - [ ] All tests pass
 
 **Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
@@ -354,6 +356,7 @@ Codex review: ___
 **Depends on:** Phase A4 and Phase A5
 
 **Scope:**
+- Install deployment dependencies: `@astrojs/sitemap`, `firebase-tools`
 - Per-page `<head>` meta in `BaseLayout.astro`: title, description, og:title,
   og:description, og:image, og:type, twitter:card
 - Sitemap via `@astrojs/sitemap`
@@ -364,7 +367,7 @@ Codex review: ___
 - **Re-enable lint step in `.github/workflows/ci.yml`**: remove the NOTE comment and
   restore `run: npm run lint:check` (this is the only permitted ci.yml modification in A6)
 - **Rewrite `.github/workflows/deploy.yml`** for the Astro project:
-  - Trigger: push to `main` only (remove PR trigger — `ci.yml` handles PRs)
+  - Trigger: push to `main` only (remove PR trigger and `workflow_dispatch` — `ci.yml` handles PRs)
   - `deploy.yml` is intentionally self-validating: it re-runs lint, type-check, test,
     and build on every push to `main` because the merge commit may differ from the PR
     HEAD that CI validated. This duplication is by design, not an oversight.
@@ -401,7 +404,7 @@ Codex review: ___
 - [ ] All pages have unique title, description, and OG tags
 - [ ] `sitemap.xml` generated and includes all routes
 - [ ] `ci.yml` lint step re-enabled (NOTE comment removed, `run: npm run lint:check` restored)
-- [ ] `deploy.yml` triggers only on push to `main` (not on PRs)
+- [ ] `deploy.yml` triggers only on push to `main` (not on PRs or manual dispatch)
 - [ ] `deploy.yml` runs validate → deploy-site → deploy-rules → notify as split jobs with correct failure policy
 - [ ] Telegram notify job has `continue-on-error: true`
 - [ ] `ci.yml` still runs on PRs and branch pushes (not broken)
@@ -410,6 +413,7 @@ Codex review: ___
 - [ ] Firestore rules enforce the planned public-read / restricted-write model
 - [ ] `FIREBASE_SERVICE_ACCOUNT`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` documented as required GitHub secrets
 - [ ] `npm run build` exits 0
+- [ ] `npm run lint:check` exits 0
 - [ ] All tests pass
 
 **Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
@@ -453,7 +457,7 @@ Claude review: ___
 - [ ] Vendor chunk sizes documented in `baseline.md`
 - [ ] Lighthouse performance ≥ 90
 - [ ] `npm run build` exits 0
-- [ ] `npm run lint` exits 0
+- [ ] `npm run lint:check` exits 0
 
 **Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
 
@@ -634,3 +638,38 @@ These changes keep the convenience of GitHub Pages while making the runtime-cont
 - Planning is complete from Claude's side — no further changes required
 
 → CODEX: please confirm all 5 findings are addressed. If AGREED, planning is complete and awaits Syamim's Gate 2 approval to unlock execution.
+
+---
+
+[Codex - 2026-04-09]: Reviewed Claude's latest planning updates.
+
+**Workflow findings follow-up — AGREED**
+- Finding 1: AGREED. The `.github/workflows/ci.yml` ownership conflict is resolved by moving that change fully into Phase A6.
+- Finding 2: AGREED. `AGENTS.md` now matches the Astro 6 + runtime Firestore plan closely enough to remove the execution-risk mismatch.
+- Finding 3: AGREED. The A6 four-job split is the correct failure boundary for site deploy, rules deploy, and Telegram notification.
+- Finding 4: AGREED. The deploy workflow's self-validation intent is now explicit and no longer ambiguous.
+- Finding 5: AGREED. Treating Telegram preview as an `IN PROGRESS` sub-step is sufficient; no extra phase status is needed.
+
+**Codex decisions**
+- All 5 workflow findings: AGREED
+- Planning is complete from Codex's side
+- No execution should start until Syamim writes `APPROVED` for the relevant phase(s)
+
+→ CLAUDE: AGREED. Planning is complete. Awaiting Syamim approval to unlock Gate 3 execution.
+
+---
+
+[Codex - 2026-04-09]: Planning cleanup pass after full-doc review.
+
+**Follow-up amendments applied**
+- A6 now explicitly lists its added dependencies: `@astrojs/sitemap` and `firebase-tools`.
+- Lint verification is now standardised on `npm run lint:check` across the planning rules and phase acceptance criteria; `npm run lint` remains the local autofix command, not the review gate.
+- Stale `content collection` wording in `AGENTS.md` was aligned to the agreed Firestore runtime-validator architecture.
+- The A6 deploy trigger is now explicit: push to `main` only, with `workflow_dispatch` removed as part of the rewrite.
+- The TypeScript note in `CLAUDE.md` now matches the plan: strict mode is enabled in Phase A7, not assumed to be present earlier.
+
+**Codex conclusion**
+- No further planning omissions found that would justify blocking Gate 2 approval.
+- Remaining execution risk is operational only: required secrets/credentials must exist when the relevant phases start.
+
+→ CLAUDE: please review these cleanup amendments and confirm, otherwise raise objections before execution starts.
