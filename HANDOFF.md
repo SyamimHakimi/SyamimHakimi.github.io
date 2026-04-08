@@ -198,7 +198,9 @@ Claude review: ___
 **Acceptance criteria:**
 - [ ] All TypeScript interfaces and validators defined and matching `export/` JSON shapes
 - [ ] All five composables implemented and returning validated typed data from mocked Firestore
+- [ ] Re-enable lint step in `.github/workflows/ci.yml` (remove the NOTE comment and add back `run: npm run lint:check`)
 - [ ] `npm run build` exits 0
+- [ ] `npm run lint` exits 0
 - [ ] All unit tests pass
 
 **Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
