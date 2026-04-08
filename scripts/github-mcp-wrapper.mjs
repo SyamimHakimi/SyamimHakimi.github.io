@@ -85,11 +85,14 @@ async function main() {
   const token      = await getInstallationToken(jwt);
 
   // Start @github/mcp-server with the installation token
+  // shell: true is required on Windows — npx is a .cmd file and cannot be
+  // spawned directly without going through the shell
   const child = spawn(
     'npx',
-    ['-y', '@github/mcp-server'],
+    ['-y', '@modelcontextprotocol/server-github'],
     {
       stdio: 'inherit',
+      shell: true,
       env: { ...process.env, GITHUB_PERSONAL_ACCESS_TOKEN: token },
     }
   );
