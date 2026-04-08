@@ -53,7 +53,7 @@
 
 | #  | Phase                             | Owner  | Reviewer | Claude  | Codex   | Syamim | Status            | Review |
 |----|-----------------------------------|--------|----------|---------|---------|--|-------------------|--------|
-| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | IN PROGRESS       | —      |
 | A1 | Baseline audit + Firestore export | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
