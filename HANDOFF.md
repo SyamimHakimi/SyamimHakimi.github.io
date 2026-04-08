@@ -12,7 +12,7 @@
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
 | 3    | Execution                       | LOCKED — awaiting Syamim approval   |
-| 4    | Peer Code Review                | LOCKED                              |
+| 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
 
@@ -62,10 +62,11 @@
 | A6 | SEO, media, hosting, security     | Codex  | Claude   | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
 | A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
 
-**Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGE READY`
+**Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
 **Syamim: write APPROVED in the Syamim column for each phase to unlock execution.**
 Phases can be approved individually. No execution begins until a phase is approved.
+After both agents write APPROVED at Gate 4, the owning agent merges and deletes the branch — no further action from Syamim required.
 
 ---
 
