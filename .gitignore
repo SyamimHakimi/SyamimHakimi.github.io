@@ -1,5 +1,12 @@
 /src/assets/css
 
+# Environment variables (never commit)
+.env
+
+# UI preview test/temp files
+scripts/test-mockup.html
+scripts/*.png
+
 # Logs
 logs
 *.log
@@ -28,3 +35,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# GitHub App private key
+scripts/*.pem
+scripts/portfolio-agents.private-key.pem
