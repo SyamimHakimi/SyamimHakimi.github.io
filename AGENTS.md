@@ -8,8 +8,12 @@ project context, and coordination protocol for the portfolio modernization proje
 ## Project Overview
 
 **SyamimHakimi.github.io** is a personal portfolio website being rebuilt as an
-**Astro 5 static site** with Tailwind CSS 4, Vue 3 islands, and Astro content
-collections. It is deployed to GitHub Pages.
+**Astro 6 static site** with Tailwind CSS 4, Vue 3 islands, and Firebase Firestore
+for runtime content. It is deployed to GitHub Pages.
+
+All editable content (portfolio, services, about, photography, statistics) is stored
+in Firestore and fetched at runtime by Vue islands — no static content files, no
+redeployment needed for content changes.
 
 The previous codebase was a Vue 3 SPA built on the KeenThemes admin template. That
 codebase is being replaced, not incrementally upgraded. See `CLAUDE.md` for the full
@@ -236,7 +240,7 @@ Always create a new branch before starting. Never commit directly to `main`.
 ```
 Phase A0 (architecture spike + docs update)
 └── Phase A1 (baseline audit + Firestore export)
-    ├── Phase A2 (content model migration)    ← Claude
+    ├── Phase A2 (Firebase SDK + data models)  ← Claude
     │   └── Phase A3 (route + layout rebuild) ← Claude + ui-ux-pro-max
     │       ├── Phase A4 (design system)      ← Claude + ui-ux-pro-max
     │       │   ├── Phase A5 (Vue islands)    ← Claude + ui-ux-pro-max
