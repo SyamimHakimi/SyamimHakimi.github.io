@@ -52,15 +52,15 @@
 ## Phase Tracker
 
 | #  | Phase                             | Owner  | Reviewer | Claude  | Codex   | Syamim | Status            | Review |
-|----|-----------------------------------|--------|----------|---------|---------|--------|-------------------|--------|
-| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A1 | Baseline audit + Firestore export | Codex  | Claude   | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A6 | SEO, media, hosting, security     | Codex  | Claude   | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
-| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | ___    | AWAITING APPROVAL | —      |
+|----|-----------------------------------|--------|----------|---------|---------|--|-------------------|--------|
+| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A1 | Baseline audit + Firestore export | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A6 | SEO, media, hosting, security     | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
@@ -118,8 +118,15 @@ Codex review: ___
 - Run `npm run build` and `npm run lint` on the current Vue app; record results in `baseline.md`
 - Document all installed dependencies: used vs dead weight
 - **Firebase credentials:** A Firebase service account JSON is required to run the export script.
-  Store as `GOOGLE_APPLICATION_CREDENTIALS` env var pointing to the key file (never committed).
-  Document this requirement in `.env.example` before running the script.
+  Two credential vars are used across the project — same key file, different formats:
+  - `GOOGLE_APPLICATION_CREDENTIALS` — **local only**: file path pointing to the `.json` key
+    on disk (e.g. `/path/to/service-account.json`). Firebase/Google SDKs read this path
+    automatically. Set in `.env`, never committed.
+  - `FIREBASE_SERVICE_ACCOUNT` — **GitHub Actions only**: the raw JSON *contents* of the same
+    key file, stored as a GitHub repo secret. The deploy workflow reads the string and writes
+    a temp file at runtime. Set in repo Settings → Secrets, not in `.env`.
+  For Phase A1: set `GOOGLE_APPLICATION_CREDENTIALS` in `.env`. Document both vars in
+  `.env.example` so the distinction is clear for Phase A6.
 - Write a Node.js Firestore export script that fetches all collections and writes to `export/`:
   - `export/profile.json`, `export/services.json`, `export/portfolio.json`
   - `export/projects.json`, `export/boardgames.json`, `export/photography-gear.json`
