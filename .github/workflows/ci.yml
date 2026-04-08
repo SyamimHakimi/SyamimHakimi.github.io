@@ -1,0 +1,45 @@
+# ci.yml — Validation pipeline
+#
+# Runs on every pull request and branch push (excluding main).
+# Never deploys. Purpose: catch type errors, test failures, and broken builds
+# before they reach main.
+#
+# NOTE: Lint step is intentionally omitted until Phase A2 (Astro migration).
+# The existing Vue SPA has lint errors that will be resolved when the codebase
+# is replaced. Re-enable by adding: run: npm run lint:check
+#
+# deploy.yml handles the actual GitHub Pages deployment on push to main.
+
+name: Validate
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Lint, Type-check, Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Build (includes type-check)
+        run: npm run build
