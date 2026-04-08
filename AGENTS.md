@@ -8,8 +8,12 @@ project context, and coordination protocol for the portfolio modernization proje
 ## Project Overview
 
 **SyamimHakimi.github.io** is a personal portfolio website being rebuilt as an
-**Astro 5 static site** with Tailwind CSS 4, Vue 3 islands, and Astro content
-collections. It is deployed to GitHub Pages.
+**Astro 6 static site** with Tailwind CSS 4, Vue 3 islands, and Firebase Firestore
+for runtime content. It is deployed to GitHub Pages.
+
+All editable content (portfolio, services, about, photography, statistics) is stored
+in Firestore and fetched at runtime by Vue islands — no static content files, no
+redeployment needed for content changes.
 
 The previous codebase was a Vue 3 SPA built on the KeenThemes admin template. That
 codebase is being replaced, not incrementally upgraded. See `CLAUDE.md` for the full
@@ -86,8 +90,8 @@ one full ping-pong cycle before any decision is treated as agreed.
 4. No item is decided until both agents have written `AGREED`.
 
 Applies to: architecture questions, phase plans, code review change requests, and any
-mid-execution scope changes. Syamim is not in the ping-pong loop — only Gate 2 approval
-and final merge require Syamim's action.
+mid-execution scope changes. Syamim is not in the ping-pong loop — only Gate 2 plan approval requires Syamim's action.
+After both agents write APPROVED at Gate 4, the owning agent merges and deletes the branch.
 
 ---
 
@@ -114,8 +118,8 @@ GATE 4 — Peer Code Review
   Non-owning agent reviews branch: correctness, tests, docs, scope, acceptance criteria.
   Writes APPROVED or REQUEST CHANGES in HANDOFF.md.
   If REQUEST CHANGES: owning agent addresses, pings back, reviewer re-reviews.
-  Both APPROVED → MERGE READY. Syamim merges.
-  → Produces: MERGE READY
+  Both APPROVED → owning agent merges PR into main and deletes the branch.
+  → Produces: MERGED (branch deleted, HANDOFF.md updated to MERGED)
 ```
 
 No gate can be skipped. An agent that begins execution before APPROVED is in violation.
@@ -172,7 +176,8 @@ Comments explain *why*, not *what*. No comments on self-evident code.
    - `APPROVED` — ready to merge
    - `REQUEST CHANGES` — list each issue with file + line reference
 4. If REQUEST CHANGES: owning agent addresses, pings reviewer, reviewer re-reviews
-5. Both APPROVED → MERGE READY → Syamim merges
+5. Both APPROVED → owning agent merges the PR into `main` and deletes the phase branch
+6. Owning agent updates `HANDOFF.md` phase status to `MERGED`
 
 Reviewer should complete review in the same working session when notified.
 
@@ -202,7 +207,12 @@ Always create a new branch before starting. Never commit directly to `main`.
 3. `npm run lint` — exits 0
 4. Self-check documentation requirements
 5. Update `HANDOFF.md`: STATUS → `REVIEW READY`, add change summary, tag reviewer
-6. Do NOT merge — push branch and wait for Gate 4
+6. Push branch and open a PR against `main` — do NOT merge yet; wait for Gate 4 APPROVED
+
+**Merging a phase** (after both agents write APPROVED at Gate 4):
+1. Owning agent merges the PR into `main`
+2. Owning agent deletes the phase branch (remote + local)
+3. Owning agent updates `HANDOFF.md`: STATUS → `MERGED`
 
 **Reviewing a phase:**
 1. Read the phase plan in `HANDOFF.md`
@@ -236,7 +246,7 @@ Always create a new branch before starting. Never commit directly to `main`.
 ```
 Phase A0 (architecture spike + docs update)
 └── Phase A1 (baseline audit + Firestore export)
-    ├── Phase A2 (content model migration)    ← Claude
+    ├── Phase A2 (Firebase SDK + data models)  ← Claude
     │   └── Phase A3 (route + layout rebuild) ← Claude + ui-ux-pro-max
     │       ├── Phase A4 (design system)      ← Claude + ui-ux-pro-max
     │       │   ├── Phase A5 (Vue islands)    ← Claude + ui-ux-pro-max
@@ -275,5 +285,5 @@ Do not modify these without explicit coverage in the approved phase plan:
 - [ ] No new `any` types
 - [ ] `HANDOFF.md` updated to REVIEW READY with change summary
 
-**MERGE READY** — reviewing agent has independently verified all above and written
-`APPROVED` in `HANDOFF.md`.
+**MERGED** — both agents have written `APPROVED`, owning agent has merged the PR into
+`main`, deleted the phase branch, and updated `HANDOFF.md` to `MERGED`.
