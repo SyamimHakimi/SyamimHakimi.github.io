@@ -39,3 +39,9 @@ coverage
 # GitHub App private key
 scripts/*.pem
 scripts/portfolio-agents.private-key.pem
+
+# Firebase service account credentials (never commit — contains private key)
+*firebase-adminsdk*.json
+*service-account*.json
+serviceAccountKey.json
+*serviceAccount*.json

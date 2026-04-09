@@ -12,7 +12,8 @@
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
-    "test": "echo 'No tests yet — Vitest is configured in Phase A2' && exit 0",
+    "test": "node --test scripts/firestore-export.test.mjs",
+    "test:export": "node --test scripts/firestore-export.test.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "ui:preview": "node --env-file=.env scripts/ui-preview.mjs"

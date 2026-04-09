@@ -1,0 +1,35 @@
+[
+  {
+    "id": "QojWK47fl9oZAIQbji5s",
+    "path": "social-media/QojWK47fl9oZAIQbji5s",
+    "createTime": "2024-11-15T03:05:01.378945Z",
+    "updateTime": "2024-11-15T03:05:23.051105Z",
+    "text": " syamim.dev@tunasprism.com.my",
+    "sorting": 1,
+    "link": "mailto:syamim.dev@tunasprism.com.my",
+    "icon": "bi bi-envelope",
+    "name": "Email"
+  },
+  {
+    "id": "iB7rP9YeTreuuXI52YNu",
+    "path": "social-media/iB7rP9YeTreuuXI52YNu",
+    "createTime": "2024-11-15T03:02:50.402072Z",
+    "updateTime": "2024-11-16T02:32:35.437280Z",
+    "text": "Syamim Hakimi",
+    "sorting": 2,
+    "link": "https://www.linkedin.com/in/syamim-hakimi-33717518a/",
+    "icon": "bi bi-linkedin",
+    "name": "LinkedIn"
+  },
+  {
+    "id": "EKAKV1OcQ0epMBQu7k1G",
+    "path": "social-media/EKAKV1OcQ0epMBQu7k1G",
+    "createTime": "2024-11-15T02:57:51.840410Z",
+    "updateTime": "2024-11-15T03:06:00.997269Z",
+    "text": "syamimhakimi",
+    "sorting": 3,
+    "icon": "bi bi-instagram",
+    "name": "Instagram",
+    "link": "https://www.instagram.com/syamimhakimi/"
+  }
+]

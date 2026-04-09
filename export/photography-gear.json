@@ -1,0 +1,46 @@
+[
+  {
+    "id": "atr52Qv62UguiFhUJRXu",
+    "path": "photography-gears/atr52Qv62UguiFhUJRXu",
+    "createTime": "2024-11-15T07:18:54.126999Z",
+    "updateTime": "2024-11-15T08:38:32.523728Z",
+    "link": "https://fujifilm-x.com/en-my/products/cameras/x-e4/",
+    "img-src": "media/gear/XE4.png",
+    "name": "X-E4",
+    "type": 1,
+    "brand": "Fujifilm"
+  },
+  {
+    "id": "k4ixUyblfq0x0C0Q7shw",
+    "path": "photography-gears/k4ixUyblfq0x0C0Q7shw",
+    "createTime": "2024-11-15T07:20:55.529406Z",
+    "updateTime": "2024-11-15T08:41:01.624629Z",
+    "type": 2,
+    "brand": "Sigma",
+    "link": "https://www.sigma-global.com/en/lenses/c023_10_18_28/",
+    "img-src": "media/gear/Sigma10-18.png",
+    "name": "10-18mm F2.8 DC DN"
+  },
+  {
+    "id": "svWil0kXPZiBZ3OIjjed",
+    "path": "photography-gears/svWil0kXPZiBZ3OIjjed",
+    "createTime": "2024-11-15T07:19:58.398823Z",
+    "updateTime": "2024-11-15T08:40:54.814152Z",
+    "type": 2,
+    "brand": "Sigma",
+    "img-src": "media/gear/Sigma18-50.png",
+    "link": "https://www.sigma-global.com/en/lenses/c021_18_50_28/",
+    "name": "18-50mm F2.8 DC DN"
+  },
+  {
+    "id": "3fnt6eGSbSap6Nr6sqFj",
+    "path": "photography-gears/3fnt6eGSbSap6Nr6sqFj",
+    "createTime": "2024-11-15T07:22:27.545320Z",
+    "updateTime": "2024-11-15T08:41:10.368160Z",
+    "img-src": "media/gear/Viltrox56.png",
+    "link": "https://viltrox.com/products/viltrox-af-56mm-f1-7-xf-z",
+    "name": "56mm F1.7 APS-C",
+    "type": 3,
+    "brand": "Viltrox"
+  }
+]

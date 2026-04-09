@@ -1,0 +1,35 @@
+{
+  "document": {
+    "id": "XYdqe9OyXNSUEzZ8kqwn",
+    "path": "projects/XYdqe9OyXNSUEzZ8kqwn",
+    "createTime": "2024-11-20T15:30:54.117173Z",
+    "updateTime": "2024-11-20T15:30:54.117173Z",
+    "title": "syamim.",
+    "description": "Due to the presence of non-disclosure agreements (NDAs) on most of my projects, I am unable to share specific details about my work. Therefore, developing a personalized website to showcase my portfolio is the most efficient way to utilize my limited time. This platform will also serve as a personal journal, documenting my photography journey and experiences. Killing two birds with one stone!",
+    "subtitle": "My Journey Showcase"
+  },
+  "techstack": [
+    {
+      "id": "U75YQ0Ij4zFcqcN0L0Hh",
+      "path": "projects/XYdqe9OyXNSUEzZ8kqwn/techstack/U75YQ0Ij4zFcqcN0L0Hh",
+      "createTime": "2024-11-20T15:32:38.607782Z",
+      "updateTime": "2024-11-20T15:32:38.607782Z",
+      "sorting": 1,
+      "link": "https://vuejs.org/",
+      "img-src": "media/brands/vue.png",
+      "title": "Vue 3",
+      "description": "The main front-end Framework used"
+    },
+    {
+      "id": "G2qx2A6istapblsySsSX",
+      "path": "projects/XYdqe9OyXNSUEzZ8kqwn/techstack/G2qx2A6istapblsySsSX",
+      "createTime": "2024-11-20T15:36:07.761696Z",
+      "updateTime": "2024-11-22T00:48:51.677890Z",
+      "title": "Firebase",
+      "description": "Used for storage and real-time database via Firestore, Cloud Storage and Cloud Functions",
+      "link": "https://firebase.google.com/",
+      "img-src": "media/brands/firebase.png",
+      "sorting": 2
+    }
+  ]
+}
