@@ -114,11 +114,13 @@ GATE 3 — Execution
   Sonnet for code writing. Haiku for documentation. ui-ux-pro-max for UI/UX.
   → Produces: REVIEW READY + branch pushed
 
-GATE 4 — Peer Code Review
-  Non-owning agent reviews branch: correctness, tests, docs, scope, acceptance criteria.
-  Writes APPROVED or REQUEST CHANGES in HANDOFF.md.
-  If REQUEST CHANGES: owning agent addresses, pings back, reviewer re-reviews.
-  Both APPROVED → owning agent merges PR into main and deletes the branch.
+GATE 4 — Automated AI Peer Review
+  Triggered automatically when a PR is opened on a phase branch.
+  .github/workflows/ai-review.yml calls the reviewing agent's API with the diff
+  and acceptance criteria, then posts APPROVED or REQUEST CHANGES as a PR comment.
+  If APPROVED: HANDOFF.md is updated, PR is merged, and branch is deleted automatically.
+  If REQUEST CHANGES: owning agent addresses issues, pushes fixes, review re-runs.
+  No manual prompting required — Gate 4 is fully automated.
   → Produces: MERGED (branch deleted, HANDOFF.md updated to MERGED)
 ```
 
@@ -169,17 +171,23 @@ Comments explain *why*, not *what*. No comments on self-evident code.
 
 ## Code Review Protocol (Gate 4)
 
-1. Non-owning agent checks out the branch and reviews all changed files
-2. Reviewer checks: acceptance criteria met, tests pass, docs present, no scope creep,
-   no new `any` types, `npm run build` and `npm run lint:check` pass
-3. Reviewer writes verdict in the phase's Gate 4 section in `HANDOFF.md`:
-   - `APPROVED` — ready to merge
-   - `REQUEST CHANGES` — list each issue with file + line reference
-4. If REQUEST CHANGES: owning agent addresses, pings reviewer, reviewer re-reviews
-5. Both APPROVED → owning agent merges the PR into `main` and deletes the phase branch
-6. Owning agent updates `HANDOFF.md` phase status to `MERGED`
+Gate 4 is **fully automated** via `.github/workflows/ai-review.yml`:
 
-Reviewer should complete review in the same working session when notified.
+1. Owning agent opens a PR on the phase branch — this triggers the review automatically
+2. `ai-review.yml` detects the phase, calls the reviewing agent's AI API (OpenAI for Codex,
+   Anthropic for Claude), and posts the verdict as a PR comment
+3. If `APPROVED`: `HANDOFF.md` Gate 4 is updated, PR is squash-merged into `main`,
+   and the branch is deleted — all automatically
+4. If `REQUEST CHANGES`: owning agent pushes fixes, review re-runs on the new commit
+
+**Owning agent checklist before opening the PR** (replaces manual REVIEW READY steps):
+- [ ] `npm test` passes
+- [ ] `npm run build` exits 0
+- [ ] `npm run lint:check` exits 0
+- [ ] Documentation written for all new/modified public API
+- [ ] No new `any` types
+- [ ] `HANDOFF.md` status updated to `REVIEW READY`
+- [ ] PR opened against `main` — review triggers automatically
 
 ---
 

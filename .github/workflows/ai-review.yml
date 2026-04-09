@@ -1,0 +1,72 @@
+# ai-review.yml — Automated AI peer review for phase branches
+#
+# Triggers when a PR is opened or updated on a phase branch targeting main.
+# Calls the appropriate AI API (OpenAI for Codex reviews, Anthropic for Claude reviews),
+# posts the verdict as a PR comment, updates HANDOFF.md Gate 4, and merges on APPROVED.
+#
+# Required GitHub secrets:
+#   OPENAI_API_KEY    — for Codex reviews (phases A0, A2, A3, A4, A5)
+#   ANTHROPIC_API_KEY — for Claude reviews (phases A1, A6, A7)
+#
+# Required repo setting:
+#   Settings → General → Pull Requests → Allow auto-merge: ON
+
+name: AI Peer Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ai-review:
+    name: AI Peer Review
+    runs-on: ubuntu-latest
+
+    # Only run for phase branches
+    if: contains(github.head_ref, '/phase-a')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+          # Use GITHUB_TOKEN so git push in the script works
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skip bot-authored commits
+        id: guard
+        run: |
+          MSG=$(git log -1 --format='%s' ${{ github.event.pull_request.head.sha }})
+          if echo "$MSG" | grep -qF '[skip-review]'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping — commit marked [skip-review]"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node.js
+        if: steps.guard.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run AI review
+        if: steps.guard.outputs.skip != 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NODE_ID: ${{ github.event.pull_request.node_id }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REPO: ${{ github.repository }}
+        run: node scripts/ai-review.mjs
