@@ -108,19 +108,20 @@ GATE 2 — Per-Phase Plan Confirmation
   Syamim writes APPROVED before execution begins.
   → Produces: APPROVED status per phase
 
-GATE 3 — Execution
+GATE 3 — Execution + Pre-PR AI Review
   Owning agent creates branch, writes code, tests, and docs.
   Opus for any planning decisions that arise mid-execution.
   Sonnet for code writing. Haiku for documentation. ui-ux-pro-max for UI/UX.
-  → Produces: REVIEW READY + branch pushed
+  Before opening a PR, the owning agent performs a local AI self-review:
+    - Read the full diff against the phase plan and every acceptance criterion
+    - Confirm each criterion is MET; fix anything that is NOT MET before opening the PR
+  → Produces: REVIEW READY + PR opened (self-review already passed)
 
-GATE 4 — Automated AI Peer Review
+GATE 4 — CI + Auto-merge
   Triggered automatically when a PR is opened on a phase branch.
-  .github/workflows/ai-review.yml calls the reviewing agent's API with the diff
-  and acceptance criteria, then posts APPROVED or REQUEST CHANGES as a PR comment.
-  If APPROVED: HANDOFF.md is updated, PR is merged, and branch is deleted automatically.
-  If REQUEST CHANGES: owning agent addresses issues, pushes fixes, review re-runs.
-  No manual prompting required — Gate 4 is fully automated.
+  .github/workflows/ai-review.yml waits for CI (lint, type-check, test, build) to pass,
+  then squash-merges the PR, updates HANDOFF.md to MERGED, and deletes the branch.
+  No AI API keys required — review happens locally in Gate 3.
   → Produces: MERGED (branch deleted, HANDOFF.md updated to MERGED)
 ```
 
@@ -169,25 +170,33 @@ Comments explain *why*, not *what*. No comments on self-evident code.
 
 ---
 
-## Code Review Protocol (Gate 4)
+## Code Review Protocol (Gate 3 → Gate 4)
 
-Gate 4 is **fully automated** via `.github/workflows/ai-review.yml`:
+**Gate 3 — Local AI self-review (before opening the PR):**
 
-1. Owning agent opens a PR on the phase branch — this triggers the review automatically
-2. `ai-review.yml` detects the phase, calls the reviewing agent's AI API (OpenAI for Codex,
-   Anthropic for Claude), and posts the verdict as a PR comment
-3. If `APPROVED`: `HANDOFF.md` Gate 4 is updated, PR is squash-merged into `main`,
-   and the branch is deleted — all automatically
-4. If `REQUEST CHANGES`: owning agent pushes fixes, review re-runs on the new commit
+The owning agent must review its own work before opening a PR:
+1. Run `git diff main...HEAD` to get the full diff
+2. Read the phase plan and acceptance criteria from `HANDOFF.md`
+3. For each acceptance criterion, confirm MET or NOT MET
+4. Fix any NOT MET criteria before proceeding
+5. Only open the PR once all criteria are confirmed MET
 
-**Owning agent checklist before opening the PR** (replaces manual REVIEW READY steps):
+**Gate 3 checklist (must all pass before opening the PR):**
 - [ ] `npm test` passes
 - [ ] `npm run build` exits 0
 - [ ] `npm run lint:check` exits 0
 - [ ] Documentation written for all new/modified public API
 - [ ] No new `any` types
+- [ ] Every acceptance criterion in `HANDOFF.md` confirmed MET
 - [ ] `HANDOFF.md` status updated to `REVIEW READY`
-- [ ] PR opened against `main` — review triggers automatically
+
+**Gate 4 — CI + Auto-merge (fully automated after PR is opened):**
+
+1. Opening the PR triggers `.github/workflows/ai-review.yml`
+2. The workflow waits for CI checks (lint, type-check, test, build) to pass
+3. Once CI is green: PR is squash-merged into `main`, `HANDOFF.md` is updated to `MERGED`,
+   and the branch is deleted — all automatically
+4. No API keys required — no AI calls happen in CI
 
 ---
 
@@ -337,7 +346,9 @@ Do not modify these without explicit coverage in the approved phase plan:
 - [ ] `npm run build` exits 0
 - [ ] `npm run lint:check` exits 0
 - [ ] No new `any` types
+- [ ] Every acceptance criterion in `HANDOFF.md` confirmed MET (local AI self-review)
 - [ ] `HANDOFF.md` updated to REVIEW READY with change summary
+- [ ] PR opened — CI + auto-merge handles the rest
 
-**MERGED** — both agents have written `APPROVED`, owning agent has merged the PR into
-`main`, deleted the phase branch, and updated `HANDOFF.md` to `MERGED`.
+**MERGED** — CI passed, PR was squash-merged automatically, branch deleted,
+`HANDOFF.md` updated to `MERGED` by the auto-merge workflow.
