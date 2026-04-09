@@ -55,7 +55,7 @@
 |----|-----------------------------------|--------|----------|---------|---------|--|-------------------|--------|
 | A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED      | —      |
 | A1 | Baseline audit + Firestore export | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | —      |
-| A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | IN PROGRESS       | —      |
 | A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
@@ -223,7 +223,7 @@ Codex review: ___
 - [ ] `npm run lint:check` exits 0
 - [ ] All unit tests pass
 
-**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
+**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** APPROVE
 
 **Gate 4 — Code review** *(filled after execution)*
 Codex review: ___
