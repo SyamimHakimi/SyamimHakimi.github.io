@@ -18,13 +18,14 @@ describe("PhotoSchema", () => {
     expect(result.focal_length).toBe(84);
   });
 
-  it("parses a minimal photo with only required fields", () => {
+  it("parses a favourite photo with only required fields", () => {
     const result = PhotoSchema.parse({
       id: "abc",
       date: "2025-01-01T00:00:00.000Z",
+      favourite: true,
     });
     expect(result.title).toBeUndefined();
-    expect(result.favourite).toBeUndefined();
+    expect(result.favourite).toBe(true);
   });
 
   it("rejects a photo missing date", () => {

@@ -6,6 +6,7 @@ import {
   orderBy,
   limit,
   startAfter,
+  where,
   type QueryDocumentSnapshot,
   type DocumentData,
 } from "firebase/firestore";
@@ -44,10 +45,14 @@ export function useGallery() {
   let lastDoc: QueryDocumentSnapshot<DocumentData> | null = null;
 
   async function fetchPage(after?: QueryDocumentSnapshot<DocumentData>) {
-    const constraints = [orderBy("date", "desc"), limit(PAGE_SIZE)] as const;
+    const base = [
+      where("favourite", "==", true),
+      orderBy("date", "desc"),
+      limit(PAGE_SIZE),
+    ] as const;
     const q = after
-      ? query(collection(db, "photos"), ...constraints, startAfter(after))
-      : query(collection(db, "photos"), ...constraints);
+      ? query(collection(db, "photos"), ...base, startAfter(after))
+      : query(collection(db, "photos"), ...base);
 
     const snap = await getDocs(q);
     const fetched = snap.docs.map((d) =>
