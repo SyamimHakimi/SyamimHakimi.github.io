@@ -27,8 +27,9 @@ export function useServices() {
 
   onMounted(async () => {
     try {
+      // Primary sort: group (section order), secondary: sorting (card order within group).
       const snap = await getDocs(
-        query(collection(db, "services"), orderBy("sorting")),
+        query(collection(db, "services"), orderBy("group"), orderBy("sorting")),
       );
       services.value = snap.docs.map((d) =>
         ServiceSchema.parse({ id: d.id, ...d.data() }),
