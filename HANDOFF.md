@@ -11,7 +11,7 @@
 |------|---------------------------------|-------------------------------------|
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
-| 3    | Execution                       | IN PROGRESS — Phase A1 active       |
+| 3    | Execution                       | IN PROGRESS — Phase A2 next       |
 | 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
