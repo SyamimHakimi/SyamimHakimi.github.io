@@ -11,7 +11,7 @@
 |------|---------------------------------|-------------------------------------|
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
-| 3    | Execution                       | IN PROGRESS — Phase A3 next       |
+| 3    | Execution                       | IN PROGRESS — Phase A4 next       |
 | 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
@@ -56,7 +56,7 @@
 | A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED      | —      |
 | A1 | Baseline audit + Firestore export | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | —      |
 | A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #18    |
-| A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #19    |
 | A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A6 | SEO, media, hosting, security     | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
@@ -261,10 +261,11 @@ PR: SyamimHakimi/SyamimHakimi.github.io#18 — MERGED 2026-04-09
 - [ ] `npm run build` exits 0
 - [ ] All snapshot tests pass
 
-**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
+**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** APPROVE
 
-**Gate 4 — Code review** *(filled after execution)*
-Codex review: ___
+**Gate 4 — Code review**
+Codex review: APPROVED (2 review iterations — P1: missing stylesheet import, P2: relative OG image URL — both fixed)
+PR: SyamimHakimi/SyamimHakimi.github.io#19 — MERGED 2026-04-09
 
 ---
 
