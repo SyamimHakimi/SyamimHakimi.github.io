@@ -1,10 +1,11 @@
 ---
 /**
  * Portfolio — route `/portfolio`.
- * Island: PortfolioSection.vue (client:visible) — Phase A5
+ * Island: PortfolioSection.vue (client:visible)
  * Composable: usePortfolio()
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import PortfolioSection from "../components/islands/PortfolioSection.vue";
 ---
 
 <PageLayout
@@ -19,12 +20,6 @@ import PageLayout from "../layouts/PageLayout.astro";
       </p>
     </header>
 
-    <section aria-label="Portfolio">
-      <!--
-        PortfolioSection island mounted here in Phase A5.
-        Uses: usePortfolio() — experience categories + projects singleton + techstack.
-      -->
-      <p class="text-[var(--color-text-muted)]">Portfolio loading…</p>
-    </section>
+    <PortfolioSection client:visible />
   </div>
 </PageLayout>
