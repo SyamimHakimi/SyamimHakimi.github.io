@@ -44,14 +44,14 @@ jobs:
       # at runtime. Requires the FIREBASE_SERVICE_ACCOUNT secret to be set in
       # the repo's GitHub Actions secrets (Settings → Secrets → Actions).
       - name: Deploy Firestore indexes
-        if: ${{ env.FIREBASE_SERVICE_ACCOUNT != '' }}
+        if: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
         run: |
           echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
           npx firebase-tools deploy --only firestore:indexes \
             --project portfolio-9e62d \
-            --service-account /tmp/sa.json \
             --non-interactive
           rm /tmp/sa.json
 
