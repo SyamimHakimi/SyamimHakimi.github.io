@@ -1,0 +1,37 @@
+---
+/**
+ * PageLayout — full page wrapper with header, nav, main, and footer.
+ * Extends BaseLayout with the shared chrome present on every page.
+ *
+ * Props:
+ *   title       — passed through to BaseLayout (required)
+ *   description — passed through to BaseLayout (required)
+ *   image       — Open Graph image, passed through to BaseLayout (optional)
+ */
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+// ThemeToggle island — client:load so it reads localStorage immediately on mount.
+// Island is rendered inside SiteHeader's theme-toggle slot.
+import ThemeToggle from "../components/islands/ThemeToggle.vue";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const { title, description, image } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <SiteHeader>
+    <ThemeToggle slot="theme-toggle" client:load />
+  </SiteHeader>
+
+  <main>
+    <slot />
+  </main>
+
+  <SiteFooter />
+</BaseLayout>

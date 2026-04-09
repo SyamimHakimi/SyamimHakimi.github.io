@@ -1,0 +1,22 @@
+---
+/**
+ * Contact — route `/contact`.
+ * Island: ContactForm.vue (client:load — requires browser fetch for EmailJS)
+ * No composable — purely client-side EmailJS submission.
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="Contact — syamim."
+  description="Get in touch with Syamim Hakimi — web development enquiries and collaborations."
+>
+  <section aria-label="Contact">
+    <!--
+      ContactForm island mounted here in Phase A5.
+      Uses client:load (not client:visible) because EmailJS requires
+      the browser fetch API on mount.
+    -->
+    <p>Contact — content loads here.</p>
+  </section>
+</PageLayout>
