@@ -10,12 +10,16 @@
 #
 # Required repo setting:
 #   Settings → General → Pull Requests → Allow auto-merge: ON
+#
+# Manual override:
+#   If both APIs are unavailable, add the `manual-approved` label to the PR.
+#   The workflow will skip the AI call, post an APPROVED comment, and merge.
 
 name: AI Peer Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, labeled]
     branches: [main]
 
 permissions:
@@ -50,6 +54,18 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Check for manual-approved label
+        id: manual
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
+          if echo "$LABELS" | grep -q 'manual-approved'; then
+            echo "override=true" >> "$GITHUB_OUTPUT"
+            echo "Manual override label detected"
+          else
+            echo "override=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up Node.js
         if: steps.guard.outputs.skip != 'true'
         uses: actions/setup-node@v4
@@ -76,4 +92,5 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           REPO: ${{ github.repository }}
+          MANUAL_OVERRIDE: ${{ steps.manual.outputs.override }}
         run: node scripts/ai-review.mjs

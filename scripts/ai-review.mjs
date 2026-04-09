@@ -29,6 +29,7 @@ const {
   BASE_SHA,
   HEAD_SHA,
   REPO,
+  MANUAL_OVERRIDE,
 } = process.env;
 
 const GH_API = 'https://api.github.com';
@@ -253,6 +254,32 @@ async function main() {
   const { owner, reviewer } = phaseInfo;
   console.log(`Phase A${phaseNum}: owner=${owner}, reviewer=${reviewer}`);
 
+  // ── Manual override ───────────────────────────────────────────────────────
+  // When the `manual-approved` label is applied, skip the AI call entirely.
+  // Used when both APIs are unavailable (quota exhausted, outage, etc.).
+  if (MANUAL_OVERRIDE === 'true') {
+    console.log('Manual override active — skipping AI call');
+    const handoff  = readFileSync('HANDOFF.md', 'utf8');
+    const commentId = await postComment(
+      `## :white_check_mark: Manual Override — Phase A${phaseNum}\n\n` +
+      `The \`manual-approved\` label was applied by Syamim, bypassing the automated AI review.\n\n` +
+      `**VERDICT: APPROVED**\n\n` +
+      `---\n*Manual override — AI review skipped*`
+    );
+    const updated = updateHandoff(handoff, phaseNum, reviewer, 'APPROVED', commentId);
+    commitAndPush(updated);
+    console.log('Waiting for CI before merging…');
+    await postComment(`> :hourglass: **Waiting for CI checks to pass** — will merge automatically once all checks are green.`);
+    const merged = await mergeWhenReady();
+    if (merged) {
+      await deleteBranch();
+      console.log('Merged and branch deleted via manual override');
+    } else {
+      await postComment(`> :warning: **Auto-merge timed out** — please merge manually once CI is green.`);
+    }
+    return;
+  }
+
   // ── Gather context ────────────────────────────────────────────────────────
   const handoff   = readFileSync('HANDOFF.md', 'utf8');
   const phasePlan = extractPhasePlan(handoff, phaseNum);
@@ -279,23 +306,58 @@ ${diff}
 
 Review the changes against every acceptance criterion above. Note each criterion as MET or NOT MET. Then state your verdict.`;
 
-  // ── Call AI API ───────────────────────────────────────────────────────────
+  // ── Call AI API (with fallback) ───────────────────────────────────────────
+  // Primary: use the assigned reviewer's API.
+  // Fallback: if the primary API is unavailable (quota exhausted, key missing,
+  // network error), automatically retry with the other provider so reviews
+  // are never fully blocked by a single API outage.
   let response;
-  try {
-    if (reviewer === 'Codex') {
+  let modelId;
+  let usedFallback = false;
+
+  const primaryIsCodex = reviewer === 'Codex';
+
+  async function tryPrimary() {
+    if (primaryIsCodex) {
       if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY secret is not set');
-      response = await callOpenAI(system, user);
+      modelId = 'gpt-4o';
+      return await callOpenAI(system, user);
     } else {
       if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY secret is not set');
-      response = await callAnthropic(system, user);
+      modelId = 'claude-sonnet-4-6';
+      return await callAnthropic(system, user);
     }
-  } catch (err) {
-    await postComment(
-      `## :robot: AI Peer Review — Error\n\n` +
-      `:warning: Automated review failed: **${err.message}**\n\n` +
-      `Please trigger a manual review or check the Actions log.`
-    );
-    process.exit(1);
+  }
+
+  async function tryFallback() {
+    if (primaryIsCodex) {
+      if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY secret is not set (fallback)');
+      modelId = 'claude-sonnet-4-6 (fallback)';
+      return await callAnthropic(system, user);
+    } else {
+      if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY secret is not set (fallback)');
+      modelId = 'gpt-4o (fallback)';
+      return await callOpenAI(system, user);
+    }
+  }
+
+  try {
+    response = await tryPrimary();
+  } catch (primaryErr) {
+    console.warn(`Primary API failed (${primaryErr.message}) — trying fallback…`);
+    try {
+      response = await tryFallback();
+      usedFallback = true;
+      console.log(`Fallback succeeded using ${modelId}`);
+    } catch (fallbackErr) {
+      await postComment(
+        `## :robot: AI Peer Review — Error\n\n` +
+        `:warning: Both APIs failed. Add the \`manual-approved\` label to bypass.\n\n` +
+        `**Primary error:** ${primaryErr.message}\n\n` +
+        `**Fallback error:** ${fallbackErr.message}`
+      );
+      process.exit(1);
+    }
   }
 
   // ── Parse verdict ─────────────────────────────────────────────────────────
@@ -303,7 +365,7 @@ Review the changes against every acceptance criterion above. Note each criterion
   const verdict      = verdictMatch ? verdictMatch[1].toUpperCase() : 'REQUEST CHANGES';
   const isApproved   = verdict === 'APPROVED';
   const icon         = isApproved ? ':white_check_mark:' : ':x:';
-  const modelId      = reviewer === 'Codex' ? 'gpt-4o' : 'claude-sonnet-4-6';
+  const fallbackNote = usedFallback ? ' · ⚠️ primary API unavailable, fallback used' : '';
 
   console.log(`Verdict: ${verdict}`);
 
@@ -311,7 +373,7 @@ Review the changes against every acceptance criterion above. Note each criterion
   const commentBody =
     `## ${icon} AI Peer Review — ${reviewer} — Phase A${phaseNum}\n\n` +
     `${response}\n\n` +
-    `---\n*Automated review · ${reviewer} · \`${modelId}\`*`;
+    `---\n*Automated review · ${reviewer} · \`${modelId}\`${fallbackNote}*`;
 
   const commentId = await postComment(commentBody);
   console.log(`Posted comment #${commentId}`);
