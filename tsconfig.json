@@ -1,18 +1,10 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "lib": ["es2017"],
-    "ignoreDeprecations": "5.0",
-    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]
     }
   },
-  "references": [
-    {
-      "path": "./tsconfig.config.json"
-    }
-  ]
+  "include": ["src", "scripts"]
 }
