@@ -1,7 +1,7 @@
 ---
 /**
  * SiteHeader — top navigation bar.
- * Static HTML only — theme toggle island is mounted separately in PageLayout.
+ * Static HTML only — ThemeToggle island is mounted via the theme-toggle slot in PageLayout.
  */
 const navLinks = [
   { href: "/", label: "Photography" },
@@ -18,18 +18,33 @@ function isActive(href: string): boolean {
 }
 ---
 
-<header>
-  <nav aria-label="Main navigation">
-    <a href="/" aria-label="syamim. — home">
-      <span>syamim.</span>
+<header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-md">
+  <nav
+    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6"
+    aria-label="Main navigation"
+  >
+    <!-- Logo -->
+    <a
+      href="/"
+      class="text-xl font-bold tracking-tight text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
+      aria-label="syamim. — home"
+    >
+      syamim.
     </a>
 
-    <ul role="list">
+    <!-- Nav links — visible on all screen sizes; scrollable on narrow viewports -->
+    <ul class="flex items-center gap-1 overflow-x-auto" role="list">
       {navLinks.map((link) => (
         <li>
           <a
             href={link.href}
             aria-current={isActive(link.href) ? "page" : undefined}
+            class:list={[
+              "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+              isActive(link.href)
+                ? "bg-[var(--color-surface)] text-[var(--color-accent)]"
+                : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]",
+            ]}
           >
             {link.label}
           </a>
@@ -37,10 +52,7 @@ function isActive(href: string): boolean {
       ))}
     </ul>
 
-    <!--
-      ThemeToggle island is injected by PageLayout so it can use client:load.
-      This slot receives it as a sibling element outside the nav list.
-    -->
+    <!-- Theme toggle slot -->
     <slot name="theme-toggle" />
   </nav>
 </header>

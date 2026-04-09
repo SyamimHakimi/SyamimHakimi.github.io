@@ -1,7 +1,7 @@
 ---
 /**
  * Portfolio — route `/portfolio`.
- * Island: PortfolioSection.vue (client:visible)
+ * Island: PortfolioSection.vue (client:visible) — Phase A5
  * Composable: usePortfolio()
  */
 import PageLayout from "../layouts/PageLayout.astro";
@@ -11,11 +11,20 @@ import PageLayout from "../layouts/PageLayout.astro";
   title="Portfolio — syamim."
   description="Syamim Hakimi's portfolio — professional experience, platforms, frameworks, and personal projects."
 >
-  <section aria-label="Portfolio">
-    <!--
-      PortfolioSection island mounted here in Phase A5.
-      Uses: usePortfolio() — experience categories + projects singleton + techstack.
-    -->
-    <p>Portfolio — content loads here.</p>
-  </section>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="mb-10">
+      <h1 class="text-3xl font-bold sm:text-4xl">Portfolio</h1>
+      <p class="mt-2 text-[var(--color-text-muted)]">
+        Professional experience, tools, and personal projects.
+      </p>
+    </header>
+
+    <section aria-label="Portfolio">
+      <!--
+        PortfolioSection island mounted here in Phase A5.
+        Uses: usePortfolio() — experience categories + projects singleton + techstack.
+      -->
+      <p class="text-[var(--color-text-muted)]">Portfolio loading…</p>
+    </section>
+  </div>
 </PageLayout>
