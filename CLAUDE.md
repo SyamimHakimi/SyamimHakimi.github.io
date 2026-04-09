@@ -25,7 +25,7 @@ in Firebase appears on the live site immediately without redeployment.
 
 **Core Stack:**
 - Astro 6 (static site generator, island architecture)
-- TypeScript (strict mode)
+- TypeScript (strict mode enabled in Phase A7 hardening)
 - Tailwind CSS 4 (via `@tailwindcss/vite`)
 - Vue 3 (Composition API — islands only, not the site shell)
 - Firebase Firestore (all content — runtime reads via Vue islands, no build-time fetch)
@@ -90,13 +90,13 @@ and it will appear on the site immediately — no redeployment required.
 Firestore data is accessed exclusively through composables in `src/lib/composables/`.
 TypeScript interfaces for all data models live alongside their composables.
 
-| Composable          | Firestore Collection  | Consumed by                |
-|---------------------|-----------------------|----------------------------|
-| `useStatistics()`   | `statistics`          | `PhotographyJourney.vue`   |
-| `useGallery()`      | `gallery`             | `GalleryGrid.vue`, `GalleryLightbox.vue` |
-| `usePortfolio()`    | `portfolio`           | `PortfolioSection.vue`     |
-| `useServices()`     | `services`            | `ServicesSection.vue`      |
-| `useAboutMe()`      | `about`               | `AboutMe.vue`              |
+| Composable          | Firestore Collection(s)                                           | Consumed by                |
+|---------------------|-------------------------------------------------------------------|----------------------------|
+| `useStatistics()`   | `statistics`                                                      | `PhotographyJourney.vue`   |
+| `useGallery()`      | `photos`                                                          | `GalleryGrid.vue`, `GalleryLightbox.vue` |
+| `usePortfolio()`    | `experience/{platforms,protocols,frameworks,languages}/item`, `projects/XYdqe9OyXNSUEzZ8kqwn` (singleton + `techstack` subcollection) | `PortfolioSection.vue`     |
+| `useServices()`     | `services`                                                        | `ServicesSection.vue`      |
+| `useAboutMe()`      | `profile/ddIhV8IxV5DjciJY7UxW` (singleton), `photography-gears`, `favourite-boardgames`, `social-media` | `AboutMe.vue`         |
 
 The `export/` directory is a one-time Phase A1 archive of Firestore data (JSON snapshots).
 It is **read-only after Phase A1** and is never read at runtime or build time.
@@ -125,7 +125,17 @@ All content flows: Firebase Firestore → Vue island composable → rendered UI 
 No content is fetched at build time. Astro pages are pure structural shells — they mount
 Vue islands but perform no data fetching themselves.
 
-Theme persists to `localStorage` (key: `theme`), managed by `ThemeToggle.vue`.
+Theme persists to `localStorage` (key: `theme`). `BaseLayout.astro` includes an inline
+`<script>` in `<head>` that reads `localStorage.theme` and sets `data-theme="dark"` on
+`<html>` before first paint to prevent a flash of wrong theme. `ThemeToggle.vue` then
+manages subsequent toggles. All dark-mode CSS must use `[data-theme="dark"]` as the selector.
+
+Tailwind's `dark:` variant must be wired to this attribute in `src/styles/global.css`:
+```css
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+```
+Without this override, Tailwind defaults to `prefers-color-scheme` and `dark:` utilities
+will not respond to the `data-theme` attribute toggle.
 
 ## Routing
 
