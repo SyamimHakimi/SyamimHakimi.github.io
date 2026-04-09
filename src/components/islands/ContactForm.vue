@@ -39,7 +39,16 @@ async function submit() {
   errorMessage.value = "";
 
   try {
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...form }, { publicKey: PUBLIC_KEY });
+    await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      {
+        from_name: form.from_name.trim(),
+        from_email: form.from_email.trim(),
+        message: form.message.trim(),
+      },
+      { publicKey: PUBLIC_KEY },
+    );
     status.value = "success";
     form.from_name = "";
     form.from_email = "";

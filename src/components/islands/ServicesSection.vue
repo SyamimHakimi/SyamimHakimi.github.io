@@ -10,12 +10,15 @@ import { useServices } from "../../lib/composables/useServices";
 const { services, loading, error } = useServices();
 
 const grouped = computed(() => {
+  // Preserve the Firestore-controlled `sorting` insertion order for group sections.
+  // Services arrive already sorted by `sorting` from useServices(); the Map preserves
+  // first-seen group order so groups appear in the sequence Firestore defines.
   const map = new Map<number, typeof services.value>();
   for (const service of services.value) {
     if (!map.has(service.group)) map.set(service.group, []);
     map.get(service.group)!.push(service);
   }
-  return [...map.entries()].sort(([a], [b]) => a - b);
+  return [...map.entries()];
 });
 </script>
 
