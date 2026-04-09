@@ -20,9 +20,17 @@ const form = reactive({
 const status = ref<"idle" | "sending" | "success" | "error">("idle");
 const errorMessage = ref("");
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+
 async function submit() {
   if (!form.from_name.trim() || !form.from_email.trim() || !form.message.trim()) {
     errorMessage.value = "Please fill in all fields.";
+    status.value = "error";
+    return;
+  }
+
+  if (!EMAIL_RE.test(form.from_email.trim())) {
+    errorMessage.value = "Please enter a valid email address.";
     status.value = "error";
     return;
   }

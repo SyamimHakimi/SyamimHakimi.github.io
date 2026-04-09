@@ -30,8 +30,8 @@ function openLightbox(index: number) {
       />
     </div>
 
-    <!-- Error -->
-    <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
+    <!-- Initial load error (no photos yet) -->
+    <div v-else-if="error && photos.length === 0" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
       <p class="font-medium">Failed to load gallery</p>
       <p class="mt-1 text-sm opacity-80">{{ error }}</p>
     </div>
@@ -41,7 +41,7 @@ function openLightbox(index: number) {
       No photos found.
     </p>
 
-    <!-- Grid -->
+    <!-- Grid (shown even if a later loadMore failed) -->
     <div v-else>
       <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
         <li
@@ -70,6 +70,11 @@ function openLightbox(index: number) {
           </button>
         </li>
       </ul>
+
+      <!-- Pagination error (photos still visible) -->
+      <p v-if="error && photos.length > 0" class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400" role="alert">
+        Failed to load more photos. Please try again.
+      </p>
 
       <!-- Load more -->
       <div v-if="hasMore" class="mt-8 flex justify-center">

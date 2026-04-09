@@ -41,16 +41,24 @@ const grouped = computed(() => {
       No services found.
     </p>
 
-    <!-- Content -->
-    <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <article
-        v-for="service in services"
-        :key="service.id"
-        class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-shadow hover:shadow-md"
+    <!-- Content — rendered grouped by category -->
+    <div v-else class="space-y-8">
+      <section
+        v-for="[groupId, groupServices] in grouped"
+        :key="groupId"
+        :aria-label="`Service group ${groupId}`"
       >
-        <h3 class="font-semibold text-[var(--color-text)]">{{ service.title }}</h3>
-        <p class="mt-1 text-sm text-[var(--color-text-muted)]">{{ service.description }}</p>
-      </article>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <article
+            v-for="service in groupServices"
+            :key="service.id"
+            class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-shadow hover:shadow-md"
+          >
+            <h3 class="font-semibold text-[var(--color-text)]">{{ service.title }}</h3>
+            <p class="mt-1 text-sm text-[var(--color-text-muted)]">{{ service.description }}</p>
+          </article>
+        </div>
+      </section>
     </div>
   </div>
 </template>
