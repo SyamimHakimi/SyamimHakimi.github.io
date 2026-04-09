@@ -127,8 +127,26 @@ fetching via a composable and renders its own loading/empty/error/retry states.
 Used for all content islands to avoid loading Firestore data for off-screen sections.
 
 **`client:load`** — hydrates immediately on page load.
-Used for `ThemeToggle` (prevents flash of wrong theme) and `ContactForm` (must be
-ready before the user reaches it).
+Used for `ContactForm` (must be ready before the user reaches it).
+
+**Theme flash prevention** — `ThemeToggle.vue` uses `client:load`, but Vue hydration
+runs after first paint, which is too late to prevent a flash of wrong theme for users
+with a saved preference. `BaseLayout.astro` must include an inline `<script>` in
+`<head>` that reads `localStorage.theme` and sets `data-theme="dark"` (or removes the
+attribute) on `<html>` synchronously before any paint occurs. The Vue island then takes
+over for subsequent toggles. All CSS dark-mode rules must use `[data-theme="dark"]` as
+the selector to match this contract.
+
+**Tailwind dark-variant wiring** — Tailwind CSS 4's `dark:` variant defaults to
+`prefers-color-scheme` and does **not** react to a `data-theme` attribute unless
+explicitly overridden. Phase A4 must add the following to `src/styles/global.css`:
+
+```css
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+```
+
+This makes every `dark:` utility class activate when any ancestor element carries
+`data-theme="dark"`, which is set on `<html>` by the pre-paint inline script.
 
 **Rule:** No Vue island is added unless the feature genuinely requires client state
 or a browser API. Pure markup sections are Astro components.
@@ -159,13 +177,13 @@ redeployment.
 
 ### Composables
 
-| Composable        | Firestore collection | Data returned                              |
-|-------------------|----------------------|--------------------------------------------|
-| `useStatistics()` | `statistics`         | Photography stats for ApexCharts           |
-| `useGallery()`    | `gallery`            | Paginated photos with cursor-based queries |
-| `usePortfolio()`  | `portfolio`          | Experience sections + personal projects    |
-| `useServices()`   | `services`           | Service types and offerings                |
-| `useAboutMe()`    | `about`              | Profile, gear, boardgames, social links    |
+| Composable        | Firestore collection(s)                                          | Data returned                              |
+|-------------------|------------------------------------------------------------------|--------------------------------------------|
+| `useStatistics()` | `statistics`                                                     | Photography stats for ApexCharts           |
+| `useGallery()`    | `photos`                                                         | Paginated photos with cursor-based queries |
+| `usePortfolio()`  | `experience/{platforms,protocols,frameworks,languages}/item`, `projects/XYdqe9OyXNSUEzZ8kqwn` (singleton + `techstack` subcollection) | Experience sections + personal projects    |
+| `useServices()`   | `services`                                                       | Service types and offerings                |
+| `useAboutMe()`    | `profile/ddIhV8IxV5DjciJY7UxW` (singleton), `photography-gears`, `favourite-boardgames`, `social-media` | Profile, gear, boardgames, social links    |
 
 All composables use the Firebase SDK v10+ modular API (`getDocs` / `onSnapshot`)
 directly — no VueFire dependency. Local persistence uses
@@ -186,16 +204,21 @@ for the deprecated `enableIndexedDbPersistence()`).
 
 ### Collections
 
-| Collection   | Purpose                                      | Key fields (shape reference: `export/`) |
-|--------------|----------------------------------------------|-----------------------------------------|
-| `gallery`    | Portfolio photos, paginated                  | `url`, `caption`, `tags`, `order`       |
-| `statistics` | Photography stats for charts                 | `label`, `value`, `chartType`           |
-| `portfolio`  | Experience sections + personal projects      | `title`, `items[]`, `type`              |
-| `services`   | Service offerings                            | `title`, `description`, `icon`          |
-| `about`      | Profile, gear, boardgames, social links      | `profile`, `gear[]`, `boardgames[]`, `social[]` |
+| Collection / Document  | Purpose                                 |
+|------------------------|-----------------------------------------|
+| `photos`               | Portfolio photos, paginated             |
+| `statistics`           | Photography stats for charts            |
+| `experience/{category}/item` | Experience items grouped by category (platforms, protocols, frameworks, languages) |
+| `projects/XYdqe9OyXNSUEzZ8kqwn` | Singleton projects document + `techstack` subcollection |
+| `services`             | Service offerings                       |
+| `profile/ddIhV8IxV5DjciJY7UxW` | Singleton profile document              |
+| `photography-gears`    | Camera and lens entries                 |
+| `favourite-boardgames` | Favourite boardgames list               |
+| `social-media`         | Social profile links                    |
 
 Document shapes are defined as TypeScript interfaces with Zod validators in Phase A2.
-The `export/` directory is the canonical shape reference during development.
+The `export/` directory is the canonical shape reference during development — JSON
+snapshots are produced by Phase A1 and committed to `export/` before Phase A2 begins.
 
 ---
 
