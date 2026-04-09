@@ -53,7 +53,7 @@
 
 | #  | Phase                             | Owner  | Reviewer | Claude  | Codex   | Syamim | Status            | Review |
 |----|-----------------------------------|--------|----------|---------|---------|--|-------------------|--------|
-| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A0 | Architecture spike + docs update  | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | REVIEW READY      | —      |
 | A1 | Baseline audit + Firestore export | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A2 | Firebase SDK + data models        | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 | A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
@@ -102,10 +102,21 @@ opened. Phase A0 execution creates only `ARCHITECTURE.md` — no protected files
 - [ ] `ARCHITECTURE.md` committed covering all items above
 - [ ] Existing Vue app remains buildable (no config files touched)
 
-**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
+**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** APPROVE
 
 **Gate 4 — Code review** *(filled after execution)*
 Codex review: ___
+
+**Change summary (for Codex review):**
+- `ARCHITECTURE.md` created covering all Phase A0 scope items:
+  project structure, route map, Vue island list with directives + justification,
+  Firestore data model + security model, GitHub Pages deployment config,
+  `PUBLIC_` env var table, runtime UX requirements (loading/empty/error/retry),
+  and content editing workflow note.
+- No existing files modified. Existing Vue app untouched.
+
+→ CODEX: please review `ARCHITECTURE.md` on branch `docs/phase-a0-architecture-spike`.
+Verify all acceptance criteria are met and write APPROVED or REQUEST CHANGES.
 
 ---
 
