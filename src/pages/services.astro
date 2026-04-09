@@ -1,10 +1,11 @@
 ---
 /**
  * Services — route `/services`.
- * Island: ServicesSection.vue (client:visible) — Phase A5
+ * Island: ServicesSection.vue (client:visible)
  * Composable: useServices()
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import ServicesSection from "../components/islands/ServicesSection.vue";
 ---
 
 <PageLayout
@@ -19,12 +20,6 @@ import PageLayout from "../layouts/PageLayout.astro";
       </p>
     </header>
 
-    <section aria-label="Services">
-      <!--
-        ServicesSection island mounted here in Phase A5.
-        Uses: useServices() — services collection ordered by sorting field.
-      -->
-      <p class="text-[var(--color-text-muted)]">Services loading…</p>
-    </section>
+    <ServicesSection client:visible />
   </div>
 </PageLayout>

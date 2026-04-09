@@ -1,10 +1,11 @@
 ---
 /**
  * Full gallery — route `/photography`.
- * Islands: GalleryGrid.vue + GalleryLightbox.vue (client:visible) — Phase A5
+ * Island: GalleryGrid.vue (client:visible) — includes GalleryLightbox internally
  * Composable: useGallery()
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import GalleryGrid from "../components/islands/GalleryGrid.vue";
 ---
 
 <PageLayout
@@ -19,13 +20,6 @@ import PageLayout from "../layouts/PageLayout.astro";
       </p>
     </header>
 
-    <section aria-label="Photography Gallery">
-      <!--
-        GalleryGrid island mounted here in Phase A5.
-        Uses: useGallery() — paginated, favourite only, ordered by date desc.
-        GalleryLightbox island also mounted here for full-screen viewing.
-      -->
-      <p class="text-[var(--color-text-muted)]">Gallery loading…</p>
-    </section>
+    <GalleryGrid client:visible />
   </div>
 </PageLayout>

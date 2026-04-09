@@ -1,10 +1,11 @@
 ---
 /**
  * About — route `/about`.
- * Island: AboutMe.vue (client:visible) — Phase A5
+ * Island: AboutMe.vue (client:visible)
  * Composable: useAboutMe()
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import AboutMe from "../components/islands/AboutMe.vue";
 ---
 
 <PageLayout
@@ -19,12 +20,6 @@ import PageLayout from "../layouts/PageLayout.astro";
       </p>
     </header>
 
-    <section aria-label="About Me">
-      <!--
-        AboutMe island mounted here in Phase A5.
-        Uses: useAboutMe() — profile singleton, photography-gears, boardgames, social-media.
-      -->
-      <p class="text-[var(--color-text-muted)]">Profile loading…</p>
-    </section>
+    <AboutMe client:visible />
   </div>
 </PageLayout>

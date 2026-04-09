@@ -7,6 +7,14 @@
         { "fieldPath": "favourite", "order": "ASCENDING" },
         { "fieldPath": "date", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "services",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "group", "order": "ASCENDING" },
+        { "fieldPath": "sorting", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

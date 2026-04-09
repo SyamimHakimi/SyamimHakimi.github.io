@@ -1,10 +1,11 @@
 ---
 /**
  * Photography Journey — default route `/`.
- * Island: PhotographyJourney.vue (client:visible) — Phase A5
- * Composable: useStatistics() + useGallery()
+ * Island: PhotographyJourney.vue (client:visible)
+ * Composable: useStatistics()
  */
 import PageLayout from "../layouts/PageLayout.astro";
+import PhotographyJourney from "../components/islands/PhotographyJourney.vue";
 ---
 
 <PageLayout
@@ -19,12 +20,6 @@ import PageLayout from "../layouts/PageLayout.astro";
       </p>
     </header>
 
-    <section aria-label="Photography Journey content">
-      <!--
-        PhotographyJourney island mounted here in Phase A5.
-        Uses: useStatistics() for charts, useGallery() for featured photos.
-      -->
-      <p class="text-[var(--color-text-muted)]">Content loading…</p>
-    </section>
+    <PhotographyJourney client:visible />
   </div>
 </PageLayout>

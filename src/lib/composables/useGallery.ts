@@ -83,6 +83,8 @@ export function useGallery() {
     try {
       const more = await fetchPage(lastDoc);
       photos.value.push(...more);
+      // Clear any previous pagination error on successful fetch.
+      error.value = null;
     } catch (err) {
       error.value = err instanceof Error ? err.message : String(err);
     } finally {

@@ -2,7 +2,6 @@
 #
 # Runs ONLY on push to main and manual dispatch.
 # PRs are validated by ci.yml — this workflow never runs on pull requests.
-# Full rewrite for Astro + Firestore rules + Telegram notify is scoped to Phase A6.
 
 name: Deploy
 
@@ -22,9 +21,7 @@ concurrency:
   group: 'pages'
   cancel-in-progress: true
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
@@ -33,22 +30,49 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
+
+      # Check whether the Firebase service account secret is present.
+      # Outputs a boolean that the next step reads via steps context so the
+      # credential itself is never exposed at job scope.
+      - name: Check Firebase credentials
+        id: firebase-check
+        run: echo "present=${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}" >> $GITHUB_OUTPUT
+
+      # Deploy Firestore indexes so composite queries (gallery, services) work
+      # at runtime. Requires the FIREBASE_SERVICE_ACCOUNT secret to be set in
+      # the repo's GitHub Actions secrets (Settings → Secrets → Actions).
+      - name: Deploy Firestore indexes
+        if: steps.firebase-check.outputs.present == 'true'
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
+          npx firebase-tools deploy --only firestore:indexes \
+            --project portfolio-9e62d \
+            --non-interactive
+          rm /tmp/sa.json
+
       - name: Build
         run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload dist folder
           path: './dist'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
