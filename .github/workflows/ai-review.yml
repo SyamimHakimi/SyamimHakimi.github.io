@@ -56,6 +56,13 @@ jobs:
         with:
           node-version: '20'
 
+      # The review script lives on main. Phase branches created before the script
+      # was added won't have it — always fetch from main at runtime so every PR
+      # uses the latest version of the script regardless of when the branch was cut.
+      - name: Fetch review script from main
+        if: steps.guard.outputs.skip != 'true'
+        run: git show origin/main:scripts/ai-review.mjs > scripts/ai-review.mjs
+
       - name: Run AI review
         if: steps.guard.outputs.skip != 'true'
         env:
