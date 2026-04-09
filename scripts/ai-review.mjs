@@ -1,16 +1,15 @@
 /**
- * ai-review.mjs — Automated AI peer review for phase branches
+ * auto-merge.mjs — CI-gated auto-merge for phase branches
  *
- * Called by .github/workflows/ai-review.yml on PR open/synchronize.
+ * Called by .github/workflows/ai-review.yml when a PR is opened on a phase branch.
+ * AI peer review is performed locally by the owning agent BEFORE the PR is opened.
+ *
  * Flow:
  *   1. Detect phase number from branch name
- *   2. Determine reviewing agent (Codex or Claude) from phase ownership
- *   3. Extract phase plan + acceptance criteria from HANDOFF.md
- *   4. Get the PR diff
- *   5. Call the appropriate AI API
- *   6. Post verdict as a PR comment
- *   7. Commit Gate 4 result to HANDOFF.md on the branch
- *   8. If APPROVED: poll for CI to pass, then merge PR + delete branch
+ *   2. Post a "waiting for CI" comment
+ *   3. Poll until CI checks pass, then squash-merge the PR
+ *   4. Update HANDOFF.md status to MERGED on the merge commit
+ *   5. Delete the remote phase branch
  */
 
 import { readFileSync, writeFileSync } from 'fs';
@@ -19,17 +18,11 @@ import { execSync } from 'child_process';
 // ── Environment ──────────────────────────────────────────────────────────────
 
 const {
-  OPENAI_API_KEY,
-  ANTHROPIC_API_KEY,
   GITHUB_TOKEN,
   PR_NUMBER,
-  PR_NODE_ID,
   PR_TITLE,
   HEAD_BRANCH,
-  BASE_SHA,
-  HEAD_SHA,
   REPO,
-  MANUAL_OVERRIDE,
 } = process.env;
 
 const GH_API = 'https://api.github.com';
@@ -37,23 +30,8 @@ const GH_HEADERS = {
   Authorization: `Bearer ${GITHUB_TOKEN}`,
   Accept: 'application/vnd.github+json',
   'X-GitHub-Api-Version': '2022-11-28',
-  'User-Agent': 'portfolio-ai-review',
+  'User-Agent': 'portfolio-auto-merge',
   'Content-Type': 'application/json',
-};
-
-// ── Phase ownership ───────────────────────────────────────────────────────────
-// Maps phase number → { owner, reviewer }
-// Source of truth: HANDOFF.md Phase Tracker
-
-const PHASE_MAP = {
-  0: { owner: 'Claude', reviewer: 'Codex'  },
-  1: { owner: 'Codex',  reviewer: 'Claude' },
-  2: { owner: 'Claude', reviewer: 'Codex'  },
-  3: { owner: 'Claude', reviewer: 'Codex'  },
-  4: { owner: 'Claude', reviewer: 'Codex'  },
-  5: { owner: 'Claude', reviewer: 'Codex'  },
-  6: { owner: 'Codex',  reviewer: 'Claude' },
-  7: { owner: 'Codex',  reviewer: 'Claude' },
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -64,76 +42,12 @@ function getPhaseNumber(branch) {
   return match ? parseInt(match[1], 10) : null;
 }
 
-/**
- * Extract a phase section from HANDOFF.md.
- * Returns up to 4000 chars to stay within API context limits.
- */
-function extractPhasePlan(handoff, phaseNum) {
-  const section = new RegExp(
-    `(### Phase A${phaseNum} —[\\s\\S]*?)(?=\\n### Phase A|\\n---\\s*\\n\\[|$)`,
-    'i'
-  );
-  const match = handoff.match(section);
-  if (!match) return `Phase A${phaseNum} plan not found in HANDOFF.md.`;
-  return match[1].length > 4000 ? match[1].slice(0, 4000) + '\n...(truncated)' : match[1];
-}
-
-/** Get the git diff between base and head, truncated to ~12 KB. */
-function getDiff() {
-  try {
-    const diff = execSync(`git diff ${BASE_SHA}...${HEAD_SHA}`, {
-      maxBuffer: 1024 * 1024 * 20,
-    }).toString();
-    return diff.length > 12000 ? diff.slice(0, 12000) + '\n\n...(diff truncated at 12 KB)' : diff;
-  } catch {
-    return '(could not generate diff)';
-  }
-}
-
 /** Sleep for ms milliseconds. */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// ── AI API calls ──────────────────────────────────────────────────────────────
-
-async function callOpenAI(system, user) {
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${OPENAI_API_KEY}` },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      max_tokens: 2048,
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user',   content: user   },
-      ],
-    }),
-  });
-  if (!res.ok) throw new Error(`OpenAI error ${res.status}: ${await res.text()}`);
-  return (await res.json()).choices[0].message.content;
-}
-
-async function callAnthropic(system, user) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 2048,
-      system,
-      messages: [{ role: 'user', content: user }],
-    }),
-  });
-  if (!res.ok) throw new Error(`Anthropic error ${res.status}: ${await res.text()}`);
-  return (await res.json()).content[0].text;
-}
-
 // ── GitHub API calls ──────────────────────────────────────────────────────────
 
-/** Post a comment on the PR. Returns the new comment ID. */
+/** Post a comment on the PR. */
 async function postComment(body) {
   const res = await fetch(`${GH_API}/repos/${REPO}/issues/${PR_NUMBER}/comments`, {
     method: 'POST',
@@ -145,8 +59,7 @@ async function postComment(body) {
 }
 
 /**
- * Attempt to merge the PR via the REST API.
- * Polls every 30 s for up to ~5 min waiting for CI checks to complete.
+ * Poll every 30 s for up to ~5 min waiting for CI checks to complete, then merge.
  * Returns true on success, false on timeout.
  */
 async function mergeWhenReady(maxAttempts = 10, delayMs = 30_000) {
@@ -157,7 +70,7 @@ async function mergeWhenReady(maxAttempts = 10, delayMs = 30_000) {
       body: JSON.stringify({
         merge_method: 'squash',
         commit_title: PR_TITLE,
-        commit_message: `Automated merge after AI peer review — Phase A${getPhaseNumber(HEAD_BRANCH)}`,
+        commit_message: `Auto-merged after CI passed — Phase A${getPhaseNumber(HEAD_BRANCH)}`,
       }),
     });
 
@@ -172,10 +85,9 @@ async function mergeWhenReady(maxAttempts = 10, delayMs = 30_000) {
       continue;
     }
 
-    // Any other error is fatal
     throw new Error(`Merge failed ${res.status}: ${JSON.stringify(data)}`);
   }
-  return false; // timed out
+  return false;
 }
 
 /** Delete the remote phase branch after a successful merge. */
@@ -192,52 +104,31 @@ async function deleteBranch() {
 
 // ── HANDOFF.md update ─────────────────────────────────────────────────────────
 
-/**
- * Update HANDOFF.md in-place:
- *   - Gate 4 section: replace reviewer's `___` with the verdict
- *   - Phase tracker row: set status to MERGED if approved
- */
-function updateHandoff(handoff, phaseNum, reviewer, verdict, commentId) {
-  const verdictLine =
-    verdict === 'APPROVED'
-      ? 'APPROVED'
-      : `REQUEST CHANGES — see [PR #${PR_NUMBER} comment](https://github.com/${REPO}/pull/${PR_NUMBER}#issuecomment-${commentId})`;
-
-  // Update Gate 4 review line for this reviewer in this phase's section
-  // Matches: "Codex review: ___" or "Claude review: ___" inside the phase section
-  let updated = handoff.replace(
-    new RegExp(`(### Phase A${phaseNum} [\\s\\S]*?${reviewer} review: )___`, 'i'),
-    `$1${verdictLine}`
+/** Update HANDOFF.md phase tracker row: REVIEW READY → MERGED */
+function updateHandoff(handoff, phaseNum) {
+  return handoff.replace(
+    new RegExp(`(\\| A${phaseNum} \\|[^\\n]+\\|) REVIEW READY(\\s*\\|)`, 'i'),
+    `$1 MERGED$2`
   );
-
-  // Update phase tracker row status: REVIEW READY → MERGED (only on APPROVED)
-  if (verdict === 'APPROVED') {
-    updated = updated.replace(
-      new RegExp(`(\\| A${phaseNum} \\|[^\\n]+\\|) REVIEW READY(\\s*\\|)`, 'i'),
-      `$1 MERGED$2`
-    );
-  }
-
-  return updated;
 }
 
-/** Commit the updated HANDOFF.md to the PR branch and push. */
-function commitAndPush(content) {
+/** Commit the updated HANDOFF.md to main after the squash merge. */
+function commitAndPushToMain(content, phaseNum) {
   writeFileSync('HANDOFF.md', content, 'utf8');
   execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
   execSync('git config user.name "github-actions[bot]"');
   execSync('git add HANDOFF.md');
   execSync(
-    `git commit -m "chore(review): update HANDOFF.md Gate 4 result [skip-review]"`,
+    `git commit -m "chore(handoff): mark Phase A${phaseNum} MERGED [skip ci]"`,
     { stdio: 'inherit' }
   );
-  execSync(`git push origin HEAD:${HEAD_BRANCH}`, { stdio: 'inherit' });
+  execSync('git push origin HEAD:main', { stdio: 'inherit' });
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log(`AI review — PR #${PR_NUMBER} — branch: ${HEAD_BRANCH}`);
+  console.log(`Auto-merge — PR #${PR_NUMBER} — branch: ${HEAD_BRANCH}`);
 
   const phaseNum = getPhaseNumber(HEAD_BRANCH);
   if (phaseNum === null) {
@@ -245,166 +136,37 @@ async function main() {
     return;
   }
 
-  const phaseInfo = PHASE_MAP[phaseNum];
-  if (!phaseInfo) {
-    console.log(`Unknown phase A${phaseNum} — skipping`);
-    return;
-  }
+  console.log(`Phase A${phaseNum} — waiting for CI before merging…`);
 
-  const { owner, reviewer } = phaseInfo;
-  console.log(`Phase A${phaseNum}: owner=${owner}, reviewer=${reviewer}`);
+  await postComment(
+    `> :hourglass: **CI checks in progress** — will squash-merge automatically once all checks are green.\n` +
+    `> *AI peer review was completed locally before this PR was opened.*`
+  );
 
-  // ── Manual override ───────────────────────────────────────────────────────
-  // When the `manual-approved` label is applied, skip the AI call entirely.
-  // Used when both APIs are unavailable (quota exhausted, outage, etc.).
-  if (MANUAL_OVERRIDE === 'true') {
-    console.log('Manual override active — skipping AI call');
-    const handoff  = readFileSync('HANDOFF.md', 'utf8');
-    const commentId = await postComment(
-      `## :white_check_mark: Manual Override — Phase A${phaseNum}\n\n` +
-      `The \`manual-approved\` label was applied by Syamim, bypassing the automated AI review.\n\n` +
-      `**VERDICT: APPROVED**\n\n` +
-      `---\n*Manual override — AI review skipped*`
-    );
-    const updated = updateHandoff(handoff, phaseNum, reviewer, 'APPROVED', commentId);
-    commitAndPush(updated);
-    console.log('Waiting for CI before merging…');
-    await postComment(`> :hourglass: **Waiting for CI checks to pass** — will merge automatically once all checks are green.`);
-    const merged = await mergeWhenReady();
-    if (merged) {
-      await deleteBranch();
-      console.log('Merged and branch deleted via manual override');
-    } else {
-      await postComment(`> :warning: **Auto-merge timed out** — please merge manually once CI is green.`);
-    }
-    return;
-  }
+  const merged = await mergeWhenReady();
 
-  // ── Gather context ────────────────────────────────────────────────────────
-  const handoff   = readFileSync('HANDOFF.md', 'utf8');
-  const phasePlan = extractPhasePlan(handoff, phaseNum);
-  const diff      = getDiff();
+  if (merged) {
+    console.log('PR merged — updating HANDOFF.md on main…');
 
-  // ── Build review prompt ───────────────────────────────────────────────────
-  const system = `You are ${reviewer}, an AI agent performing a peer code review for a personal portfolio website rebuild. You are reviewing work produced by ${owner} for Phase A${phaseNum}.
+    execSync('git fetch origin main', { stdio: 'inherit' });
+    execSync('git checkout main', { stdio: 'inherit' });
+    execSync('git pull origin main', { stdio: 'inherit' });
 
-Your role is to verify that the changes satisfy the phase plan and acceptance criteria. Be concise, specific, and actionable.
+    const handoff = readFileSync('HANDOFF.md', 'utf8');
+    const updated = updateHandoff(handoff, phaseNum);
+    commitAndPushToMain(updated, phaseNum);
 
-Always end your response with exactly one of these two lines:
-VERDICT: APPROVED
-VERDICT: REQUEST CHANGES`;
-
-  const user = `## Phase A${phaseNum} — Plan and Acceptance Criteria
-
-${phasePlan}
-
-## Changes (git diff)
-
-\`\`\`diff
-${diff}
-\`\`\`
-
-Review the changes against every acceptance criterion above. Note each criterion as MET or NOT MET. Then state your verdict.`;
-
-  // ── Call AI API (with fallback) ───────────────────────────────────────────
-  // Primary: use the assigned reviewer's API.
-  // Fallback: if the primary API is unavailable (quota exhausted, key missing,
-  // network error), automatically retry with the other provider so reviews
-  // are never fully blocked by a single API outage.
-  let response;
-  let modelId;
-  let usedFallback = false;
-
-  const primaryIsCodex = reviewer === 'Codex';
-
-  async function tryPrimary() {
-    if (primaryIsCodex) {
-      if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY secret is not set');
-      modelId = 'gpt-4o';
-      return await callOpenAI(system, user);
-    } else {
-      if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY secret is not set');
-      modelId = 'claude-sonnet-4-6';
-      return await callAnthropic(system, user);
-    }
-  }
-
-  async function tryFallback() {
-    if (primaryIsCodex) {
-      if (!ANTHROPIC_API_KEY) throw new Error('ANTHROPIC_API_KEY secret is not set (fallback)');
-      modelId = 'claude-sonnet-4-6 (fallback)';
-      return await callAnthropic(system, user);
-    } else {
-      if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY secret is not set (fallback)');
-      modelId = 'gpt-4o (fallback)';
-      return await callOpenAI(system, user);
-    }
-  }
-
-  try {
-    response = await tryPrimary();
-  } catch (primaryErr) {
-    console.warn(`Primary API failed (${primaryErr.message}) — trying fallback…`);
-    try {
-      response = await tryFallback();
-      usedFallback = true;
-      console.log(`Fallback succeeded using ${modelId}`);
-    } catch (fallbackErr) {
-      await postComment(
-        `## :robot: AI Peer Review — Error\n\n` +
-        `:warning: Both APIs failed. Add the \`manual-approved\` label to bypass.\n\n` +
-        `**Primary error:** ${primaryErr.message}\n\n` +
-        `**Fallback error:** ${fallbackErr.message}`
-      );
-      process.exit(1);
-    }
-  }
-
-  // ── Parse verdict ─────────────────────────────────────────────────────────
-  const verdictMatch = response.match(/VERDICT:\s*(APPROVED|REQUEST CHANGES)/i);
-  const verdict      = verdictMatch ? verdictMatch[1].toUpperCase() : 'REQUEST CHANGES';
-  const isApproved   = verdict === 'APPROVED';
-  const icon         = isApproved ? ':white_check_mark:' : ':x:';
-  const fallbackNote = usedFallback ? ' · ⚠️ primary API unavailable, fallback used' : '';
-
-  console.log(`Verdict: ${verdict}`);
-
-  // ── Post PR comment ───────────────────────────────────────────────────────
-  const commentBody =
-    `## ${icon} AI Peer Review — ${reviewer} — Phase A${phaseNum}\n\n` +
-    `${response}\n\n` +
-    `---\n*Automated review · ${reviewer} · \`${modelId}\`${fallbackNote}*`;
-
-  const commentId = await postComment(commentBody);
-  console.log(`Posted comment #${commentId}`);
-
-  // ── Update HANDOFF.md ─────────────────────────────────────────────────────
-  const updatedHandoff = updateHandoff(handoff, phaseNum, reviewer, verdict, commentId);
-  commitAndPush(updatedHandoff);
-  console.log('HANDOFF.md Gate 4 updated and pushed');
-
-  // ── Merge if approved ─────────────────────────────────────────────────────
-  if (isApproved) {
-    console.log('Waiting for CI checks to pass before merging…');
+    await deleteBranch();
+    console.log(`Phase A${phaseNum} complete — branch deleted, HANDOFF.md updated to MERGED`);
+  } else {
     await postComment(
-      `> :hourglass: **Waiting for CI checks to pass** — will merge automatically once all checks are green.`
+      `> :warning: **Auto-merge timed out** — CI checks did not pass within the allotted time.\n` +
+      `> Please merge manually once all checks are green.`
     );
-
-    const merged = await mergeWhenReady();
-    if (merged) {
-      console.log('PR merged successfully');
-      await deleteBranch();
-      console.log('Branch deleted');
-    } else {
-      await postComment(
-        `> :warning: **Auto-merge timed out** — CI checks did not pass within the allotted time.\n` +
-        `> Please merge manually once checks are green.`
-      );
-    }
   }
 }
 
 main().catch((err) => {
-  console.error('Fatal error in ai-review.mjs:', err);
+  console.error('Fatal error in auto-merge:', err);
   process.exit(1);
 });
