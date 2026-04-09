@@ -1,0 +1,22 @@
+---
+/**
+ * Full gallery — route `/photography`.
+ * Islands: GalleryGrid.vue + GalleryLightbox.vue (client:visible)
+ * Composable: useGallery()
+ */
+import PageLayout from "../layouts/PageLayout.astro";
+---
+
+<PageLayout
+  title="Photography — syamim."
+  description="Syamim Hakimi's photography gallery — favourite shots sorted by date."
+>
+  <section aria-label="Photography Gallery">
+    <!--
+      GalleryGrid island mounted here in Phase A5.
+      Uses: useGallery() — paginated, favourite only.
+      GalleryLightbox island also mounted here for full-screen viewing.
+    -->
+    <p>Gallery — content loads here.</p>
+  </section>
+</PageLayout>

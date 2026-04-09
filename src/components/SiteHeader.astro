@@ -1,0 +1,46 @@
+---
+/**
+ * SiteHeader — top navigation bar.
+ * Static HTML only — theme toggle island is mounted separately in PageLayout.
+ */
+const navLinks = [
+  { href: "/", label: "Photography" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname;
+function isActive(href: string): boolean {
+  if (href === "/") return currentPath === "/";
+  return currentPath.startsWith(href);
+}
+---
+
+<header>
+  <nav aria-label="Main navigation">
+    <a href="/" aria-label="syamim. — home">
+      <span>syamim.</span>
+    </a>
+
+    <ul role="list">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            aria-current={isActive(link.href) ? "page" : undefined}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!--
+      ThemeToggle island is injected by PageLayout so it can use client:load.
+      This slot receives it as a sibling element outside the nav list.
+    -->
+    <slot name="theme-toggle" />
+  </nav>
+</header>

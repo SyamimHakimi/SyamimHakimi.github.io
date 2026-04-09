@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/*
+  Dark mode wiring — Tailwind 4 requires an explicit custom variant to respond
+  to the data-theme attribute. ThemeToggle.vue toggles data-theme="dark" on
+  <html>; BaseLayout.astro sets it from localStorage before first paint.
+  All dark-mode CSS must use `dark:` which maps to this selector.
+*/
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
