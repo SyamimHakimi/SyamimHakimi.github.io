@@ -1,7 +1,7 @@
 ---
 /**
  * About — route `/about`.
- * Island: AboutMe.vue (client:visible)
+ * Island: AboutMe.vue (client:visible) — Phase A5
  * Composable: useAboutMe()
  */
 import PageLayout from "../layouts/PageLayout.astro";
@@ -11,11 +11,20 @@ import PageLayout from "../layouts/PageLayout.astro";
   title="About — syamim."
   description="About Syamim Hakimi — profile, photography gear, favourite boardgames, and social links."
 >
-  <section aria-label="About Me">
-    <!--
-      AboutMe island mounted here in Phase A5.
-      Uses: useAboutMe() — profile singleton, photography-gears, boardgames, social-media.
-    -->
-    <p>About — content loads here.</p>
-  </section>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="mb-10">
+      <h1 class="text-3xl font-bold sm:text-4xl">About</h1>
+      <p class="mt-2 text-[var(--color-text-muted)]">
+        Developer by day, photographer on weekends, boardgame enthusiast always.
+      </p>
+    </header>
+
+    <section aria-label="About Me">
+      <!--
+        AboutMe island mounted here in Phase A5.
+        Uses: useAboutMe() — profile singleton, photography-gears, boardgames, social-media.
+      -->
+      <p class="text-[var(--color-text-muted)]">Profile loading…</p>
+    </section>
+  </div>
 </PageLayout>

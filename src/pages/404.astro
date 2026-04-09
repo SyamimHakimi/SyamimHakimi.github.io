@@ -2,7 +2,6 @@
 /**
  * 404 — Not Found page.
  * Static — no Vue island, no composable.
- * Astro recognises 404.astro as the error page automatically.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 ---
@@ -11,9 +10,17 @@ import PageLayout from "../layouts/PageLayout.astro";
   title="Page Not Found — syamim."
   description="The page you are looking for does not exist."
 >
-  <section aria-label="Page not found">
-    <h1>404 — Page Not Found</h1>
-    <p>The page you are looking for does not exist.</p>
-    <a href="/">Return to Photography Journey</a>
-  </section>
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-32 text-center sm:px-6">
+    <p class="text-6xl font-bold text-[var(--color-accent)]">404</p>
+    <h1 class="mt-4 text-2xl font-semibold">Page Not Found</h1>
+    <p class="mt-2 text-[var(--color-text-muted)]">
+      The page you are looking for does not exist.
+    </p>
+    <a
+      href="/"
+      class="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-accent-hover)]"
+    >
+      Return to Photography Journey
+    </a>
+  </div>
 </PageLayout>
