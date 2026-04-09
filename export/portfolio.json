@@ -1,0 +1,157 @@
+{
+  "experience": {
+    "platforms": [
+      {
+        "id": "tSUKsViiHMZ6wa10iC6N",
+        "path": "experience/platforms/item/tSUKsViiHMZ6wa10iC6N",
+        "createTime": "2024-11-19T12:57:48.574059Z",
+        "updateTime": "2024-11-20T14:28:22.427090Z",
+        "link": "https://stripe.com/en-my",
+        "img-src": "media/brands/stripe.png",
+        "title": "Stripe",
+        "description": "A powerful API-driven Payment Gateway that enables businesses to manage online payments.",
+        "date-from": "2023-04-30T16:00:00.864Z"
+      },
+      {
+        "id": "rVpnejcHMrsqZgSdHXCq",
+        "path": "experience/platforms/item/rVpnejcHMrsqZgSdHXCq",
+        "createTime": "2024-11-19T13:03:20.877199Z",
+        "updateTime": "2024-11-20T14:30:10.762961Z",
+        "date-to": "2024-05-31T16:00:00.644Z",
+        "date-from": "2023-12-31T16:00:00.518Z",
+        "img-src": "media/brands/opensearch.png",
+        "link": "https://opensearch.org/",
+        "description": "An open-source search and analytics suite derived from Elasticsearch, designed for scalable and real-time data analysis.",
+        "title": "OpenSearch"
+      },
+      {
+        "id": "aXYrBYj9oUJk6B0SGb5H",
+        "path": "experience/platforms/item/aXYrBYj9oUJk6B0SGb5H",
+        "createTime": "2024-11-19T12:59:49.447216Z",
+        "updateTime": "2024-11-20T14:28:54.370492Z",
+        "date-from": "2024-09-30T16:00:00.082Z",
+        "img-src": "media/brands/firebase.png",
+        "link": "https://firebase.google.com/",
+        "title": "Firebase",
+        "description": "A comprehensive app development platform by Google that offers tools for building web and mobile applications."
+      }
+    ],
+    "protocols": [
+      {
+        "id": "6wbj0I7BbKsqtW2DiP51",
+        "path": "experience/protocols/item/6wbj0I7BbKsqtW2DiP51",
+        "createTime": "2024-11-19T13:10:20.048260Z",
+        "updateTime": "2024-11-20T14:42:24.939722Z",
+        "title": "OCPI",
+        "link": "https://evroaming.org/ocpi/",
+        "date-from": "2024-05-31T16:00:00.825Z",
+        "img-src": "media/brands/ocpi.png",
+        "description": "Open Charge Point Interface is an open, standardized communication protocol designed to enable interoperability between EV network entities."
+      }
+    ],
+    "frameworks": [
+      {
+        "id": "ITVCte6phEH9aIfEPbGy",
+        "path": "experience/frameworks/item/ITVCte6phEH9aIfEPbGy",
+        "createTime": "2024-11-19T12:53:51.703068Z",
+        "updateTime": "2024-11-20T15:19:17.832372Z",
+        "link": "https://www.sqlalchemy.org/",
+        "img-src": "media/brands/sqlalchemy.png",
+        "description": "A powerful Python SQL toolkit and ORM library that provides a flexible and efficient way to interact with databases.",
+        "date-from": "2020-01-31T16:00:00.073Z",
+        "title": "SQLAlchemy"
+      },
+      {
+        "id": "H7r8nP0LpaFPxDaxB6Bw",
+        "path": "experience/frameworks/item/H7r8nP0LpaFPxDaxB6Bw",
+        "createTime": "2024-11-19T12:48:26.560587Z",
+        "updateTime": "2024-11-20T14:45:14.437790Z",
+        "description": "A modern Python web framework designed for building high-performance APIs.",
+        "img-src": "media/brands/fastapi.png",
+        "link": "https://fastapi.tiangolo.com/",
+        "date-from": "2020-01-31T16:00:00.622Z",
+        "title": "FastAPI"
+      },
+      {
+        "id": "U1L9FVGmWJxqhf1wp4ch",
+        "path": "experience/frameworks/item/U1L9FVGmWJxqhf1wp4ch",
+        "createTime": "2024-11-19T12:40:36.146679Z",
+        "updateTime": "2024-11-20T14:52:14.410809Z",
+        "img-src": "media/brands/vue.png",
+        "link": "https://vuejs.org/",
+        "description": "A progressive TypeScript framework for building modern web applications.",
+        "date-from": "2021-01-31T16:00:00.685Z",
+        "title": "Vue3"
+      },
+      {
+        "id": "MVtp5PWhAevTaTQB0Fkk",
+        "path": "experience/frameworks/item/MVtp5PWhAevTaTQB0Fkk",
+        "createTime": "2024-11-19T12:46:24.816015Z",
+        "updateTime": "2024-11-20T14:51:34.111646Z",
+        "date-from": "2023-02-28T16:00:00.117Z",
+        "title": "Flask",
+        "link": "https://flask.palletsprojects.com/en/stable/",
+        "img-src": "media/brands/flask.png",
+        "description": "A flexible Python microframework used for creating web applications including APIs."
+      },
+      {
+        "id": "LozN7vwmEk6dkjxVy9WD",
+        "path": "experience/frameworks/item/LozN7vwmEk6dkjxVy9WD",
+        "createTime": "2024-11-19T12:37:32.025930Z",
+        "updateTime": "2024-11-20T14:49:50.897770Z",
+        "img-src": "media/brands/aws.png",
+        "link": "https://boto3.amazonaws.com/v1/documentation/api/latest/index.html",
+        "description": "The AWS SDK for Python, providing a seamless interface to interact with AWS services programmatically.",
+        "date-from": "2023-04-30T16:00:00.965Z",
+        "title": "Boto3"
+      }
+    ],
+    "languages": [
+      {
+        "id": "nADI0vdaQVnc2MZpo607",
+        "path": "experience/languages/item/nADI0vdaQVnc2MZpo607",
+        "createTime": "2024-11-19T13:32:15.866599Z",
+        "updateTime": "2024-11-20T15:06:58.509896Z",
+        "description": "An open-source, object-relational database management system known for its robustness, extensibility, and support for advanced data types.",
+        "date-from": "2020-01-31T16:00:00.352Z",
+        "date-to": "2023-02-28T16:00:00.655Z",
+        "title": "PostgreSQL",
+        "img-src": "media/brands/postgresql.png",
+        "link": "https://www.postgresql.org/"
+      },
+      {
+        "id": "1NIrp5hQijhHI0vohJru",
+        "path": "experience/languages/item/1NIrp5hQijhHI0vohJru",
+        "createTime": "2024-11-19T13:13:30.866907Z",
+        "updateTime": "2024-11-20T15:01:34.470569Z",
+        "date-from": "2020-01-31T16:00:00.466Z",
+        "img-src": "media/brands/python.png",
+        "title": "Python",
+        "link": "https://www.python.org/",
+        "description": "A high-level, interpreted programming language known for its readability, simplicity, and versatility."
+      },
+      {
+        "id": "FnhASbqskai8x8ttPsXD",
+        "path": "experience/languages/item/FnhASbqskai8x8ttPsXD",
+        "createTime": "2024-11-19T15:43:28.679254Z",
+        "updateTime": "2024-11-20T15:05:57.698435Z",
+        "description": "A fork of MySQL, known for its high performance, scalability, and compatibility with a wide range of applications.",
+        "date-from": "2023-02-28T16:00:00.089Z",
+        "img-src": "media/brands/mariadb.png",
+        "title": "MariaDB",
+        "link": "https://mariadb.org/"
+      },
+      {
+        "id": "AcoArksIEaVybiSRixOf",
+        "path": "experience/languages/item/AcoArksIEaVybiSRixOf",
+        "createTime": "2024-11-19T15:45:26.740352Z",
+        "updateTime": "2024-11-20T15:04:25.117587Z",
+        "title": "TypeScript",
+        "img-src": "media/brands/typescript.png",
+        "link": "https://www.typescriptlang.org/",
+        "date-from": "2023-02-28T16:00:00.948Z",
+        "description": "A strongly typed superset of JavaScript that adds static typing and advanced tooling features,"
+      }
+    ]
+  }
+}

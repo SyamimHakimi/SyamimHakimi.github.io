@@ -14,6 +14,8 @@ npm run type-check   # TypeScript validation only
 npm run deploy       # Build + deploy to GitHub Pages
 npm run ui:preview   # Screenshot an HTML mockup and send to Syamim's Telegram
                      # Usage: npm run ui:preview -- --file scripts/mockup.html --label "Title"
+node --env-file=.env scripts/firestore-export.mjs  # Re-export Firestore data (Phase A1, one-time)
+                     # Requires GOOGLE_APPLICATION_CREDENTIALS in .env pointing to service account JSON
 ```
 
 ## Architecture

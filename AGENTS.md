@@ -313,14 +313,18 @@ Always create a new branch before starting. Never commit directly to `main`.
 
 ## Phase Dependency Order
 
+**Note:** Phase A1 and A6 ownership was reassigned from Codex to Claude by Syamim
+(project owner) on 2026-04-09, before either phase began execution. This supersedes
+the original plan. Gate 4 reviewer for both phases is Codex.
+
 ```
 Phase A0 (architecture spike + docs update)
-└── Phase A1 (baseline audit + Firestore export)
+└── Phase A1 (baseline audit + Firestore export)  ← Claude
     ├── Phase A2 (Firebase SDK + data models)  ← Claude
     │   └── Phase A3 (route + layout rebuild) ← Claude + ui-ux-pro-max
     │       ├── Phase A4 (design system)      ← Claude + ui-ux-pro-max
     │       │   ├── Phase A5 (Vue islands)    ← Claude + ui-ux-pro-max
-    │       │   └── Phase A6 (SEO + hosting)  ← Codex
+    │       │   └── Phase A6 (SEO + hosting)  ← Claude
     │       │       └── Phase A7 (testing + hardening) ← Codex
     │       └── Phase A5 can run alongside A4 after A3 lands
 ```

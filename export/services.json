@@ -1,0 +1,156 @@
+[
+  {
+    "id": "2eQDNhBrJruiMRiHOzav",
+    "path": "services/2eQDNhBrJruiMRiHOzav",
+    "createTime": "2024-11-14T15:26:28.110576Z",
+    "updateTime": "2024-11-14T15:28:29.560220Z",
+    "sorting": 1,
+    "description": "Creating web applications from scratch according to requirements",
+    "title": "Custom Web Application",
+    "group": 4,
+    "icon": "screen"
+  },
+  {
+    "id": "9Ox1Hb6rt7ecexVRRCms",
+    "path": "services/9Ox1Hb6rt7ecexVRRCms",
+    "createTime": "2024-11-14T15:20:28.916691Z",
+    "updateTime": "2024-11-14T15:20:28.916691Z",
+    "sorting": 1,
+    "description": "Seamlessly connect with APIs from payment gateways to in-house APIs",
+    "title": "Integrate Third-Party APIs",
+    "group": 2,
+    "icon": "fasten"
+  },
+  {
+    "id": "tRyZp8lmgxTviPHDrVrt",
+    "path": "services/tRyZp8lmgxTviPHDrVrt",
+    "createTime": "2024-11-14T10:17:48.330561Z",
+    "updateTime": "2024-11-14T15:20:53.476031Z",
+    "sorting": 1,
+    "description": "Design to be scalable, secure and easy to maintain",
+    "icon": "data",
+    "group": 1,
+    "title": "Designing RESTful APIs"
+  },
+  {
+    "id": "tS8ohMfN82VjZ7weIBHV",
+    "path": "services/tS8ohMfN82VjZ7weIBHV",
+    "createTime": "2024-11-14T15:25:19.622928Z",
+    "updateTime": "2024-11-14T15:29:16.166573Z",
+    "sorting": 1,
+    "description": "Design to be scalable, efficient and easy to maintain",
+    "icon": "external-drive",
+    "group": 3,
+    "title": "Designing SQL Database"
+  },
+  {
+    "id": "4jRUlyJgmrBTc3GNOsZp",
+    "path": "services/4jRUlyJgmrBTc3GNOsZp",
+    "createTime": "2024-11-14T15:21:35.715089Z",
+    "updateTime": "2024-11-14T15:21:35.715089Z",
+    "description": "Minor to none customization to current business flow",
+    "sorting": 2,
+    "icon": "kanban",
+    "group": 2,
+    "title": "Meet Business Flow"
+  },
+  {
+    "id": "KjH9DO941ZTvPiJihwha",
+    "path": "services/KjH9DO941ZTvPiJihwha",
+    "createTime": "2024-11-14T15:25:50.641050Z",
+    "updateTime": "2024-11-14T15:28:43.534530Z",
+    "description": "Handling import and export tasks to enable compatibility with older data",
+    "sorting": 2,
+    "title": "Data Migration",
+    "group": 3,
+    "icon": "arrow-up-down"
+  },
+  {
+    "id": "lyxyW2F7M6l1MV8ZimmR",
+    "path": "services/lyxyW2F7M6l1MV8ZimmR",
+    "createTime": "2024-11-14T10:22:33.714541Z",
+    "updateTime": "2024-11-14T15:20:50.120814Z",
+    "icon": "rocket",
+    "group": 1,
+    "title": "Performance Optimization",
+    "description": "Consideration for future increase of traffic",
+    "sorting": 2
+  },
+  {
+    "id": "YCWvI3O5VcYSdpuxqWp4",
+    "path": "services/YCWvI3O5VcYSdpuxqWp4",
+    "createTime": "2024-11-14T15:26:57.400705Z",
+    "updateTime": "2024-11-14T15:29:04.212751Z",
+    "title": "Forms and Validations",
+    "group": 4,
+    "icon": "questionnaire-tablet",
+    "description": "Comprehensive forms and validation for data entry",
+    "sorting": 2
+  },
+  {
+    "id": "5aDEMQl7DwuSzTBR5MEK",
+    "path": "services/5aDEMQl7DwuSzTBR5MEK",
+    "createTime": "2024-11-14T15:22:23.745370Z",
+    "updateTime": "2024-11-14T15:22:23.745370Z",
+    "title": "Data Mapping",
+    "group": 2,
+    "icon": "arrows-loop",
+    "description": "Ensuring correct formatting during transfer of data to and from APIs",
+    "sorting": 3
+  },
+  {
+    "id": "O7HTF8L22IIFW6KAjoKE",
+    "path": "services/O7HTF8L22IIFW6KAjoKE",
+    "createTime": "2024-11-14T14:41:49.110702Z",
+    "updateTime": "2024-11-14T15:20:41.227299Z",
+    "icon": "shield-tick",
+    "group": 1,
+    "title": "Security Implementation",
+    "sorting": 3,
+    "description": "Ensuring APIs follow secure coding practices to prevent vulnerabilities"
+  },
+  {
+    "id": "QIQ5JKlCUbqSOLsny1P2",
+    "path": "services/QIQ5JKlCUbqSOLsny1P2",
+    "createTime": "2024-11-14T15:27:29.398387Z",
+    "updateTime": "2024-11-14T15:28:55.427773Z",
+    "title": "Access Management",
+    "group": 4,
+    "icon": "security-user",
+    "description": "Apply security roles for access management",
+    "sorting": 3
+  },
+  {
+    "id": "c3aa2iKiYvzmYDljFEXh",
+    "path": "services/c3aa2iKiYvzmYDljFEXh",
+    "createTime": "2024-11-14T14:43:25.577716Z",
+    "updateTime": "2024-11-15T03:06:55.753045Z",
+    "title": "Providing Postman Requests",
+    "group": 1,
+    "icon": "send",
+    "sorting": 4,
+    "description": "Useful for easier maintenance and troubleshooting"
+  },
+  {
+    "id": "EvwaDjqM084yic95zN0B",
+    "path": "services/EvwaDjqM084yic95zN0B",
+    "createTime": "2024-11-14T15:28:17.677107Z",
+    "updateTime": "2024-11-14T15:28:17.677107Z",
+    "description": "Provide relevant statistics in a single page",
+    "sorting": 4,
+    "title": "Detailed Dashboard",
+    "group": 4,
+    "icon": "graph-3"
+  },
+  {
+    "id": "ibjNzcJVdbZ3ljeuiTCR",
+    "path": "services/ibjNzcJVdbZ3ljeuiTCR",
+    "createTime": "2024-11-14T14:45:13.571822Z",
+    "updateTime": "2024-11-14T15:20:47.315732Z",
+    "sorting": 5,
+    "description": "Clear handover documents to future developers and users",
+    "icon": "book",
+    "group": 1,
+    "title": "Writing-up API Documentation"
+  }
+]
