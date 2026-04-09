@@ -12,8 +12,6 @@
  *   5. Delete the remote phase branch
  */
 
-import { readFileSync, writeFileSync } from 'fs';
-import { execSync } from 'child_process';
 
 // ── Environment ──────────────────────────────────────────────────────────────
 
@@ -102,7 +100,7 @@ async function deleteBranch() {
   }
 }
 
-// ── HANDOFF.md update ─────────────────────────────────────────────────────────
+// ── HANDOFF.md update (via GitHub API — avoids git checkout conflicts) ────────
 
 /** Update HANDOFF.md phase tracker row: REVIEW READY → MERGED */
 function updateHandoff(handoff, phaseNum) {
@@ -112,17 +110,46 @@ function updateHandoff(handoff, phaseNum) {
   );
 }
 
-/** Commit the updated HANDOFF.md to main after the squash merge. */
-function commitAndPushToMain(content, phaseNum) {
-  writeFileSync('HANDOFF.md', content, 'utf8');
-  execSync('git config user.email "41898282+github-actions[bot]@users.noreply.github.com"');
-  execSync('git config user.name "github-actions[bot]"');
-  execSync('git add HANDOFF.md');
-  execSync(
-    `git commit -m "chore(handoff): mark Phase A${phaseNum} MERGED [skip ci]"`,
-    { stdio: 'inherit' }
+/**
+ * Update HANDOFF.md on main via the GitHub Contents API.
+ * Avoids git checkout/push entirely — no branch switching needed.
+ */
+async function updateHandoffViaApi(phaseNum) {
+  // Get current file state on main
+  const getRes = await fetch(
+    `${GH_API}/repos/${REPO}/contents/HANDOFF.md?ref=main`,
+    { headers: GH_HEADERS }
   );
-  execSync('git push origin HEAD:main', { stdio: 'inherit' });
+  if (!getRes.ok) throw new Error(`GET HANDOFF.md failed ${getRes.status}: ${await getRes.text()}`);
+  const file = await getRes.json();
+
+  const current = Buffer.from(file.content, 'base64').toString('utf8');
+  const updated = updateHandoff(current, phaseNum);
+
+  if (current === updated) {
+    console.log('HANDOFF.md already up to date — no change needed');
+    return;
+  }
+
+  const putRes = await fetch(
+    `${GH_API}/repos/${REPO}/contents/HANDOFF.md`,
+    {
+      method: 'PUT',
+      headers: GH_HEADERS,
+      body: JSON.stringify({
+        message: `chore(handoff): mark Phase A${phaseNum} MERGED [skip ci]`,
+        content: Buffer.from(updated).toString('base64'),
+        sha: file.sha,
+        branch: 'main',
+        committer: {
+          name: 'github-actions[bot]',
+          email: '41898282+github-actions[bot]@users.noreply.github.com',
+        },
+      }),
+    }
+  );
+  if (!putRes.ok) throw new Error(`PUT HANDOFF.md failed ${putRes.status}: ${await putRes.text()}`);
+  console.log('HANDOFF.md updated on main via API');
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -146,16 +173,8 @@ async function main() {
   const merged = await mergeWhenReady();
 
   if (merged) {
-    console.log('PR merged — updating HANDOFF.md on main…');
-
-    execSync('git fetch origin main', { stdio: 'inherit' });
-    execSync('git checkout main', { stdio: 'inherit' });
-    execSync('git pull origin main', { stdio: 'inherit' });
-
-    const handoff = readFileSync('HANDOFF.md', 'utf8');
-    const updated = updateHandoff(handoff, phaseNum);
-    commitAndPushToMain(updated, phaseNum);
-
+    console.log('PR merged — updating HANDOFF.md via API…');
+    await updateHandoffViaApi(phaseNum);
     await deleteBranch();
     console.log(`Phase A${phaseNum} complete — branch deleted, HANDOFF.md updated to MERGED`);
   } else {
