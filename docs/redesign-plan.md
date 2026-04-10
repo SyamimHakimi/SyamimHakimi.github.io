@@ -17,6 +17,12 @@
 3. UI/UX Pro Max produces ≥ 3 distinct design mockups per page/section
 4. Syamim selects preferred option
 5. Implementation begins on the agreed design
+6. PR is opened → CI passes → PR is merged into main
+7. Branch cleanup:
+   a. Remote branch is deleted (via merge-pr.mjs or GitHub auto-delete)
+   b. Local branch is deleted: git branch -D <branch>
+   c. Stale remote refs are pruned: git remote prune origin
+   d. Switch back to main and pull: git checkout main && git pull origin main
 ```
 
 ---
