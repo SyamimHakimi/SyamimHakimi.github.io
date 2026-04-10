@@ -51,7 +51,10 @@ export function decodeFirestoreValue(value) {
  */
 export function decodeFirestoreFields(fields = {}) {
   return Object.fromEntries(
-    Object.entries(fields).map(([key, value]) => [key, decodeFirestoreValue(value)]),
+    Object.entries(fields).map(([key, value]) => [
+      key,
+      decodeFirestoreValue(value),
+    ]),
   );
 }
 
@@ -89,7 +92,9 @@ export function decodeDocument(document) {
  */
 export function sortDecodedRecords(records, sortSpec) {
   if (!sortSpec) {
-    return [...records].sort((left, right) => String(left.id).localeCompare(String(right.id)));
+    return [...records].sort((left, right) =>
+      String(left.id).localeCompare(String(right.id)),
+    );
   }
 
   const multiplier = sortSpec.direction === "desc" ? -1 : 1;

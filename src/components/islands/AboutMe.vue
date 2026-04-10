@@ -12,15 +12,30 @@ const { data, loading, error } = useAboutMe();
 <template>
   <div>
     <!-- Loading -->
-    <div v-if="loading" class="space-y-8" aria-busy="true" aria-label="Loading profile">
-      <div class="h-24 w-64 animate-pulse rounded-xl bg-[var(--color-surface)]" />
+    <div
+      v-if="loading"
+      class="space-y-8"
+      aria-busy="true"
+      aria-label="Loading profile"
+    >
+      <div
+        class="h-24 w-64 animate-pulse rounded-xl bg-[var(--color-surface)]"
+      />
       <div class="grid gap-4 sm:grid-cols-2">
-        <div v-for="i in 4" :key="i" class="h-20 animate-pulse rounded-xl bg-[var(--color-surface)]" />
+        <div
+          v-for="i in 4"
+          :key="i"
+          class="h-20 animate-pulse rounded-xl bg-[var(--color-surface)]"
+        />
       </div>
     </div>
 
     <!-- Error -->
-    <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
+    <div
+      v-else-if="error"
+      class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
+      role="alert"
+    >
       <p class="font-medium">Failed to load profile</p>
       <p class="mt-1 text-sm opacity-80">{{ error }}</p>
     </div>
@@ -31,9 +46,12 @@ const { data, loading, error } = useAboutMe();
       <section v-if="data.profile" aria-label="Profile">
         <h2 class="text-xl font-semibold">{{ data.profile.Name }}</h2>
         <p class="mt-1 text-[var(--color-text-muted)]">
-          {{ data.profile['Residing Country'] ?? data.profile.Country }}
+          {{ data.profile["Residing Country"] ?? data.profile.Country }}
         </p>
-        <p v-if="data.profile.Hobbies" class="mt-1 text-sm text-[var(--color-text-muted)]">
+        <p
+          v-if="data.profile.Hobbies"
+          class="mt-1 text-sm text-[var(--color-text-muted)]"
+        >
           {{ data.profile.Hobbies }}
         </p>
       </section>
@@ -62,7 +80,10 @@ const { data, loading, error } = useAboutMe();
       </section>
 
       <!-- Favourite Boardgames -->
-      <section v-if="data.boardgames.length > 0" aria-label="Favourite boardgames">
+      <section
+        v-if="data.boardgames.length > 0"
+        aria-label="Favourite boardgames"
+      >
         <h2 class="mb-4 text-xl font-semibold">Favourite Boardgames</h2>
         <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
           <li
@@ -79,7 +100,10 @@ const { data, loading, error } = useAboutMe();
       </section>
 
       <!-- Social Media -->
-      <section v-if="data.socialMedia.length > 0" aria-label="Social media links">
+      <section
+        v-if="data.socialMedia.length > 0"
+        aria-label="Social media links"
+      >
         <h2 class="mb-4 text-xl font-semibold">Connect</h2>
         <ul class="flex flex-wrap gap-3" role="list">
           <li v-for="social in data.socialMedia" :key="social.id">

@@ -10,27 +10,37 @@
  *   GITHUB_APP_PRIVATE_KEY_PATH — absolute path to the .pem private key file
  */
 
-import { readFileSync } from 'fs';
-import { spawn } from 'child_process';
-import { createSign } from 'crypto';
+import { readFileSync } from "fs";
+import { spawn } from "child_process";
+import { createSign } from "crypto";
 
-const APP_ID        = process.env.GITHUB_APP_ID;
-const PEM_PATH      = process.env.GITHUB_APP_PRIVATE_KEY_PATH;
+const APP_ID = process.env.GITHUB_APP_ID;
+const PEM_PATH = process.env.GITHUB_APP_PRIVATE_KEY_PATH;
 
 if (!APP_ID || !PEM_PATH) {
-  process.stderr.write('github-mcp-wrapper: GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY_PATH must be set\n');
+  process.stderr.write(
+    "github-mcp-wrapper: GITHUB_APP_ID and GITHUB_APP_PRIVATE_KEY_PATH must be set\n",
+  );
   process.exit(1);
 }
 
 function base64url(buf) {
-  return buf.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return buf
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
 }
 
 function signJwt(appId, privateKey) {
   const now = Math.floor(Date.now() / 1000);
-  const header  = base64url(Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })));
-  const payload = base64url(Buffer.from(JSON.stringify({ iat: now - 60, exp: now + 540, iss: appId })));
-  const sign    = createSign('RSA-SHA256');
+  const header = base64url(
+    Buffer.from(JSON.stringify({ alg: "RS256", typ: "JWT" })),
+  );
+  const payload = base64url(
+    Buffer.from(JSON.stringify({ iat: now - 60, exp: now + 540, iss: appId })),
+  );
+  const sign = createSign("RSA-SHA256");
   sign.update(`${header}.${payload}`);
   const sig = base64url(sign.sign(privateKey));
   return `${header}.${payload}.${sig}`;
@@ -38,12 +48,12 @@ function signJwt(appId, privateKey) {
 
 async function getInstallationToken(jwt) {
   // Get the first installation (the one on SyamimHakimi.github.io)
-  const instRes = await fetch('https://api.github.com/app/installations', {
+  const instRes = await fetch("https://api.github.com/app/installations", {
     headers: {
       Authorization: `Bearer ${jwt}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'portfolio-agents-mcp',
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      "User-Agent": "portfolio-agents-mcp",
     },
   });
 
@@ -53,26 +63,29 @@ async function getInstallationToken(jwt) {
   }
 
   const installations = await instRes.json();
-  if (!installations.length) throw new Error('No installations found for this GitHub App');
+  if (!installations.length)
+    throw new Error("No installations found for this GitHub App");
 
   const installationId = installations[0].id;
 
   const tokenRes = await fetch(
     `https://api.github.com/app/installations/${installationId}/access_tokens`,
     {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'portfolio-agents-mcp',
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "portfolio-agents-mcp",
       },
-    }
+    },
   );
 
   if (!tokenRes.ok) {
     const body = await tokenRes.text();
-    throw new Error(`Failed to get installation token: ${tokenRes.status} ${body}`);
+    throw new Error(
+      `Failed to get installation token: ${tokenRes.status} ${body}`,
+    );
   }
 
   const { token } = await tokenRes.json();
@@ -80,27 +93,23 @@ async function getInstallationToken(jwt) {
 }
 
 async function main() {
-  const privateKey = readFileSync(PEM_PATH, 'utf8');
-  const jwt        = signJwt(APP_ID, privateKey);
-  const token      = await getInstallationToken(jwt);
+  const privateKey = readFileSync(PEM_PATH, "utf8");
+  const jwt = signJwt(APP_ID, privateKey);
+  const token = await getInstallationToken(jwt);
 
   // Start @github/mcp-server with the installation token
   // shell: true is required on Windows — npx is a .cmd file and cannot be
   // spawned directly without going through the shell
-  const child = spawn(
-    'npx',
-    ['-y', '@modelcontextprotocol/server-github'],
-    {
-      stdio: 'inherit',
-      shell: true,
-      env: { ...process.env, GITHUB_PERSONAL_ACCESS_TOKEN: token },
-    }
-  );
+  const child = spawn("npx", ["-y", "@modelcontextprotocol/server-github"], {
+    stdio: "inherit",
+    shell: true,
+    env: { ...process.env, GITHUB_PERSONAL_ACCESS_TOKEN: token },
+  });
 
-  child.on('exit', (code) => process.exit(code ?? 0));
+  child.on("exit", (code) => process.exit(code ?? 0));
 }
 
-main().catch(err => {
+main().catch((err) => {
   process.stderr.write(`github-mcp-wrapper error: ${err.message}\n`);
   process.exit(1);
 });
