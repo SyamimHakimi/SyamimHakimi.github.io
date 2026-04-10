@@ -32,8 +32,12 @@ let content = Buffer.from(file.content, 'base64').toString('utf8');
 // The [message] and [from→to] args
 const [,, message, ...pairs] = process.argv;
 for (const pair of pairs) {
-  const [from, to] = pair.split('→');
-  content = content.replaceAll(from, to);
+  const sep = pair.indexOf('→');
+  if (sep === -1) { console.warn(`Skipping malformed pair (no → separator): ${pair}`); continue; }
+  const from = pair.slice(0, sep);
+  const to   = pair.slice(sep + 1);
+  // Use .replace() (first occurrence only) to avoid mutating repeated status text elsewhere.
+  content = content.replace(from, to);
 }
 
 const putRes = await fetch(`${REPO}/contents/HANDOFF.md`, {

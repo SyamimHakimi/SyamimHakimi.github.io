@@ -24,15 +24,35 @@ async function getToken(jwt) {
 const token = await getToken(signJwt());
 const H = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json', 'User-Agent': 'portfolio-agents-mcp' };
 
+// Usage: node --env-file=.env scripts/_push-handoff.mjs "<commit-message>" "<from>→<to>" [...]
+// Fetches current HANDOFF.md from main and applies targeted replacements, never overwriting
+// unrelated changes made by other commits.
+const [,, message, ...pairs] = process.argv;
+if (!message) {
+  console.error('Usage: node --env-file=.env scripts/_push-handoff.mjs "<message>" ["<from>→<to>" ...]');
+  process.exit(1);
+}
+
+// Always start from the live remote content to avoid overwriting concurrent edits
 const getRes = await fetch(`${REPO}/contents/HANDOFF.md?ref=main`, { headers: H });
 const file = await getRes.json();
-const localContent = readFileSync('HANDOFF.md', 'utf8');
+let content = Buffer.from(file.content, 'base64').toString('utf8');
+
+// Apply each replacement to the first matching occurrence (not replaceAll) to avoid
+// accidentally mutating repeated status text elsewhere in the document.
+for (const pair of pairs) {
+  const sep = pair.indexOf('→');
+  if (sep === -1) { console.warn(`Skipping malformed pair (no → separator): ${pair}`); continue; }
+  const from = pair.slice(0, sep);
+  const to   = pair.slice(sep + 1);
+  content = content.replace(from, to);
+}
 
 const putRes = await fetch(`${REPO}/contents/HANDOFF.md`, {
   method: 'PUT', headers: H,
   body: JSON.stringify({
-    message: 'chore(handoff): mark Phase A2 MERGED, advance gate 3 to A3 [skip ci]',
-    content: Buffer.from(localContent).toString('base64'),
+    message,
+    content: Buffer.from(content).toString('base64'),
     sha: file.sha,
     branch: 'main',
     committer: { name: 'github-actions[bot]', email: '41898282+github-actions[bot]@users.noreply.github.com' },

@@ -23,11 +23,19 @@ async function getToken(jwt) {
 const token = await getToken(signJwt(APP_ID, readFileSync(PEM_PATH, 'utf8')));
 const H = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'portfolio-agents-mcp' };
 
-const PR = process.argv[2] || '16';
-const { data: pr } = await (await fetch(`https://api.github.com/repos/SyamimHakimi/SyamimHakimi.github.io/pulls/${PR}`, { headers: H })).json().then(d => ({ data: d }));
-console.log(`PR #${PR}: ${pr.state} | mergeable: ${pr.mergeable_state}`);
+const PR = process.argv[2];
+if (!PR) { console.error('Usage: node --env-file=.env scripts/check-ci.mjs <pr-number>'); process.exit(1); }
 
-const runs = await (await fetch(`https://api.github.com/repos/SyamimHakimi/SyamimHakimi.github.io/actions/runs?branch=fix/architecture-schema-corrections&per_page=5`, { headers: H })).json();
+const REPO = 'https://api.github.com/repos/SyamimHakimi/SyamimHakimi.github.io';
+
+// Fetch PR to get actual head branch
+const prRes = await fetch(`${REPO}/pulls/${PR}`, { headers: H });
+const pr = await prRes.json();
+if (!prRes.ok) { console.error('Could not fetch PR:', pr.message); process.exit(1); }
+console.log(`PR #${PR}: ${pr.state} | mergeable: ${pr.mergeable_state} | branch: ${pr.head.ref}`);
+
+// Query CI runs for the PR's actual head branch
+const runs = await (await fetch(`${REPO}/actions/runs?branch=${encodeURIComponent(pr.head.ref)}&per_page=5`, { headers: H })).json();
 for (const r of (runs.workflow_runs || [])) {
   console.log(` - ${r.name} | ${r.status} | ${r.conclusion || 'pending'}`);
 }

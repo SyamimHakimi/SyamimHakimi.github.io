@@ -25,16 +25,21 @@ const H = { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+js
 const REPO = 'https://api.github.com/repos/SyamimHakimi/SyamimHakimi.github.io';
 const PR = process.argv[2];
 
+// Fetch PR to get head branch name and title
+const prRes = await fetch(`${REPO}/pulls/${PR}`, { headers: H });
+const pr = await prRes.json();
+if (!prRes.ok) { console.error('Could not fetch PR:', pr.message); process.exit(1); }
+const branch = pr.head.ref;
+
 // Squash merge
 const mergeRes = await fetch(`${REPO}/pulls/${PR}/merge`, {
   method: 'PUT', headers: H,
-  body: JSON.stringify({ merge_method: 'squash', commit_title: `fix(phase-a0): correct Firestore schema and theme flash docs (#${PR})` }),
+  body: JSON.stringify({ merge_method: 'squash', commit_title: `${pr.title} (#${PR})` }),
 });
 const merge = await mergeRes.json();
 if (!mergeRes.ok) { console.error('Merge failed:', merge.message); process.exit(1); }
 console.log('Merged:', merge.sha);
 
-// Delete branch
-const branch = 'fix/architecture-schema-corrections';
+// Delete branch (derived from PR payload, not hardcoded)
 const delRes = await fetch(`${REPO}/git/refs/heads/${branch}`, { method: 'DELETE', headers: H });
 console.log('Branch deleted:', delRes.status === 204 ? 'yes' : await delRes.text());
