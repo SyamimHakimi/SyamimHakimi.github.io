@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { PhotoSchema } from "./useGallery";
+import { describe, it, expect, expectTypeOf } from "vitest";
+import { PhotoSchema, type Photo } from "./useGallery";
 
 describe("PhotoSchema", () => {
   it("parses a photo with all fields", () => {
@@ -30,5 +30,15 @@ describe("PhotoSchema", () => {
 
   it("rejects a photo missing date", () => {
     expect(() => PhotoSchema.parse({ id: "abc" })).toThrow();
+  });
+});
+
+describe("Photo type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Photo["id"]>().toBeString();
+    expectTypeOf<Photo["date"]>().toBeString();
+    expectTypeOf<Photo["theme"]>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<Photo["favourite"]>().toEqualTypeOf<boolean | undefined>();
+    expectTypeOf<Photo["focal_length"]>().toEqualTypeOf<number | undefined>();
   });
 });

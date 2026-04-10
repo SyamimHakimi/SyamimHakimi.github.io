@@ -1,8 +1,11 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, expectTypeOf } from "vitest";
 import {
   ExperienceItemSchema,
   ProjectDocumentSchema,
   TechstackItemSchema,
+  type ExperienceItem,
+  type ProjectDocument,
+  type TechstackItem,
 } from "./usePortfolio";
 
 describe("ExperienceItemSchema", () => {
@@ -54,5 +57,30 @@ describe("TechstackItemSchema", () => {
     expect(() =>
       TechstackItemSchema.parse({ id: "x", title: "Vue" }),
     ).toThrow();
+  });
+});
+
+describe("ExperienceItem type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<ExperienceItem["id"]>().toBeString();
+    expectTypeOf<ExperienceItem["title"]>().toBeString();
+    expectTypeOf<ExperienceItem["link"]>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<ExperienceItem["date-from"]>().toEqualTypeOf<string | undefined>();
+  });
+});
+
+describe("ProjectDocument type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<ProjectDocument["id"]>().toBeString();
+    expectTypeOf<ProjectDocument["title"]>().toBeString();
+    expectTypeOf<ProjectDocument["subtitle"]>().toEqualTypeOf<string | undefined>();
+  });
+});
+
+describe("TechstackItem type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<TechstackItem["id"]>().toBeString();
+    expectTypeOf<TechstackItem["title"]>().toBeString();
+    expectTypeOf<TechstackItem["sorting"]>().toBeNumber();
   });
 });

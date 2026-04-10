@@ -3,11 +3,23 @@
  * ServicesSection — displays service offerings grouped by category.
  * Island: client:visible — loads only when scrolled into view.
  * Composable: useServices()
+ * Animations: motion-v scroll-triggered card entrance (respects prefers-reduced-motion)
  */
 import { computed } from "vue";
+import { Motion } from "motion-v";
 import { useServices } from "../../lib/composables/useServices";
 
 const { services, loading, error } = useServices();
+
+// Respect user's reduced-motion preference.
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const cardVariants = {
+  hidden: prefersReducedMotion ? {} : { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const grouped = computed(() => {
   // Preserve the Firestore-controlled `sorting` insertion order for group sections.
@@ -52,14 +64,18 @@ const grouped = computed(() => {
         :aria-label="`Service group ${groupId}`"
       >
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <article
-            v-for="service in groupServices"
+          <Motion
+            v-for="(service, index) in groupServices"
             :key="service.id"
+            as="article"
+            :initial="cardVariants.hidden"
+            :animate="cardVariants.visible"
+            :transition="{ duration: 0.3, delay: prefersReducedMotion ? 0 : index * 0.05 }"
             class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-shadow hover:shadow-md"
           >
             <h3 class="font-semibold text-[var(--color-text)]">{{ service.title }}</h3>
             <p class="mt-1 text-sm text-[var(--color-text-muted)]">{{ service.description }}</p>
-          </article>
+          </Motion>
         </div>
       </section>
     </div>
