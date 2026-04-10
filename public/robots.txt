@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://syamimhakimi.github.io/sitemap-index.xml

@@ -1,12 +1,74 @@
 rules_version = '2';
 
-// Firestore security rules — Phase A6 will harden these.
-// Currently open for reads (portfolio content is public) and closed for writes.
+// Firestore security rules for syamimhakimi.github.io
+//
+// Public read model: all portfolio content (photos, services, experience,
+// projects, statistics, profile, gears, boardgames, social-media) is
+// intentionally public — the site serves anonymous visitors.
+//
+// Write model: all writes are restricted. Content is managed via the Firebase
+// console by the project owner. A lightweight admin UI is planned for a future
+// phase. Client-side writes will only be permitted once an authenticated admin
+// role is implemented.
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
+    // ── Public read collections ──────────────────────────────────────────────
+    // Each collection listed explicitly to make the intent auditable.
+
+    match /photos/{doc} {
       allow read: if true;
       allow write: if false;
+    }
+
+    match /statistics/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /services/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /experience/{category}/item/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /projects/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /projects/{doc}/techstack/{sub} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /profile/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /photography-gears/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /favourite-boardgames/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /social-media/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // ── Default: deny everything else ───────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

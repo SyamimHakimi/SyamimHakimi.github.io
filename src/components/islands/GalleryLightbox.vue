@@ -101,6 +101,7 @@ import { computed } from "vue";
             v-if="current.link"
             :src="current.link"
             :alt="current.title ?? 'Photo'"
+            loading="eager"
             class="max-h-[80dvh] max-w-full rounded-lg object-contain"
           />
           <div v-if="current.title || current.recipe" class="text-center text-sm text-white/70">
