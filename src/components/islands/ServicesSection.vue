@@ -37,7 +37,12 @@ const grouped = computed(() => {
 <template>
   <div>
     <!-- Loading -->
-    <div v-if="loading" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading services">
+    <div
+      v-if="loading"
+      class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      aria-busy="true"
+      aria-label="Loading services"
+    >
       <div
         v-for="i in 6"
         :key="i"
@@ -46,7 +51,11 @@ const grouped = computed(() => {
     </div>
 
     <!-- Error -->
-    <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
+    <div
+      v-else-if="error"
+      class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
+      role="alert"
+    >
       <p class="font-medium">Failed to load services</p>
       <p class="mt-1 text-sm opacity-80">{{ error }}</p>
     </div>
@@ -70,11 +79,18 @@ const grouped = computed(() => {
             as="article"
             :initial="cardVariants.hidden"
             :animate="cardVariants.visible"
-            :transition="{ duration: 0.3, delay: prefersReducedMotion ? 0 : index * 0.05 }"
+            :transition="{
+              duration: 0.3,
+              delay: prefersReducedMotion ? 0 : index * 0.05,
+            }"
             class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 transition-shadow hover:shadow-md"
           >
-            <h3 class="font-semibold text-[var(--color-text)]">{{ service.title }}</h3>
-            <p class="mt-1 text-sm text-[var(--color-text-muted)]">{{ service.description }}</p>
+            <h3 class="font-semibold text-[var(--color-text)]">
+              {{ service.title }}
+            </h3>
+            <p class="mt-1 text-sm text-[var(--color-text-muted)]">
+              {{ service.description }}
+            </p>
           </Motion>
         </div>
       </section>

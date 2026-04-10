@@ -65,7 +65,9 @@ describe("ExperienceItem type", () => {
     expectTypeOf<ExperienceItem["id"]>().toBeString();
     expectTypeOf<ExperienceItem["title"]>().toBeString();
     expectTypeOf<ExperienceItem["link"]>().toEqualTypeOf<string | undefined>();
-    expectTypeOf<ExperienceItem["date-from"]>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<ExperienceItem["date-from"]>().toEqualTypeOf<
+      string | undefined
+    >();
   });
 });
 
@@ -73,7 +75,9 @@ describe("ProjectDocument type", () => {
   it("has correct field types", () => {
     expectTypeOf<ProjectDocument["id"]>().toBeString();
     expectTypeOf<ProjectDocument["title"]>().toBeString();
-    expectTypeOf<ProjectDocument["subtitle"]>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<ProjectDocument["subtitle"]>().toEqualTypeOf<
+      string | undefined
+    >();
   });
 });
 

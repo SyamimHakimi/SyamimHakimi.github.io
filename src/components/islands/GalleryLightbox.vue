@@ -35,7 +35,9 @@ const currentIndex = ref(props.initialIndex);
 
 watch(
   () => props.initialIndex,
-  (v) => { currentIndex.value = v; },
+  (v) => {
+    currentIndex.value = v;
+  },
 );
 
 const current = computed(() => props.photos[currentIndex.value]);
@@ -96,7 +98,9 @@ import { computed } from "vue";
         </button>
 
         <!-- Image -->
-        <div class="mx-16 flex max-h-[90dvh] max-w-[90dvw] flex-col items-center gap-3">
+        <div
+          class="mx-16 flex max-h-[90dvh] max-w-[90dvw] flex-col items-center gap-3"
+        >
           <img
             v-if="current.link"
             :src="current.link"
@@ -104,8 +108,13 @@ import { computed } from "vue";
             loading="eager"
             class="max-h-[80dvh] max-w-full rounded-lg object-contain"
           />
-          <div v-if="current.title || current.recipe" class="text-center text-sm text-white/70">
-            <p v-if="current.title" class="font-medium text-white">{{ current.title }}</p>
+          <div
+            v-if="current.title || current.recipe"
+            class="text-center text-sm text-white/70"
+          >
+            <p v-if="current.title" class="font-medium text-white">
+              {{ current.title }}
+            </p>
             <p v-if="current.recipe">{{ current.recipe }}</p>
             <p v-if="current.lens" class="opacity-60">{{ current.lens }}</p>
           </div>

@@ -10,7 +10,10 @@ const { data, loading, error } = usePortfolio();
 
 function formatDate(iso: string | undefined): string {
   if (!iso) return "Present";
-  return new Date(iso).toLocaleDateString("en-MY", { year: "numeric", month: "short" });
+  return new Date(iso).toLocaleDateString("en-MY", {
+    year: "numeric",
+    month: "short",
+  });
 }
 </script>
 
@@ -21,13 +24,21 @@ function formatDate(iso: string | undefined): string {
       <div v-for="i in 4" :key="i" class="space-y-3">
         <div class="h-6 w-40 animate-pulse rounded bg-[var(--color-surface)]" />
         <div class="grid gap-3 sm:grid-cols-2">
-          <div v-for="j in 2" :key="j" class="h-28 animate-pulse rounded-xl bg-[var(--color-surface)]" />
+          <div
+            v-for="j in 2"
+            :key="j"
+            class="h-28 animate-pulse rounded-xl bg-[var(--color-surface)]"
+          />
         </div>
       </div>
     </div>
 
     <!-- Error -->
-    <div v-else-if="error" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
+    <div
+      v-else-if="error"
+      class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
+      role="alert"
+    >
       <p class="font-medium">Failed to load portfolio</p>
       <p class="mt-1 text-sm opacity-80">{{ error }}</p>
     </div>
@@ -35,7 +46,10 @@ function formatDate(iso: string | undefined): string {
     <!-- Content -->
     <div v-else class="space-y-12">
       <!-- Platforms -->
-      <section v-if="data.experience.platforms.length > 0" aria-label="Platforms experience">
+      <section
+        v-if="data.experience.platforms.length > 0"
+        aria-label="Platforms experience"
+      >
         <h2 class="mb-4 text-xl font-semibold">Platforms</h2>
         <ul class="grid gap-3 sm:grid-cols-2" role="list">
           <li
@@ -44,16 +58,28 @@ function formatDate(iso: string | undefined): string {
             class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
           >
             <p class="font-medium">{{ item.title }}</p>
-            <p v-if="item['date-from']" class="mt-1 text-sm text-[var(--color-text-muted)]">
-              {{ formatDate(item['date-from']) }} — {{ formatDate(item['date-to']) }}
+            <p
+              v-if="item['date-from']"
+              class="mt-1 text-sm text-[var(--color-text-muted)]"
+            >
+              {{ formatDate(item["date-from"]) }} —
+              {{ formatDate(item["date-to"]) }}
             </p>
-            <p v-if="item.description" class="mt-1 text-sm text-[var(--color-text-muted)]">{{ item.description }}</p>
+            <p
+              v-if="item.description"
+              class="mt-1 text-sm text-[var(--color-text-muted)]"
+            >
+              {{ item.description }}
+            </p>
           </li>
         </ul>
       </section>
 
       <!-- Protocols -->
-      <section v-if="data.experience.protocols.length > 0" aria-label="Protocols experience">
+      <section
+        v-if="data.experience.protocols.length > 0"
+        aria-label="Protocols experience"
+      >
         <h2 class="mb-4 text-xl font-semibold">Protocols</h2>
         <ul class="grid gap-3 sm:grid-cols-2" role="list">
           <li
@@ -62,16 +88,28 @@ function formatDate(iso: string | undefined): string {
             class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
           >
             <p class="font-medium">{{ item.title }}</p>
-            <p v-if="item['date-from']" class="mt-1 text-sm text-[var(--color-text-muted)]">
-              {{ formatDate(item['date-from']) }} — {{ formatDate(item['date-to']) }}
+            <p
+              v-if="item['date-from']"
+              class="mt-1 text-sm text-[var(--color-text-muted)]"
+            >
+              {{ formatDate(item["date-from"]) }} —
+              {{ formatDate(item["date-to"]) }}
             </p>
-            <p v-if="item.description" class="mt-1 text-sm text-[var(--color-text-muted)]">{{ item.description }}</p>
+            <p
+              v-if="item.description"
+              class="mt-1 text-sm text-[var(--color-text-muted)]"
+            >
+              {{ item.description }}
+            </p>
           </li>
         </ul>
       </section>
 
       <!-- Frameworks -->
-      <section v-if="data.experience.frameworks.length > 0" aria-label="Frameworks experience">
+      <section
+        v-if="data.experience.frameworks.length > 0"
+        aria-label="Frameworks experience"
+      >
         <h2 class="mb-4 text-xl font-semibold">Frameworks</h2>
         <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
           <li
@@ -80,15 +118,22 @@ function formatDate(iso: string | undefined): string {
             class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4"
           >
             <p class="font-medium">{{ item.title }}</p>
-            <p v-if="item['date-from']" class="mt-1 text-sm text-[var(--color-text-muted)]">
-              {{ formatDate(item['date-from']) }} — {{ formatDate(item['date-to']) }}
+            <p
+              v-if="item['date-from']"
+              class="mt-1 text-sm text-[var(--color-text-muted)]"
+            >
+              {{ formatDate(item["date-from"]) }} —
+              {{ formatDate(item["date-to"]) }}
             </p>
           </li>
         </ul>
       </section>
 
       <!-- Languages -->
-      <section v-if="data.experience.languages.length > 0" aria-label="Languages experience">
+      <section
+        v-if="data.experience.languages.length > 0"
+        aria-label="Languages experience"
+      >
         <h2 class="mb-4 text-xl font-semibold">Languages</h2>
         <ul class="flex flex-wrap gap-2" role="list">
           <li
@@ -104,10 +149,22 @@ function formatDate(iso: string | undefined): string {
       <!-- Personal Project -->
       <section v-if="data.project" aria-label="Personal projects">
         <h2 class="mb-4 text-xl font-semibold">Personal Project</h2>
-        <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+        <div
+          class="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6"
+        >
           <h3 class="text-lg font-semibold">{{ data.project.title }}</h3>
-          <p v-if="data.project.subtitle" class="mt-1 text-sm text-[var(--color-accent)]">{{ data.project.subtitle }}</p>
-          <p v-if="data.project.description" class="mt-3 text-sm text-[var(--color-text-muted)]">{{ data.project.description }}</p>
+          <p
+            v-if="data.project.subtitle"
+            class="mt-1 text-sm text-[var(--color-accent)]"
+          >
+            {{ data.project.subtitle }}
+          </p>
+          <p
+            v-if="data.project.description"
+            class="mt-3 text-sm text-[var(--color-text-muted)]"
+          >
+            {{ data.project.description }}
+          </p>
 
           <div v-if="data.techstack.length > 0" class="mt-4">
             <p class="mb-2 text-sm font-medium">Tech Stack</p>

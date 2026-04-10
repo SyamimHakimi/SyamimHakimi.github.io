@@ -22,7 +22,12 @@ function openLightbox(index: number) {
 <template>
   <div>
     <!-- Loading skeleton -->
-    <div v-if="loading" class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" aria-busy="true" aria-label="Loading photos">
+    <div
+      v-if="loading"
+      class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+      aria-busy="true"
+      aria-label="Loading photos"
+    >
       <div
         v-for="i in 12"
         :key="i"
@@ -31,7 +36,11 @@ function openLightbox(index: number) {
     </div>
 
     <!-- Initial load error (no photos yet) -->
-    <div v-else-if="error && photos.length === 0" class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400" role="alert">
+    <div
+      v-else-if="error && photos.length === 0"
+      class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
+      role="alert"
+    >
       <p class="font-medium">Failed to load gallery</p>
       <p class="mt-1 text-sm opacity-80">{{ error }}</p>
     </div>
@@ -43,11 +52,11 @@ function openLightbox(index: number) {
 
     <!-- Grid (shown even if a later loadMore failed) -->
     <div v-else>
-      <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
-        <li
-          v-for="(photo, index) in photos"
-          :key="photo.id"
-        >
+      <ul
+        class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+        role="list"
+      >
+        <li v-for="(photo, index) in photos" :key="photo.id">
           <button
             type="button"
             class="group aspect-square w-full overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
@@ -72,7 +81,11 @@ function openLightbox(index: number) {
       </ul>
 
       <!-- Pagination error (photos still visible) -->
-      <p v-if="error && photos.length > 0" class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400" role="alert">
+      <p
+        v-if="error && photos.length > 0"
+        class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400"
+        role="alert"
+      >
         Failed to load more photos. Please try again.
       </p>
 

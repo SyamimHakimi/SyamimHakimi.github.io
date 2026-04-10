@@ -1,5 +1,10 @@
 import { describe, it, expect, expectTypeOf } from "vitest";
-import { StatsSchema, StatisticsSchema, type Stats, type Statistics } from "./useStatistics";
+import {
+  StatsSchema,
+  StatisticsSchema,
+  type Stats,
+  type Statistics,
+} from "./useStatistics";
 
 describe("StatsSchema", () => {
   it("parses a valid stats document", () => {
@@ -39,7 +44,7 @@ describe("StatisticsSchema", () => {
       focalStats: { "75": 18, "84": 29 },
       lensStats: { "56mm F1.7 APS-C": 30 },
       recipeStats: { "Kodachrome 64": 15 },
-      themeStats: { "Street": 28, "Portrait": 9 },
+      themeStats: { Street: 28, Portrait: 9 },
     });
     expect(result.stats.total_outings).toBe(20);
     expect(result.photoStats["11/2024"]).toBe(22);
@@ -53,14 +58,20 @@ describe("Stats type", () => {
     expectTypeOf<Stats["total_outings"]>().toBeNumber();
     expectTypeOf<Stats["total_photos"]>().toBeNumber();
     expectTypeOf<Stats["total_fav_photos"]>().toBeNumber();
-    expectTypeOf<Stats["favourite_photo_lens"]>().toEqualTypeOf<string | undefined>();
+    expectTypeOf<Stats["favourite_photo_lens"]>().toEqualTypeOf<
+      string | undefined
+    >();
   });
 });
 
 describe("Statistics type", () => {
   it("has correct field types", () => {
     expectTypeOf<Statistics["stats"]>().toEqualTypeOf<Stats>();
-    expectTypeOf<Statistics["photoStats"]>().toEqualTypeOf<Record<string, number>>();
-    expectTypeOf<Statistics["themeStats"]>().toEqualTypeOf<Record<string, string | number>>();
+    expectTypeOf<Statistics["photoStats"]>().toEqualTypeOf<
+      Record<string, number>
+    >();
+    expectTypeOf<Statistics["themeStats"]>().toEqualTypeOf<
+      Record<string, string | number>
+    >();
   });
 });

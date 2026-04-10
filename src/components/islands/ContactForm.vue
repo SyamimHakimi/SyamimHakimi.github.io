@@ -23,7 +23,11 @@ const errorMessage = ref("");
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
 
 async function submit() {
-  if (!form.from_name.trim() || !form.from_email.trim() || !form.message.trim()) {
+  if (
+    !form.from_name.trim() ||
+    !form.from_email.trim() ||
+    !form.message.trim()
+  ) {
     errorMessage.value = "Please fill in all fields.";
     status.value = "error";
     return;
@@ -55,7 +59,10 @@ async function submit() {
     form.message = "";
   } catch (err) {
     status.value = "error";
-    errorMessage.value = err instanceof Error ? err.message : "Failed to send message. Please try again.";
+    errorMessage.value =
+      err instanceof Error
+        ? err.message
+        : "Failed to send message. Please try again.";
   }
 }
 </script>
@@ -63,7 +70,9 @@ async function submit() {
 <template>
   <form class="space-y-5" novalidate @submit.prevent="submit">
     <div>
-      <label for="contact-name" class="mb-1.5 block text-sm font-medium">Name</label>
+      <label for="contact-name" class="mb-1.5 block text-sm font-medium"
+        >Name</label
+      >
       <input
         id="contact-name"
         v-model="form.from_name"
@@ -76,7 +85,9 @@ async function submit() {
     </div>
 
     <div>
-      <label for="contact-email" class="mb-1.5 block text-sm font-medium">Email</label>
+      <label for="contact-email" class="mb-1.5 block text-sm font-medium"
+        >Email</label
+      >
       <input
         id="contact-email"
         v-model="form.from_email"
@@ -89,7 +100,9 @@ async function submit() {
     </div>
 
     <div>
-      <label for="contact-message" class="mb-1.5 block text-sm font-medium">Message</label>
+      <label for="contact-message" class="mb-1.5 block text-sm font-medium"
+        >Message</label
+      >
       <textarea
         id="contact-message"
         v-model="form.message"
@@ -111,12 +124,20 @@ async function submit() {
     </button>
 
     <!-- Success -->
-    <p v-if="status === 'success'" class="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-400" role="status">
+    <p
+      v-if="status === 'success'"
+      class="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-400"
+      role="status"
+    >
       Message sent! I'll get back to you soon.
     </p>
 
     <!-- Error -->
-    <p v-if="status === 'error'" class="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400" role="alert">
+    <p
+      v-if="status === 'error'"
+      class="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400"
+      role="alert"
+    >
       {{ errorMessage }}
     </p>
   </form>
