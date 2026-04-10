@@ -15,7 +15,7 @@
  */
 
 import { chromium } from 'playwright';
-import { readFileSync, writeFileSync, unlinkSync } from 'fs';
+import { unlinkSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
@@ -50,7 +50,7 @@ function parseArgs() {
 }
 
 async function sendPhoto(imagePath, caption) {
-  const { FormData, File } = await import('formdata-node');
+  const { FormData } = await import('formdata-node');
   const { fileFromPath } = await import('formdata-node/file-from-path');
 
   const form = new FormData();

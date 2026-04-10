@@ -1,14 +1,25 @@
 # deploy.yml — Production deployment pipeline
 #
-# Runs ONLY on push to main and manual dispatch.
-# PRs are validated by ci.yml — this workflow never runs on pull requests.
+# Runs ONLY on push to main. PRs are validated by ci.yml.
+#
+# Job failure policy:
+#   validate      — lint + type-check + test + build (blocks all downstream)
+#   deploy-site   — Astro build → GitHub Pages (blocks deploy-rules)
+#   deploy-rules  — firebase deploy --only firestore:rules (isolated; failure
+#                   does not revert the site deploy — fix and re-run separately)
+#   notify        — Telegram success/failure notification (continue-on-error:
+#                   true — a missing Telegram secret must not block a deploy)
+#
+# Required GitHub Actions secrets:
+#   FIREBASE_SERVICE_ACCOUNT — full JSON content of a Firebase service account key
+#   TELEGRAM_TOKEN           — Telegram bot token (@BotFather)
+#   TELEGRAM_CHAT_ID         — Telegram chat/user ID to receive notifications
 
 name: Deploy
 
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
 
 # Sets the GITHUB_TOKEN permissions to allow deployment to GitHub Pages
 permissions:
@@ -16,16 +27,17 @@ permissions:
   pages: write
   id-token: write
 
-# Allow one concurrent deployment
+# Allow one concurrent deployment; cancel in-flight runs on new push
 concurrency:
   group: 'pages'
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  # ── Job 1: Validate ──────────────────────────────────────────────────────────
+  # Re-runs lint + type-check + test + build on the merge commit, because the
+  # merge commit may differ from the PR HEAD that ci.yml validated. Intentional.
+  validate:
+    name: Lint, Type-check, Test, Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -40,27 +52,35 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Check whether the Firebase service account secret is present.
-      # Outputs a boolean that the next step reads via steps context so the
-      # credential itself is never exposed at job scope.
-      - name: Check Firebase credentials
-        id: firebase-check
-        run: echo "present=${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}" >> $GITHUB_OUTPUT
+      - name: Lint
+        run: npm run lint:check
 
-      # Deploy Firestore indexes so composite queries (gallery, services) work
-      # at runtime. Requires the FIREBASE_SERVICE_ACCOUNT secret to be set in
-      # the repo's GitHub Actions secrets (Settings → Secrets → Actions).
-      - name: Deploy Firestore indexes
-        if: steps.firebase-check.outputs.present == 'true'
-        env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
-        run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
-          npx firebase-tools deploy --only firestore:indexes \
-            --project portfolio-9e62d \
-            --non-interactive
-          rm /tmp/sa.json
+      - name: Test
+        run: npm test
+
+      - name: Build (includes type-check)
+        run: npm run build
+
+  # ── Job 2: Deploy site ───────────────────────────────────────────────────────
+  deploy-site:
+    name: Deploy to GitHub Pages
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build
         run: npm run build
@@ -76,3 +96,66 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # ── Job 3: Deploy Firestore rules + indexes ──────────────────────────────────
+  # Isolated from the site deploy — a Firebase failure does not revert the live
+  # site. Re-run this job alone after fixing firestore.rules or indexes.
+  deploy-rules:
+    name: Deploy Firestore rules + indexes
+    needs: deploy-site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Firebase credentials
+        id: firebase-check
+        run: echo "present=${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' }}" >> $GITHUB_OUTPUT
+
+      - name: Deploy Firestore rules and indexes
+        if: steps.firebase-check.outputs.present == 'true'
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
+          npx firebase-tools deploy --only firestore:rules,firestore:indexes \
+            --project portfolio-9e62d \
+            --non-interactive
+          rm /tmp/sa.json
+
+  # ── Job 4: Notify ────────────────────────────────────────────────────────────
+  # Sends a Telegram message on success or failure.
+  # continue-on-error: true — a missing or invalid Telegram secret must not
+  # block or fail a successful site deploy.
+  notify:
+    name: Notify via Telegram
+    needs: [ deploy-site, deploy-rules ]
+    if: always()
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Telegram credentials
+        id: telegram-check
+        run: echo "present=${{ secrets.TELEGRAM_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != '' }}" >> $GITHUB_OUTPUT
+
+      - name: Send success notification
+        if: |
+          steps.telegram-check.outputs.present == 'true' &&
+          needs.deploy-site.result == 'success' &&
+          needs.deploy-rules.result == 'success'
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="✅ *syamim.* deployed successfully%0A${{ github.sha }}" \
+            -d parse_mode=Markdown
+
+      - name: Send failure notification
+        if: |
+          steps.telegram-check.outputs.present == 'true' &&
+          (needs.deploy-site.result != 'success' || needs.deploy-rules.result == 'failure')
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="❌ *syamim.* deploy failed%0A${{ github.sha }}" \
+            -d parse_mode=Markdown
