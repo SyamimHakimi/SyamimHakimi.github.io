@@ -11,7 +11,7 @@
 |------|---------------------------------|-------------------------------------|
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
-| 3    | Execution                       | IN PROGRESS — Phase A6 next       |
+| 3    | Execution                       | IN PROGRESS — Phase A7 next       |
 | 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
@@ -59,7 +59,7 @@
 | A3 | Route and layout rebuild          | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #19    |
 | A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #20    |
 | A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #21    |
-| A6 | SEO, media, hosting, security     | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A6 | SEO, media, hosting, security     | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #22    |
 | A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
@@ -437,10 +437,10 @@ Codex review: APPROVED (8 iterations — gallery favourite filter, composite Fir
 - [ ] `npm run lint:check` exits 0
 - [ ] All tests pass
 
-**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
+**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** APPROVE
 
 **Gate 4 — Code review** *(filled after execution)*
-Claude review: ___
+Codex review: APPROVED (3 iterations — Vite 8→7 pin, indexes+rules combined deploy, notify success condition requires both jobs)
 
 ---
 
