@@ -11,7 +11,7 @@
 |------|---------------------------------|-------------------------------------|
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
-| 3    | Execution                       | IN PROGRESS — Phase A7 next       |
+| 3    | Execution                       | COMPLETE — all phases A0–A7 merged       |
 | 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
@@ -60,7 +60,7 @@
 | A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #20    |
 | A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #21    |
 | A6 | SEO, media, hosting, security     | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #22    |
-| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | MERGED            | #23      |
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
