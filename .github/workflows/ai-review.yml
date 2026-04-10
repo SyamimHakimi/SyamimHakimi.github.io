@@ -54,7 +54,7 @@ jobs:
       # Always fetch the merge script from main so every branch uses the latest version.
       - name: Fetch merge script from main
         if: steps.guard.outputs.skip != 'true'
-        run: git show origin/main:scripts/ai-review.mjs > scripts/ai-review.mjs
+        run: git show origin/main:scripts/agents/ai-review.mjs > scripts/agents/ai-review.mjs
 
       - name: Run auto-merge
         if: steps.guard.outputs.skip != 'true'
@@ -64,4 +64,4 @@ jobs:
           PR_TITLE: ${{ github.event.pull_request.title }}
           HEAD_BRANCH: ${{ github.head_ref }}
           REPO: ${{ github.repository }}
-        run: node scripts/ai-review.mjs
+        run: node scripts/agents/ai-review.mjs

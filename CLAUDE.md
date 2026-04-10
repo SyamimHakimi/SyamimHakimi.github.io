@@ -80,7 +80,15 @@ export/                   # Firestore export JSON (Phase A1 archive — read-onl
 public/                   # Static assets (images, og-image.jpg, robots.txt)
 scripts/
 ├── ui-preview.mjs        # Screenshots an HTML file and sends desktop + mobile to Telegram
-└── <phase>-<name>.html   # ui-ux-pro-max mockup outputs (gitignored after review)
+├── firestore-export.mjs  # Re-export Firestore data (one-time, Phase A1)
+├── github-mcp-wrapper.mjs # MCP server wrapper for GitHub API
+└── agents/               # Agent-only automation (not for developer use)
+    ├── ai-review.mjs     # CI-gated auto-merge for phase PRs
+    ├── create-pr.mjs     # Create a GitHub PR via App auth
+    ├── merge-pr.mjs      # Merge a PR via App auth
+    ├── check-ci.mjs      # Poll CI status for a PR
+    ├── update-handoff.mjs # Update HANDOFF.md on main via API
+    └── push-handoff.mjs  # Push HANDOFF.md changes to a branch
 ```
 
 ## Data Model

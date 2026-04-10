@@ -15,6 +15,11 @@ import { db } from "../firebase";
 
 // ── Schema ─────────────────────────────────────────────────────────────────
 
+/**
+ * Validates a document from the `photos` Firestore collection.
+ * `date` is an ISO 8601 string. `favourite` filters the public gallery view.
+ * All other fields are optional shoot metadata.
+ */
 export const PhotoSchema = z.object({
   id: z.string(),
   date: z.string(),
@@ -29,12 +34,25 @@ export const PhotoSchema = z.object({
 
 // ── Type ───────────────────────────────────────────────────────────────────
 
+/** Validated photo document from Firestore. */
 export type Photo = z.infer<typeof PhotoSchema>;
 
 // ── Composable ─────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 12;
 
+/**
+ * Fetches favourite photos from the `photos` Firestore collection using
+ * cursor-based pagination (`startAfter`). Only documents where `favourite == true`
+ * are returned, ordered by `date` descending.
+ *
+ * @returns `photos` — reactive array of validated `Photo` objects (accumulates across pages);
+ *          `loading` — true during the initial page fetch;
+ *          `loadingMore` — true while a subsequent page is being fetched;
+ *          `hasMore` — false when the last page has fewer than PAGE_SIZE (12) results;
+ *          `error` — error message on failure, otherwise null;
+ *          `loadMore()` — call to append the next page to `photos`.
+ */
 export function useGallery() {
   const photos = ref<Photo[]>([]);
   const loading = ref(true);
