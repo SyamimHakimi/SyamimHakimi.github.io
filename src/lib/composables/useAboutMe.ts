@@ -12,6 +12,10 @@ import { db } from "../firebase";
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
+/**
+ * Validates the singleton profile document (`profile/ddIhV8IxV5DjciJY7UxW`).
+ * Required: `Name`. Optional: `Country`, `Residing Country`, `Hobbies`.
+ */
 export const ProfileSchema = z.object({
   id: z.string(),
   Name: z.string(),
@@ -20,6 +24,11 @@ export const ProfileSchema = z.object({
   Hobbies: z.string().optional(),
 });
 
+/**
+ * Validates a document from the `photography-gears` collection.
+ * `type` is a numeric category key (e.g. 1 = camera body, 2 = lens).
+ * `link` and `img-src` are optional external URL and image path.
+ */
 export const PhotographyGearSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -29,6 +38,10 @@ export const PhotographyGearSchema = z.object({
   "img-src": z.string().optional(),
 });
 
+/**
+ * Validates a document from the `favourite-boardgames` collection.
+ * `score` is a numeric rating (e.g. 9.5). `tags` is a free-form category string.
+ */
 export const BoardgameSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -37,6 +50,11 @@ export const BoardgameSchema = z.object({
   tags: z.string().optional(),
 });
 
+/**
+ * Validates a document from the `social-media` collection.
+ * `icon` is a CSS class string (e.g. Bootstrap Icons class).
+ * `sorting` controls display order.
+ */
 export const SocialMediaSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -48,11 +66,16 @@ export const SocialMediaSchema = z.object({
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
+/** Validated profile singleton. */
 export type Profile = z.infer<typeof ProfileSchema>;
+/** Validated photography gear item. */
 export type PhotographyGear = z.infer<typeof PhotographyGearSchema>;
+/** Validated favourite boardgame entry. */
 export type Boardgame = z.infer<typeof BoardgameSchema>;
+/** Validated social media link. */
 export type SocialMedia = z.infer<typeof SocialMediaSchema>;
 
+/** Aggregated return type for the `useAboutMe` composable. */
 export interface AboutMeData {
   profile: Profile | null;
   gear: PhotographyGear[];
@@ -62,6 +85,19 @@ export interface AboutMeData {
 
 // ── Composable ─────────────────────────────────────────────────────────────
 
+/**
+ * Fetches all About Me content in a single parallel batch:
+ * - `profile/ddIhV8IxV5DjciJY7UxW` — singleton profile document
+ * - `photography-gears` — ordered by `type`
+ * - `favourite-boardgames` — ordered by `score` descending
+ * - `social-media` — ordered by `sorting`
+ *
+ * All payloads are validated through their Zod schemas before reaching the UI.
+ *
+ * @returns `data` — reactive `AboutMeData` object;
+ *          `loading` — true while the fetch batch is in flight;
+ *          `error` — error message string on failure, otherwise null.
+ */
 export function useAboutMe() {
   const data = ref<AboutMeData>({
     profile: null,
@@ -79,11 +115,12 @@ export function useAboutMe() {
           getDoc(doc(db, "profile", "ddIhV8IxV5DjciJY7UxW")),
           getDocs(query(collection(db, "photography-gears"), orderBy("type"))),
           getDocs(
-            query(collection(db, "favourite-boardgames"), orderBy("score", "desc")),
+            query(
+              collection(db, "favourite-boardgames"),
+              orderBy("score", "desc"),
+            ),
           ),
-          getDocs(
-            query(collection(db, "social-media"), orderBy("sorting")),
-          ),
+          getDocs(query(collection(db, "social-media"), orderBy("sorting"))),
         ]);
 
       data.value = {

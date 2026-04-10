@@ -39,3 +39,18 @@ Recorded at Phase A7 (2026-04-10). Run `npm run build` to regenerate.
 | First Contentful Paint (FCP) | < 1.5 s on fast 3G |
 | Initial JS shipped (before scroll) | 0 KB client JS (static shell) |
 | Lighthouse Performance score | ≥ 90 |
+
+Lighthouse scores are measured against the live GitHub Pages deployment. The static shell (no client JS on initial load) and lazy island hydration (`client:visible`) are expected to satisfy the ≥ 90 performance target; measure after each deploy at https://pagespeed.web.dev.
+
+## Runtime telemetry opportunities
+
+Post-launch monitoring options — none are implemented yet; these are starting points if observability is needed:
+
+| Signal | Approach | Notes |
+|---|---|---|
+| Firestore fetch errors | Wrap composable `catch` blocks with `console.error` + optional `fetch` beacon to a logging endpoint | Already surfaced in the UI error state; adding a beacon would make failures visible without user reports |
+| Island hydration timing | `performance.mark()` before/after `onMounted` in each composable | Useful for diagnosing slow Firestore round-trips by route |
+| Client-side errors | Add a `window.onerror` + `unhandledrejection` handler in `BaseLayout.astro` `<script>` | Catches errors outside Vue's error boundary (e.g. island boot failures) |
+| Lighthouse CI | Add `@lhci/cli` to `ci.yml` against a preview deploy | Automated regression detection for performance scores |
+
+All options above are client-side only and do not require a backend. Firebase Analytics (already available in the Firebase project) could replace custom beacons if richer telemetry is desired.
