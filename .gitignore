@@ -1,13 +1,20 @@
-/src/assets/css
-
 # Environment variables (never commit)
 .env
 
-# UI preview test/temp files
+# Build output and caches
+dist
+dist-ssr
+.astro/
+
+# Dependencies
+node_modules
+coverage
+
+# UI preview temp files
 scripts/test-mockup.html
 scripts/*.png
 
-# Logs
+# Logs and CI artifacts
 logs
 *.log
 npm-debug.log*
@@ -15,18 +22,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+merge-logs*/
+*.zip
 
-node_modules
+# OS / editor artifacts
 .DS_Store
-dist
-dist-ssr
-coverage
+.claude/
 *.local
-
-/cypress/videos/
-/cypress/screenshots/
-
-# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -36,9 +38,9 @@ coverage
 *.sln
 *.sw?
 
-# GitHub App private key
+# GitHub App private key (never commit)
 scripts/*.pem
-scripts/portfolio-agents.private-key.pem
+scripts/agents/*.pem
 
 # Firebase service account credentials (never commit — contains private key)
 *firebase-adminsdk*.json
