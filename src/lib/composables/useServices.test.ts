@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { ServiceSchema } from "./useServices";
+import { describe, it, expect, expectTypeOf } from "vitest";
+import { ServiceSchema, type Service } from "./useServices";
 
 describe("ServiceSchema", () => {
   it("parses a valid service document", () => {
@@ -19,5 +19,16 @@ describe("ServiceSchema", () => {
     expect(() =>
       ServiceSchema.parse({ id: "x", title: "Incomplete" }),
     ).toThrow();
+  });
+});
+
+describe("Service type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Service["id"]>().toBeString();
+    expectTypeOf<Service["title"]>().toBeString();
+    expectTypeOf<Service["description"]>().toBeString();
+    expectTypeOf<Service["icon"]>().toBeString();
+    expectTypeOf<Service["group"]>().toBeNumber();
+    expectTypeOf<Service["sorting"]>().toBeNumber();
   });
 });

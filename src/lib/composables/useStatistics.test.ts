@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { StatsSchema, StatisticsSchema } from "./useStatistics";
+import { describe, it, expect, expectTypeOf } from "vitest";
+import { StatsSchema, StatisticsSchema, type Stats, type Statistics } from "./useStatistics";
 
 describe("StatsSchema", () => {
   it("parses a valid stats document", () => {
@@ -44,5 +44,23 @@ describe("StatisticsSchema", () => {
     expect(result.stats.total_outings).toBe(20);
     expect(result.photoStats["11/2024"]).toBe(22);
     expect(result.themeStats["Street"]).toBe(28);
+  });
+});
+
+describe("Stats type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Stats["id"]>().toBeString();
+    expectTypeOf<Stats["total_outings"]>().toBeNumber();
+    expectTypeOf<Stats["total_photos"]>().toBeNumber();
+    expectTypeOf<Stats["total_fav_photos"]>().toBeNumber();
+    expectTypeOf<Stats["favourite_photo_lens"]>().toEqualTypeOf<string | undefined>();
+  });
+});
+
+describe("Statistics type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Statistics["stats"]>().toEqualTypeOf<Stats>();
+    expectTypeOf<Statistics["photoStats"]>().toEqualTypeOf<Record<string, number>>();
+    expectTypeOf<Statistics["themeStats"]>().toEqualTypeOf<Record<string, string | number>>();
   });
 });

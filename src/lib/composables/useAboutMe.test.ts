@@ -1,9 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, expectTypeOf } from "vitest";
 import {
   ProfileSchema,
   PhotographyGearSchema,
   BoardgameSchema,
   SocialMediaSchema,
+  type Profile,
+  type PhotographyGear,
+  type Boardgame,
+  type SocialMedia,
 } from "./useAboutMe";
 
 describe("ProfileSchema", () => {
@@ -74,5 +78,39 @@ describe("SocialMediaSchema", () => {
       sorting: 1,
     });
     expect(result.sorting).toBe(1);
+  });
+});
+
+describe("Profile type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Profile["id"]>().toBeString();
+    expectTypeOf<Profile["Name"]>().toBeString();
+    expectTypeOf<Profile["Country"]>().toEqualTypeOf<string | undefined>();
+  });
+});
+
+describe("PhotographyGear type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<PhotographyGear["id"]>().toBeString();
+    expectTypeOf<PhotographyGear["name"]>().toBeString();
+    expectTypeOf<PhotographyGear["brand"]>().toBeString();
+    expectTypeOf<PhotographyGear["type"]>().toBeNumber();
+    expectTypeOf<PhotographyGear["link"]>().toEqualTypeOf<string | undefined>();
+  });
+});
+
+describe("Boardgame type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<Boardgame["id"]>().toBeString();
+    expectTypeOf<Boardgame["name"]>().toBeString();
+    expectTypeOf<Boardgame["score"]>().toBeNumber();
+  });
+});
+
+describe("SocialMedia type", () => {
+  it("has correct field types", () => {
+    expectTypeOf<SocialMedia["id"]>().toBeString();
+    expectTypeOf<SocialMedia["name"]>().toBeString();
+    expectTypeOf<SocialMedia["sorting"]>().toBeNumber();
   });
 });
