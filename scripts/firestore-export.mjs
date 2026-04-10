@@ -107,7 +107,9 @@ async function fetchAccessToken(credentials) {
   );
 
   if (!response.ok) {
-    throw new Error(`OAuth token exchange failed: ${response.status} ${await response.text()}`);
+    throw new Error(
+      `OAuth token exchange failed: ${response.status} ${await response.text()}`,
+    );
   }
 
   const payload = await response.json();
@@ -127,7 +129,9 @@ async function fetchFirestoreJson(accessToken, url) {
   });
 
   if (!response.ok) {
-    throw new Error(`Firestore request failed: ${response.status} ${await response.text()}`);
+    throw new Error(
+      `Firestore request failed: ${response.status} ${await response.text()}`,
+    );
   }
 
   return response.json();
@@ -156,7 +160,12 @@ async function getDocument(accessToken, firestoreBaseUrl, documentPath) {
  * @param {{ field: string, direction?: "asc" | "desc" } | undefined} sortSpec
  * @returns {Promise<Array<Record<string, unknown>>>}
  */
-async function listCollection(accessToken, firestoreBaseUrl, collectionPath, sortSpec) {
+async function listCollection(
+  accessToken,
+  firestoreBaseUrl,
+  collectionPath,
+  sortSpec,
+) {
   const decoded = [];
   let pageToken = "";
 
@@ -170,7 +179,8 @@ async function listCollection(accessToken, firestoreBaseUrl, collectionPath, sor
     const payload = await fetchFirestoreJson(accessToken, url.toString());
     const documents = Array.isArray(payload.documents) ? payload.documents : [];
     decoded.push(...documents.map((document) => decodeDocument(document)));
-    pageToken = typeof payload.nextPageToken === "string" ? payload.nextPageToken : "";
+    pageToken =
+      typeof payload.nextPageToken === "string" ? payload.nextPageToken : "";
   } while (pageToken);
 
   return sortDecodedRecords(decoded, sortSpec);
@@ -201,21 +211,46 @@ async function main() {
   const firestoreBaseUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
 
   const get = (path) => getDocument(accessToken, firestoreBaseUrl, path);
-  const list = (path, sort) => listCollection(accessToken, firestoreBaseUrl, path, sort);
+  const list = (path, sort) =>
+    listCollection(accessToken, firestoreBaseUrl, path, sort);
 
   const exportBundle = buildExportBundle({
     profile: await get("profile/ddIhV8IxV5DjciJY7UxW"),
     services: await list("services", { field: "sorting", direction: "asc" }),
-    experiencePlatforms: await list("experience/platforms/item", { field: "date-from", direction: "asc" }),
-    experienceProtocols: await list("experience/protocols/item", { field: "date-from", direction: "asc" }),
-    experienceFrameworks: await list("experience/frameworks/item", { field: "date-from", direction: "asc" }),
-    experienceLanguages: await list("experience/languages/item", { field: "date-from", direction: "asc" }),
+    experiencePlatforms: await list("experience/platforms/item", {
+      field: "date-from",
+      direction: "asc",
+    }),
+    experienceProtocols: await list("experience/protocols/item", {
+      field: "date-from",
+      direction: "asc",
+    }),
+    experienceFrameworks: await list("experience/frameworks/item", {
+      field: "date-from",
+      direction: "asc",
+    }),
+    experienceLanguages: await list("experience/languages/item", {
+      field: "date-from",
+      direction: "asc",
+    }),
     // projects is a singleton document accessed via doc() at runtime — export mirrors that shape.
     project: await get("projects/XYdqe9OyXNSUEzZ8kqwn"),
-    projectTechstack: await list("projects/XYdqe9OyXNSUEzZ8kqwn/techstack", { field: "sorting", direction: "asc" }),
-    boardgames: await list("favourite-boardgames", { field: "score", direction: "desc" }),
-    photographyGear: await list("photography-gears", { field: "type", direction: "asc" }),
-    socialMedia: await list("social-media", { field: "sorting", direction: "asc" }),
+    projectTechstack: await list("projects/XYdqe9OyXNSUEzZ8kqwn/techstack", {
+      field: "sorting",
+      direction: "asc",
+    }),
+    boardgames: await list("favourite-boardgames", {
+      field: "score",
+      direction: "desc",
+    }),
+    photographyGear: await list("photography-gears", {
+      field: "type",
+      direction: "asc",
+    }),
+    socialMedia: await list("social-media", {
+      field: "sorting",
+      direction: "asc",
+    }),
     photos: await list("photos", { field: "date", direction: "desc" }),
     statistics: {
       stats: await get("statistics/stats"),
@@ -231,7 +266,9 @@ async function main() {
   await writeExportBundle(exportBundle);
 
   console.log("Firestore export completed.");
-  Object.keys(exportBundle).forEach((filename) => console.log(`- export/${filename}`));
+  Object.keys(exportBundle).forEach((filename) =>
+    console.log(`- export/${filename}`),
+  );
 }
 
 main().catch((error) => {
