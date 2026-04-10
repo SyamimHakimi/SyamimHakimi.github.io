@@ -64,6 +64,10 @@
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
+**Frontend design rule:** For any user-facing visual or interaction change, an
+approved `ui-ux-pro-max` mockup and Telegram sign-off are required before code
+implementation. That approved design is the review baseline at Gate 4.
+
 **Branch naming:** `<type>/phase-a<N>-<short-description>` (e.g. `feat/phase-a2-firebase-sdk-data-models`). See `AGENTS.md` for full convention.
 
 **Syamim: write APPROVED in the Syamim column for each phase to unlock execution.**
@@ -237,6 +241,9 @@ PR: SyamimHakimi/SyamimHakimi.github.io#18 — MERGED 2026-04-09
 **Depends on:** Phase A2
 **UI preview note:** `ui-ux-pro-max` design + Telegram review happens *within* `IN PROGRESS` before implementation begins. No separate gate state — Syamim's Telegram sign-off is a sub-step of execution, not a blocking gate.
 
+Approved layout mockups must be saved in `scripts/`, and the prompt, rationale,
+required states, and Telegram sign-off must be recorded in the phase notes.
+
 **Scope:**
 - Create all Astro pages matching the agreed route map
 - Build `src/layouts/BaseLayout.astro` — `<head>`, meta slot, body wrapper
@@ -254,6 +261,7 @@ PR: SyamimHakimi/SyamimHakimi.github.io#18 — MERGED 2026-04-09
 - Inline comment on each page noting which composable(s) the island on that page will use
 
 **Acceptance criteria:**
+- [ ] Approved `ui-ux-pro-max` layout mockups recorded before implementation
 - [ ] All routes render without errors
 - [ ] Navigation links work correctly
 - [ ] No hash routing anywhere in the codebase
@@ -275,6 +283,9 @@ PR: SyamimHakimi/SyamimHakimi.github.io#19 — MERGED 2026-04-09
 **Depends on:** Phase A3
 **UI preview note:** `ui-ux-pro-max` design + Telegram review happens *within* `IN PROGRESS` before implementation begins. No separate gate state — Syamim's Telegram sign-off is a sub-step of execution, not a blocking gate.
 
+Approved design-system mockups must be saved in `scripts/`, and the prompt,
+rationale, required states, and Telegram sign-off must be recorded in the phase notes.
+
 **Scope:**
 - Install `tailwindcss@4`, `@tailwindcss/vite`, `lucide-vue-next`
 - Build the full visual system: typography, spacing, color tokens, dark mode, cards,
@@ -295,6 +306,7 @@ PR: SyamimHakimi/SyamimHakimi.github.io#19 — MERGED 2026-04-09
   that Phase A5's `ThemeToggle.vue` island must target
 
 **Acceptance criteria:**
+- [ ] Approved `ui-ux-pro-max` design-system mockups recorded before implementation
 - [ ] All pages styled and complete in light and dark mode (via static attribute)
 - [ ] Responsive on mobile, tablet, desktop
 - [ ] No Bootstrap, SCSS, or KeenThemes references anywhere
@@ -315,6 +327,9 @@ PR: SyamimHakimi/SyamimHakimi.github.io#20 — MERGED 2026-04-09
 **Tools:** Sonnet (code) + Haiku (docs) + `ui-ux-pro-max` (island component design) + Telegram preview
 **Depends on:** Phase A3 (can run alongside A4)
 **UI preview note:** `ui-ux-pro-max` design + Telegram review happens *within* `IN PROGRESS` before implementation begins. No separate gate state — Syamim's Telegram sign-off is a sub-step of execution, not a blocking gate.
+
+Approved island mockups must be saved in `scripts/`, and the prompt, rationale,
+required states, and Telegram sign-off must be recorded in the phase notes.
 
 **Scope:**
 - Install remaining dependencies:
@@ -355,6 +370,7 @@ PR: SyamimHakimi/SyamimHakimi.github.io#20 — MERGED 2026-04-09
 - Comment in `astro.config.mjs` on Vue integration setup
 
 **Acceptance criteria:**
+- [ ] Approved `ui-ux-pro-max` island mockups recorded before implementation
 - [ ] All islands render correctly with live Firestore data
 - [ ] All islands show loading, empty, error, and retry states correctly
 - [ ] Gallery pagination works without hardcoded cursors
