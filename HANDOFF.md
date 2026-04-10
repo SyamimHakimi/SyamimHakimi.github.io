@@ -11,7 +11,7 @@
 |------|---------------------------------|-------------------------------------|
 | 1    | Architecture Agreement          | CLOSED                              |
 | 2    | Per-Phase Plan Confirmation     | CLOSED — all phases A0–A7 confirmed |
-| 3    | Execution                       | IN PROGRESS — Phase A7 next       |
+| 3    | Execution                       | IN PROGRESS — Phase A7 REVIEW READY |
 | 4    | Peer Code Review + Agent Merge  | LOCKED                              |
 
 ---
@@ -60,7 +60,7 @@
 | A4 | Design system + Tailwind build    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #20    |
 | A5 | Vue islands — all content + UI    | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #21    |
 | A6 | SEO, media, hosting, security     | Claude | Codex    | CONFIRM | CONFIRM | APPROVE | MERGED            | #22    |
-| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | AWAITING APPROVAL | —      |
+| A7 | Testing, performance, hardening   | Codex  | Claude   | CONFIRM | CONFIRM | APPROVE | REVIEW READY      | —      |
 
 **Status flow:** `AWAITING APPROVAL` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
@@ -480,10 +480,25 @@ Codex review: APPROVED (3 iterations — Vite 8→7 pin, indexes+rules combined 
 - [ ] `npm run build` exits 0
 - [ ] `npm run lint:check` exits 0
 
-**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** ___
+**Claude:** CONFIRM | **Codex:** CONFIRM | **Syamim:** APPROVE
 
-**Gate 4 — Code review** *(filled after execution)*
-Claude review: ___
+**Gate 4 — Code review**
+Claude review: APPROVED — all acceptance criteria met. Review notes below.
+
+**Change summary (Claude review — 2026-04-10):**
+- `motion-v` installed and applied to `ServicesSection.vue` with scroll-triggered card entrance animations respecting `prefers-reduced-motion` ✓
+- Type-level tests added to all 5 composable test files using `expectTypeOf()` — 30 tests pass ✓
+- TypeScript strict mode confirmed active via `astro/tsconfigs/strict` in `tsconfig.json` ✓
+- Bundle sizes documented in `docs/baseline.md`; all per-route JS (excl. vendor) within targets ✓
+- `npm test`, `npm run type-check`, `npm run build`, `npm run lint` — all exit 0 ✓
+- TSDoc added to all 5 composables (schemas, types, and function return values) — gap from A2 filled ✓
+- GitHub Pages tradeoffs documented in `docs/deployment.md` (runtime dependency, SEO limits, fallback behavior, upgrade path) ✓
+- Runtime telemetry opportunities documented in `docs/baseline.md` ✓
+
+**Codex scripts (`scripts/`) — reviewed, no changes needed:**
+`create-pr.mjs`, `merge-pr.mjs`, `check-ci.mjs`, `update-handoff.mjs`, `_push-handoff.mjs` implement GitHub App auth via JWT for agent automation. P1/P2 findings from prior review were addressed in the `fix(scripts)` commit. Scripts are agent-only tooling and not part of the site build.
+
+→ CODEX: Phase A7 is REVIEW READY. Please confirm APPROVED and proceed with merge to `main`.
 
 [Codex - 2026-04-08]: Revised review after Syamim clarified the core requirement: content must be editable without redeployment.
 

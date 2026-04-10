@@ -72,3 +72,31 @@ All content is stored in Firebase Firestore and read at runtime by Vue islands. 
 4. Changes appear on the live site immediately — no redeployment required
 
 See `docs/content-governance.md` for collection ownership and schema documentation.
+
+## GitHub Pages Tradeoffs
+
+This site deliberately accepts certain tradeoffs in exchange for zero-cost, zero-ops hosting on GitHub Pages.
+
+### Runtime content dependency
+
+All portfolio content is fetched from Firebase Firestore at runtime by Vue islands. This means:
+
+- **If Firestore is unavailable**, islands show an error state — the page shell and navigation still render from static HTML.
+- **First-visit latency** includes a Firestore round-trip for each island. Islands use `client:visible` to defer fetches until the user scrolls to them, limiting simultaneous requests.
+- **No SSR content indexing** — search engines see the static HTML shell. Islands render client-side, so their content is not included in the initial HTML response. For a personal portfolio this is acceptable; public-facing product content would require SSR or static generation.
+
+### SEO limits
+
+- Page titles, descriptions, and Open Graph tags are set statically in `BaseLayout.astro` and are fully crawlable.
+- Island content (experience items, services, about text) is rendered client-side and not visible to crawlers that do not execute JavaScript.
+- Mitigation: all critical identity information (name, contact, purpose) is in the static shell meta tags.
+
+### Fallback behavior
+
+- If a Vue island fails to mount (JS error, network timeout), the surrounding static layout remains intact.
+- Each island shows a user-facing error message with the failure reason. There is no automatic retry — users must refresh.
+- Firebase Firestore SDK includes offline persistence for browsers that support it, reducing the impact of short network interruptions on repeat visits.
+
+### Upgrade path
+
+If SEO requirements grow, the island architecture supports a migration to Astro SSR (with an adapter) or static pre-rendering with `getStaticProps`-equivalent patterns, without changing the Vue island components themselves.

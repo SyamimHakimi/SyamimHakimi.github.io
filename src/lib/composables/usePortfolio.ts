@@ -12,6 +12,11 @@ import { db } from "../firebase";
 
 // ── Schemas ────────────────────────────────────────────────────────────────
 
+/**
+ * Validates a document from `experience/{category}/item` subcollections
+ * (categories: `platforms`, `protocols`, `frameworks`, `languages`).
+ * `date-from` / `date-to` are ISO 8601 strings from Firestore Timestamps.
+ */
 export const ExperienceItemSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -22,6 +27,10 @@ export const ExperienceItemSchema = z.object({
   "date-to": z.string().optional(),
 });
 
+/**
+ * Validates the singleton project document (`projects/XYdqe9OyXNSUEzZ8kqwn`).
+ * `subtitle` and `description` are optional display fields.
+ */
 export const ProjectDocumentSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -29,6 +38,10 @@ export const ProjectDocumentSchema = z.object({
   description: z.string().optional(),
 });
 
+/**
+ * Validates a document from the `techstack` subcollection under the project document.
+ * `sorting` controls display order.
+ */
 export const TechstackItemSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -40,10 +53,14 @@ export const TechstackItemSchema = z.object({
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
+/** Validated experience item (platform, protocol, framework, or language). */
 export type ExperienceItem = z.infer<typeof ExperienceItemSchema>;
+/** Validated personal project singleton document. */
 export type ProjectDocument = z.infer<typeof ProjectDocumentSchema>;
+/** Validated tech stack item from the project's `techstack` subcollection. */
 export type TechstackItem = z.infer<typeof TechstackItemSchema>;
 
+/** Aggregated return type for the `usePortfolio` composable. */
 export interface PortfolioData {
   experience: {
     platforms: ExperienceItem[];
@@ -59,15 +76,25 @@ export interface PortfolioData {
 
 const PROJECT_DOC_ID = "XYdqe9OyXNSUEzZ8kqwn";
 
+/** Builds a Firestore query for one experience category, ordered by `date-from`. */
 function experienceQuery(category: string) {
   return getDocs(
-    query(
-      collection(db, "experience", category, "item"),
-      orderBy("date-from"),
-    ),
+    query(collection(db, "experience", category, "item"), orderBy("date-from")),
   );
 }
 
+/**
+ * Fetches all portfolio content in a single parallel batch:
+ * - `experience/{platforms,protocols,frameworks,languages}/item` — ordered by `date-from`
+ * - `projects/XYdqe9OyXNSUEzZ8kqwn` — singleton personal project document
+ * - `projects/{id}/techstack` — ordered by `sorting`
+ *
+ * All payloads are validated through their Zod schemas before reaching the UI.
+ *
+ * @returns `data` — reactive `PortfolioData` object;
+ *          `loading` — true while the fetch batch is in flight;
+ *          `error` — error message string on failure, otherwise null.
+ */
 export function usePortfolio() {
   const data = ref<PortfolioData>({
     experience: {
