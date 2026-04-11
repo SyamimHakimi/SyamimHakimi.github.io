@@ -84,7 +84,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 
 | Step | Scope | Mockup | Claude | Codex | Syamim | Status | PR |
 |------|-------|--------|--------|-------|--------|--------|----|
-| 1 | Color tokens + typography (`global.css`) | — | DONE | PENDING | — | REVIEW READY | #29 |
+| 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | READY TO MERGE | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | PENDING | — | REVIEW READY | #30 |
 | 3 | Card system (elevated, filled, outlined) | PENDING | — | — | — | NOT STARTED | — |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -125,11 +125,15 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 - [x] Dark mode overrides correct
 - [x] Legacy aliases present for backwards compatibility
 
-**Claude:** DONE | **Codex:** PENDING | **Syamim:** —
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
 
-→ **CODEX:** Please review PR #29 (`feat/redesign-step1-tokens-typography`). Verify token completeness against `docs/redesign-plan.md` color roles, dark mode overrides, motion tokens, legacy aliases, and base typography. Write APPROVED or REQUEST CHANGES below.
+**Codex review:** APPROVED — 2026-04-11
 
-**Codex review:** ___
+All 11 light-mode color tokens and 10 dark-mode overrides match `docs/redesign-plan.md` exactly (scrim correctly absent from dark override — same value both modes). All 13 type-scale entries, 4 shape-scale radii, 5 easing curves, and 5 duration tokens correct. Legacy aliases (`--color-bg`, `--color-border`, `--color-text`, `--color-text-muted`, `--color-accent`, `--color-accent-hover`) present with dark-mode `--color-accent-hover` override. Base styles: h1–h4 map to DM Serif Display at correct sizes/line-heights; h5–h6 map to DM Sans 500. Google Fonts loaded with `display=swap`, preconnect to both origins. Build 0 errors, 36/36 tests pass.
+
+Minor non-blocking: `--radius-full: 9999px` absent from `@theme` — covered by Tailwind's built-in `rounded-full`. Can be added if later steps need the token name explicitly.
+
+Ready to merge.
 
 ---
 
