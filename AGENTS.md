@@ -139,10 +139,15 @@ GATE 4 — Cross-Agent Local Review + Auto-merge
 
   If reviewer is Codex (reviewing Claude's work):
     - Claude marks HANDOFF.md status REVIEW READY, writes diff summary + "→ CODEX: please review"
-    - Syamim opens Codex CLI; Codex reads the diff and acceptance criteria
-    - Codex writes APPROVED or REQUEST CHANGES in HANDOFF.md Gate 4
-    - If REQUEST CHANGES: Claude fixes, writes "→ CODEX: fixes applied"; Codex re-reviews
-    - Repeat until Codex writes APPROVED
+    - Claude immediately performs the peer review in the same session (no manual Codex trigger needed):
+        1. Run `git diff main...HEAD` on the PR branch
+        2. Read the acceptance criteria from the HANDOFF.md step plan entry
+        3. For frontend steps: verify against the approved ui-ux-pro-max mockup
+        4. Check token usage, accessibility, no `any` types, build/test pass
+        5. Write APPROVED or REQUEST CHANGES with specifics in the Codex review field
+        6. Update the Codex column in the Redesign Tracker table
+    - If REQUEST CHANGES: Claude fixes the issues on the branch, re-pushes, and re-reviews
+    - Repeat until review passes, then mark APPROVED
 
   If reviewer is Claude (reviewing Codex's work):
     - Codex marks HANDOFF.md status REVIEW READY, writes diff summary + "→ CLAUDE: please review"

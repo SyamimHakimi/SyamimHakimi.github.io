@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Step 2 — Navigation Shell · 3 Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #09090B;
+  --surf:    #18181B;
+  --sv:      #27272A;
+  --pri:     #FAFAFA;
+  --sec:     #A1A1AA;
+  --cta:     #60A5FA;
+  --outline: #3F3F46;
+  --on-s:    #FAFAFA;
+  --on-sv:   #D4D4D8;
+  --serif:   'DM Serif Display', Georgia, serif;
+  --sans:    'DM Sans', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: #050507;
+  color: var(--on-s);
+  padding: 40px 32px 60px;
+  min-height: 100vh;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.page-title {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sec);
+  margin-bottom: 6px;
+}
+.page-heading {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--on-s);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--sec);
+  margin-bottom: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 380px repeat(3, 280px);
+  gap: 24px;
+  align-items: start;
+}
+
+.col-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sec);
+  margin-bottom: 12px;
+}
+
+/* ── Device frames ───────────────────────────────────────────── */
+.desktop-frame {
+  width: 380px;
+  height: 560px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7);
+  display: flex;
+}
+
+.mobile-frame {
+  width: 280px;
+  height: 560px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 8px 48px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── Shared: Nav rail (desktop) ─────────────────────────────── */
+.rail {
+  width: 80px;
+  flex-shrink: 0;
+  background: var(--surf);
+  border-right: 1px solid var(--outline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 16px;
+  gap: 2px;
+}
+
+.rail-logo {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--cta);
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+.rail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  width: 64px;
+  border-radius: 9999px;
+  cursor: pointer;
+}
+.rail-item.active {
+  background: rgba(96,165,250,0.12);
+}
+.rail-item svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.75;
+}
+.rail-item.active svg { stroke: var(--cta); }
+.rail-item:not(.active) svg { stroke: var(--sec); }
+.rail-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.rail-item.active .rail-label { color: var(--cta); }
+.rail-item:not(.active) .rail-label { color: var(--sec); }
+
+.rail-spacer { flex: 1; }
+
+.theme-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: var(--sv);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-btn svg { width: 16px; height: 16px; stroke: var(--on-sv); stroke-width: 1.75; }
+
+/* ── Shared: Content area ───────────────────────────────────── */
+.content-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--outline);
+  background: var(--bg);
+}
+.topbar-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--on-s);
+}
+.topbar-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  background: var(--sv);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.topbar-icon svg { width: 16px; height: 16px; stroke: var(--on-sv); stroke-width: 1.75; }
+
+.page-content {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.hero-text { display: flex; flex-direction: column; gap: 4px; }
+.hero-title { font-family: var(--serif); font-size: 22px; font-weight: 400; color: var(--on-s); }
+.hero-sub   { font-size: 12px; color: var(--sec); line-height: 1.5; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.stat-card {
+  background: var(--surf);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stat-num { font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--cta); }
+.stat-lbl { font-size: 10px; color: var(--sec); font-weight: 500; }
+
+.chart-card {
+  background: var(--surf);
+  border-radius: 10px;
+  border: 1px solid var(--outline);
+  padding: 12px;
+}
+.chart-lbl { font-size: 10px; color: var(--sec); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 44px; }
+.bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: var(--cta);
+  opacity: 0.7;
+}
+.bar-1 { height: 100%; }
+.bar-2 { height: 60%; }
+.bar-3 { height: 80%; }
+.bar-4 { height: 40%; }
+.bar-5 { height: 55%; opacity: 0.4; }
+.bar-6 { height: 70%; opacity: 0.4; }
+
+/* ── Mobile: OPTION A — Compact 6-item bottom bar ───────────── */
+.opt-a-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  background: var(--surf);
+  border-top: 1px solid var(--outline);
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+.opt-a-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 2px;
+  border-radius: 8px;
+}
+.opt-a-item.active {
+  background: rgba(96,165,250,0.12);
+}
+.opt-a-item svg { width: 20px; height: 20px; stroke-width: 1.75; }
+.opt-a-item.active svg { stroke: var(--cta); }
+.opt-a-item:not(.active) svg { stroke: var(--sec); }
+.opt-a-lbl { font-size: 8.5px; font-weight: 500; }
+.opt-a-item.active .opt-a-lbl { color: var(--cta); }
+.opt-a-item:not(.active) .opt-a-lbl { color: var(--sec); }
+
+/* ── Mobile: OPTION B — Two-row bottom bar ──────────────────── */
+.opt-b-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surf);
+  border-top: 1px solid var(--outline);
+  padding: 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.opt-b-row {
+  display: flex;
+  gap: 4px;
+}
+.opt-b-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  border-radius: 8px;
+}
+.opt-b-item.active {
+  background: rgba(96,165,250,0.12);
+}
+.opt-b-item svg { width: 20px; height: 20px; stroke-width: 1.75; }
+.opt-b-item.active svg { stroke: var(--cta); }
+.opt-b-item:not(.active) svg { stroke: var(--sec); }
+.opt-b-lbl { font-size: 8.5px; font-weight: 500; }
+.opt-b-item.active .opt-b-lbl { color: var(--cta); }
+.opt-b-item:not(.active) .opt-b-lbl { color: var(--sec); }
+.opt-b-divider {
+  height: 1px;
+  background: var(--outline);
+  opacity: 0.5;
+  margin: 0 4px;
+}
+
+/* ── Mobile: OPTION C — Slide-out drawer ────────────────────── */
+.opt-c-topbar {
+  height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--outline);
+  background: var(--bg);
+}
+.opt-c-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hamburger {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: var(--sv);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hamburger svg { width: 18px; height: 18px; stroke: var(--on-sv); stroke-width: 1.75; }
+.opt-c-topbar-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--on-s);
+}
+.opt-c-icons {
+  display: flex;
+  gap: 4px;
+}
+
+/* Drawer overlay */
+.drawer-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+}
+.drawer-scrim {
+  flex: 1;
+  background: rgba(0,0,0,0.5);
+}
+.drawer {
+  width: 220px;
+  background: var(--surf);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0 20px;
+  border-right: 1px solid var(--outline);
+  flex-shrink: 0;
+}
+.drawer-logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--cta);
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--outline);
+  margin-bottom: 8px;
+}
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sec);
+  border-radius: 0 24px 24px 0;
+  margin-right: 12px;
+}
+.drawer-item.active {
+  background: rgba(96,165,250,0.12);
+  color: var(--cta);
+}
+.drawer-item svg { width: 20px; height: 20px; stroke-width: 1.75; flex-shrink: 0; }
+.drawer-item.active svg { stroke: var(--cta); }
+.drawer-item:not(.active) svg { stroke: var(--sec); }
+
+/* ── Option labels & notes ───────────────────────────────────── */
+.option-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--sv);
+  border: 1px solid var(--outline);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--on-s);
+  margin-bottom: 8px;
+}
+.option-badge span { color: var(--cta); }
+
+.note-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.note {
+  font-size: 10.5px;
+  color: var(--sec);
+  line-height: 1.5;
+  padding-left: 10px;
+  border-left: 2px solid var(--outline);
+}
+.note strong { color: var(--on-sv); }
+
+/* ── Section label ───────────────────────────────────────────── */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sec);
+  margin-bottom: 8px;
+  margin-top: 28px;
+}
+.section-label:first-child { margin-top: 0; }
+
+.divider {
+  height: 1px;
+  background: var(--outline);
+  margin: 32px 0;
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+
+<div class="page-title">Step 2 — Global Shell</div>
+<div class="page-heading">Navigation Shell · 3 Options</div>
+<div class="page-sub">Desktop rail is shared across all options. Options differ in mobile navigation pattern.</div>
+
+<div class="grid">
+
+  <!-- ── DESKTOP (shared) ────────────────────────────────── -->
+  <div>
+    <div class="col-label">Desktop (all options share this rail)</div>
+    <div class="desktop-frame">
+      <!-- Rail -->
+      <nav class="rail">
+        <div class="rail-logo">SH</div>
+        <!-- Home active -->
+        <div class="rail-item active">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+          <span class="rail-label">Home</span>
+        </div>
+        <div class="rail-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M22 15l-5-5L5 22"/></svg>
+          <span class="rail-label">Gallery</span>
+        </div>
+        <div class="rail-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span class="rail-label">Portfolio</span>
+        </div>
+        <div class="rail-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span class="rail-label">Services</span>
+        </div>
+        <div class="rail-item">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+          <span class="rail-label">About</span>
+        </div>
+        <div class="rail-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span class="rail-label">Contact</span>
+        </div>
+        <div class="rail-spacer"></div>
+        <div class="theme-btn">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </div>
+      </nav>
+      <!-- Content -->
+      <div class="content-wrap">
+        <div class="topbar">
+          <span class="topbar-title">Photography Journey</span>
+          <div class="topbar-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="hero-text">
+            <div class="hero-title">Photography Journey</div>
+            <div class="hero-sub">Film photography through Fujifilm X-series,<br>street portraits and custom recipes.</div>
+          </div>
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-num">1,247</div>
+              <div class="stat-lbl">Total Shots</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">36</div>
+              <div class="stat-lbl">Film Rolls</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-lbl">Shots by Theme</div>
+            <div class="chart-bars">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+              <div class="bar bar-3"></div>
+              <div class="bar bar-4"></div>
+              <div class="bar bar-5"></div>
+              <div class="bar bar-6"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-list" style="margin-top:12px">
+      <div class="note"><strong>Rail width:</strong> 80px fixed, full viewport height</div>
+      <div class="note"><strong>Active indicator:</strong> CTA-tinted pill behind icon + label</div>
+      <div class="note"><strong>ThemeToggle:</strong> icon button pinned to rail bottom</div>
+      <div class="note"><strong>Top app bar:</strong> page title (DM Serif Display) + ThemeToggle echo on mobile</div>
+    </div>
+  </div>
+
+  <!-- ── OPTION A — Compact 6-item bottom bar ─────────────── -->
+  <div>
+    <div class="option-badge">Option <span>A</span></div>
+    <div class="col-label">Compact single-row bottom bar</div>
+    <div class="mobile-frame">
+      <div class="topbar">
+        <span class="topbar-title">Photography Journey</span>
+        <div class="topbar-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </div>
+      </div>
+      <div class="page-content" style="padding-bottom:80px">
+        <div class="hero-text">
+          <div class="hero-title">Photography Journey</div>
+          <div class="hero-sub">Film photography, Fujifilm X-series.</div>
+        </div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-num">1,247</div><div class="stat-lbl">Total Shots</div></div>
+          <div class="stat-card"><div class="stat-num">36</div><div class="stat-lbl">Film Rolls</div></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-lbl">Shots by Theme</div>
+          <div class="chart-bars">
+            <div class="bar bar-1"></div><div class="bar bar-2"></div><div class="bar bar-3"></div>
+            <div class="bar bar-4"></div><div class="bar bar-5"></div><div class="bar bar-6"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom bar -->
+      <div class="opt-a-bar">
+        <div class="opt-a-item active">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+          <span class="opt-a-lbl">Home</span>
+        </div>
+        <div class="opt-a-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M22 15l-5-5L5 22"/></svg>
+          <span class="opt-a-lbl">Gallery</span>
+        </div>
+        <div class="opt-a-item">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span class="opt-a-lbl">Portfolio</span>
+        </div>
+        <div class="opt-a-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span class="opt-a-lbl">Services</span>
+        </div>
+        <div class="opt-a-item">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+          <span class="opt-a-lbl">About</span>
+        </div>
+        <div class="opt-a-item">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <span class="opt-a-lbl">Contact</span>
+        </div>
+      </div>
+    </div>
+    <div class="note-list">
+      <div class="note"><strong>Height:</strong> 68px bottom bar, all 6 items visible</div>
+      <div class="note"><strong>Labels:</strong> 8.5px, always visible below icon</div>
+      <div class="note"><strong>Tradeoff:</strong> compact but dense on small screens</div>
+      <div class="note"><strong>Best for:</strong> users who scan all tabs at once</div>
+    </div>
+  </div>
+
+  <!-- ── OPTION B — Two-row bottom bar ─────────────────────── -->
+  <div>
+    <div class="option-badge">Option <span>B</span></div>
+    <div class="col-label">Two-row bottom bar (3 + 3)</div>
+    <div class="mobile-frame">
+      <div class="topbar">
+        <span class="topbar-title">Photography Journey</span>
+        <div class="topbar-icon">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </div>
+      </div>
+      <div class="page-content" style="padding-bottom:108px">
+        <div class="hero-text">
+          <div class="hero-title">Photography Journey</div>
+          <div class="hero-sub">Film photography, Fujifilm X-series.</div>
+        </div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-num">1,247</div><div class="stat-lbl">Total Shots</div></div>
+          <div class="stat-card"><div class="stat-num">36</div><div class="stat-lbl">Film Rolls</div></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-lbl">Shots by Theme</div>
+          <div class="chart-bars">
+            <div class="bar bar-1"></div><div class="bar bar-2"></div><div class="bar bar-3"></div>
+            <div class="bar bar-4"></div><div class="bar bar-5"></div><div class="bar bar-6"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Two-row bar -->
+      <div class="opt-b-bar">
+        <div class="opt-b-row">
+          <div class="opt-b-item active">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+            <span class="opt-b-lbl">Home</span>
+          </div>
+          <div class="opt-b-item">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M22 15l-5-5L5 22"/></svg>
+            <span class="opt-b-lbl">Gallery</span>
+          </div>
+          <div class="opt-b-item">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <span class="opt-b-lbl">Portfolio</span>
+          </div>
+        </div>
+        <div class="opt-b-divider"></div>
+        <div class="opt-b-row">
+          <div class="opt-b-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            <span class="opt-b-lbl">Services</span>
+          </div>
+          <div class="opt-b-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+            <span class="opt-b-lbl">About</span>
+          </div>
+          <div class="opt-b-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span class="opt-b-lbl">Contact</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note-list">
+      <div class="note"><strong>Height:</strong> ~104px — two rows of 3 with divider</div>
+      <div class="note"><strong>Labels:</strong> 8.5px, larger touch targets than Option A</div>
+      <div class="note"><strong>Grouping:</strong> Content (Home/Gallery/Portfolio) + Work (Services/About/Contact)</div>
+      <div class="note"><strong>Best for:</strong> clear conceptual grouping, less visual density</div>
+    </div>
+  </div>
+
+  <!-- ── OPTION C — Drawer ─────────────────────────────────── -->
+  <div>
+    <div class="option-badge">Option <span>C</span></div>
+    <div class="col-label">Slide-in navigation drawer</div>
+    <div class="mobile-frame">
+      <!-- Top bar with hamburger -->
+      <div class="opt-c-topbar">
+        <div class="opt-c-topbar-left">
+          <div class="hamburger">
+            <svg viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </div>
+          <span class="opt-c-topbar-title">Photography Journey</span>
+        </div>
+        <div class="opt-c-icons">
+          <div class="topbar-icon">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="page-content">
+        <div class="hero-text">
+          <div class="hero-title">Photography Journey</div>
+          <div class="hero-sub">Film photography, Fujifilm X-series.</div>
+        </div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-num">1,247</div><div class="stat-lbl">Total Shots</div></div>
+          <div class="stat-card"><div class="stat-num">36</div><div class="stat-lbl">Film Rolls</div></div>
+        </div>
+      </div>
+      <!-- Drawer open state -->
+      <div class="drawer-overlay">
+        <div class="drawer">
+          <div class="drawer-logo">Syamim Hakimi</div>
+          <div class="drawer-item active">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+            Home
+          </div>
+          <div class="drawer-item">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M22 15l-5-5L5 22"/></svg>
+            Gallery
+          </div>
+          <div class="drawer-item">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Portfolio
+          </div>
+          <div class="drawer-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            Services
+          </div>
+          <div class="drawer-item">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+            About
+          </div>
+          <div class="drawer-item">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Contact
+          </div>
+        </div>
+        <div class="drawer-scrim"></div>
+      </div>
+    </div>
+    <div class="note-list">
+      <div class="note"><strong>Trigger:</strong> hamburger in top-left of app bar</div>
+      <div class="note"><strong>Labels:</strong> 14px full-width, most readable option</div>
+      <div class="note"><strong>Tradeoff:</strong> navigation is hidden behind a tap — not immediately visible</div>
+      <div class="note"><strong>Best for:</strong> maximising content space; common pattern on content-heavy sites</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Token reference ─────────────────────────────────────── -->
+<div class="divider"></div>
+<div class="page-sub" style="margin-bottom:16px">All three options use the same token set</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">Background <strong style="color:var(--on-s)">#09090B</strong></div>
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">Surface <strong style="color:var(--on-s)">#18181B</strong></div>
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">Surface Variant <strong style="color:var(--on-s)">#27272A</strong></div>
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">CTA <strong style="color:var(--cta)">#60A5FA</strong></div>
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">Outline <strong style="color:var(--on-s)">#3F3F46</strong></div>
+  <div style="background:var(--surf);border:1px solid var(--outline);border-radius:8px;padding:8px 14px;font-size:10.5px;color:var(--on-sv)">Typography <strong style="color:var(--on-s)">DM Serif Display + DM Sans</strong></div>
+</div>
+
+</body>
+</html>

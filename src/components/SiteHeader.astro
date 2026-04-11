@@ -1,14 +1,26 @@
 ---
 /**
- * SiteHeader — top navigation bar.
- * Static HTML only — ThemeToggle island is mounted via the theme-toggle slot in PageLayout.
+ * SiteHeader — desktop navigation rail + mobile top app bar + slide-in drawer.
+ *
+ * Desktop (≥lg): fixed 80px rail on the left — logo mark, 6 nav destinations (icon +
+ * label), and ThemeToggle pinned to the bottom.
+ *
+ * Mobile (<lg): fixed 56px top app bar (hamburger, site name, ThemeToggle) and a
+ * full-height slide-in drawer with all 6 destinations and a scrim overlay.
+ *
+ * ThemeToggle renders once per breakpoint (two instances total). Both write to the same
+ * localStorage key and data-theme attribute. A MutationObserver in ThemeToggle keeps
+ * icon state in sync when the attribute changes from the other instance.
  */
+import ThemeToggle from "./islands/ThemeToggle.vue";
+
 const navLinks = [
-  { href: "/", label: "Photography" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/services", label: "Services" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/",            label: "Home",      icon: "home"      },
+  { href: "/photography", label: "Gallery",   icon: "gallery"   },
+  { href: "/portfolio",   label: "Portfolio", icon: "portfolio" },
+  { href: "/services",    label: "Services",  icon: "services"  },
+  { href: "/about",       label: "About",     icon: "about"     },
+  { href: "/contact",     label: "Contact",   icon: "contact"   },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -16,43 +28,228 @@ function isActive(href: string): boolean {
   if (href === "/") return currentPath === "/";
   return currentPath.startsWith(href);
 }
+
+/** Inline SVG icon paths (Lucide-style, stroke, viewBox 0 0 24 24). */
+const iconPaths: Record<string, string> = {
+  home:      `<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>`,
+  gallery:   `<rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M22 15 17 10 5 22"/>`,
+  portfolio: `<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>`,
+  services:  `<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>`,
+  about:     `<circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/>`,
+  contact:   `<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>`,
+  menu:      `<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>`,
+  close:     `<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>`,
+};
+
+function icon(name: string, size = 20): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name]}</svg>`;
+}
 ---
 
-<header class="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-md">
-  <nav
-    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:px-6"
-    aria-label="Main navigation"
+<!-- Skip to main content (keyboard users) -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- ════════════════════════════════════════════════════════════════
+     Desktop: Fixed navigation rail (≥lg)
+     ════════════════════════════════════════════════════════════════ -->
+<nav
+  class="hidden lg:flex fixed left-0 top-0 z-40 h-full w-20 flex-col items-center border-r border-[var(--color-outline)] bg-[var(--color-surface)] py-5"
+  aria-label="Main navigation"
+>
+  <!-- Logo mark -->
+  <a
+    href="/"
+    aria-label="syamim. — home"
+    class="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-surface-variant)] text-xs font-bold tracking-wide text-[var(--color-on-surface)] transition-colors hover:bg-[var(--color-outline)]"
   >
-    <!-- Logo -->
-    <a
-      href="/"
-      class="text-xl font-bold tracking-tight text-[var(--color-text)] hover:text-[var(--color-accent)] transition-colors"
-      aria-label="syamim. — home"
+    SH
+  </a>
+
+  <!-- Navigation items -->
+  <ul class="flex w-full flex-col gap-1 px-2" role="list">
+    {navLinks.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          aria-current={isActive(link.href) ? "page" : undefined}
+          class:list={[
+            "flex min-h-[48px] w-full flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 transition-colors",
+            isActive(link.href)
+              ? "bg-[rgba(37,99,235,0.10)] dark:bg-[rgba(96,165,250,0.12)] text-[var(--color-cta)]"
+              : "text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]",
+          ]}
+        >
+          <Fragment set:html={icon(link.icon)} />
+          <span class="text-[10px] font-medium leading-none">{link.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <!-- ThemeToggle pinned to rail bottom -->
+  <div class="mt-auto">
+    <ThemeToggle client:load />
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     Mobile: Fixed top app bar (<lg)
+     ════════════════════════════════════════════════════════════════ -->
+<header
+  class="lg:hidden fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between border-b border-[var(--color-outline)] bg-[var(--color-surface)] px-4"
+>
+  <!-- Site name -->
+  <a
+    href="/"
+    aria-label="syamim. — home"
+    class="font-serif text-lg font-normal text-[var(--color-on-surface)] transition-colors hover:text-[var(--color-cta)]"
+  >
+    syamim.
+  </a>
+
+  <!-- Right: ThemeToggle + hamburger -->
+  <div class="flex items-center gap-1">
+    <ThemeToggle client:load />
+    <button
+      id="nav-drawer-open"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-expanded="false"
+      aria-controls="nav-drawer"
+      class="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-surface-variant)] text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)]"
     >
-      syamim.
-    </a>
-
-    <!-- Nav links — visible on all screen sizes; scrollable on narrow viewports -->
-    <ul class="flex items-center gap-1 overflow-x-auto" role="list">
-      {navLinks.map((link) => (
-        <li>
-          <a
-            href={link.href}
-            aria-current={isActive(link.href) ? "page" : undefined}
-            class:list={[
-              "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-              isActive(link.href)
-                ? "bg-[var(--color-surface)] text-[var(--color-accent)]"
-                : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text)]",
-            ]}
-          >
-            {link.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-
-    <!-- Theme toggle slot -->
-    <slot name="theme-toggle" />
-  </nav>
+      <Fragment set:html={icon("menu", 18)} />
+    </button>
+  </div>
 </header>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     Mobile: Scrim overlay
+     ════════════════════════════════════════════════════════════════ -->
+<div
+  id="nav-scrim"
+  class="lg:hidden fixed inset-0 z-50 bg-[var(--color-scrim)]"
+  aria-hidden="true"
+  style="display: none;"
+></div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     Mobile: Navigation drawer
+     ════════════════════════════════════════════════════════════════ -->
+<nav
+  id="nav-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+  class="lg:hidden fixed left-0 top-0 z-[60] flex h-full w-64 flex-col border-r border-[var(--color-outline)] bg-[var(--color-surface)]"
+  style="transform: translateX(-100%);"
+>
+  <!-- Drawer header -->
+  <div class="flex items-center justify-between border-b border-[var(--color-outline)] px-5 py-5">
+    <span class="font-serif text-xl font-normal text-[var(--color-cta)]">
+      Syamim Hakimi
+    </span>
+    <button
+      id="nav-drawer-close"
+      type="button"
+      aria-label="Close navigation menu"
+      class="flex h-8 w-8 items-center justify-center rounded-md text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-on-surface)]"
+    >
+      <Fragment set:html={icon("close")} />
+    </button>
+  </div>
+
+  <!-- Navigation items -->
+  <ul class="flex flex-col gap-0.5 py-2 pr-3" role="list">
+    {navLinks.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          aria-current={isActive(link.href) ? "page" : undefined}
+          class:list={[
+            "flex items-center gap-3.5 rounded-r-3xl py-2.5 pl-5 text-sm font-medium transition-colors",
+            isActive(link.href)
+              ? "bg-[rgba(37,99,235,0.10)] dark:bg-[rgba(96,165,250,0.12)] text-[var(--color-cta)]"
+              : "text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]",
+          ]}
+        >
+          <Fragment set:html={icon(link.icon)} />
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+
+<script>
+  const openBtn = document.getElementById("nav-drawer-open");
+  const closeBtn = document.getElementById("nav-drawer-close");
+  const drawer = document.getElementById("nav-drawer") as HTMLElement | null;
+  const scrim = document.getElementById("nav-scrim") as HTMLElement | null;
+
+  function openDrawer() {
+    if (!drawer || !scrim) return;
+    drawer.style.transform = "translateX(0)";
+    scrim.style.display = "block";
+    openBtn?.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+    // Move focus to close button for keyboard accessibility
+    (closeBtn as HTMLElement | null)?.focus();
+  }
+
+  function closeDrawer() {
+    if (!drawer || !scrim) return;
+    drawer.style.transform = "translateX(-100%)";
+    scrim.style.display = "none";
+    openBtn?.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+    // Return focus to the trigger button
+    (openBtn as HTMLElement | null)?.focus();
+  }
+
+  openBtn?.addEventListener("click", openDrawer);
+  closeBtn?.addEventListener("click", closeDrawer);
+  scrim?.addEventListener("click", closeDrawer);
+
+  // Close on Escape key
+  document.addEventListener("keydown", (e: KeyboardEvent) => {
+    if (e.key === "Escape" && scrim?.style.display !== "none") {
+      closeDrawer();
+    }
+  });
+</script>
+
+<style>
+  /* Skip link — hidden off-screen until focused */
+  .skip-link {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: var(--color-cta);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transform: translateY(-200%);
+    transition: transform 0.2s;
+  }
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* Drawer entrance/exit animation */
+  #nav-drawer {
+    transition: transform 300ms cubic-bezier(0.05, 0.7, 0.1, 1);
+  }
+
+  /* Scrim fade */
+  #nav-scrim {
+    transition: opacity 200ms cubic-bezier(0.2, 0, 0, 1);
+  }
+</style>
