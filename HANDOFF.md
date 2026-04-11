@@ -86,7 +86,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 |------|-------|--------|--------|-------|--------|--------|----|
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
-| 3 | Card system (elevated, filled, outlined) | PENDING | — | — | — | NOT STARTED | — |
+| 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | — | — | REVIEW READY | — |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -170,6 +170,39 @@ All acceptance criteria met. Desktop rail: 80px fixed, 6 icon+label items, CTA-t
 Minor non-blocking: drawer 256px vs mockup 220px — wider is acceptable. Mobile top bar logo-left/hamburger-right vs mockup hamburger-left — both valid layouts.
 
 Ready to merge.
+
+---
+
+### Redesign Step 3 — Card System
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step3-cards.html` — Approved via Telegram 2026-04-11
+**Branch:** `feat/redesign-step3-card-system` | **PR:** —
+
+**Scope:**
+- Added `@keyframes shimmer` to `@layer base` in `src/styles/global.css`
+- Added `@layer components` card system block:
+  - `.card-elevated` — `bg-surface` + resting shadow, hover shadow lift + `translateY(-1px)`, 4% state layer
+  - `.card-filled` — `bg-surface-variant`, 6% state layer on hover
+  - `.card-outlined` — `bg-surface` + `1px outline` border, border shifts to `--color-secondary` on hover, 4% state layer
+  - All variants: `border-radius: var(--radius-md)` (12px), `position: relative; overflow: hidden`, `::before` state layer pseudo-element, `150ms var(--ease-standard)` transitions
+  - Dark mode shadow overrides for `.card-elevated` (higher opacity values)
+- Skeleton utilities: `.skeleton-line`, `.skeleton-circle`, `.skeleton-rect` — shimmer gradient using `--color-surface-variant` / `--color-outline` tokens
+- Content helpers: `.icon-disc` (44px circle, CTA-tint bg), `.chip` (outlined, CTA color, `--radius-sm`), `.tag` (subdued pill, outline border), `.badge` (compact inline label)
+- No new dependencies, no `any` types
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — 36/36 passing
+- [x] All three card variants present in `global.css` with correct token names
+- [x] Dark mode shadow overrides on `.card-elevated`
+- [x] Shimmer animation defined and used by all three skeleton classes
+- [x] Content helpers (`.icon-disc`, `.chip`, `.tag`, `.badge`) present with dark overrides
+- [x] No hardcoded color values — all use design tokens
+
+**Claude:** DONE | **Codex:** — | **Syamim:** —
+
+→ CODEX: please review
 
 ---
 
