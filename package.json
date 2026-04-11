@@ -19,8 +19,8 @@
     "@astrojs/sitemap": "3.7.2",
     "@astrojs/vue": "^6.0.1",
     "@emailjs/browser": "^4.4.1",
+    "apexcharts": "^5.10.5",
     "astro": "^6.1.5",
-    "chart.js": "^4.5.1",
     "firebase": "^10.14.1",
     "firebase-tools": "15.13.0",
     "formdata-node": "^6.0.3",
@@ -28,7 +28,7 @@
     "motion-v": "^1.0.0",
     "typescript": "^5.7.3",
     "vue": "^3.5.24",
-    "vue-chartjs": "^5.3.3",
+    "vue3-apexcharts": "^1.11.1",
     "zod": "^3.24.1"
   },
   "devDependencies": {

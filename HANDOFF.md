@@ -87,7 +87,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
 | 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
-| 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #32 |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -211,6 +211,56 @@ Ready to merge.
 ---
 
 ## Phase Plans
+
+---
+
+### Redesign Step 4 — Photography Journey Island
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step4-photography-journey.html` (rev 2) — Approved via Telegram 2026-04-11
+**Branch:** `feat/redesign-step4-photography-journey` | **PR:** —
+
+**Scope:**
+- `PhotographyJourney.vue` — full rewrite:
+  - Migrated from `vue-chartjs` + Chart.js to `vue3-apexcharts` + ApexCharts
+  - Line chart (`type: "area"`) for `photoStats` (monthly photos, last 12 months, sorted chronologically)
+  - Horizontal bar chart (`type: "bar"`, `horizontal: true`) for `recipeStats` (top 6, sorted descending)
+  - `ChartPalette` simplified to 5 canonical tokens (`cta`, `onSurface`, `onSurfaceVariant`, `outline`, `surface`)
+  - MutationObserver re-resolves palette on `data-theme` changes
+  - Stat row: 4× `.card-elevated`, `font-serif` number, 10px uppercase eyebrow, 12px sub-label
+  - Chart row: `.card-outlined`, `grid-cols-[3fr_2fr]` on sm+
+  - Loading: `.skeleton-line` / `.skeleton-rect` shimmer (mirrors final layout)
+  - Error: `role="alert"` with `--color-error` border, icon, message
+  - Scroll entrance: `motion-v Motion` with stagger (60ms stat cards, 80ms chart cards, 300ms duration), skipped when `prefers-reduced-motion`
+  - All legacy tokens removed (`--color-accent`, `--color-border`, `--color-text`, `--color-text-muted`)
+- `statisticsCharts.ts` — rewritten for ApexCharts:
+  - Removed chart.js-specific builders; added `buildPhotoStatsLineSeries`, `buildPhotoStatsLineOptions`, `buildRecipeBarSeries`, `buildRecipeBarOptions`, `parseMonthKey`
+  - `toChartEntries` unchanged
+- `statisticsCharts.test.ts` — updated: 15 tests (was 6), all passing
+- `index.astro` — page header updated: `h1` now uses global serif style (no `font-bold`), subtitle uses `--color-on-surface-variant`
+- `package.json` — added `apexcharts@^5.10.5`, `vue3-apexcharts@^1.11.1`
+- `scripts/ui-preview.mjs` — added `sendDocument` fallback for large screenshots (dimension limit workaround)
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — 45/45 passing
+- [x] `PhotographyJourney.vue` uses only canonical tokens (no legacy aliases)
+- [x] ApexCharts line chart built from `photoStats` sorted chronologically
+- [x] ApexCharts bar chart built from `recipeStats` sorted descending, top 6
+- [x] Palette re-resolved on `data-theme` change via MutationObserver
+- [x] Loading shimmer mirrors final layout
+- [x] Error state uses `role="alert"` and `--color-error`
+- [x] motion-v stagger respects `prefers-reduced-motion`
+- [x] No `any` types
+- [x] `index.astro` page header uses new token-based typography
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-11
+
+Build 0 errors, 45/45 tests (9 new). All four legacy token aliases removed from the island. `buildPhotoStatsLineSeries` correctly filters `MM/YYYY` keys, sorts via `parseMonthKey`, and slices the last 12 months. `buildRecipeBarSeries` sorts descending and slices top 6. MutationObserver pattern matches `ThemeToggle.vue`. Shimmer skeleton mirrors the loaded layout. Error state uses `role="alert"` and `--color-error` border. motion-v stagger correctly returns 0 delays when `prefers-reduced-motion`. No `any` types. `index.astro` header uses global `h1` serif style and `--color-on-surface-variant` token. `chart.js` and `vue-chartjs` fully uninstalled — no remaining imports.
+
+Ready to merge.
 
 ---
 
