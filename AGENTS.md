@@ -61,6 +61,11 @@ Syamim has final say on unresolved disagreements and all merges to `main`.
 typography, spacing, or interactive design patterns **must** go through `ui-ux-pro-max`
 before implementation. Applies to Claude. Codex flags UI/UX work for Claude.
 
+This includes motion, responsive behaviour, loading/empty/error states, navigation
+patterns, and any later frontend hotfix that materially changes the user experience.
+Claude executes the skill, but both agents treat the approved `ui-ux-pro-max` output
+as the design source of truth rather than an optional recommendation.
+
 **UI preview workflow:** After `ui-ux-pro-max` produces a design, Claude must:
 1. Save the output as `scripts/<phase>-<component>.html`
 2. Run `npm run ui:preview -- --file scripts/<file>.html --label "<Phase> — <Component>"`
@@ -70,10 +75,19 @@ before implementation. Applies to Claude. Codex flags UI/UX work for Claude.
 Syamim reviews designs on Telegram and replies with approval or change requests.
 No island or layout implementation begins until the preview has been reviewed.
 
+For every frontend redesign pass, Claude must also record the `ui-ux-pro-max` prompt,
+design rationale, and approved interaction states in `HANDOFF.md` or the phase design
+doc before implementation. If Syamim requests visual changes, the revision goes back
+through `ui-ux-pro-max`; Claude and Codex must not freestyle redesign revisions directly.
+The approved mockup becomes the implementation baseline and the Gate 4 review baseline.
+
 Phases requiring `ui-ux-pro-max` + Telegram preview:
 - **Phase A3** — Route and layout rebuild
 - **Phase A4** — Design system and Tailwind build
 - **Phase A5** — Vue island component design
+
+The same requirement applies to any later user-facing redesign or UX-affecting fix,
+even if it falls outside A3-A5.
 
 ---
 
@@ -105,11 +119,16 @@ GATE 1 — Architecture Agreement
 GATE 2 — Per-Phase Plan Confirmation
   Detailed plan per phase: files touched, packages, unit test expectations,
   documentation expectations, acceptance criteria. Both agents ping-pong until AGREED.
+  For any user-facing frontend work, Gate 2 must also define the required
+  `ui-ux-pro-max` deliverables: mockup files, required states, Telegram preview,
+  and approval record.
   Syamim writes APPROVED before execution begins.
   → Produces: APPROVED status per phase
 
 GATE 3 — Execution
   Owning agent creates branch, writes code, tests, and docs.
+  For frontend work, the required `ui-ux-pro-max` design pass and Telegram approval
+  happen before implementation starts.
   Opus for any planning decisions that arise mid-execution.
   Sonnet for code writing. Haiku for documentation. ui-ux-pro-max for UI/UX.
   → Produces: code complete, tests passing, docs written
@@ -195,9 +214,13 @@ Comments explain *why*, not *what*. No comments on self-evident code.
 **Reviewing agent — how to review:**
 1. Run `git diff main...<branch>` to get the full diff
 2. Read the phase plan and every acceptance criterion from `HANDOFF.md`
-3. For each criterion, state MET or NOT MET with file + line reference where relevant
-4. Write `APPROVED` or `REQUEST CHANGES` with specifics in the HANDOFF.md Gate 4 section
-5. If REQUEST CHANGES: end with `→ <OWNER>: please address the above`
+3. For frontend work, also read the approved `ui-ux-pro-max` mockup/design record
+   and review against it
+4. For each criterion, state MET or NOT MET with file + line reference where relevant
+5. For frontend work, explicitly confirm whether the implementation matches the
+   approved mockup and interaction states
+6. Write `APPROVED` or `REQUEST CHANGES` with specifics in the HANDOFF.md Gate 4 section
+7. If REQUEST CHANGES: end with `→ <OWNER>: please address the above`
 
 **Loop until APPROVED, then owning agent opens the PR:**
 - Opening the PR triggers `.github/workflows/ai-review.yml`

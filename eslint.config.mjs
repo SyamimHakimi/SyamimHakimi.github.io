@@ -15,7 +15,7 @@ export default [
   includeIgnoreFile(gitignorePath),
   // Exclude the legacy Vue app archive — it predates this ESLint config and
   // fixing its legacy patterns is out of scope for the Astro migration.
-  { ignores: ["archive/**", ".astro/**"] },
+  { ignores: ["archive/**", ".astro/**", ".codex/**", ".codex-temp/**"] },
   ...pluginVue.configs["flat/essential"],
   ...vueTsEslintConfig(),
   prettierConfig,
