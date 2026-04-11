@@ -148,6 +148,8 @@ GATE 4 — Cross-Agent Local Review + Auto-merge
         6. Update the Codex column in the Redesign Tracker table
     - If REQUEST CHANGES: Claude fixes the issues on the branch, re-pushes, and re-reviews
     - Repeat until review passes, then mark APPROVED
+    - Once APPROVED: Claude immediately merges the PR and deletes the branch
+      (no further input from Syamim needed — merge follows automatically from approval)
 
   If reviewer is Claude (reviewing Codex's work):
     - Codex marks HANDOFF.md status REVIEW READY, writes diff summary + "→ CLAUDE: please review"
@@ -155,11 +157,12 @@ GATE 4 — Cross-Agent Local Review + Auto-merge
     - Claude writes APPROVED or REQUEST CHANGES in HANDOFF.md Gate 4
     - If REQUEST CHANGES: Codex fixes, writes "→ CLAUDE: fixes applied"; Claude re-reviews
     - Repeat until Claude writes APPROVED
+    - Once APPROVED: Codex merges the PR and deletes the branch
 
-  Once reviewer writes APPROVED:
-    - Owning agent opens PR against main
-    - .github/workflows/ai-review.yml waits for CI (lint, type-check, test, build) to pass
-    - CI passes → PR squash-merged, HANDOFF.md updated to MERGED, branch deleted
+  After merge (either reviewer):
+    - Update the Redesign Tracker row in HANDOFF.md to MERGED
+    - Commit the HANDOFF.md update directly to main via `scripts/agents/update-handoff.mjs`
+      or include it in the merge commit
   → Produces: MERGED (branch deleted, HANDOFF.md updated to MERGED)
 ```
 
