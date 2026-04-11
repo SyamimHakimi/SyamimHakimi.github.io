@@ -85,7 +85,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | Step | Scope | Mockup | Claude | Codex | Syamim | Status | PR |
 |------|-------|--------|--------|-------|--------|--------|----|
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
-| 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | PENDING | — | REVIEW READY | #30 |
+| 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | READY TO MERGE | #30 |
 | 3 | Card system (elevated, filled, outlined) | PENDING | — | — | — | NOT STARTED | — |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -159,11 +159,17 @@ Ready to merge.
 - [x] Focus returns to hamburger on drawer close
 - [x] Both ThemeToggle instances stay in sync via MutationObserver
 
-**Claude:** DONE | **Codex:** PENDING | **Syamim:** —
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
 
-→ **CODEX:** Please review PR #30 (`feat/redesign-step2-navigation-shell`). Verify against `scripts/redesign-step2-shell.html` (Option C). Check: ARIA attributes (`role="dialog"`, `aria-modal`, `aria-expanded`, `aria-controls`), keyboard navigation, focus management, token usage, responsive offsets, and six-destination parity between rail and drawer. Write APPROVED or REQUEST CHANGES below.
+**Codex review:** APPROVED — 2026-04-11
 
-**Codex review:** ___
+P1 fix applied during review: drawer was `z-50` matching scrim `z-50` — relied on DOM order for stacking. Fixed drawer to `z-[60]` for explicit separation. Build confirmed clean after fix.
+
+All acceptance criteria met. Desktop rail: 80px fixed, 6 icon+label items, CTA-tinted active pill (`rgba(37,99,235,0.10)` / `rgba(96,165,250,0.12)`), ThemeToggle at bottom via `mt-auto`. Mobile top bar: 56px, hamburger with `aria-expanded`/`aria-controls`. Drawer: `role="dialog"` + `aria-modal` + `aria-label`, slide-in at 300ms Emphasized Decelerate, `rounded-r-3xl` items match mockup's 24px right radius, scrim at `z-50`, drawer at `z-[60]`. Focus management: open→close button, close→hamburger, Escape closes. ThemeToggle MutationObserver syncs both instances. Skip link present. All canonical token names. No `any` types.
+
+Minor non-blocking: drawer 256px vs mockup 220px — wider is acceptable. Mobile top bar logo-left/hamburger-right vs mockup hamburger-left — both valid layouts.
+
+Ready to merge.
 
 ---
 
