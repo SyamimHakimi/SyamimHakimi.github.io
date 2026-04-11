@@ -76,6 +76,93 @@ After both agents write APPROVED at Gate 4, the owning agent merges and deletes 
 
 ---
 
+## Redesign Tracker
+
+Design authority: `ui-ux-pro-max` | Implementation owner: Claude | Reviewer: Codex | Final approver: Syamim
+
+Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegram sign-off → implement → Codex review → merge
+
+| Step | Scope | Mockup | Claude | Codex | Syamim | Status | PR |
+|------|-------|--------|--------|-------|--------|--------|----|
+| 1 | Color tokens + typography (`global.css`) | — | DONE | PENDING | — | REVIEW READY | #29 |
+| 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | PENDING | — | REVIEW READY | #30 |
+| 3 | Card system (elevated, filled, outlined) | PENDING | — | — | — | NOT STARTED | — |
+| 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 8 | About (`AboutMe.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 9 | Contact (`ContactForm.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 10 | 404 (`404.astro`) | PENDING | — | — | — | NOT STARTED | — |
+
+**Status flow:** `NOT STARTED` → `MOCKUP PENDING` → `MOCKUP APPROVED` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
+
+**Mockup rule:** Every step requires a `ui-ux-pro-max` mockup approved via Telegram before implementation. Mockup saved as `scripts/redesign-step<N>-<component>.html`.
+
+**Codex review rule:** Codex reviews each PR against (1) the approved mockup, (2) the redesign plan constraints, and (3) accessibility and engineering standards before merge.
+
+---
+
+### Redesign Step 1 — Color Tokens + Typography
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** N/A (CSS-only, no visual mockup needed)
+**Branch:** `feat/redesign-step1-tokens-typography` | **PR:** #29
+
+**Scope:**
+- Rewrote `src/styles/global.css` with full MD3-informed design token system
+- `@theme {}` block: all color roles, type scale, shape scale, content widths
+- `[data-theme="dark"]` overrides for every color token
+- Motion tokens (easing curves + durations) in `:root`
+- Backwards-compatible legacy aliases (`--color-bg`, `--color-border`, etc.) bridging unredesigned components
+- Base styles: `body`, `h1`–`h6`, `:focus-visible`, `img`/`svg` reset
+- `BaseLayout.astro`: Google Fonts preconnect + DM Serif Display + DM Sans stylesheet
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — all tests pass
+- [x] All redesign-plan.md color roles present in `@theme`
+- [x] Dark mode overrides correct
+- [x] Legacy aliases present for backwards compatibility
+
+**Claude:** DONE | **Codex:** PENDING | **Syamim:** —
+
+→ **CODEX:** Please review PR #29 (`feat/redesign-step1-tokens-typography`). Verify token completeness against `docs/redesign-plan.md` color roles, dark mode overrides, motion tokens, legacy aliases, and base typography. Write APPROVED or REQUEST CHANGES below.
+
+**Codex review:** ___
+
+---
+
+### Redesign Step 2 — Navigation Shell
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step2-shell.html` — Option C selected (slide-in drawer)
+**Branch:** `feat/redesign-step2-navigation-shell` | **PR:** #30
+
+**Scope:**
+- `SiteHeader.astro`: desktop 80px fixed left rail (logo mark, 6 icon+label nav items, ThemeToggle at bottom); mobile 56px top app bar (site name, ThemeToggle, hamburger); full-height 256px slide-in drawer (CTA header, rounded-r-3xl items, scrim, Escape/click-outside close, focus management)
+- `PageLayout.astro`: removes ThemeToggle slot; adds `pt-14 lg:pl-20` offset wrapper so content clears fixed nav on both breakpoints; `id="main-content"` on `<main>`
+- `SiteFooter.astro`: canonical token names (`--color-outline`, `--color-on-surface-variant`), `max-w-7xl`
+- `ThemeToggle.vue`: `MutationObserver` keeps two breakpoint instances in sync
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — 36/36 passing
+- [x] Desktop rail visible at lg+ with active state CTA tint
+- [x] All 6 routes: icon + visible label on both rail and drawer
+- [x] Skip link (`#main-content`) present and focusable
+- [x] Escape key and scrim click close the drawer
+- [x] Focus returns to hamburger on drawer close
+- [x] Both ThemeToggle instances stay in sync via MutationObserver
+
+**Claude:** DONE | **Codex:** PENDING | **Syamim:** —
+
+→ **CODEX:** Please review PR #30 (`feat/redesign-step2-navigation-shell`). Verify against `scripts/redesign-step2-shell.html` (Option C). Check: ARIA attributes (`role="dialog"`, `aria-modal`, `aria-expanded`, `aria-controls`), keyboard navigation, focus management, token usage, responsive offsets, and six-destination parity between rail and drawer. Write APPROVED or REQUEST CHANGES below.
+
+**Codex review:** ___
+
+---
+
 ## Phase Plans
 
 ---
