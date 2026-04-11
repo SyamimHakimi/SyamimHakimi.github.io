@@ -1,7 +1,11 @@
 ---
 /**
- * PageLayout — full page wrapper with header, nav, main, and footer.
+ * PageLayout — full page wrapper with navigation shell, main content, and footer.
  * Extends BaseLayout with the shared chrome present on every page.
+ *
+ * SiteHeader now imports ThemeToggle directly; no slot needed here.
+ * The offset wrapper (pt-14 lg:pl-20) clears the fixed top app bar on mobile
+ * and the fixed navigation rail on desktop.
  *
  * Props:
  *   title       — passed through to BaseLayout (required)
@@ -11,9 +15,6 @@
 import BaseLayout from "./BaseLayout.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
-// ThemeToggle island — client:load so it reads localStorage immediately on mount.
-// Island is rendered inside SiteHeader's theme-toggle slot.
-import ThemeToggle from "../components/islands/ThemeToggle.vue";
 
 interface Props {
   title: string;
@@ -25,13 +26,19 @@ const { title, description, image } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={image}>
-  <SiteHeader>
-    <ThemeToggle slot="theme-toggle" client:load />
-  </SiteHeader>
+  <SiteHeader />
 
-  <main>
-    <slot />
-  </main>
+  <!--
+    Offset wrapper — pt-14 (56px) clears the fixed mobile top app bar;
+    lg:pl-20 (80px) clears the fixed desktop navigation rail.
+    flex-col + flex-1 keeps the footer pinned to the bottom of the viewport
+    on short pages (body already has display:flex flex-col in global.css).
+  -->
+  <div class="flex flex-1 flex-col pt-14 lg:pt-0 lg:pl-20">
+    <main id="main-content">
+      <slot />
+    </main>
 
-  <SiteFooter />
+    <SiteFooter />
+  </div>
 </BaseLayout>
