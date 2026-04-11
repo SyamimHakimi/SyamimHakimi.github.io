@@ -87,7 +87,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
 | 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
-| 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | — | — | REVIEW READY | — |
+| 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #32 |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -254,9 +254,13 @@ Ready to merge.
 - [x] No `any` types
 - [x] `index.astro` page header uses new token-based typography
 
-**Claude:** DONE | **Codex:** — | **Syamim:** —
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
 
-→ CODEX: please review
+**Codex review:** APPROVED — 2026-04-11
+
+Build 0 errors, 45/45 tests (9 new). All four legacy token aliases removed from the island. `buildPhotoStatsLineSeries` correctly filters `MM/YYYY` keys, sorts via `parseMonthKey`, and slices the last 12 months. `buildRecipeBarSeries` sorts descending and slices top 6. MutationObserver pattern matches `ThemeToggle.vue`. Shimmer skeleton mirrors the loaded layout. Error state uses `role="alert"` and `--color-error` border. motion-v stagger correctly returns 0 delays when `prefers-reduced-motion`. No `any` types. `index.astro` header uses global `h1` serif style and `--color-on-surface-variant` token. `chart.js` and `vue-chartjs` fully uninstalled — no remaining imports.
+
+Ready to merge.
 
 ---
 
