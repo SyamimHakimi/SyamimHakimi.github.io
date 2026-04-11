@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Step 4 — Photography Journey Island</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-background:         #FAFAFA;
+  --color-surface:            #FFFFFF;
+  --color-surface-variant:    #F4F4F5;
+  --color-on-surface:         #09090B;
+  --color-on-surface-variant: #52525B;
+  --color-cta:                #2563EB;
+  --color-outline:            #E4E4E7;
+  --color-error:              #DC2626;
+  --color-secondary:          #3F3F46;
+  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px;
+  --ease-standard: cubic-bezier(0.2,0,0,1);
+  --shadow-elev:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+}
+
+body { font-family:var(--font-sans); background:#DEDEDE; color:var(--color-on-surface); padding:40px 24px 80px; min-height:100vh; }
+
+.page-label { font-family:var(--font-serif); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#71717A; margin-bottom:6px; }
+.page-title { font-family:var(--font-serif); font-size:28px; font-weight:400; color:#18181B; margin-bottom:4px; }
+.page-sub   { font-size:13px; color:#71717A; margin-bottom:36px; }
+
+.section-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#18181B; color:#FAFAFA;
+  border-radius:6px; padding:5px 14px;
+  font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+/* ── Theme panels ── */
+.panels { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
+@media (max-width:1100px) { .panels { grid-template-columns:1fr; } }
+
+.panel { border-radius:20px; padding:32px; overflow:hidden; }
+.panel.light { background:var(--color-background); border:1px solid var(--color-outline); }
+.panel.dark  {
+  background:#09090B; border:1px solid #27272A;
+  --color-background:#09090B; --color-surface:#18181B; --color-surface-variant:#27272A;
+  --color-on-surface:#FAFAFA; --color-on-surface-variant:#D4D4D8;
+  --color-cta:#60A5FA; --color-outline:#3F3F46; --color-error:#F87171;
+  --color-secondary:#A1A1AA;
+  --shadow-elev: 0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
+  --shadow-hover:0 4px 12px rgba(0,0,0,.5), 0 2px 4px rgba(0,0,0,.3);
+}
+.panel-label {
+  font-size:10px; font-weight:600; letter-spacing:.10em; text-transform:uppercase;
+  color:var(--color-on-surface-variant); margin-bottom:20px;
+  padding:4px 10px; border:1px solid var(--color-outline);
+  border-radius:var(--radius-sm); display:inline-block;
+}
+
+/* ── Page header ── */
+.page-header { margin-bottom:28px; }
+.page-header h1 { font-family:var(--font-serif); font-size:clamp(26px,4vw,36px); font-weight:400; color:var(--color-on-surface); line-height:1.2; margin-bottom:8px; }
+.page-header p  { font-size:15px; color:var(--color-on-surface-variant); line-height:1.6; }
+
+/* ── Card variants ── */
+.card-elevated {
+  background:var(--color-surface); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-elev); padding:20px;
+  position:relative; overflow:hidden;
+  transition: box-shadow 200ms var(--ease-standard), transform 200ms var(--ease-standard);
+}
+.card-elevated::before { content:''; position:absolute; inset:0; border-radius:var(--radius-md); background:var(--color-on-surface); opacity:0; pointer-events:none; transition:opacity 150ms var(--ease-standard); }
+.card-elevated:hover { box-shadow:var(--shadow-hover); transform:translateY(-1px); }
+.card-elevated:hover::before { opacity:.04; }
+
+.card-outlined {
+  background:var(--color-surface); border-radius:var(--radius-md);
+  border:1px solid var(--color-outline); padding:20px;
+  position:relative; overflow:hidden;
+}
+
+/* ── Skeleton ── */
+@keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+.skeleton-line {
+  border-radius:4px; height:12px;
+  background:linear-gradient(90deg,var(--color-surface-variant) 25%,var(--color-outline) 50%,var(--color-surface-variant) 75%);
+  background-size:800px 100%; animation:shimmer 1.5s infinite linear;
+}
+.skeleton-rect {
+  border-radius:var(--radius-md);
+  background:linear-gradient(90deg,var(--color-surface-variant) 25%,var(--color-outline) 50%,var(--color-surface-variant) 75%);
+  background-size:800px 100%; animation:shimmer 1.5s infinite linear;
+}
+
+/* ── Stat grid ── */
+.stat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:16px; }
+@media (min-width:480px) { .stat-grid { grid-template-columns:repeat(4,1fr); } }
+
+.stat-eyebrow { font-size:10px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--color-on-surface-variant); margin-bottom:10px; }
+.stat-number  { font-family:var(--font-serif); font-size:36px; font-weight:400; color:var(--color-on-surface); line-height:1; margin-bottom:4px; }
+.stat-number.sm { font-size:17px; line-height:1.35; }
+.stat-label   { font-size:12px; color:var(--color-on-surface-variant); }
+
+/* ── Chart grid ── */
+.chart-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+@media (min-width:560px) { .chart-grid { grid-template-columns:3fr 2fr; } }
+
+.chart-header { margin-bottom:12px; }
+.chart-title    { font-size:13px; font-weight:600; color:var(--color-on-surface); }
+.chart-subtitle { font-size:11px; color:var(--color-on-surface-variant); margin-top:2px; }
+
+/* ── Line graph ── */
+.line-graph-wrap { position:relative; width:100%; height:140px; }
+.line-graph-wrap svg { width:100%; height:100%; overflow:visible; }
+
+/* Grid lines */
+.grid-line { stroke:var(--color-outline); stroke-width:1; }
+/* Area fill */
+.area-fill { fill:var(--color-cta); opacity:.10; }
+.dark .area-fill { opacity:.15; }
+/* Line stroke */
+.line-stroke { fill:none; stroke:var(--color-cta); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+/* Data dot */
+.data-dot { fill:var(--color-cta); }
+.data-dot-inner { fill:var(--color-surface); }
+/* Tick labels */
+.tick-label { font-size:9px; font-family:var(--font-sans); fill:var(--color-on-surface-variant); }
+
+/* ── Bar chart ── */
+.bar-chart { display:flex; flex-direction:column; gap:9px; }
+.bar-row    { display:flex; align-items:center; gap:8px; }
+.bar-label  { font-size:11px; color:var(--color-on-surface-variant); width:90px; text-align:right; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bar-track  { flex:1; height:9px; background:var(--color-surface-variant); border-radius:999px; overflow:hidden; }
+.bar-fill   { height:100%; border-radius:999px; background:var(--color-cta); }
+.bar-value  { font-size:11px; font-weight:500; color:var(--color-on-surface-variant); width:26px; text-align:left; flex-shrink:0; }
+
+/* ── Error ── */
+.error-card { background:var(--color-surface); border:1px solid var(--color-error); border-radius:var(--radius-md); padding:24px; display:flex; gap:16px; align-items:flex-start; }
+.error-icon { width:36px; height:36px; border-radius:50%; background:rgba(220,38,38,.10); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.error-title { font-size:14px; font-weight:600; color:var(--color-error); margin-bottom:4px; }
+.error-body  { font-size:13px; color:var(--color-on-surface-variant); line-height:1.5; }
+.error-retry { display:inline-flex; align-items:center; gap:5px; margin-top:10px; font-size:12px; font-weight:500; color:var(--color-cta); cursor:pointer; }
+
+/* ── Spec table ── */
+.spec-section { background:#fff; border:1px solid #E4E4E7; border-radius:16px; padding:28px; margin-top:40px; }
+.spec-section h3 { font-family:var(--font-serif); font-size:18px; font-weight:400; color:#18181B; margin-bottom:20px; }
+.spec-table { width:100%; border-collapse:collapse; font-size:12px; }
+.spec-table th { text-align:left; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#71717A; border-bottom:1px solid #E4E4E7; padding:6px 10px; }
+.spec-table td { padding:9px 10px; border-bottom:1px solid #F4F4F5; color:#3F3F46; vertical-align:top; }
+.spec-table td:first-child { color:#18181B; font-weight:500; }
+.mono { font-family:monospace; font-size:11px; background:#F4F4F5; padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+
+<div class="page-label">Step 4 — Photography Journey Island (rev 2)</div>
+<div class="page-title">PhotographyJourney.vue · Stat Cards · Line Graph · Film Recipes</div>
+<div class="page-sub">Donut replaced with monthly photo count line graph (photoStats). Shown light + dark, skeleton, error.</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     LOADED STATE
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-badge">Loaded State</div>
+
+<div class="panels">
+
+  <!-- LIGHT -->
+  <div class="panel light">
+    <div class="panel-label">Light Mode</div>
+
+    <div class="page-header">
+      <h1>Photography Journey</h1>
+      <p>A visual diary — film simulations, statistics, and favourite frames.</p>
+    </div>
+
+    <!-- Stat row -->
+    <div class="stat-grid">
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Outings</div>
+        <div class="stat-number">42</div>
+        <div class="stat-label">photo walks</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Total Photos</div>
+        <div class="stat-number">1,247</div>
+        <div class="stat-label">frames captured</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Favourites</div>
+        <div class="stat-number">89</div>
+        <div class="stat-label">kept forever</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Fav Lens</div>
+        <div class="stat-number sm">XF 23mm<br>f/1.4</div>
+        <div class="stat-label" style="margin-top:5px">most used</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+
+      <!-- Line graph — monthly photos -->
+      <div class="card-outlined">
+        <div class="chart-header">
+          <div class="chart-title">Photos Over Time</div>
+          <div class="chart-subtitle">Monthly shots — last 12 months</div>
+        </div>
+
+        <!-- SVG line graph (14 months of mock photoStats data) -->
+        <!--
+          Data: 1/24→32, 2/24→18, 3/24→45, 4/24→61, 5/24→38, 6/24→72,
+                7/24→55, 8/24→90, 9/24→47, 10/24→83, 11/24→68, 12/24→104,
+                1/25→78, 2/25→95
+          Max=104, viewBox coords mapped to 0–240 wide, 0–120 tall (y inverted)
+        -->
+        <div class="line-graph-wrap">
+          <svg viewBox="0 0 260 130" preserveAspectRatio="none" aria-label="Monthly photo count line graph">
+            <!-- Horizontal grid lines at y=26,52,78,104 (values 25,50,75,100) -->
+            <line class="grid-line" x1="28" y1="26" x2="256" y2="26"/>
+            <line class="grid-line" x1="28" y1="52" x2="256" y2="52"/>
+            <line class="grid-line" x1="28" y1="78" x2="256" y2="78"/>
+            <line class="grid-line" x1="28" y1="104" x2="256" y2="104"/>
+
+            <!-- Y-axis labels -->
+            <text class="tick-label" x="22" y="29" text-anchor="end">100</text>
+            <text class="tick-label" x="22" y="55" text-anchor="end">75</text>
+            <text class="tick-label" x="22" y="81" text-anchor="end">50</text>
+            <text class="tick-label" x="22" y="107" text-anchor="end">25</text>
+
+            <!--
+              Points (x from 28..256 in 17.5 steps, y = 110 - val*(104/104)):
+              val  mapped_y = 110 - (val/104)*104  →  110 - val
+              32→78  18→92  45→65  61→49  38→72  72→38  55→55  90→20  47→63  83→27  68→42  104→6  78→32  95→15
+              x: 28,45.5,63,80.5,98,115.5,133,150.5,168,185.5,203,220.5,238,255.5
+            -->
+
+            <!-- Area fill -->
+            <polygon class="area-fill"
+              points="28,78 45.5,92 63,65 80.5,49 98,72 115.5,38 133,55 150.5,20 168,63 185.5,27 203,42 220.5,6 238,32 255.5,15 255.5,110 28,110"/>
+
+            <!-- Line -->
+            <polyline class="line-stroke"
+              points="28,78 45.5,92 63,65 80.5,49 98,72 115.5,38 133,55 150.5,20 168,63 185.5,27 203,42 220.5,6 238,32 255.5,15"/>
+
+            <!-- Latest dot (highlighted) -->
+            <circle class="data-dot" cx="255.5" cy="15" r="4"/>
+            <circle class="data-dot-inner" cx="255.5" cy="15" r="2"/>
+
+            <!-- X-axis month labels (every other) -->
+            <text class="tick-label" x="28"    y="124" text-anchor="middle">Jan</text>
+            <text class="tick-label" x="63"    y="124" text-anchor="middle">Mar</text>
+            <text class="tick-label" x="98"    y="124" text-anchor="middle">May</text>
+            <text class="tick-label" x="133"   y="124" text-anchor="middle">Jul</text>
+            <text class="tick-label" x="168"   y="124" text-anchor="middle">Sep</text>
+            <text class="tick-label" x="203"   y="124" text-anchor="middle">Nov</text>
+            <text class="tick-label" x="238"   y="124" text-anchor="middle">Jan</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Horizontal bar — film recipes -->
+      <div class="card-outlined">
+        <div class="chart-header">
+          <div class="chart-title">Film Recipes</div>
+          <div class="chart-subtitle">Simulation usage count</div>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">Classic Chrome</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-value">410</div></div>
+          <div class="bar-row"><div class="bar-label">Velvia</div><div class="bar-track"><div class="bar-fill" style="width:71%"></div></div><div class="bar-value">290</div></div>
+          <div class="bar-row"><div class="bar-label">Eterna Cinema</div><div class="bar-track"><div class="bar-fill" style="width:49%"></div></div><div class="bar-value">200</div></div>
+          <div class="bar-row"><div class="bar-label">Provia/Standard</div><div class="bar-track"><div class="bar-fill" style="width:37%"></div></div><div class="bar-value">152</div></div>
+          <div class="bar-row"><div class="bar-label">Astia/Soft</div><div class="bar-track"><div class="bar-fill" style="width:27%"></div></div><div class="bar-value">110</div></div>
+          <div class="bar-row"><div class="bar-label">Pro Neg Hi</div><div class="bar-track"><div class="bar-fill" style="width:21%"></div></div><div class="bar-value">85</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DARK -->
+  <div class="panel dark">
+    <div class="panel-label">Dark Mode</div>
+
+    <div class="page-header">
+      <h1>Photography Journey</h1>
+      <p>A visual diary — film simulations, statistics, and favourite frames.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Outings</div>
+        <div class="stat-number">42</div>
+        <div class="stat-label">photo walks</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Total Photos</div>
+        <div class="stat-number">1,247</div>
+        <div class="stat-label">frames captured</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Favourites</div>
+        <div class="stat-number">89</div>
+        <div class="stat-label">kept forever</div>
+      </div>
+      <div class="card-elevated">
+        <div class="stat-eyebrow">Fav Lens</div>
+        <div class="stat-number sm">XF 23mm<br>f/1.4</div>
+        <div class="stat-label" style="margin-top:5px">most used</div>
+      </div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="card-outlined">
+        <div class="chart-header">
+          <div class="chart-title">Photos Over Time</div>
+          <div class="chart-subtitle">Monthly shots — last 12 months</div>
+        </div>
+        <div class="line-graph-wrap">
+          <svg viewBox="0 0 260 130" preserveAspectRatio="none" aria-label="Monthly photo count line graph">
+            <line class="grid-line" x1="28" y1="26" x2="256" y2="26"/>
+            <line class="grid-line" x1="28" y1="52" x2="256" y2="52"/>
+            <line class="grid-line" x1="28" y1="78" x2="256" y2="78"/>
+            <line class="grid-line" x1="28" y1="104" x2="256" y2="104"/>
+            <text class="tick-label" x="22" y="29" text-anchor="end">100</text>
+            <text class="tick-label" x="22" y="55" text-anchor="end">75</text>
+            <text class="tick-label" x="22" y="81" text-anchor="end">50</text>
+            <text class="tick-label" x="22" y="107" text-anchor="end">25</text>
+            <polygon class="area-fill"
+              points="28,78 45.5,92 63,65 80.5,49 98,72 115.5,38 133,55 150.5,20 168,63 185.5,27 203,42 220.5,6 238,32 255.5,15 255.5,110 28,110"/>
+            <polyline class="line-stroke"
+              points="28,78 45.5,92 63,65 80.5,49 98,72 115.5,38 133,55 150.5,20 168,63 185.5,27 203,42 220.5,6 238,32 255.5,15"/>
+            <circle class="data-dot" cx="255.5" cy="15" r="4"/>
+            <circle class="data-dot-inner" cx="255.5" cy="15" r="2"/>
+            <text class="tick-label" x="28"  y="124" text-anchor="middle">Jan</text>
+            <text class="tick-label" x="63"  y="124" text-anchor="middle">Mar</text>
+            <text class="tick-label" x="98"  y="124" text-anchor="middle">May</text>
+            <text class="tick-label" x="133" y="124" text-anchor="middle">Jul</text>
+            <text class="tick-label" x="168" y="124" text-anchor="middle">Sep</text>
+            <text class="tick-label" x="203" y="124" text-anchor="middle">Nov</text>
+            <text class="tick-label" x="238" y="124" text-anchor="middle">Jan</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card-outlined">
+        <div class="chart-header">
+          <div class="chart-title">Film Recipes</div>
+          <div class="chart-subtitle">Simulation usage count</div>
+        </div>
+        <div class="bar-chart">
+          <div class="bar-row"><div class="bar-label">Classic Chrome</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-value">410</div></div>
+          <div class="bar-row"><div class="bar-label">Velvia</div><div class="bar-track"><div class="bar-fill" style="width:71%"></div></div><div class="bar-value">290</div></div>
+          <div class="bar-row"><div class="bar-label">Eterna Cinema</div><div class="bar-track"><div class="bar-fill" style="width:49%"></div></div><div class="bar-value">200</div></div>
+          <div class="bar-row"><div class="bar-label">Provia/Standard</div><div class="bar-track"><div class="bar-fill" style="width:37%"></div></div><div class="bar-value">152</div></div>
+          <div class="bar-row"><div class="bar-label">Astia/Soft</div><div class="bar-track"><div class="bar-fill" style="width:27%"></div></div><div class="bar-value">110</div></div>
+          <div class="bar-row"><div class="bar-label">Pro Neg Hi</div><div class="bar-track"><div class="bar-fill" style="width:21%"></div></div><div class="bar-value">85</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /loaded panels -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SKELETON STATE
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-badge">Loading Skeleton</div>
+
+<div class="panels">
+  <div class="panel light">
+    <div class="panel-label">Light — skeleton</div>
+
+    <div style="margin-bottom:28px">
+      <div class="skeleton-line" style="width:52%;height:28px;margin-bottom:10px"></div>
+      <div class="skeleton-line" style="width:75%;height:13px"></div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:16px">
+      <div class="card-elevated"><div class="skeleton-line" style="width:50%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:55%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:65%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:55%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:60%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:60%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:48%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:50%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:60%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:45%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:65%;height:18px;margin-bottom:5px"></div><div class="skeleton-line" style="width:65%;height:18px;margin-bottom:8px"></div><div class="skeleton-line" style="width:50%;height:10px"></div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="card-outlined">
+        <div class="skeleton-line" style="width:45%;height:13px;margin-bottom:6px"></div>
+        <div class="skeleton-line" style="width:60%;height:10px;margin-bottom:16px"></div>
+        <div class="skeleton-rect" style="width:100%;height:140px"></div>
+      </div>
+      <div class="card-outlined">
+        <div class="skeleton-line" style="width:40%;height:13px;margin-bottom:6px"></div>
+        <div class="skeleton-line" style="width:55%;height:10px;margin-bottom:16px"></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:82px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:52px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:70px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:66px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:48px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:58px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel dark">
+    <div class="panel-label">Dark — skeleton</div>
+
+    <div style="margin-bottom:28px">
+      <div class="skeleton-line" style="width:52%;height:28px;margin-bottom:10px"></div>
+      <div class="skeleton-line" style="width:75%;height:13px"></div>
+    </div>
+
+    <div class="stat-grid" style="margin-bottom:16px">
+      <div class="card-elevated"><div class="skeleton-line" style="width:50%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:55%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:65%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:55%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:60%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:60%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:48%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:50%;height:30px;margin-bottom:8px"></div><div class="skeleton-line" style="width:60%;height:10px"></div></div>
+      <div class="card-elevated"><div class="skeleton-line" style="width:45%;height:10px;margin-bottom:14px"></div><div class="skeleton-line" style="width:65%;height:18px;margin-bottom:5px"></div><div class="skeleton-line" style="width:65%;height:18px;margin-bottom:8px"></div><div class="skeleton-line" style="width:50%;height:10px"></div></div>
+    </div>
+
+    <div class="chart-grid">
+      <div class="card-outlined">
+        <div class="skeleton-line" style="width:45%;height:13px;margin-bottom:6px"></div>
+        <div class="skeleton-line" style="width:60%;height:10px;margin-bottom:16px"></div>
+        <div class="skeleton-rect" style="width:100%;height:140px"></div>
+      </div>
+      <div class="card-outlined">
+        <div class="skeleton-line" style="width:40%;height:13px;margin-bottom:6px"></div>
+        <div class="skeleton-line" style="width:55%;height:10px;margin-bottom:16px"></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:82px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:52px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:70px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:66px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+          <div style="display:flex;align-items:center;gap:8px"><div class="skeleton-line" style="width:48px;height:10px;flex-shrink:0"></div><div class="skeleton-rect" style="flex:1;height:9px;border-radius:999px"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     ERROR STATE
+     ══════════════════════════════════════════════════════════ -->
+<div class="section-badge">Error State</div>
+
+<div class="panels">
+  <div class="panel light">
+    <div class="panel-label">Light — error</div>
+    <div class="page-header"><h1>Photography Journey</h1><p>A visual diary — film simulations, statistics, and favourite frames.</p></div>
+    <div class="error-card" role="alert">
+      <div class="error-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="error-title">Failed to load statistics</div>
+        <div class="error-body">Could not connect to Firestore. Check your connection and try again.</div>
+        <div class="error-retry">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
+          Retry
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel dark">
+    <div class="panel-label">Dark — error</div>
+    <div class="page-header"><h1>Photography Journey</h1><p>A visual diary — film simulations, statistics, and favourite frames.</p></div>
+    <div class="error-card" role="alert" style="border-color:var(--color-error);background:var(--color-surface)">
+      <div class="error-icon" style="background:rgba(248,113,113,.12)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="error-title" style="color:var(--color-error)">Failed to load statistics</div>
+        <div class="error-body">Could not connect to Firestore. Check your connection and try again.</div>
+        <div class="error-retry" style="color:var(--color-cta)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
+          Retry
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SPEC
+     ══════════════════════════════════════════════════════════ -->
+<div class="spec-section">
+  <h3>Implementation Spec (rev 2)</h3>
+  <table class="spec-table">
+    <thead><tr><th>Element</th><th>Token / Value</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Line graph data source</td><td><span class="mono">statistics.photoStats</span></td><td>Record&lt;string, number&gt; keyed "MM/YYYY". Sort by date, take last 12 entries for x-axis.</td></tr>
+      <tr><td>Line graph chart type</td><td>ApexCharts <span class="mono">type="line"</span></td><td>spark-style: no y-axis title, minimal grid, area fill enabled (fill.type: "gradient"), tooltip on hover.</td></tr>
+      <tr><td>Line color</td><td><span class="mono">--color-cta</span> resolved at mount</td><td>Re-read on data-theme MutationObserver. Area fill: same color at 10% opacity (15% dark).</td></tr>
+      <tr><td>Line stroke</td><td>2px, lineCap: round</td><td>Smooth curve: <span class="mono">curve: "smooth"</span> in ApexCharts stroke options.</td></tr>
+      <tr><td>Grid lines</td><td><span class="mono">--color-outline</span></td><td>Horizontal only. No border on axes.</td></tr>
+      <tr><td>Axis labels</td><td>9px · <span class="mono">--color-on-surface-variant</span></td><td>X: month abbreviations. Y: count values. Skip labels when too dense (tickAmount: 4–5).</td></tr>
+      <tr><td>Latest data dot</td><td><span class="mono">--color-cta</span> fill, surface inner</td><td>Show marker only on last data point (markers.discrete). r=4, inner white circle r=2.</td></tr>
+      <tr><td>Tooltip</td><td>surface bg · outline border</td><td>Shows "Month YYYY: N photos". Background: <span class="mono">--color-surface</span>, border: <span class="mono">--color-outline</span>.</td></tr>
+      <tr><td>Bar chart data source</td><td><span class="mono">statistics.recipeStats</span></td><td>Sort descending by value. Take top 6.</td></tr>
+      <tr><td>Chart grid layout</td><td><span class="mono">grid-cols-1 sm:grid-cols-[3fr_2fr]</span></td><td>Line graph gets more width (3fr); bar chart narrower (2fr). Stacked on mobile.</td></tr>
+      <tr><td>Stat cards</td><td><span class="mono">.card-elevated</span> · 2-col → 4-col</td><td>Unchanged from previous version.</td></tr>
+      <tr><td>Skeleton — line graph</td><td><span class="mono">.skeleton-rect</span> h-[140px]</td><td>Single rect block covers the full chart area.</td></tr>
+      <tr><td>Motion (scroll entrance)</td><td>motion-v · initial {opacity:0, y:16}</td><td>Stagger: stat cards 60ms each, then chart cards 80ms each. Duration 300ms. Guard prefers-reduced-motion.</td></tr>
+      <tr><td>Legacy tokens removed</td><td><span class="mono">--color-accent → --color-cta</span><br><span class="mono">--color-border → --color-outline</span><br><span class="mono">--color-text → --color-on-surface</span><br><span class="mono">--color-text-muted → --color-on-surface-variant</span></td><td>All four aliases removed from this island.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

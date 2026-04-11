@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Step 3 — Card System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Light tokens */
+  --bg:     #FAFAFA;
+  --surf:   #FFFFFF;
+  --sv:     #F4F4F5;
+  --pri:    #18181B;
+  --sec:    #52525B;
+  --cta:    #2563EB;
+  --out:    #E4E4E7;
+  --on-s:   #09090B;
+  --on-sv:  #52525B;
+  --err:    #DC2626;
+  --serif:  'DM Serif Display', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --r-md:   12px;
+  --shadow-elev: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+}
+
+body {
+  font-family: var(--sans);
+  background: #EDEDED;
+  color: var(--on-s);
+  padding: 40px 32px 80px;
+  min-height: 100vh;
+}
+
+/* ── Page header ──────────────────────────────────────────────────── */
+.page-label  { font-family:var(--serif); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:#71717A; margin-bottom:6px; }
+.page-title  { font-family:var(--serif); font-size:28px; font-weight:400; color:#18181B; margin-bottom:4px; }
+.page-sub    { font-size:13px; color:#71717A; margin-bottom:40px; }
+
+/* ── Section headers ──────────────────────────────────────────────── */
+.section-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#18181B; color:#FAFAFA;
+  border-radius:6px; padding:5px 12px;
+  font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  margin-bottom:20px;
+}
+.section-badge.dark-badge { background:#F4F4F5; color:#18181B; }
+
+.type-label {
+  font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:#71717A; margin-bottom:10px;
+}
+
+/* ── Theme panels ─────────────────────────────────────────────────── */
+.theme-panel {
+  border-radius:16px; padding:32px;
+  margin-bottom:32px;
+}
+.theme-panel.light { background: var(--bg); border: 1px solid var(--out); }
+.theme-panel.dark  {
+  background: #09090B;
+  --bg:#09090B; --surf:#18181B; --sv:#27272A; --pri:#FAFAFA; --sec:#A1A1AA;
+  --cta:#60A5FA; --out:#3F3F46; --on-s:#FAFAFA; --on-sv:#D4D4D8;
+  --shadow-elev: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+}
+.theme-panel.dark .page-label,
+.theme-panel.dark .type-label { color: var(--sec); }
+
+/* ── Card grid ────────────────────────────────────────────────────── */
+.card-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+.card-row.wide { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .card-row { grid-template-columns: 1fr; } }
+
+/* ── Card variants ────────────────────────────────────────────────── */
+
+/* ELEVATED — Level 1 surface, shadow communicates lift */
+.card-elevated {
+  background: var(--surf);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-elev);
+  padding: 20px;
+  transition: box-shadow 200ms cubic-bezier(0.2,0,0,1), transform 200ms cubic-bezier(0.2,0,0,1);
+  position: relative;
+  overflow: hidden;
+}
+.card-elevated::before {
+  content:''; position:absolute; inset:0; border-radius:var(--r-md);
+  background: var(--on-s); opacity:0;
+  transition: opacity 150ms cubic-bezier(0.2,0,0,1);
+  pointer-events:none;
+}
+.card-elevated:hover { box-shadow: var(--shadow-hover); transform: translateY(-1px); }
+.card-elevated:hover::before { opacity: 0.04; }
+
+/* FILLED — Surface Variant background, no shadow, no border */
+.card-filled {
+  background: var(--sv);
+  border-radius: var(--r-md);
+  padding: 20px;
+  transition: background 150ms cubic-bezier(0.2,0,0,1);
+  position: relative;
+  overflow: hidden;
+}
+.card-filled::before {
+  content:''; position:absolute; inset:0; border-radius:var(--r-md);
+  background: var(--on-s); opacity:0;
+  transition: opacity 150ms cubic-bezier(0.2,0,0,1);
+  pointer-events:none;
+}
+.card-filled:hover::before { opacity: 0.06; }
+
+/* OUTLINED — Surface + 1px outline border, no shadow */
+.card-outlined {
+  background: var(--surf);
+  border-radius: var(--r-md);
+  border: 1px solid var(--out);
+  padding: 20px;
+  transition: border-color 150ms cubic-bezier(0.2,0,0,1);
+  position: relative;
+  overflow: hidden;
+}
+.card-outlined::before {
+  content:''; position:absolute; inset:0; border-radius:var(--r-md);
+  background: var(--on-s); opacity:0;
+  transition: opacity 150ms cubic-bezier(0.2,0,0,1);
+  pointer-events:none;
+}
+.card-outlined:hover { border-color: var(--sec); }
+.card-outlined:hover::before { opacity: 0.04; }
+
+/* ── Shimmer skeleton ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
+.skeleton-line {
+  border-radius: 4px;
+  height: 12px;
+  background: linear-gradient(90deg, var(--sv) 25%, var(--out) 50%, var(--sv) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+.skeleton-circle {
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--sv) 25%, var(--out) 50%, var(--sv) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+.skeleton-rect {
+  border-radius: var(--r-md);
+  background: linear-gradient(90deg, var(--sv) 25%, var(--out) 50%, var(--sv) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* ── Card content typography ──────────────────────────────────────── */
+.card-eyebrow { font-size:11px; font-weight:500; color:var(--sec); letter-spacing:.06em; text-transform:uppercase; margin-bottom:8px; }
+.card-title   { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--on-s); line-height:1.3; margin-bottom:6px; }
+.card-title-sm{ font-family:var(--serif); font-size:18px; font-weight:400; color:var(--on-s); line-height:1.3; margin-bottom:6px; }
+.card-body    { font-size:14px; font-weight:400; color:var(--sec); line-height:1.5; }
+.card-stat    { font-family:var(--serif); font-size:36px; font-weight:400; color:var(--on-s); line-height:1; margin-bottom:4px; }
+.card-stat-label { font-size:12px; color:var(--sec); }
+
+/* ── Specific card content examples ──────────────────────────────── */
+.stat-card-inner { text-align:center; padding:8px 0; }
+.icon-disc {
+  width:44px; height:44px; border-radius:50%;
+  background:rgba(37,99,235,0.10); display:flex; align-items:center; justify-content:center;
+  margin-bottom:12px;
+}
+.dark .icon-disc { background:rgba(96,165,250,0.12); }
+.icon-disc svg { stroke: var(--cta); }
+
+.tag-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.tag {
+  font-size:11px; font-weight:500; color:var(--sec);
+  background:var(--bg); border:1px solid var(--out);
+  border-radius:999px; padding:3px 10px;
+}
+.theme-panel.dark .tag { background:var(--sv); }
+
+.chart-placeholder {
+  height:72px; border-radius:8px; background:var(--sv);
+  display:flex; align-items:flex-end; gap:6px; padding:8px;
+  margin-top:12px;
+}
+.bar { border-radius:3px 3px 0 0; background:var(--cta); flex:1; }
+
+.chip-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+.chip {
+  font-size:11px; font-weight:500;
+  border-radius:8px; padding:4px 10px;
+  color:var(--cta); border:1px solid var(--cta);
+  background:rgba(37,99,235,0.06);
+}
+.theme-panel.dark .chip { background:rgba(96,165,250,0.08); }
+
+.divider { height:1px; background:var(--out); margin:12px 0; }
+
+.badge {
+  display:inline-block; font-size:10px; font-weight:600;
+  padding:2px 8px; border-radius:999px;
+  background:rgba(37,99,235,0.10); color:var(--cta);
+}
+
+/* ── State reference table ────────────────────────────────────────── */
+.spec-table {
+  width:100%; border-collapse:collapse;
+  font-size:12px; margin-top:16px;
+}
+.spec-table th {
+  text-align:left; font-weight:600; font-size:10px; letter-spacing:.08em;
+  text-transform:uppercase; color:#71717A;
+  border-bottom:1px solid #E4E4E7; padding:6px 8px;
+}
+.spec-table td { padding:8px; border-bottom:1px solid #F4F4F5; color:#3F3F46; vertical-align:top; }
+.spec-table td:first-child { color:#18181B; font-weight:500; }
+.mono { font-family:monospace; font-size:11px; }
+
+/* ── Token strip ──────────────────────────────────────────────────── */
+.token-strip { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+.token-pill {
+  background:#fff; border:1px solid #E4E4E7; border-radius:8px;
+  padding:7px 12px; font-size:10.5px; color:#52525B;
+}
+.token-pill strong { color:#18181B; }
+
+.section-divider { height:1px; background:#D4D4D8; margin:36px 0; opacity:.4; }
+</style>
+</head>
+<body>
+
+<div class="page-label">Step 3 — Card System</div>
+<div class="page-title">Card Variants · Elevated · Filled · Outlined</div>
+<div class="page-sub">Three card types used across all page islands. Each shown in light + dark, with states and shimmer skeleton.</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     LIGHT MODE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-badge">Light Mode</div>
+
+<div class="theme-panel light">
+
+  <!-- ── Card type headers ── -->
+  <div class="card-row">
+    <div class="type-label">Elevated Card<br><span style="font-weight:400;text-transform:none;letter-spacing:0">bg-surface + shadow · Stats, platforms, profile</span></div>
+    <div class="type-label">Filled Card<br><span style="font-weight:400;text-transform:none;letter-spacing:0">bg-surface-variant · Services, frameworks</span></div>
+    <div class="type-label">Outlined Card<br><span style="font-weight:400;text-transform:none;letter-spacing:0">bg-surface + border · Charts, projects, boardgames</span></div>
+  </div>
+
+  <!-- ── Default state ── -->
+  <div class="type-label" style="margin-bottom:10px">Default</div>
+  <div class="card-row">
+    <!-- Elevated: stat example -->
+    <div class="card-elevated">
+      <div class="card-eyebrow">Total Shots</div>
+      <div class="stat-card-inner">
+        <div class="card-stat">1,247</div>
+        <div class="card-stat-label">photographs taken</div>
+      </div>
+    </div>
+    <!-- Filled: service example -->
+    <div class="card-filled">
+      <div class="icon-disc">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="card-title-sm">Web Development</div>
+      <div class="card-body">Full-stack applications from design to deployment.</div>
+      <div class="tag-row">
+        <span class="tag">React</span><span class="tag">Astro</span><span class="tag">Node.js</span>
+      </div>
+    </div>
+    <!-- Outlined: chart example -->
+    <div class="card-outlined">
+      <div class="card-eyebrow">Shots by Theme</div>
+      <div class="chart-placeholder">
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:80%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Hover state ── -->
+  <div class="type-label" style="margin-bottom:10px">Hover (state layer + elevation)</div>
+  <div class="card-row">
+    <div class="card-elevated" style="box-shadow:var(--shadow-hover);transform:translateY(-1px)">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:var(--on-s);opacity:.04;pointer-events:none"></div>
+      <div class="card-eyebrow">Total Shots</div>
+      <div class="stat-card-inner">
+        <div class="card-stat">1,247</div>
+        <div class="card-stat-label">photographs taken</div>
+      </div>
+    </div>
+    <div class="card-filled">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:var(--on-s);opacity:.06;pointer-events:none"></div>
+      <div class="icon-disc">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="card-title-sm">Web Development</div>
+      <div class="card-body">Full-stack applications from design to deployment.</div>
+    </div>
+    <div class="card-outlined" style="border-color:var(--sec)">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:var(--on-s);opacity:.04;pointer-events:none"></div>
+      <div class="card-eyebrow">Shots by Theme</div>
+      <div class="chart-placeholder">
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:80%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Loading shimmer ── -->
+  <div class="type-label" style="margin-bottom:10px">Loading skeleton (shimmer)</div>
+  <div class="card-row">
+    <!-- Elevated shimmer -->
+    <div class="card-elevated">
+      <div class="skeleton-line" style="width:50%;margin-bottom:16px"></div>
+      <div class="skeleton-line" style="width:40%;height:32px;margin-bottom:8px"></div>
+      <div class="skeleton-line" style="width:60%;height:10px"></div>
+    </div>
+    <!-- Filled shimmer -->
+    <div class="card-filled">
+      <div class="skeleton-circle" style="width:44px;height:44px;margin-bottom:12px"></div>
+      <div class="skeleton-line" style="width:65%;margin-bottom:8px"></div>
+      <div class="skeleton-line" style="width:100%;margin-bottom:5px;height:10px"></div>
+      <div class="skeleton-line" style="width:80%;height:10px"></div>
+    </div>
+    <!-- Outlined shimmer -->
+    <div class="card-outlined">
+      <div class="skeleton-line" style="width:45%;margin-bottom:12px"></div>
+      <div class="skeleton-rect" style="height:72px;margin-top:4px"></div>
+    </div>
+  </div>
+
+  <!-- ── More use-case examples ── -->
+  <div class="type-label" style="margin-bottom:10px;margin-top:8px">More examples</div>
+  <div class="card-row">
+    <!-- Elevated: platform experience -->
+    <div class="card-elevated">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title-sm" style="margin:0">Backend</div>
+        <div class="badge">5 yrs</div>
+      </div>
+      <div class="divider"></div>
+      <div class="chip-row">
+        <span class="chip">Node.js</span>
+        <span class="chip">Python</span>
+        <span class="chip">Go</span>
+        <span class="chip">Rust</span>
+      </div>
+    </div>
+    <!-- Filled: compact framework -->
+    <div class="card-filled" style="display:flex;align-items:center;gap:14px;padding:16px 20px">
+      <div class="icon-disc" style="margin:0;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="card-title-sm" style="font-size:15px;margin-bottom:2px">Astro</div>
+        <div class="card-body" style="font-size:12px">Static site framework</div>
+      </div>
+    </div>
+    <!-- Outlined: project card -->
+    <div class="card-outlined">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div>
+          <div class="card-eyebrow">Personal Project</div>
+          <div class="card-title-sm">Portfolio v3</div>
+          <div class="card-body" style="margin-top:4px;font-size:13px">Astro 6 + Vue islands + Firestore runtime content</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cta)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px">
+          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+        </svg>
+      </div>
+      <div class="divider"></div>
+      <div class="chip-row">
+        <span class="chip">Astro</span><span class="chip">Vue</span><span class="chip">Firebase</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     DARK MODE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-badge dark-badge">Dark Mode</div>
+
+<div class="theme-panel dark dark">
+
+  <div class="card-row">
+    <div class="type-label">Elevated Card</div>
+    <div class="type-label">Filled Card</div>
+    <div class="type-label">Outlined Card</div>
+  </div>
+
+  <!-- Default -->
+  <div class="type-label" style="margin-bottom:10px">Default</div>
+  <div class="card-row">
+    <div class="card-elevated">
+      <div class="card-eyebrow">Total Shots</div>
+      <div class="stat-card-inner">
+        <div class="card-stat">1,247</div>
+        <div class="card-stat-label">photographs taken</div>
+      </div>
+    </div>
+    <div class="card-filled">
+      <div class="icon-disc">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="card-title-sm">Web Development</div>
+      <div class="card-body">Full-stack applications from design to deployment.</div>
+      <div class="tag-row">
+        <span class="tag">React</span><span class="tag">Astro</span><span class="tag">Node.js</span>
+      </div>
+    </div>
+    <div class="card-outlined">
+      <div class="card-eyebrow">Shots by Theme</div>
+      <div class="chart-placeholder">
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:80%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hover -->
+  <div class="type-label" style="margin-bottom:10px">Hover</div>
+  <div class="card-row">
+    <div class="card-elevated" style="box-shadow:var(--shadow-hover);transform:translateY(-1px)">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:#fff;opacity:.04;pointer-events:none"></div>
+      <div class="card-eyebrow">Total Shots</div>
+      <div class="stat-card-inner">
+        <div class="card-stat">1,247</div>
+        <div class="card-stat-label">photographs taken</div>
+      </div>
+    </div>
+    <div class="card-filled">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:#fff;opacity:.06;pointer-events:none"></div>
+      <div class="icon-disc">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+        </svg>
+      </div>
+      <div class="card-title-sm">Web Development</div>
+      <div class="card-body">Full-stack applications from design to deployment.</div>
+    </div>
+    <div class="card-outlined" style="border-color:var(--sec)">
+      <div style="position:absolute;inset:0;border-radius:var(--r-md);background:#fff;opacity:.04;pointer-events:none"></div>
+      <div class="card-eyebrow">Shots by Theme</div>
+      <div class="chart-placeholder">
+        <div class="bar" style="height:60%"></div>
+        <div class="bar" style="height:90%"></div>
+        <div class="bar" style="height:45%"></div>
+        <div class="bar" style="height:70%"></div>
+        <div class="bar" style="height:55%"></div>
+        <div class="bar" style="height:80%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="type-label" style="margin-bottom:10px">Loading skeleton</div>
+  <div class="card-row">
+    <div class="card-elevated">
+      <div class="skeleton-line" style="width:50%;margin-bottom:16px"></div>
+      <div class="skeleton-line" style="width:40%;height:32px;margin-bottom:8px"></div>
+      <div class="skeleton-line" style="width:60%;height:10px"></div>
+    </div>
+    <div class="card-filled">
+      <div class="skeleton-circle" style="width:44px;height:44px;margin-bottom:12px"></div>
+      <div class="skeleton-line" style="width:65%;margin-bottom:8px"></div>
+      <div class="skeleton-line" style="width:100%;margin-bottom:5px;height:10px"></div>
+      <div class="skeleton-line" style="width:80%;height:10px"></div>
+    </div>
+    <div class="card-outlined">
+      <div class="skeleton-line" style="width:45%;margin-bottom:12px"></div>
+      <div class="skeleton-rect" style="height:72px;margin-top:4px"></div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════════
+     SPEC TABLE
+     ════════════════════════════════════════════════════════════════ -->
+<div class="section-badge" style="margin-top:8px">Specification</div>
+
+<table class="spec-table">
+  <thead>
+    <tr>
+      <th>Variant</th>
+      <th>Background</th>
+      <th>Border</th>
+      <th>Shadow (rest / hover)</th>
+      <th>Radius</th>
+      <th>State layer (hover)</th>
+      <th>Used for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Elevated</td>
+      <td class="mono">--color-surface</td>
+      <td>none</td>
+      <td class="mono">0 1px 3px rgba(0,0,0,.08) / 0 4px 12px rgba(0,0,0,.10)</td>
+      <td class="mono">--radius-md (12px)</td>
+      <td class="mono">on-surface @ 4% opacity</td>
+      <td>Stats, platforms, profile card</td>
+    </tr>
+    <tr>
+      <td>Filled</td>
+      <td class="mono">--color-surface-variant</td>
+      <td>none</td>
+      <td>none</td>
+      <td class="mono">--radius-md (12px)</td>
+      <td class="mono">on-surface @ 6% opacity</td>
+      <td>Service cards, framework tiles</td>
+    </tr>
+    <tr>
+      <td>Outlined</td>
+      <td class="mono">--color-surface</td>
+      <td class="mono">1px --color-outline → --color-secondary on hover</td>
+      <td>none</td>
+      <td class="mono">--radius-md (12px)</td>
+      <td class="mono">on-surface @ 4% opacity</td>
+      <td>Charts, projects, boardgames</td>
+    </tr>
+    <tr>
+      <td>Skeleton</td>
+      <td colspan="5">Shimmer: <span class="mono">linear-gradient(90deg, surface-variant 25%, outline 50%, surface-variant 75%)</span>, 800px width, 1.5s linear animation. Applied to line/circle/rect placeholders matching content shape.</td>
+      <td>Any card while Firestore loading</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="height:32px"></div>
+
+<!-- ── Token reference ── -->
+<div class="section-badge">Token Reference</div>
+<div class="token-strip">
+  <div class="token-pill">Surface <strong>#FFFFFF / #18181B</strong></div>
+  <div class="token-pill">Surface Variant <strong>#F4F4F5 / #27272A</strong></div>
+  <div class="token-pill">Outline <strong>#E4E4E7 / #3F3F46</strong></div>
+  <div class="token-pill">On Surface <strong>#09090B / #FAFAFA</strong></div>
+  <div class="token-pill">On Surface Variant <strong>#52525B / #D4D4D8</strong></div>
+  <div class="token-pill">CTA <strong>#2563EB / #60A5FA</strong></div>
+  <div class="token-pill">Radius <strong>--radius-md = 12px</strong></div>
+  <div class="token-pill">Transition <strong>150–200ms Standard ease</strong></div>
+</div>
+
+</body>
+</html>

@@ -55,6 +55,8 @@ async function sendPhoto(imagePath, caption) {
   const { FormData } = await import("formdata-node");
   const { fileFromPath } = await import("formdata-node/file-from-path");
 
+  // Try sendPhoto first; fall back to sendDocument if dimensions are too large
+  // (Telegram rejects photos whose combined w+h exceeds ~10 000px)
   const form = new FormData();
   form.set("chat_id", TELEGRAM_CHAT_ID);
   form.set("caption", caption);
@@ -65,8 +67,24 @@ async function sendPhoto(imagePath, caption) {
     { method: "POST", body: form },
   );
   const json = await res.json();
-  if (!json.ok) throw new Error(`Telegram error: ${JSON.stringify(json)}`);
-  return json;
+  if (json.ok) return json;
+
+  // Fallback: send as document (no dimension limits)
+  if (json.error_code === 400 && json.description?.includes("PHOTO_INVALID_DIMENSIONS")) {
+    const form2 = new FormData();
+    form2.set("chat_id", TELEGRAM_CHAT_ID);
+    form2.set("caption", caption);
+    form2.set("document", await fileFromPath(imagePath));
+    const res2 = await fetch(
+      `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendDocument`,
+      { method: "POST", body: form2 },
+    );
+    const json2 = await res2.json();
+    if (!json2.ok) throw new Error(`Telegram error: ${JSON.stringify(json2)}`);
+    return json2;
+  }
+
+  throw new Error(`Telegram error: ${JSON.stringify(json)}`);
 }
 
 async function sendMessage(text) {
