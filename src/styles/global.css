@@ -210,4 +210,232 @@
     outline-offset: 2px;
     border-radius: 2px;
   }
+
+  /* ── Shimmer animation (used by skeleton loading states) ─────────────── */
+  @keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+  }
+}
+
+/* ── Card system ────────────────────────────────────────────────────────── */
+/*
+  Three card variants following the approved Step 3 mockup.
+  State layer is a ::before pseudo-element — no extra DOM nodes required.
+  Shimmer skeleton classes share the same keyframe for consistent motion.
+*/
+@layer components {
+  /* ELEVATED — Level 1 surface, shadow communicates lift */
+  .card-elevated {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition:
+      box-shadow 200ms var(--ease-standard),
+      transform  200ms var(--ease-standard);
+  }
+
+  [data-theme="dark"] .card-elevated {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.4),
+      0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-elevated::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms var(--ease-standard);
+  }
+
+  .card-elevated:hover {
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.1),
+      0 2px 4px  rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  [data-theme="dark"] .card-elevated:hover {
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.5),
+      0 2px 4px  rgba(0, 0, 0, 0.3);
+  }
+
+  .card-elevated:hover::before {
+    opacity: 0.04;
+  }
+
+  /* FILLED — Surface Variant background, no shadow, no border */
+  .card-filled {
+    background: var(--color-surface-variant);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: background 150ms var(--ease-standard);
+  }
+
+  .card-filled::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms var(--ease-standard);
+  }
+
+  .card-filled:hover::before {
+    opacity: 0.06;
+  }
+
+  /* OUTLINED — Surface background + 1px outline border, no shadow */
+  .card-outlined {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-outline);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 150ms var(--ease-standard);
+  }
+
+  .card-outlined::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-md);
+    background: var(--color-on-surface);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms var(--ease-standard);
+  }
+
+  .card-outlined:hover {
+    border-color: var(--color-secondary);
+  }
+
+  .card-outlined:hover::before {
+    opacity: 0.04;
+  }
+
+  /* ── Shimmer skeleton loading states ────────────────────────────────── */
+  .skeleton-line {
+    border-radius: 4px;
+    height: 12px;
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-variant) 25%,
+      var(--color-outline)         50%,
+      var(--color-surface-variant) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  .skeleton-circle {
+    border-radius: 50%;
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-variant) 25%,
+      var(--color-outline)         50%,
+      var(--color-surface-variant) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  .skeleton-rect {
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-variant) 25%,
+      var(--color-outline)         50%,
+      var(--color-surface-variant) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.5s infinite linear;
+  }
+
+  /* ── Card content helpers ───────────────────────────────────────────── */
+
+  /* Icon disc — circular container with CTA-tint background */
+  .icon-disc {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-cta);
+  }
+
+  [data-theme="dark"] .icon-disc {
+    background: rgba(96, 165, 250, 0.12);
+  }
+
+  /* Chip — outlined technology / skill tag with CTA color */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    color: var(--color-cta);
+    border: 1px solid var(--color-cta);
+    background: rgba(37, 99, 235, 0.06);
+    white-space: nowrap;
+  }
+
+  [data-theme="dark"] .chip {
+    background: rgba(96, 165, 250, 0.08);
+  }
+
+  /* Tag — subdued category pill using outline border on background surface */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 9999px;
+    padding: 3px 10px;
+    color: var(--color-on-surface-variant);
+    background: var(--color-background);
+    border: 1px solid var(--color-outline);
+    white-space: nowrap;
+  }
+
+  [data-theme="dark"] .tag {
+    background: var(--color-surface-variant);
+  }
+
+  /* Badge — compact inline label (e.g. "5 yrs" experience) */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(37, 99, 235, 0.10);
+    color: var(--color-cta);
+    white-space: nowrap;
+  }
+
+  [data-theme="dark"] .badge {
+    background: rgba(96, 165, 250, 0.12);
+  }
 }

@@ -86,7 +86,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 |------|-------|--------|--------|-------|--------|--------|----|
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
-| 3 | Card system (elevated, filled, outlined) | PENDING | — | — | — | NOT STARTED | — |
+| 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -168,6 +168,43 @@ P1 fix applied during review: drawer was `z-50` matching scrim `z-50` — relied
 All acceptance criteria met. Desktop rail: 80px fixed, 6 icon+label items, CTA-tinted active pill (`rgba(37,99,235,0.10)` / `rgba(96,165,250,0.12)`), ThemeToggle at bottom via `mt-auto`. Mobile top bar: 56px, hamburger with `aria-expanded`/`aria-controls`. Drawer: `role="dialog"` + `aria-modal` + `aria-label`, slide-in at 300ms Emphasized Decelerate, `rounded-r-3xl` items match mockup's 24px right radius, scrim at `z-50`, drawer at `z-[60]`. Focus management: open→close button, close→hamburger, Escape closes. ThemeToggle MutationObserver syncs both instances. Skip link present. All canonical token names. No `any` types.
 
 Minor non-blocking: drawer 256px vs mockup 220px — wider is acceptable. Mobile top bar logo-left/hamburger-right vs mockup hamburger-left — both valid layouts.
+
+Ready to merge.
+
+---
+
+### Redesign Step 3 — Card System
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step3-cards.html` — Approved via Telegram 2026-04-11
+**Branch:** `feat/redesign-step3-card-system` | **PR:** —
+
+**Scope:**
+- Added `@keyframes shimmer` to `@layer base` in `src/styles/global.css`
+- Added `@layer components` card system block:
+  - `.card-elevated` — `bg-surface` + resting shadow, hover shadow lift + `translateY(-1px)`, 4% state layer
+  - `.card-filled` — `bg-surface-variant`, 6% state layer on hover
+  - `.card-outlined` — `bg-surface` + `1px outline` border, border shifts to `--color-secondary` on hover, 4% state layer
+  - All variants: `border-radius: var(--radius-md)` (12px), `position: relative; overflow: hidden`, `::before` state layer pseudo-element, `150ms var(--ease-standard)` transitions
+  - Dark mode shadow overrides for `.card-elevated` (higher opacity values)
+- Skeleton utilities: `.skeleton-line`, `.skeleton-circle`, `.skeleton-rect` — shimmer gradient using `--color-surface-variant` / `--color-outline` tokens
+- Content helpers: `.icon-disc` (44px circle, CTA-tint bg), `.chip` (outlined, CTA color, `--radius-sm`), `.tag` (subdued pill, outline border), `.badge` (compact inline label)
+- No new dependencies, no `any` types
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — 36/36 passing
+- [x] All three card variants present in `global.css` with correct token names
+- [x] Dark mode shadow overrides on `.card-elevated`
+- [x] Shimmer animation defined and used by all three skeleton classes
+- [x] Content helpers (`.icon-disc`, `.chip`, `.tag`, `.badge`) present with dark overrides
+- [x] No hardcoded color values — all use design tokens
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-11
+
+Build 0 errors, 36/36 tests pass. All three card variants use correct token names (`--color-surface`, `--color-surface-variant`, `--color-outline`, `--color-secondary`, `--radius-md`, `--ease-standard`). Dark-mode shadow overrides present on `.card-elevated` (resting + hover, higher opacities). `@keyframes shimmer` in `@layer base`; all three skeleton classes share it with `background-size: 800px 100%`. All four content helpers (`.icon-disc`, `.chip`, `.tag`, `.badge`) present with `[data-theme="dark"]` overrides. State-layer rgba values are intentional (hex tokens cannot be used in rgba interpolation — same documented approach as SiteHeader). Mockup fidelity: shadow values, state-layer opacities (elevated 4%, filled 6%, outlined 4%), and helper proportions match `scripts/redesign-step3-cards.html` exactly. `overflow: hidden` on all cards correctly clips state layer.
 
 Ready to merge.
 
