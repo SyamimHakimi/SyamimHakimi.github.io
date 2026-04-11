@@ -86,7 +86,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 |------|-------|--------|--------|-------|--------|--------|----|
 | 1 | Color tokens + typography (`global.css`) | — | DONE | APPROVED | — | MERGED | #29 |
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
-| 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | — | — | REVIEW READY | — |
+| 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -200,9 +200,13 @@ Ready to merge.
 - [x] Content helpers (`.icon-disc`, `.chip`, `.tag`, `.badge`) present with dark overrides
 - [x] No hardcoded color values — all use design tokens
 
-**Claude:** DONE | **Codex:** — | **Syamim:** —
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
 
-→ CODEX: please review
+**Codex review:** APPROVED — 2026-04-11
+
+Build 0 errors, 36/36 tests pass. All three card variants use correct token names (`--color-surface`, `--color-surface-variant`, `--color-outline`, `--color-secondary`, `--radius-md`, `--ease-standard`). Dark-mode shadow overrides present on `.card-elevated` (resting + hover, higher opacities). `@keyframes shimmer` in `@layer base`; all three skeleton classes share it with `background-size: 800px 100%`. All four content helpers (`.icon-disc`, `.chip`, `.tag`, `.badge`) present with `[data-theme="dark"]` overrides. State-layer rgba values are intentional (hex tokens cannot be used in rgba interpolation — same documented approach as SiteHeader). Mockup fidelity: shadow values, state-layer opacities (elevated 4%, filled 6%, outlined 4%), and helper proportions match `scripts/redesign-step3-cards.html` exactly. `overflow: hidden` on all cards correctly clips state layer.
+
+Ready to merge.
 
 ---
 
