@@ -88,7 +88,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
 | 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #32 |
-| 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 8 | About (`AboutMe.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -261,6 +261,34 @@ Ready to merge.
 Build 0 errors, 45/45 tests (9 new). All four legacy token aliases removed from the island. `buildPhotoStatsLineSeries` correctly filters `MM/YYYY` keys, sorts via `parseMonthKey`, and slices the last 12 months. `buildRecipeBarSeries` sorts descending and slices top 6. MutationObserver pattern matches `ThemeToggle.vue`. Shimmer skeleton mirrors the loaded layout. Error state uses `role="alert"` and `--color-error` border. motion-v stagger correctly returns 0 delays when `prefers-reduced-motion`. No `any` types. `index.astro` header uses global `h1` serif style and `--color-on-surface-variant` token. `chart.js` and `vue-chartjs` fully uninstalled — no remaining imports.
 
 Ready to merge.
+
+---
+
+### Redesign Step 5 — Gallery + Lightbox
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step5-gallery.html` — Approved via Telegram 2026-04-13
+**Branch:** `main` (committed directly — same pattern as Steps 3 & 4) | **PR:** —
+
+**Scope:**
+- `src/pages/photography.astro`: h1 → DM Serif Display (removed `font-bold`), `--color-text-muted` → `--color-on-surface-variant`, added camera icon disc
+- `src/components/islands/GalleryGrid.vue`: full token migration (4 legacy vars), hover overlay with gradient + title/recipe, `animate-pulse` → `.skeleton-rect` shimmer with per-tile stagger delay, load-more button card-outlined style + CTA focus ring + spinner icon, error states match `PhotographyJourney.vue` icon-disc pattern, motion-v entrance stagger (40ms per tile, modulo 12)
+- `src/components/islands/GalleryLightbox.vue`: nav buttons 40px → 48px (meets 44px touch target), counter badge glassmorphic pill (top-center), metadata bar frosted-glass panel (title + recipe + lens chips), keyboard hint strip (bottom, hidden when reduced-motion), `fade-leave-active` shortened to 0.15s, `import { computed }` moved to top of script
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] All legacy tokens (`--color-text-muted`, `--color-border`, `--color-accent`, `--color-text`) replaced
+- [x] Nav buttons ≥ 44px touch target
+- [x] Hover overlay: `aria-hidden="true"`, `pointer-events-none`, `group-focus-visible` trigger
+- [x] Skeleton uses `.skeleton-rect` shimmer (not `animate-pulse`)
+- [x] `prefersReducedMotion` guard on motion-v stagger
+- [x] Error states use `--color-error` token + `role="alert"`
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-13
+
+Build 0 errors, 0 warnings. All 4 legacy token aliases removed from both islands and the page shell. `--color-surface-variant`, `--radius-sm`, `--radius-md` all confirmed defined in `global.css`. Nav buttons correctly upgraded to 48×48px. Hover overlay uses `pointer-events-none` + `aria-hidden="true"` + `group-focus-visible:opacity-100` for keyboard accessibility. Skeleton shimmer uses card-system `.skeleton-rect` with per-tile `animation-delay`. Error states match `PhotographyJourney.vue` icon-disc pattern. motion-v stagger returns 0 when `prefers-reduced-motion`. `import { computed }` moved to top of `<script setup>`. `fade-leave-active` exit at 0.15s (faster than 0.2s enter). No `any` types.
 
 ---
 
