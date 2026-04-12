@@ -89,7 +89,7 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #32 |
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
-| 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 6 | Portfolio (`PortfolioSection.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
 | 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 8 | About (`AboutMe.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 9 | Contact (`ContactForm.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -289,6 +289,32 @@ Ready to merge.
 **Codex review:** APPROVED — 2026-04-13
 
 Build 0 errors, 0 warnings. All 4 legacy token aliases removed from both islands and the page shell. `--color-surface-variant`, `--radius-sm`, `--radius-md` all confirmed defined in `global.css`. Nav buttons correctly upgraded to 48×48px. Hover overlay uses `pointer-events-none` + `aria-hidden="true"` + `group-focus-visible:opacity-100` for keyboard accessibility. Skeleton shimmer uses card-system `.skeleton-rect` with per-tile `animation-delay`. Error states match `PhotographyJourney.vue` icon-disc pattern. motion-v stagger returns 0 when `prefers-reduced-motion`. `import { computed }` moved to top of `<script setup>`. `fade-leave-active` exit at 0.15s (faster than 0.2s enter). No `any` types.
+
+---
+
+### Redesign Step 6 — Portfolio
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step6-portfolio.html` — Approved via Telegram 2026-04-13
+**Branch:** `main` | **PR:** —
+
+**Scope:**
+- `src/pages/portfolio.astro`: h1 → DM Serif Display, briefcase icon disc, updated subtitle copy, `--color-text-muted` → `--color-on-surface-variant`
+- `src/components/islands/PortfolioSection.vue`: hero summary strip (computed Python/Vue years + FinTech/EV domain tags), experience cards with brand logo disc + active green dot + year badge + hover CTA left-border accent, section context lines, compact framework grid (30px logo + title + date), Languages renamed to "Languages & Databases" with active chip indicators, `card-elevated` personal project with eyebrow + tech stack tags, skeleton mirrors loaded layout, error state matches icon-disc pattern, motion-v stagger, dead code (`formatDate`) removed, 5 legacy tokens fully migrated
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] All legacy tokens replaced (`--color-border`, `--color-text-muted`, `--color-accent`, `--color-bg`, `animate-pulse`)
+- [x] `isActive()` non-null assertion safe (only used when `date-to` present)
+- [x] `aria-hidden` on decorative SVGs, `role="alert"` on error, `aria-busy` + `aria-label` on loading
+- [x] `prefersReducedMotion` guard on motion-v stagger
+- [x] Dead code (`formatDate`) removed
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-13
+
+Build 0 errors, 0 warnings. All 5 legacy token aliases removed. `animate-pulse` fully replaced with `.skeleton-rect`/`.skeleton-line` shimmer. Raw Tailwind red error classes replaced with `--color-error` icon-disc pattern. `formatDate` dead code caught and removed before commit. `isActive()` non-null assertion on `date-to` safe — only reached when `!isActive(item)` confirms presence. Hero strip `pythonSince`/`vueSince` computed from live Firestore data, gracefully hidden if `null`. `prefersReducedMotion` guard returns 0 delays. All decorative SVGs have `aria-hidden="true"`. Active dot has `aria-label="Currently using"`. No `any` types.
 
 ---
 
