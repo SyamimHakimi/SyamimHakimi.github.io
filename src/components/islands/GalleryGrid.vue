@@ -7,18 +7,36 @@
  * Scroll entrance animations use motion-v; stagger is skipped when
  * prefers-reduced-motion is active.
  */
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Motion } from "motion-v";
 import { useGallery } from "../../lib/composables/useGallery";
 import GalleryLightbox from "./GalleryLightbox.vue";
 
 const { photos, loading, loadingMore, hasMore, error, loadMore } = useGallery();
 
+// ── Theme filtering (client-side, loaded batch only) ───────────────────────
+const activeTheme = ref<string | null>(null);
+
+const availableThemes = computed(() => {
+  const seen = new Set<string>();
+  for (const p of photos.value) {
+    if (p.theme) seen.add(p.theme);
+  }
+  return [...seen];
+});
+
+const filteredPhotos = computed(() =>
+  activeTheme.value
+    ? photos.value.filter((p) => p.theme === activeTheme.value)
+    : photos.value,
+);
+
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
-function openLightbox(index: number) {
-  lightboxIndex.value = index;
+function openLightbox(photoId: string) {
+  const realIndex = photos.value.findIndex((p) => p.id === photoId);
+  lightboxIndex.value = realIndex >= 0 ? realIndex : 0;
   lightboxOpen.value = true;
 }
 
@@ -86,35 +104,68 @@ function delay(i: number): number {
 
     <!-- Grid ─────────────────────────────────────────────────────────────── -->
     <div v-else>
+      <!-- Count context line -->
+      <p class="mb-3 text-[13px] text-[var(--color-on-surface-variant)]">
+        <span v-if="activeTheme">
+          {{ filteredPhotos.length }} {{ activeTheme }} photo{{ filteredPhotos.length !== 1 ? "s" : "" }}
+          <span class="opacity-60">· from {{ photos.length }} loaded</span>
+        </span>
+        <span v-else>{{ photos.length }} favourite photo{{ photos.length !== 1 ? "s" : "" }}</span>
+      </p>
+
+      <!-- Theme filter bar -->
+      <div
+        v-if="availableThemes.length > 1"
+        class="mb-5 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter by theme"
+      >
+        <button
+          type="button"
+          class="filter-pill"
+          :class="{ active: activeTheme === null }"
+          @click="activeTheme = null"
+        >All</button>
+        <button
+          v-for="theme in availableThemes"
+          :key="theme"
+          type="button"
+          class="filter-pill"
+          :class="{ active: activeTheme === theme }"
+          @click="activeTheme = theme"
+        >{{ theme }}</button>
+      </div>
+
       <ul
-        class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+        class="columns-2 gap-3 sm:columns-3 lg:columns-4"
         role="list"
       >
         <Motion
-          v-for="(photo, index) in photos"
+          v-for="(photo, index) in filteredPhotos"
           :key="photo.id"
           as="li"
+          class="mb-3 break-inside-avoid"
           :initial="tileInitial"
           :animate="tileVisible"
           :transition="{ duration: 0.25, delay: delay(index % 12), easing: [0.2,0,0,1] }"
         >
           <button
             type="button"
-            class="group relative aspect-square w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
+            class="group relative w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
             :aria-label="photo.title ?? `Photo ${index + 1}`"
             style="touch-action: manipulation; cursor: pointer"
-            @click="openLightbox(index)"
+            @click="openLightbox(photo.id)"
           >
             <img
               v-if="photo.link"
               :src="photo.link"
               :alt="photo.title ?? ''"
               loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              class="block h-auto w-full transition-transform duration-300 group-hover:scale-105"
             />
             <div
               v-else
-              class="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
+              class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
             >
               <svg
                 width="22" height="22" viewBox="0 0 24 24"
@@ -173,7 +224,7 @@ function delay(i: number): number {
       </div>
 
       <!-- Load more ───────────────────────────────────────────────────────── -->
-      <div v-if="hasMore" class="mt-8 flex justify-center">
+      <div v-if="hasMore" class="mt-8 flex flex-col items-center gap-2">
         <button
           type="button"
           class="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:bg-[var(--color-surface-variant)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)] disabled:cursor-not-allowed disabled:opacity-50"
@@ -192,6 +243,12 @@ function delay(i: number): number {
           </svg>
           <span>{{ loadingMore ? "Loading…" : "Load more" }}</span>
         </button>
+        <p
+          v-if="activeTheme"
+          class="text-center text-[12px] text-[var(--color-on-surface-variant)]"
+        >
+          Load more to see all {{ activeTheme }} photos
+        </p>
       </div>
     </div>
 
@@ -204,3 +261,33 @@ function delay(i: number): number {
     />
   </div>
 </template>
+
+<style scoped>
+.filter-pill {
+  padding: 7px 16px;
+  min-height: 36px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+  touch-action: manipulation;
+}
+.filter-pill:hover {
+  border-color: var(--color-cta);
+  color: var(--color-on-surface);
+}
+.filter-pill.active {
+  background: var(--color-cta);
+  border-color: var(--color-cta);
+  color: #fff;
+  font-weight: 600;
+}
+.filter-pill:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+</style>

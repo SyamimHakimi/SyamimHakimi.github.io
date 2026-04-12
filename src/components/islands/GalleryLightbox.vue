@@ -14,6 +14,7 @@ interface Photo {
   date: string;
   recipe?: string;
   lens?: string;
+  theme?: string;
 }
 
 interface Props {
@@ -65,6 +66,10 @@ function onKeydown(e: KeyboardEvent) {
 
 onMounted(() => document.addEventListener("keydown", onKeydown));
 onUnmounted(() => document.removeEventListener("keydown", onKeydown));
+
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-MY", { month: "short", year: "numeric" });
+}
 </script>
 
 <template>
@@ -116,7 +121,7 @@ onUnmounted(() => document.removeEventListener("keydown", onKeydown));
 
           <!-- Metadata bar -->
           <div
-            v-if="current.title || current.recipe || current.lens"
+            v-if="current.title || current.recipe || current.lens || current.date || current.theme"
             class="lb-meta mt-2.5 w-full"
           >
             <span
@@ -126,6 +131,8 @@ onUnmounted(() => document.removeEventListener("keydown", onKeydown));
               {{ current.title }}
             </span>
             <div class="flex flex-shrink-0 flex-wrap justify-end gap-1.5">
+              <span v-if="current.date" class="lb-tag lb-tag--dim">{{ formatDate(current.date) }}</span>
+              <span v-if="current.theme" class="lb-tag lb-tag--dim">{{ current.theme }}</span>
               <span v-if="current.recipe" class="lb-tag">{{ current.recipe }}</span>
               <span v-if="current.lens" class="lb-tag lb-tag--dim">{{ current.lens }}</span>
             </div>
