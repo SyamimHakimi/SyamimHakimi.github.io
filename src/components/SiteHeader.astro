@@ -29,6 +29,8 @@ function isActive(href: string): boolean {
   return currentPath.startsWith(href);
 }
 
+const currentPageLabel = navLinks.find((l) => isActive(l.href))?.label ?? "";
+
 /** Inline SVG icon paths (Lucide-style, stroke, viewBox 0 0 24 24). */
 const iconPaths: Record<string, string> = {
   home:      `<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/>`,
@@ -99,13 +101,18 @@ function icon(name: string, size = 20): string {
 <header
   class="lg:hidden fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between border-b border-[var(--color-outline)] bg-[var(--color-surface)] px-4"
 >
-  <!-- Site name -->
+  <!-- Site name + current page breadcrumb -->
   <a
     href="/"
     aria-label="syamim. — home"
-    class="font-serif text-lg font-normal text-[var(--color-on-surface)] transition-colors hover:text-[var(--color-cta)]"
+    class="flex items-baseline gap-1.5 font-serif text-lg font-normal text-[var(--color-on-surface)] transition-colors hover:text-[var(--color-cta)]"
   >
     syamim.
+    {currentPageLabel && currentPageLabel !== "Home" && (
+      <span class="font-sans text-[12px] font-normal text-[var(--color-on-surface-variant)]">
+        / {currentPageLabel}
+      </span>
+    )}
   </a>
 
   <!-- Right: ThemeToggle + hamburger -->
