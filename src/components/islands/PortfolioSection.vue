@@ -670,9 +670,26 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
                   target="_blank"
                   rel="noopener noreferrer"
                   class="tag tag--link"
-                  >{{ tech.title }}</a
                 >
-                <span v-else class="tag">{{ tech.title }}</span>
+                  <img
+                    v-if="tech['img-src']"
+                    :src="`/${tech['img-src']}`"
+                    :alt="tech.title"
+                    class="h-3.5 w-3.5 shrink-0 object-contain"
+                    aria-hidden="true"
+                  />
+                  {{ tech.title }}
+                </a>
+                <span v-else class="tag">
+                  <img
+                    v-if="tech['img-src']"
+                    :src="`/${tech['img-src']}`"
+                    :alt="tech.title"
+                    class="h-3.5 w-3.5 shrink-0 object-contain"
+                    aria-hidden="true"
+                  />
+                  {{ tech.title }}
+                </span>
               </li>
             </ul>
           </div>
@@ -848,6 +865,7 @@ h2 {
 .tag {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 11px;

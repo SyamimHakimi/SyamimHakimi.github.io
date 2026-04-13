@@ -29,6 +29,36 @@ const GEAR_TYPE_META: Record<number, string> = {
   3: "Prime",
 };
 
+/** Maps brand + name to a local product image path. */
+const GEAR_IMAGE: Record<string, string> = {
+  "Fujifilm X-E4": "/media/gear/XE4.png",
+  "Sigma 10-18mm F2.8 DC DN": "/media/gear/Sigma10-18.png",
+  "Sigma 18-50mm F2.8 DC DN": "/media/gear/Sigma18-50.png",
+  "Viltrox 56mm F1.7 APS-C": "/media/gear/Viltrox56.png",
+};
+
+function gearImage(item: PhotographyGear): string | null {
+  return GEAR_IMAGE[`${item.brand} ${item.name}`] ?? null;
+}
+
+/* ── Social helpers ────────────────────────────────────────────────────── */
+
+/** Maps social platform name to a local SVG icon path. */
+const SOCIAL_ICON: Record<string, string> = {
+  github: "/media/svg/social-logos/github.svg",
+  linkedin: "/media/svg/social-logos/linkedin.svg",
+  instagram: "/media/svg/social-logos/instagram.svg",
+  twitter: "/media/svg/social-logos/twitter.svg",
+  facebook: "/media/svg/social-logos/facebook.svg",
+  youtube: "/media/svg/social-logos/youtube.svg",
+  dribbble: "/media/svg/social-logos/dribbble.svg",
+  google: "/media/svg/social-logos/google.svg",
+};
+
+function socialIcon(name: string): string | null {
+  return SOCIAL_ICON[name.toLowerCase()] ?? null;
+}
+
 const gearGroups = computed<[string, PhotographyGear[]][]>(() => {
   const groups = new Map<string, PhotographyGear[]>();
   for (const item of data.value.gear) {
@@ -81,7 +111,7 @@ function boardgameTags(tags: string | undefined): string[] {
     <div v-else class="space-y-8">
       <!-- Profile card + visual panel ───────────────────────────────── -->
       <section
-        class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
+        class="grid gap-4 rounded-[20px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[28px] sm:p-6 md:p-8"
         aria-label="About Syamim"
       >
         <!-- Two-column: profile card + visual panel -->
@@ -89,18 +119,19 @@ function boardgameTags(tags: string | undefined): string[] {
           <!-- Profile card -->
           <div
             v-if="data.profile"
-            class="grid gap-4 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+            class="grid gap-4 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[24px] sm:p-5"
           >
             <!-- Avatar + name row -->
-            <div class="flex items-start gap-4">
+            <div class="flex items-start gap-3">
               <div
-                class="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-[24px] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)]"
+                class="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[18px] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)] sm:h-[76px] sm:w-[76px] sm:rounded-[24px]"
                 aria-hidden="true"
               >
-                <User :size="30" :stroke-width="1.75" />
+                <User :size="24" :stroke-width="1.75" class="sm:hidden" />
+                <User :size="30" :stroke-width="1.75" class="hidden sm:block" />
               </div>
               <div>
-                <h2 class="font-serif text-[2.125rem] leading-none">
+                <h2 class="font-serif text-[1.625rem] leading-none sm:text-[2.125rem]">
                   {{ data.profile.Name }}
                 </h2>
                 <p
@@ -114,13 +145,13 @@ function boardgameTags(tags: string | undefined): string[] {
             <!-- Hobbies -->
             <p
               v-if="data.profile.Hobbies"
-              class="max-w-[52ch] text-[15px] text-[var(--color-on-surface)]"
+              class="text-[15px] text-[var(--color-on-surface)]"
             >
               {{ data.profile.Hobbies }}
             </p>
 
             <!-- Interest grid (static) -->
-            <div class="grid gap-2.5 sm:grid-cols-3">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5">
               <div
                 class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3.5"
               >
@@ -175,8 +206,15 @@ function boardgameTags(tags: string | undefined): string[] {
                 "
                 rel="noopener noreferrer"
                 role="listitem"
-                class="inline-flex min-h-[40px] items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+                class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
               >
+                <img
+                  v-if="socialIcon(social.name)"
+                  :src="socialIcon(social.name)!"
+                  :alt="social.name"
+                  class="h-4 w-4 shrink-0 object-contain opacity-70"
+                  aria-hidden="true"
+                />
                 {{ social.name }} — {{ social.text }}
               </a>
             </div>
@@ -211,7 +249,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Photography Gear ─────────────────────────────────────────── -->
         <section
           v-if="data.gear.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Photography gear"
         >
           <!-- Section header -->
@@ -229,13 +267,25 @@ function boardgameTags(tags: string | undefined): string[] {
               >
                 {{ label }}
               </p>
-              <div class="grid gap-3 sm:grid-cols-2">
+              <div class="grid grid-cols-2 gap-3">
                 <article
                   v-for="item in items"
                   :key="item.id"
-                  class="rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3.5"
+                  class="rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3"
                 >
-                  <strong class="block text-[15px] font-semibold">
+                  <!-- Gear product image -->
+                  <div
+                    v-if="gearImage(item)"
+                    class="mb-2.5 flex h-[80px] items-center justify-center overflow-hidden rounded-xl border border-[var(--color-outline)] bg-[var(--color-surface)] sm:h-[96px]"
+                  >
+                    <img
+                      :src="gearImage(item)!"
+                      :alt="item.brand + ' ' + item.name"
+                      class="h-full w-full object-contain p-2"
+                      loading="lazy"
+                    />
+                  </div>
+                  <strong class="block text-[13px] font-semibold leading-snug sm:text-[15px]">
                     {{ item.brand }} {{ item.name }}
                   </strong>
                   <a
@@ -262,7 +312,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Favourite Boardgames ─────────────────────────────────────── -->
         <section
           v-if="data.boardgames.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Favourite boardgames"
         >
           <!-- Section header -->
@@ -339,7 +389,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Connect ─────────────────────────────────────────────────── -->
         <section
           v-if="data.socialMedia.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Connect"
         >
           <!-- Section header -->
@@ -362,8 +412,15 @@ function boardgameTags(tags: string | undefined): string[] {
               :target="social.link.startsWith('mailto:') ? undefined : '_blank'"
               rel="noopener noreferrer"
               role="listitem"
-              class="inline-flex min-h-[40px] items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+              class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
             >
+              <img
+                v-if="socialIcon(social.name)"
+                :src="socialIcon(social.name)!"
+                :alt="social.name"
+                class="h-4 w-4 shrink-0 object-contain opacity-70"
+                aria-hidden="true"
+              />
               {{ social.name }} — {{ social.text }}
             </a>
           </div>
