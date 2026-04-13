@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Step 4b — Photography Journey: Cumulative Growth + Heatmap + Focal Length</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<style>
+  :root {
+    --color-bg: #f9f9f9;
+    --color-surface: #ffffff;
+    --color-surface-variant: #f1f5f9;
+    --color-on-surface: #09090b;
+    --color-on-surface-variant: #52525b;
+    --color-outline: #e4e4e7;
+    --color-cta: #2563eb;
+    --color-cta-10: rgba(37,99,235,.10);
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--color-bg); color: var(--color-on-surface); padding: 24px; min-height: 100vh; }
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  /* Card system */
+  .card-elevated {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
+  }
+  .card-outlined {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    border: 1px solid var(--color-outline);
+  }
+
+  /* Layout */
+  .space-y-3 > * + * { margin-top: 12px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .grid-charts { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+  .grid-new { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; align-items: stretch; }
+  .grid-new .card-outlined { display: flex; flex-direction: column; overflow: hidden; }
+  #donutChart { width: 100% !important; overflow: hidden; }
+
+  /* Stat card */
+  .stat-eyebrow {
+    font-size: 10px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--color-on-surface-variant); margin-bottom: 10px;
+  }
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px; line-height: 1; color: var(--color-on-surface); margin-bottom: 4px;
+  }
+  .stat-value.small { font-size: 17px; line-height: 1.3; }
+  .stat-label { font-size: 12px; color: var(--color-on-surface-variant); }
+
+  /* Chart header */
+  .chart-title { font-size: 13px; font-weight: 600; color: var(--color-on-surface); }
+  .chart-sub { font-size: 11px; color: var(--color-on-surface-variant); margin-top: 1px; margin-bottom: 12px; }
+
+  /* New badge */
+  .new-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(37,99,235,.10); color: var(--color-cta);
+    font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: middle;
+  }
+
+  /* Heatmap legend */
+  .heatmap-legend {
+    display: flex; align-items: center; gap: 6px; margin-top: 8px;
+    font-size: 10px; color: var(--color-on-surface-variant); justify-content: flex-end;
+  }
+  .legend-swatch {
+    width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+  }
+
+  /* Donut centre label */
+  .donut-wrap { position: relative; }
+
+  /* Responsive note */
+  @media (max-width: 640px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-charts, .grid-new { grid-template-columns: 1fr; }
+  }
+
+  /* Dark mode preview toggle */
+  .theme-btn {
+    position: fixed; top: 16px; right: 16px;
+    background: var(--color-surface); border: 1px solid var(--color-outline);
+    color: var(--color-on-surface); padding: 6px 12px; border-radius: 8px;
+    font-size: 12px; cursor: pointer; font-family: inherit;
+  }
+  [data-theme="dark"] {
+    --color-bg: #09090b; --color-surface: #18181b; --color-surface-variant: #27272a;
+    --color-on-surface: #fafafa; --color-on-surface-variant: #a1a1aa;
+    --color-outline: #3f3f46; --color-cta: #60a5fa;
+    --color-cta-10: rgba(96,165,250,.12);
+  }
+</style>
+</head>
+<body>
+<button class="theme-btn" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; location.reload()">
+  Toggle dark
+</button>
+
+<div class="page">
+  <div style="margin-bottom:24px">
+    <h1 style="font-family:'DM Serif Display',serif;font-size:28px;font-weight:400">Photography Journey</h1>
+    <p style="font-size:15px;color:var(--color-on-surface-variant);margin-top:4px">Step 4b — cumulative growth line, shooting calendar heatmap, focal length donut</p>
+  </div>
+
+  <div class="space-y-3">
+
+    <!-- ── Stat row (existing, unchanged) ─────────────────────────── -->
+    <div class="grid-4">
+      <div class="card-elevated">
+        <p class="stat-eyebrow">Outings</p>
+        <p class="stat-value">42</p>
+        <p class="stat-label">photo walks</p>
+      </div>
+      <div class="card-elevated">
+        <p class="stat-eyebrow">Total Photos</p>
+        <p class="stat-value">1,284</p>
+        <p class="stat-label">frames captured</p>
+      </div>
+      <div class="card-elevated">
+        <p class="stat-eyebrow">Favourites</p>
+        <p class="stat-value">203</p>
+        <p class="stat-label">kept forever</p>
+      </div>
+      <div class="card-elevated">
+        <p class="stat-eyebrow">Fav Lens</p>
+        <p class="stat-value small">Sigma 18-50mm F2.8</p>
+        <p class="stat-label">most used</p>
+      </div>
+    </div>
+
+    <!-- ── Existing chart row (unchanged) ─────────────────────────── -->
+    <div class="grid-charts">
+      <div class="card-outlined">
+        <p class="chart-title">Photos Over Time</p>
+        <p class="chart-sub">Cumulative total — since first shoot</p>
+        <div id="lineChart"></div>
+      </div>
+      <div class="card-outlined">
+        <p class="chart-title">Film Recipes</p>
+        <p class="chart-sub">Simulation usage count</p>
+        <div id="barChart"></div>
+      </div>
+    </div>
+
+    <!-- ── NEW chart row ───────────────────────────────────────────── -->
+    <div class="grid-new">
+
+      <!-- Shooting calendar heatmap — NEW -->
+      <div class="card-outlined">
+        <p class="chart-title">
+          Shooting Calendar
+          <span class="new-badge">New</span>
+        </p>
+        <p class="chart-sub">Monthly shooting frequency by year</p>
+        <div id="heatmapChart"></div>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <span class="legend-swatch" style="background:rgba(37,99,235,.08)"></span>
+          <span class="legend-swatch" style="background:rgba(37,99,235,.25)"></span>
+          <span class="legend-swatch" style="background:rgba(37,99,235,.50)"></span>
+          <span class="legend-swatch" style="background:rgba(37,99,235,.75)"></span>
+          <span class="legend-swatch" style="background:#2563eb"></span>
+          <span>More</span>
+        </div>
+      </div>
+
+      <!-- Focal length distribution — NEW -->
+      <div class="card-outlined">
+        <p class="chart-title">
+          Focal Lengths
+          <span class="new-badge">New</span>
+        </p>
+        <p class="chart-sub">Shots per focal length</p>
+        <div id="donutChart"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const palette = isDark
+    ? { cta:'#60a5fa', onSurface:'#fafafa', onSurfaceVariant:'#a1a1aa', outline:'#3f3f46', surface:'#18181b' }
+    : { cta:'#2563eb', onSurface:'#09090b', onSurfaceVariant:'#52525b', outline:'#e4e4e7', surface:'#ffffff' };
+
+  // ── Cumulative photos line chart ───────────────────────────────────────────
+  // Monthly data from Jul 2023 → present, accumulated into running total
+  const monthly = [6,14,9,18,4,0,5,12,18,35,28,10,22,30,14,25,8,3,15,22,8];
+  const cumulative = monthly.reduce((acc,v,i)=>{ acc.push((acc[i-1]||0)+v); return acc; },[]);
+  const months = ['Jul\'23','Aug','Sep','Oct','Nov','Dec','Jan\'24','Feb','Mar','Apr','May','Jun',
+                  'Jul','Aug','Sep','Oct','Nov','Dec','Jan\'25','Feb','Mar'];
+  new ApexCharts(document.querySelector('#lineChart'), {
+    chart: { type:'area', height:160, toolbar:{show:false}, background:'transparent',
+      fontFamily:'DM Sans, system-ui, sans-serif', animations:{enabled:true,speed:400} },
+    colors:[palette.cta],
+    stroke:{curve:'smooth',width:2},
+    fill:{type:'gradient',gradient:{opacityFrom:.18,opacityTo:.02,stops:[0,100]}},
+    dataLabels:{enabled:false},
+    markers:{
+      size:0,
+      discrete:[{dataPointIndex:cumulative.length-1,seriesIndex:0,size:4,
+        fillColor:palette.cta,strokeColor:palette.surface,strokeWidth:2}],
+    },
+    series:[{name:'Total photos',data:cumulative}],
+    xaxis:{
+      categories:months,
+      labels:{style:{colors:palette.onSurfaceVariant,fontSize:'9px'},rotate:0,
+        formatter:(v,i)=> i%4===0 ? v : ''},
+      axisBorder:{show:false},axisTicks:{show:false},tooltip:{enabled:false},
+    },
+    yaxis:{tickAmount:4,labels:{style:{colors:palette.onSurfaceVariant,fontSize:'9px'},
+      formatter:v=>Math.round(v)}},
+    grid:{borderColor:palette.outline,xaxis:{lines:{show:false}},yaxis:{lines:{show:true}},
+      padding:{top:4,right:4,bottom:0,left:0}},
+    tooltip:{
+      theme:'none',
+      style:{fontFamily:'DM Sans, system-ui, sans-serif',fontSize:'12px'},
+      x:{show:true},
+      y:{formatter:v=>`${v} total photos`},
+    },
+  }).render();
+
+  // ── Existing bar chart ─────────────────────────────────────────────────────
+  new ApexCharts(document.querySelector('#barChart'), {
+    chart:{type:'bar',height:160,toolbar:{show:false},background:'transparent',
+      fontFamily:'DM Sans, system-ui, sans-serif',animations:{enabled:true,speed:300}},
+    colors:[palette.cta],
+    plotOptions:{bar:{horizontal:true,borderRadius:4,borderRadiusApplication:'end',barHeight:'60%'}},
+    dataLabels:{enabled:false},
+    series:[{name:'Photos',data:[45,38,32,28,20,15]}],
+    xaxis:{categories:['Classic Neg.','Velvia','Eterna','Provia','Astia','Acros'],
+      labels:{style:{colors:palette.onSurfaceVariant,fontSize:'9px'}},
+      axisBorder:{show:false},axisTicks:{show:false}},
+    yaxis:{labels:{style:{colors:palette.onSurfaceVariant,fontSize:'10px'}}},
+    grid:{borderColor:palette.outline,xaxis:{lines:{show:true}},yaxis:{lines:{show:false}},
+      padding:{top:0,right:8,bottom:0,left:0}},
+    tooltip:{theme:'none',style:{fontFamily:'DM Sans, system-ui, sans-serif',fontSize:'12px'}},
+  }).render();
+
+  // ── NEW: Shooting calendar heatmap ─────────────────────────────────────────
+  // Rows = years, columns = months Jan→Dec
+  // Color range: 0 = near-white, max = --color-cta
+  new ApexCharts(document.querySelector('#heatmapChart'), {
+    chart:{type:'heatmap',height:140,toolbar:{show:false},background:'transparent',
+      fontFamily:'DM Sans, system-ui, sans-serif',animations:{enabled:true,speed:400},
+      sparkline:{enabled:false}},
+    dataLabels:{enabled:false},
+    stroke:{width:2,colors:[isDark?'#18181b':'#f9f9f9']},
+    plotOptions:{
+      heatmap:{
+        shadeIntensity:0.5,
+        radius:4,
+        colorScale:{
+          ranges:[
+            {from:0,to:0,color:isDark?'#27272a':'#f1f5f9',name:'None'},
+            {from:1,to:8,color:isDark?'rgba(96,165,250,.25)':'rgba(37,99,235,.15)',name:'Low'},
+            {from:9,to:18,color:isDark?'rgba(96,165,250,.50)':'rgba(37,99,235,.40)',name:'Mid'},
+            {from:19,to:30,color:isDark?'rgba(96,165,250,.80)':'rgba(37,99,235,.70)',name:'High'},
+            {from:31,to:999,color:palette.cta,name:'Peak'},
+          ],
+        },
+      },
+    },
+    series:[
+      {name:'2025',data:[
+        {x:'Jan',y:15},{x:'Feb',y:22},{x:'Mar',y:8},{x:'Apr',y:0},{x:'May',y:0},
+        {x:'Jun',y:0},{x:'Jul',y:0},{x:'Aug',y:0},{x:'Sep',y:0},{x:'Oct',y:0},{x:'Nov',y:0},{x:'Dec',y:0},
+      ]},
+      {name:'2024',data:[
+        {x:'Jan',y:5},{x:'Feb',y:12},{x:'Mar',y:18},{x:'Apr',y:35},{x:'May',y:28},
+        {x:'Jun',y:10},{x:'Jul',y:22},{x:'Aug',y:30},{x:'Sep',y:14},{x:'Oct',y:25},{x:'Nov',y:8},{x:'Dec',y:3},
+      ]},
+      {name:'2023',data:[
+        {x:'Jan',y:0},{x:'Feb',y:0},{x:'Mar',y:0},{x:'Apr',y:0},{x:'May',y:0},
+        {x:'Jun',y:0},{x:'Jul',y:6},{x:'Aug',y:14},{x:'Sep',y:9},{x:'Oct',y:18},{x:'Nov',y:4},{x:'Dec',y:0},
+      ]},
+    ],
+    xaxis:{
+      labels:{style:{colors:palette.onSurfaceVariant,fontSize:'9px'}},
+      axisBorder:{show:false},axisTicks:{show:false},
+    },
+    yaxis:{labels:{style:{colors:palette.onSurfaceVariant,fontSize:'9px'}}},
+    grid:{padding:{top:0,right:0,bottom:0,left:0}},
+    legend:{show:false},
+    tooltip:{
+      theme:'none',
+      style:{fontFamily:'DM Sans, system-ui, sans-serif',fontSize:'12px'},
+      y:{formatter:v=>v===0?'No shots':`${v} photos`},
+    },
+  }).render();
+
+  // ── NEW: Focal length donut ────────────────────────────────────────────────
+  new ApexCharts(document.querySelector('#donutChart'), {
+    chart:{type:'donut',height:200,width:'100%',background:'transparent',
+      fontFamily:'DM Sans, system-ui, sans-serif',animations:{enabled:true,speed:300},
+      offsetX:0,offsetY:0},
+    colors:[palette.cta, isDark?'rgba(96,165,250,.50)':'rgba(37,99,235,.45)', isDark?'rgba(96,165,250,.25)':'rgba(37,99,235,.20)'],
+    series:[120, 45, 38],
+    labels:['18-50mm','10-18mm','56mm'],
+    dataLabels:{enabled:false},
+    plotOptions:{
+      pie:{
+        donut:{
+          size:'70%',
+          labels:{
+            show:true,
+            total:{
+              show:true,
+              label:'Shots',
+              fontSize:'10px',
+              color:palette.onSurfaceVariant,
+              fontFamily:'DM Sans, system-ui, sans-serif',
+              formatter:w=>w.globals.seriesTotals.reduce((a,b)=>a+b,0),
+            },
+            value:{
+              fontSize:'18px',
+              fontFamily:'DM Serif Display, serif',
+              color:palette.onSurface,
+              offsetY:4,
+            },
+          },
+        },
+      },
+    },
+    stroke:{width:0},
+    legend:{
+      show:true, position:'bottom',
+      fontSize:'10px', fontFamily:'DM Sans, system-ui, sans-serif',
+      labels:{colors:palette.onSurfaceVariant},
+      markers:{width:8, height:8, radius:4},
+      itemMargin:{horizontal:6, vertical:2},
+      containerMargin:{left:0, right:0},
+    },
+    tooltip:{
+      theme:'none',
+      style:{fontFamily:'DM Sans, system-ui, sans-serif',fontSize:'12px'},
+      y:{formatter:v=>`${v} photos`},
+    },
+  }).render();
+</script>
+</body>
+</html>
