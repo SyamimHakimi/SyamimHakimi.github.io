@@ -120,6 +120,50 @@ const donutOptions = computed(() =>
   ),
 );
 
+// ── Screen-reader chart summaries ─────────────────────────────────────────
+const lineSrSummary = computed(() => {
+  const s = statistics.value;
+  if (!s) return "";
+  const total = s.stats.total_photos ?? 0;
+  const firstYear = lineData.value.categories[0] ?? "";
+  const lastYear = lineData.value.categories[lineData.value.categories.length - 1] ?? "";
+  return `Cumulative photo count from ${firstYear} to ${lastYear}, reaching ${total.toLocaleString()} total photos.`;
+});
+
+const barSrSummary = computed(() => {
+  const entries = barData.value.categories
+    .map((name, i) => `${name}: ${barData.value.series[0]?.data[i] ?? 0}`)
+    .join(", ");
+  return `Film recipe usage — ${entries}.`;
+});
+
+const heatmapSrSummary = computed(() => {
+  const s = statistics.value;
+  if (!s) return "";
+  const total = s.stats.total_photos ?? 0;
+  const outings = s.stats.total_outings ?? 0;
+  return `Shooting calendar heatmap showing ${total.toLocaleString()} photos across ${outings} outings by month and year.`;
+});
+
+const donutSrSummary = computed(() => {
+  if (!donutData.value.series.length) return "";
+  const parts = donutData.value.labels.map(
+    (label, i) => `${label}: ${donutData.value.series[i]}`,
+  );
+  return `Focal length distribution — ${parts.join(", ")}.`;
+});
+
+// ── Heatmap legend range ──────────────────────────────────────────────────
+const heatmapMaxPhotos = computed(() => {
+  let max = 0;
+  for (const row of heatmapData.value) {
+    for (const pt of row.data as { y: number }[]) {
+      if (pt.y > max) max = pt.y;
+    }
+  }
+  return max;
+});
+
 // ── Motion helpers ─────────────────────────────────────────────────────────
 const cardInitial = prefersReducedMotion ? {} : { opacity: 0, y: 16 };
 const cardVisible = { opacity: 1, y: 0 };
@@ -302,6 +346,7 @@ function delay(i: number, base = 0, step = 60): number {
           :series="lineData.series"
           aria-label="Cumulative photo count area chart"
         />
+        <p v-if="lineSrSummary" class="sr-only">{{ lineSrSummary }}</p>
       </Motion>
 
       <!-- Film recipe bar chart -->
@@ -329,6 +374,7 @@ function delay(i: number, base = 0, step = 60): number {
           :series="barData.series"
           aria-label="Film recipe usage horizontal bar chart"
         />
+        <p v-if="barSrSummary" class="sr-only">{{ barSrSummary }}</p>
       </Motion>
     </div>
 
@@ -360,11 +406,13 @@ function delay(i: number, base = 0, step = 60): number {
           :series="heatmapData"
           aria-label="Shooting calendar heatmap by year and month"
         />
-        <!-- Custom legend -->
+        <p v-if="heatmapSrSummary" class="sr-only">{{ heatmapSrSummary }}</p>
+        <!-- Custom legend with numeric range -->
         <div
           class="mt-1 flex items-center justify-end gap-1.5 text-[10px] text-[var(--color-on-surface-variant)]"
+          aria-label="Colour scale: 0 photos (light) to {{ heatmapMaxPhotos }} photos (dark)"
         >
-          <span>Less</span>
+          <span>0</span>
           <div
             class="h-2 w-14 rounded-sm"
             style="
@@ -376,7 +424,7 @@ function delay(i: number, base = 0, step = 60): number {
             "
             aria-hidden="true"
           ></div>
-          <span>More</span>
+          <span>{{ heatmapMaxPhotos }}+ photos</span>
         </div>
       </Motion>
 
@@ -407,6 +455,7 @@ function delay(i: number, base = 0, step = 60): number {
             :series="donutData.series"
             aria-label="Focal length usage donut chart"
           />
+          <p v-if="donutSrSummary" class="sr-only">{{ donutSrSummary }}</p>
         </div>
       </Motion>
     </div>

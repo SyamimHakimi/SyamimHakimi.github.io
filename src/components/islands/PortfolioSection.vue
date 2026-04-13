@@ -915,8 +915,15 @@ h2 {
   color: var(--color-cta);
   background: rgba(37, 99, 235, 0.08);
 }
+.exp-link-btn:active {
+  background: rgba(37, 99, 235, 0.16);
+  transform: scale(0.95);
+}
 [data-theme="dark"] .exp-link-btn:hover {
   background: rgba(96, 165, 250, 0.1);
+}
+[data-theme="dark"] .exp-link-btn:active {
+  background: rgba(96, 165, 250, 0.2);
 }
 .exp-link-btn:focus-visible {
   outline: 2px solid var(--color-cta);
