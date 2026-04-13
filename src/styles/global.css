@@ -216,6 +216,14 @@
     0%   { background-position: -400px 0; }
     100% { background-position:  400px 0; }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skeleton-line,
+    .skeleton-rect,
+    .skeleton-circle {
+      animation: none;
+    }
+  }
 }
 
 /* ── Card system ────────────────────────────────────────────────────────── */
