@@ -186,6 +186,7 @@ export function buildPhotoStatsLineOptions(
     },
     tooltip: {
       theme: "none",
+      cssClass: "chart-tooltip",
       style: { fontFamily: "DM Sans, system-ui, sans-serif", fontSize: "12px" },
       x: { show: true },
     },
@@ -262,6 +263,7 @@ export function buildRecipeBarOptions(
     },
     tooltip: {
       theme: "none",
+      cssClass: "chart-tooltip",
       style: { fontFamily: "DM Sans, system-ui, sans-serif", fontSize: "12px" },
     },
   };
@@ -381,6 +383,7 @@ export function buildCumulativeLineOptions(
     },
     tooltip: {
       theme: "none",
+      cssClass: "chart-tooltip",
       style: { fontFamily: "DM Sans, system-ui, sans-serif", fontSize: "12px" },
       x: { show: true },
       y: { formatter: (v: number) => `${v} total photos` },
@@ -487,6 +490,7 @@ export function buildHeatmapOptions({
     },
     tooltip: {
       theme: "none",
+      cssClass: "chart-tooltip",
       style: { fontFamily: "DM Sans, system-ui, sans-serif", fontSize: "12px" },
       y: { formatter: (v: number) => `${v} photo${v !== 1 ? "s" : ""}` },
     },
@@ -590,6 +594,7 @@ export function buildFocalLengthOptions(
     },
     tooltip: {
       theme: "none",
+      cssClass: "chart-tooltip",
       style: { fontFamily: "DM Sans, system-ui, sans-serif", fontSize: "12px" },
     },
   };

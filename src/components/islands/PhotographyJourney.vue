@@ -280,7 +280,7 @@ function delay(i: number, base = 0, step = 60): number {
       <!-- Cumulative photos line chart -->
       <Motion
         as="div"
-        class="card-outlined"
+        class="card-outlined overflow-visible"
         :initial="cardInitial"
         :animate="cardVisible"
         :transition="{
@@ -307,7 +307,7 @@ function delay(i: number, base = 0, step = 60): number {
       <!-- Film recipe bar chart -->
       <Motion
         as="div"
-        class="card-outlined"
+        class="card-outlined overflow-visible"
         :initial="cardInitial"
         :animate="cardVisible"
         :transition="{
@@ -337,7 +337,7 @@ function delay(i: number, base = 0, step = 60): number {
       <!-- Shooting calendar heatmap -->
       <Motion
         as="div"
-        class="card-outlined overflow-hidden"
+        class="card-outlined overflow-visible"
         :initial="cardInitial"
         :animate="cardVisible"
         :transition="{
@@ -383,7 +383,7 @@ function delay(i: number, base = 0, step = 60): number {
       <!-- Focal lengths donut -->
       <Motion
         as="div"
-        class="card-outlined flex flex-col overflow-hidden"
+        class="card-outlined flex flex-col overflow-visible"
         :initial="cardInitial"
         :animate="cardVisible"
         :transition="{
