@@ -233,7 +233,7 @@ function boardgameTags(tags: string | undefined): string[] {
       </section>
 
       <!-- Section stack ───────────────────────────────────────────────── -->
-      <div class="mx-auto grid max-w-[860px] gap-5">
+      <div class="grid gap-5">
         <!-- Photography Gear ─────────────────────────────────────────── -->
         <section
           v-if="data.gear.length > 0"
