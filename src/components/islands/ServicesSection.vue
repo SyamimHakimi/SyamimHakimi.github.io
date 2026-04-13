@@ -17,17 +17,12 @@ import { Motion } from "motion-v";
 import { computed } from "vue";
 import { useServices } from "../../lib/composables/useServices";
 import { groupServices } from "../../lib/utils/servicesSection";
+import { useMotionAnimation } from "../../lib/composables/useMotionAnimation";
+import ErrorAlert from "../ui/ErrorAlert.vue";
 
 const { services, loading, error } = useServices();
 
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const cardVariants = {
-  hidden: prefersReducedMotion ? {} : { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0 },
-};
+const { prefersReducedMotion, cardInitial, cardVisible } = useMotionAnimation();
 
 const grouped = computed(() => groupServices(services.value));
 
@@ -161,14 +156,11 @@ function iconForService(title: string, groupId: number) {
       </div>
     </div>
 
-    <div
+    <ErrorAlert
       v-else-if="error"
-      class="rounded-[20px] border border-[color:color-mix(in_srgb,var(--color-error)_35%,var(--color-surface))] bg-[color:color-mix(in_srgb,var(--color-error)_10%,var(--color-surface))] p-6 text-[var(--color-error)]"
-      role="alert"
-    >
-      <p class="font-medium">Failed to load services</p>
-      <p class="mt-2 text-sm opacity-90">{{ error }}</p>
-    </div>
+      title="Failed to load services"
+      :message="error"
+    />
 
     <div
       v-else-if="services.length === 0"
@@ -233,8 +225,8 @@ function iconForService(title: string, groupId: number) {
             v-for="(service, index) in groupServices"
             :key="service.id"
             as="article"
-            :initial="cardVariants.hidden"
-            :animate="cardVariants.visible"
+            :initial="cardInitial"
+            :animate="cardVisible"
             :transition="{
               duration: 0.3,
               delay:
