@@ -329,6 +329,47 @@
     opacity: 0.04;
   }
 
+  /* ── ApexCharts tooltip ─────────────────────────────────────────────── */
+  /* chart-tooltip class is applied via cssClass in statisticsCharts.ts.   */
+  /* Overrides ApexCharts' default transparent/dark styling with design    */
+  /* tokens so tooltips are readable in both light and dark mode.          */
+  .apexcharts-tooltip.chart-tooltip {
+    background: var(--color-surface) !important;
+    border: 1px solid var(--color-outline) !important;
+    border-radius: 10px !important;
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.12),
+      0 1px 4px rgba(0, 0, 0, 0.08) !important;
+    color: var(--color-on-surface) !important;
+    overflow: hidden;
+    padding: 0 !important;
+  }
+
+  .apexcharts-tooltip.chart-tooltip .apexcharts-tooltip-title {
+    background: var(--color-surface-variant) !important;
+    border-bottom: 1px solid var(--color-outline) !important;
+    color: var(--color-on-surface) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    padding: 5px 10px !important;
+  }
+
+  .apexcharts-tooltip.chart-tooltip .apexcharts-tooltip-series-group {
+    background: transparent !important;
+    padding: 5px 10px !important;
+  }
+
+  .apexcharts-tooltip.chart-tooltip .apexcharts-tooltip-text-y-label,
+  .apexcharts-tooltip.chart-tooltip .apexcharts-tooltip-text-y-value {
+    color: var(--color-on-surface) !important;
+    font-size: 12px !important;
+  }
+
+  .apexcharts-tooltip.chart-tooltip .apexcharts-tooltip-marker {
+    border-radius: 3px !important;
+  }
+
   /* ── Shimmer skeleton loading states ────────────────────────────────── */
   .skeleton-line {
     border-radius: 4px;
