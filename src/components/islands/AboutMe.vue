@@ -79,37 +79,11 @@ function boardgameTags(tags: string | undefined): string[] {
 
     <!-- ── Content ─────────────────────────────────────────────────────── -->
     <div v-else class="space-y-8">
-      <!-- Hero card ──────────────────────────────────────────────────── -->
+      <!-- Profile card + visual panel ───────────────────────────────── -->
       <section
         class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
         aria-label="About Syamim"
       >
-        <!-- Eyebrow -->
-        <p
-          class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]"
-        >
-          <span
-            class="h-2 w-2 rounded-full bg-[var(--color-cta)]"
-            aria-hidden="true"
-          />
-          About Syamim
-        </p>
-
-        <!-- Title + subtitle -->
-        <div>
-          <h1
-            class="font-serif text-[clamp(2.125rem,6vw,3.625rem)] leading-[0.98] tracking-[-0.03em]"
-          >
-            The person behind the work.
-          </h1>
-          <p
-            class="mt-4 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]"
-          >
-            A profile-first read on who I am, what I spend time on, and how
-            software, photography, and boardgames fit together.
-          </p>
-        </div>
-
         <!-- Two-column: profile card + visual panel -->
         <div class="grid gap-4 md:grid-cols-[1.1fr_0.9fr] md:items-start">
           <!-- Profile card -->

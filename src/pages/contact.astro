@@ -2,7 +2,9 @@
 /**
  * Contact — route `/contact`.
  * Island: ContactForm.vue (client:load — EmailJS requires browser fetch API)
- * The island owns its own hero section, info card, and form layout.
+ * The island owns the info card and form layout.
+ * The page-level header (eyebrow + h1 + subtitle) lives here, matching the
+ * other pages.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import ContactForm from "../components/islands/ContactForm.vue";
@@ -13,6 +15,24 @@ import ContactForm from "../components/islands/ContactForm.vue";
   description="Get in touch with Syamim Hakimi — web development enquiries and collaborations."
 >
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <header class="mb-10">
+      <div class="mb-3 flex items-center gap-3">
+        <span class="icon-disc" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </span>
+        <p class="text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]">
+          Contact
+        </p>
+      </div>
+      <h1>Start with a clear message.</h1>
+      <p class="mt-3 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]">
+        One form, a few expectations up front, and feedback states that feel
+        calm instead of noisy.
+      </p>
+    </header>
+
     <ContactForm client:load />
   </div>
 </PageLayout>
