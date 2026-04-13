@@ -125,37 +125,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- Hero card ─────────────────────────────────────────────────────── -->
+  <!-- Info card + form card ──────────────────────────────────────────── -->
   <section
     class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
     aria-label="Contact"
   >
-    <!-- Eyebrow -->
-    <p
-      class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]"
-    >
-      <span
-        class="h-2 w-2 rounded-full bg-[var(--color-cta)]"
-        aria-hidden="true"
-      />
-      Contact
-    </p>
-
-    <!-- Title + subtitle -->
-    <div>
-      <h1
-        class="font-serif text-[clamp(2.125rem,6vw,3.625rem)] leading-[0.98] tracking-[-0.03em]"
-      >
-        Start with a clear message.
-      </h1>
-      <p
-        class="mt-4 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]"
-      >
-        One form, a few expectations up front, and feedback states that feel
-        calm instead of noisy.
-      </p>
-    </div>
-
     <!-- Two-column: info card + form card -->
     <div
       class="grid gap-5 md:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] md:items-start"
