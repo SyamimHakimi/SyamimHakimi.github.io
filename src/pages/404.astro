@@ -2,6 +2,8 @@
 /**
  * 404 — Not Found page.
  * Static — no Vue island, no composable.
+ * Design: Step 10 approved mockup — centered hero card, strong 404 number,
+ * two CTAs, and subtle blurred orb + ring background accents.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 ---
@@ -10,17 +12,111 @@ import PageLayout from "../layouts/PageLayout.astro";
   title="Page Not Found — syamim."
   description="The page you are looking for does not exist."
 >
-  <div class="mx-auto flex max-w-6xl flex-col items-center justify-center px-4 py-32 text-center sm:px-6">
-    <p class="text-6xl font-bold text-[var(--color-accent)]">404</p>
-    <h1 class="mt-4 text-2xl font-semibold">Page Not Found</h1>
-    <p class="mt-2 text-[var(--color-text-muted)]">
-      The page you are looking for does not exist.
-    </p>
-    <a
-      href="/"
-      class="mt-8 inline-flex items-center gap-2 rounded-lg bg-[var(--color-accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-accent-hover)]"
-    >
-      Return to Photography Journey
-    </a>
+  <!-- Full-height flex container with overflow clip for the background orbs -->
+  <div
+    class="relative flex min-h-[75vh] items-center justify-center overflow-hidden px-4 py-8 sm:py-16"
+  >
+
+    <!-- Background accent: left blurred orb -->
+    <div
+      class="pointer-events-none absolute -left-20 top-[14%] z-0 h-80 w-80 rounded-full blur-[10px]"
+      style="background: radial-gradient(circle, color-mix(in srgb, var(--color-cta-soft, rgba(37,99,235,0.1)) 86%, transparent) 0%, transparent 70%);"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Background accent: right blurred orb -->
+    <div
+      class="pointer-events-none absolute -right-[90px] bottom-[10%] z-0 h-80 w-80 rounded-full blur-[10px]"
+      style="background: radial-gradient(circle, color-mix(in srgb, var(--color-cta-soft, rgba(37,99,235,0.1)) 86%, transparent) 0%, transparent 70%);"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Background accent: top-right ring -->
+    <div
+      class="pointer-events-none absolute -top-[120px] right-[6%] z-0 h-[420px] w-[420px] rounded-full border border-[color-mix(in_srgb,var(--color-outline)_84%,var(--color-cta-soft,rgba(37,99,235,0.1)))] opacity-60"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Background accent: bottom-left ring -->
+    <div
+      class="pointer-events-none absolute -bottom-[180px] left-[4%] z-0 h-[420px] w-[420px] rounded-full border border-[color-mix(in_srgb,var(--color-outline)_84%,var(--color-cta-soft,rgba(37,99,235,0.1)))] opacity-60"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Content shell -->
+    <div class="relative z-10 w-full max-w-[760px]">
+
+      <!-- Divider label -->
+      <div
+        class="mb-[22px] flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--color-cta)]"
+      >
+        <span class="block h-px w-12 bg-[var(--color-outline)]" aria-hidden="true"></span>
+        <span>Page not found</span>
+        <span class="block h-px w-12 bg-[var(--color-outline)]" aria-hidden="true"></span>
+      </div>
+
+      <!-- Hero card -->
+      <section
+        class="relative grid justify-items-center gap-5 rounded-[32px] border border-[var(--color-outline)] px-7 pb-[30px] pt-[38px] text-center backdrop-blur-[14px] shadow-[0_18px_60px_rgba(9,9,11,0.06)] sm:px-7"
+        style="background: color-mix(in srgb, var(--color-surface) 94%, transparent);"
+        aria-label="404 — Page not found"
+      >
+
+        <!-- Inner inset ring (decorative) -->
+        <span
+          class="pointer-events-none absolute inset-3 rounded-[24px] border border-[color-mix(in_srgb,var(--color-outline)_74%,transparent)]"
+          aria-hidden="true"
+        ></span>
+
+        <!-- Error code block -->
+        <div class="grid justify-items-center gap-2.5">
+          <!-- Micro badge -->
+          <span
+            class="inline-flex min-h-[32px] items-center rounded-full border border-[color-mix(in_srgb,var(--color-outline)_74%,var(--color-cta-soft,rgba(37,99,235,0.1)))] bg-[color-mix(in_srgb,var(--color-surface-variant)_84%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-xs font-semibold text-[var(--color-on-surface-variant)]"
+          >
+            Page not found
+          </span>
+
+          <!-- 404 number -->
+          <div
+            class="font-serif leading-[0.88] tracking-[-0.06em] text-[var(--color-cta)]"
+            style="font-size: clamp(84px, 20vw, 172px); text-shadow: 0 12px 28px color-mix(in srgb, var(--color-cta-soft, rgba(37,99,235,0.1)) 74%, transparent);"
+            aria-hidden="true"
+          >
+            404
+          </div>
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="max-w-[12ch] font-serif text-[clamp(2.125rem,6vw,3.625rem)] leading-[0.98] tracking-[-0.03em]"
+        >
+          The page is gone, not the route home.
+        </h1>
+
+        <!-- Body -->
+        <p class="max-w-[42ch] text-[15px] text-[var(--color-on-surface-variant)]">
+          The content may have moved or the URL may be incorrect. Use one of
+          the links below to get back on track.
+        </p>
+
+        <!-- Actions -->
+        <div class="flex w-full flex-wrap justify-center gap-3 sm:w-auto">
+          <a
+            href="/"
+            class="inline-flex min-h-[48px] w-full items-center justify-center rounded-full bg-[var(--color-cta)] px-5 text-[14px] font-bold text-white transition-all duration-150 hover:bg-[#1d4ed8] hover:-translate-y-px dark:hover:bg-[#93c5fd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto"
+          >
+            Back to Photography Journey
+          </a>
+          <a
+            href="/portfolio"
+            class="inline-flex min-h-[48px] w-full items-center justify-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 text-[14px] font-bold text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto"
+          >
+            Open Portfolio
+          </a>
+        </div>
+
+      </section>
+    </div>
   </div>
 </PageLayout>
