@@ -139,7 +139,13 @@ describe("buildPhotoStatsLineOptions", () => {
 describe("buildRecipeBarSeries", () => {
   it("sorts descending and takes top 6", () => {
     const stats = {
-      A: 10, B: 50, C: 30, D: 80, E: 20, F: 60, G: 5,
+      A: 10,
+      B: 50,
+      C: 30,
+      D: 80,
+      E: 20,
+      F: 60,
+      G: 5,
     };
     const { series, categories } = buildRecipeBarSeries(stats);
     expect(categories).toHaveLength(6);
@@ -291,16 +297,28 @@ describe("buildHeatmapSeries", () => {
 
 describe("buildHeatmapOptions", () => {
   it("uses surfaceVariant for zero-value range", () => {
-    const opts = buildHeatmapOptions({ palette, prefersReducedMotion: false }) as {
-      plotOptions: { heatmap: { colorScale: { ranges: { from: number; color: string }[] } } };
+    const opts = buildHeatmapOptions({
+      palette,
+      prefersReducedMotion: false,
+    }) as {
+      plotOptions: {
+        heatmap: { colorScale: { ranges: { from: number; color: string }[] } };
+      };
     };
-    const zeroRange = opts.plotOptions.heatmap.colorScale.ranges.find((r) => r.from === 0);
+    const zeroRange = opts.plotOptions.heatmap.colorScale.ranges.find(
+      (r) => r.from === 0,
+    );
     expect(zeroRange?.color).toBe(palette.surfaceVariant);
   });
 
   it("highest range uses solid cta color", () => {
-    const opts = buildHeatmapOptions({ palette, prefersReducedMotion: false }) as {
-      plotOptions: { heatmap: { colorScale: { ranges: { from: number; color: string }[] } } };
+    const opts = buildHeatmapOptions({
+      palette,
+      prefersReducedMotion: false,
+    }) as {
+      plotOptions: {
+        heatmap: { colorScale: { ranges: { from: number; color: string }[] } };
+      };
     };
     const ranges = opts.plotOptions.heatmap.colorScale.ranges;
     expect(ranges.at(-1)?.color).toBe(palette.cta);
@@ -317,7 +335,11 @@ describe("buildFocalLengthSeries", () => {
   });
 
   it("sorts descending by count", () => {
-    const { series, labels } = buildFocalLengthSeries({ "18-50": 80, "56": 30, "10-18": 50 });
+    const { series, labels } = buildFocalLengthSeries({
+      "18-50": 80,
+      "56": 30,
+      "10-18": 50,
+    });
     expect(series[0]).toBe(80);
     expect(labels[0]).toBe("18-50");
   });
@@ -346,7 +368,11 @@ describe("buildFocalLengthOptions", () => {
       { palette, prefersReducedMotion: false },
       ["56mm"],
       42,
-    ) as { plotOptions: { pie: { donut: { labels: { total: { formatter: () => string } } } } } };
+    ) as {
+      plotOptions: {
+        pie: { donut: { labels: { total: { formatter: () => string } } } };
+      };
+    };
     expect(opts.plotOptions.pie.donut.labels.total.formatter()).toBe("42");
   });
 

@@ -70,7 +70,10 @@ async function sendPhoto(imagePath, caption) {
   if (json.ok) return json;
 
   // Fallback: send as document (no dimension limits)
-  if (json.error_code === 400 && json.description?.includes("PHOTO_INVALID_DIMENSIONS")) {
+  if (
+    json.error_code === 400 &&
+    json.description?.includes("PHOTO_INVALID_DIMENSIONS")
+  ) {
     const form2 = new FormData();
     form2.set("chat_id", TELEGRAM_CHAT_ID);
     form2.set("caption", caption);

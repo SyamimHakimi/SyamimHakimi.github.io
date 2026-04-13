@@ -101,7 +101,10 @@ export function buildPhotoStatsLineSeries(
     .slice(-12);
 
   const categories = entries.map(([key]) =>
-    parseMonthKey(key).toLocaleString("en", { month: "short", year: "2-digit" }),
+    parseMonthKey(key).toLocaleString("en", {
+      month: "short",
+      year: "2-digit",
+    }),
   );
 
   return {
@@ -281,7 +284,9 @@ export function buildCumulativeLineSeries(
 ): { series: { name: string; data: number[] }[]; categories: string[] } {
   const entries = toChartEntries(photoStats)
     .filter(([key]) => /^\d{1,2}\/\d{4}$/.test(key))
-    .sort(([a], [b]) => parseMonthKey(a).getTime() - parseMonthKey(b).getTime());
+    .sort(
+      ([a], [b]) => parseMonthKey(a).getTime() - parseMonthKey(b).getTime(),
+    );
 
   let running = 0;
   const data = entries.map(([, v]) => {
@@ -291,7 +296,10 @@ export function buildCumulativeLineSeries(
 
   const categories = entries.map(([key], i) =>
     i % 4 === 0
-      ? parseMonthKey(key).toLocaleString("en", { month: "short", year: "2-digit" })
+      ? parseMonthKey(key).toLocaleString("en", {
+          month: "short",
+          year: "2-digit",
+        })
       : "",
   );
 
@@ -407,7 +415,20 @@ export function buildHeatmapSeries(
     byYear.get(year)![month] = v;
   }
 
-  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const MONTHS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const years = [...byYear.keys()].sort((a, b) => b - a); // newest first
 
   return years.map((year) => ({
@@ -426,9 +447,10 @@ export function buildHeatmapSeries(
  * @param opts Palette and reduced-motion flag.
  * @returns ApexCharts options object.
  */
-export function buildHeatmapOptions(
-  { palette, prefersReducedMotion }: ChartThemeOptions,
-): object {
+export function buildHeatmapOptions({
+  palette,
+  prefersReducedMotion,
+}: ChartThemeOptions): object {
   const { cta, surfaceVariant } = palette;
   return {
     chart: {
@@ -445,11 +467,11 @@ export function buildHeatmapOptions(
         enableShades: false,
         colorScale: {
           ranges: [
-            { from: 0,    to: 0,    color: surfaceVariant,        name: "0"    },
-            { from: 1,    to: 8,    color: hexToRgba(cta, 0.18),  name: "1–8"  },
-            { from: 9,    to: 18,   color: hexToRgba(cta, 0.42),  name: "9–18" },
-            { from: 19,   to: 30,   color: hexToRgba(cta, 0.70),  name: "19–30"},
-            { from: 31,   to: 9999, color: cta,                   name: "31+"  },
+            { from: 0, to: 0, color: surfaceVariant, name: "0" },
+            { from: 1, to: 8, color: hexToRgba(cta, 0.18), name: "1–8" },
+            { from: 9, to: 18, color: hexToRgba(cta, 0.42), name: "9–18" },
+            { from: 19, to: 30, color: hexToRgba(cta, 0.7), name: "19–30" },
+            { from: 31, to: 9999, color: cta, name: "31+" },
           ],
         },
       },
@@ -490,7 +512,9 @@ export function buildFocalLengthSeries(
   const entries = toChartEntries(focalStats).sort(([, a], [, b]) => b - a);
   return {
     series: entries.map(([, v]) => v),
-    labels: entries.map(([label]) => (/^\d+$/.test(label) ? `${label}mm` : label)),
+    labels: entries.map(([label]) =>
+      /^\d+$/.test(label) ? `${label}mm` : label,
+    ),
   };
 }
 
@@ -512,7 +536,12 @@ export function buildFocalLengthOptions(
 ): object {
   const ALPHA_STEPS = [1, 0.65, 0.38, 0.22];
   const colors = labels.map((_, i) =>
-    i === 0 ? palette.cta : hexToRgba(palette.cta, ALPHA_STEPS[Math.min(i, ALPHA_STEPS.length - 1)]),
+    i === 0
+      ? palette.cta
+      : hexToRgba(
+          palette.cta,
+          ALPHA_STEPS[Math.min(i, ALPHA_STEPS.length - 1)],
+        ),
   );
 
   return {

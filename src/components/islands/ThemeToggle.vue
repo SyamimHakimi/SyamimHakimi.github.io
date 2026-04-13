@@ -20,7 +20,8 @@ onMounted(() => {
   isDark.value = document.documentElement.getAttribute("data-theme") === "dark";
 
   observer = new MutationObserver(() => {
-    isDark.value = document.documentElement.getAttribute("data-theme") === "dark";
+    isDark.value =
+      document.documentElement.getAttribute("data-theme") === "dark";
   });
   observer.observe(document.documentElement, {
     attributes: true,
