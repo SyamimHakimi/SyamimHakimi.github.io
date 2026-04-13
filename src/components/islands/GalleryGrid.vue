@@ -4,11 +4,16 @@
  * Island: client:visible
  * Composable: useGallery()
  *
- * Scroll entrance animations use motion-v; stagger is skipped when
- * prefers-reduced-motion is active.
+ * Layout: uniform CSS grid (2 → 3 → 4 by breakpoint).
+ * Tiles use a consistent media frame so portrait and landscape images both
+ * read cleanly without masonry packing or aggressive cropping.
+ *
+ * Skeleton UX:
+ * - Initial load: full grid of 12 framed skeleton tiles.
+ * - Load-more: 12 skeleton tiles appended after existing photos while
+ *   loadingMore is true.
  */
-import { ref, computed } from "vue";
-import { Motion } from "motion-v";
+import { computed, ref, watchPostEffect } from "vue";
 import { useGallery } from "../../lib/composables/useGallery";
 import GalleryLightbox from "./GalleryLightbox.vue";
 
@@ -31,6 +36,7 @@ const filteredPhotos = computed(() =>
     : photos.value,
 );
 
+// ── Lightbox ───────────────────────────────────────────────────────────────
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
@@ -40,34 +46,88 @@ function openLightbox(photoId: string) {
   lightboxOpen.value = true;
 }
 
-// ── Motion helpers ─────────────────────────────────────────────────────────
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+type ImageStatus = "loading" | "loaded" | "error";
 
-const tileInitial = prefersReducedMotion ? {} : { opacity: 0, y: 12 };
-const tileVisible = { opacity: 1, y: 0 };
+const imageStatuses = ref<Record<string, ImageStatus>>({});
 
-function delay(i: number): number {
-  return prefersReducedMotion ? 0 : (i * 40) / 1000;
+function setImageStatus(id: string, status: ImageStatus) {
+  imageStatuses.value = { ...imageStatuses.value, [id]: status };
 }
+
+function onImageLoad(id: string) {
+  setImageStatus(id, "loaded");
+}
+
+function onImageError(id: string) {
+  setImageStatus(id, "error");
+}
+
+function isImageLoading(id: string) {
+  return (
+    imageStatuses.value[id] !== "loaded" && imageStatuses.value[id] !== "error"
+  );
+}
+
+function isImageLoaded(id: string) {
+  return imageStatuses.value[id] === "loaded";
+}
+
+function isImageError(id: string) {
+  return imageStatuses.value[id] === "error";
+}
+
+const galleryRoot = ref<HTMLElement | null>(null);
+
+watchPostEffect(() => {
+  if (typeof window === "undefined") return;
+
+  void filteredPhotos.value;
+
+  requestAnimationFrame(() => {
+    const root = galleryRoot.value;
+    if (!root) return;
+
+    const images =
+      root.querySelectorAll<HTMLImageElement>("img[data-photo-id]");
+    for (const image of images) {
+      const id = image.dataset.photoId;
+      if (!id || !image.complete) continue;
+      if (
+        imageStatuses.value[id] === "loaded" ||
+        imageStatuses.value[id] === "error"
+      ) {
+        continue;
+      }
+
+      if (image.naturalWidth > 0) {
+        onImageLoad(id);
+      } else {
+        onImageError(id);
+      }
+    }
+  });
+});
+
+const SKELETON_COUNT = 12;
 </script>
 
 <template>
-  <div>
-    <!-- Loading skeleton ─────────────────────────────────────────────────── -->
+  <div ref="galleryRoot">
+    <!-- Initial loading skeleton ──────────────────────────────────────────── -->
     <div
       v-if="loading"
-      class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+      class="gallery-grid"
       aria-busy="true"
       aria-label="Loading photos"
     >
-      <div
-        v-for="i in 12"
-        :key="i"
-        class="skeleton-rect aspect-square"
-        :style="{ animationDelay: `${(i - 1) * 60}ms` }"
-      />
+      <div v-for="i in SKELETON_COUNT" :key="i" aria-hidden="true">
+        <div
+          class="gallery-card"
+          :style="{ animationDelay: `${(i - 1) * 60}ms` }"
+        >
+          <div class="skeleton-rect gallery-media-frame" />
+        </div>
+      </div>
     </div>
 
     <!-- Initial load error ───────────────────────────────────────────────── -->
@@ -124,11 +184,11 @@ function delay(i: number): number {
           }}
           <span class="opacity-60">· from {{ photos.length }} loaded</span>
         </span>
-        <span v-else
-          >{{ photos.length }} favourite photo{{
+        <span v-else>
+          {{ photos.length }} favourite photo{{
             photos.length !== 1 ? "s" : ""
-          }}</span
-        >
+          }}
+        </span>
       </p>
 
       <!-- Theme filter bar -->
@@ -158,84 +218,120 @@ function delay(i: number): number {
         </button>
       </div>
 
-      <ul class="columns-2 gap-3 sm:columns-3 lg:columns-4" role="list">
-        <Motion
-          v-for="(photo, index) in filteredPhotos"
-          :key="photo.id"
-          as="li"
-          class="mb-3 break-inside-avoid"
-          :initial="tileInitial"
-          :animate="tileVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(index % 12),
-            easing: [0.2, 0, 0, 1],
-          }"
-        >
+      <!-- Uniform grid — 2 → 3 → 4 columns by breakpoint -->
+      <ul class="gallery-grid" role="list">
+        <!-- Photo tiles -->
+        <li v-for="photo in filteredPhotos" :key="photo.id">
           <button
             type="button"
-            class="group relative w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
+            class="group relative block w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
             :aria-label="photo.title ?? `Photo ${index + 1}`"
             style="touch-action: manipulation; cursor: pointer"
             @click="openLightbox(photo.id)"
           >
-            <img
-              v-if="photo.link"
-              :src="photo.link"
-              :alt="photo.title ?? ''"
-              loading="lazy"
-              class="block h-auto w-full transition-transform duration-300 group-hover:scale-105"
-            />
-            <div
-              v-else
-              class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
-            >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-on-surface-variant)"
-                stroke-width="1.5"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-              <span class="text-[10px] text-[var(--color-on-surface-variant)]"
-                >No image</span
-              >
-            </div>
+            <div class="gallery-card">
+              <div class="gallery-media-frame">
+                <div
+                  v-if="isImageLoading(photo.id)"
+                  class="skeleton-rect absolute inset-0 z-10"
+                  aria-hidden="true"
+                />
+                <div
+                  v-if="isImageError(photo.id)"
+                  class="flex h-full w-full flex-col items-center justify-center gap-2 bg-[var(--color-surface-variant)] px-4 text-center"
+                >
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--color-on-surface-variant)"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <path d="M8 8l8 8" />
+                    <path d="M16 8l-8 8" />
+                  </svg>
+                  <span
+                    class="text-[11px] text-[var(--color-on-surface-variant)]"
+                  >
+                    Image unavailable
+                  </span>
+                </div>
+                <img
+                  v-else-if="photo.link"
+                  :src="photo.link"
+                  :alt="photo.title ?? ''"
+                  loading="lazy"
+                  :data-photo-id="photo.id"
+                  class="gallery-image relative z-0 transition-all duration-300 group-hover:scale-[1.02]"
+                  :class="isImageLoaded(photo.id) ? 'opacity-100' : 'opacity-0'"
+                  @load="onImageLoad(photo.id)"
+                  @error="onImageError(photo.id)"
+                />
+                <div
+                  v-else
+                  class="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
+                >
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--color-on-surface-variant)"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  <span
+                    class="text-[10px] text-[var(--color-on-surface-variant)]"
+                    >No image</span
+                  >
+                </div>
+              </div>
 
-            <!-- Hover overlay — title + recipe ──────────────────────────── -->
-            <div
-              class="pointer-events-none absolute inset-0 flex flex-col justify-end p-2.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
-              style="
-                background: linear-gradient(
-                  to top,
-                  rgba(0, 0, 0, 0.7) 0%,
-                  rgba(0, 0, 0, 0.18) 55%,
-                  transparent 100%
-                );
-              "
-              aria-hidden="true"
-            >
-              <p
-                v-if="photo.title"
-                class="truncate text-[11px] font-semibold leading-tight text-white"
-              >
-                {{ photo.title }}
-              </p>
-              <p
-                v-if="photo.recipe"
-                class="mt-0.5 truncate text-[10px] text-white/70"
-              >
-                {{ photo.recipe }}
-              </p>
+              <div class="gallery-meta">
+                <p
+                  v-if="photo.title"
+                  class="truncate text-[12px] font-semibold text-[var(--color-on-surface)]"
+                >
+                  {{ photo.title }}
+                </p>
+                <p
+                  v-if="photo.recipe"
+                  class="mt-0.5 truncate text-[11px] text-[var(--color-on-surface-variant)]"
+                >
+                  {{ photo.recipe }}
+                </p>
+              </div>
+
+              <div
+                class="pointer-events-none absolute inset-0 rounded-[var(--radius-sm)] ring-1 ring-transparent transition-all duration-200 group-hover:ring-[var(--color-cta)]/25 group-focus-visible:ring-[var(--color-cta)]/30"
+                aria-hidden="true"
+              />
             </div>
           </button>
-        </Motion>
+        </li>
+
+        <!-- Load-more skeleton tiles (appended while loadingMore) -->
+        <template v-if="loadingMore">
+          <li
+            v-for="i in SKELETON_COUNT"
+            :key="`skeleton-more-${i}`"
+            aria-hidden="true"
+          >
+            <div class="gallery-card">
+              <div
+                class="skeleton-rect gallery-media-frame"
+                :style="{ animationDelay: `${i * 60}ms` }"
+              />
+            </div>
+          </li>
+        </template>
       </ul>
 
       <!-- Pagination error ─────────────────────────────────────────────── -->
@@ -265,29 +361,18 @@ function delay(i: number): number {
         </p>
       </div>
 
-      <!-- Load more ───────────────────────────────────────────────────────── -->
-      <div v-if="hasMore" class="mt-8 flex flex-col items-center gap-2">
+      <!-- Load more button -->
+      <div
+        v-if="hasMore && !loadingMore"
+        class="mt-8 flex flex-col items-center gap-2"
+      >
         <button
           type="button"
-          class="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:bg-[var(--color-surface-variant)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)] disabled:cursor-not-allowed disabled:opacity-50"
+          class="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:bg-[var(--color-surface-variant)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
           style="touch-action: manipulation"
-          :disabled="loadingMore"
           @click="loadMore"
         >
-          <svg
-            v-if="loadingMore"
-            class="h-3.5 w-3.5 animate-spin"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <path
-              d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-            />
-          </svg>
-          <span>{{ loadingMore ? "Loading…" : "Load more" }}</span>
+          Load more
         </button>
         <p
           v-if="activeTheme"
@@ -309,6 +394,73 @@ function delay(i: number): number {
 </template>
 
 <style scoped>
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.gallery-grid > * {
+  align-self: start;
+}
+
+.gallery-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.gallery-media-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-surface-variant) 78%, var(--color-cta-soft))
+      0%,
+    var(--color-surface-variant) 100%
+  );
+}
+
+.gallery-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.gallery-meta {
+  padding: 0.75rem 0.75rem 0.8rem;
+}
+
+@media (min-width: 640px) {
+  .gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .gallery-media-frame {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .gallery-media-frame {
+    aspect-ratio: 4 / 5;
+  }
+}
+
 .filter-pill {
   padding: 7px 16px;
   min-height: 36px;
