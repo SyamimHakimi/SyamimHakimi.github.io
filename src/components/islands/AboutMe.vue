@@ -29,6 +29,36 @@ const GEAR_TYPE_META: Record<number, string> = {
   3: "Prime",
 };
 
+/** Maps brand + name to a local product image path. */
+const GEAR_IMAGE: Record<string, string> = {
+  "Fujifilm X-E4": "/media/gear/XE4.png",
+  "Sigma 10-18mm F2.8 DC DN": "/media/gear/Sigma10-18.png",
+  "Sigma 18-50mm F2.8 DC DN": "/media/gear/Sigma18-50.png",
+  "Viltrox 56mm F1.7 APS-C": "/media/gear/Viltrox56.png",
+};
+
+function gearImage(item: PhotographyGear): string | null {
+  return GEAR_IMAGE[`${item.brand} ${item.name}`] ?? null;
+}
+
+/* ── Social helpers ────────────────────────────────────────────────────── */
+
+/** Maps social platform name to a local SVG icon path. */
+const SOCIAL_ICON: Record<string, string> = {
+  github: "/media/svg/social-logos/github.svg",
+  linkedin: "/media/svg/social-logos/linkedin.svg",
+  instagram: "/media/svg/social-logos/instagram.svg",
+  twitter: "/media/svg/social-logos/twitter.svg",
+  facebook: "/media/svg/social-logos/facebook.svg",
+  youtube: "/media/svg/social-logos/youtube.svg",
+  dribbble: "/media/svg/social-logos/dribbble.svg",
+  google: "/media/svg/social-logos/google.svg",
+};
+
+function socialIcon(name: string): string | null {
+  return SOCIAL_ICON[name.toLowerCase()] ?? null;
+}
+
 const gearGroups = computed<[string, PhotographyGear[]][]>(() => {
   const groups = new Map<string, PhotographyGear[]>();
   for (const item of data.value.gear) {
@@ -175,8 +205,15 @@ function boardgameTags(tags: string | undefined): string[] {
                 "
                 rel="noopener noreferrer"
                 role="listitem"
-                class="inline-flex min-h-[40px] items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+                class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
               >
+                <img
+                  v-if="socialIcon(social.name)"
+                  :src="socialIcon(social.name)!"
+                  :alt="social.name"
+                  class="h-4 w-4 shrink-0 object-contain opacity-70"
+                  aria-hidden="true"
+                />
                 {{ social.name }} — {{ social.text }}
               </a>
             </div>
@@ -235,6 +272,18 @@ function boardgameTags(tags: string | undefined): string[] {
                   :key="item.id"
                   class="rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3.5"
                 >
+                  <!-- Gear product image -->
+                  <div
+                    v-if="gearImage(item)"
+                    class="mb-3 flex h-[96px] items-center justify-center overflow-hidden rounded-xl border border-[var(--color-outline)] bg-[var(--color-surface)]"
+                  >
+                    <img
+                      :src="gearImage(item)!"
+                      :alt="item.brand + ' ' + item.name"
+                      class="h-full w-full object-contain p-2"
+                      loading="lazy"
+                    />
+                  </div>
                   <strong class="block text-[15px] font-semibold">
                     {{ item.brand }} {{ item.name }}
                   </strong>
@@ -362,8 +411,15 @@ function boardgameTags(tags: string | undefined): string[] {
               :target="social.link.startsWith('mailto:') ? undefined : '_blank'"
               rel="noopener noreferrer"
               role="listitem"
-              class="inline-flex min-h-[40px] items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+              class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
             >
+              <img
+                v-if="socialIcon(social.name)"
+                :src="socialIcon(social.name)!"
+                :alt="social.name"
+                class="h-4 w-4 shrink-0 object-contain opacity-70"
+                aria-hidden="true"
+              />
               {{ social.name }} — {{ social.text }}
             </a>
           </div>
