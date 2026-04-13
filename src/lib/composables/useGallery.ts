@@ -16,13 +16,28 @@ import { db } from "../firebase";
 // ── Schema ─────────────────────────────────────────────────────────────────
 
 /**
+ * Coerces a Firestore Timestamp (or plain string) to an ISO 8601 string.
+ * Firestore SDKs return Timestamp objects for date fields; the rest of the
+ * app works with plain strings, so we normalise at the boundary.
+ */
+const firestoreDateString = z.preprocess((val) => {
+  if (typeof val === "string") return val;
+  // Firestore Timestamp — has a toDate() method
+  if (val != null && typeof val === "object" && "toDate" in val) {
+    return (val as { toDate(): Date }).toDate().toISOString();
+  }
+  return val;
+}, z.string());
+
+/**
  * Validates a document from the `photos` Firestore collection.
- * `date` is an ISO 8601 string. `favourite` filters the public gallery view.
+ * `date` accepts either an ISO 8601 string or a Firestore Timestamp and is
+ * normalised to a string. `favourite` filters the public gallery view.
  * All other fields are optional shoot metadata.
  */
 export const PhotoSchema = z.object({
   id: z.string(),
-  date: z.string(),
+  date: firestoreDateString,
   theme: z.string().optional(),
   lens: z.string().optional(),
   focal_length: z.number().optional(),
