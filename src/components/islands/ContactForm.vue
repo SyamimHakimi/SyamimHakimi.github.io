@@ -3,13 +3,25 @@
  * ContactForm — EmailJS-powered contact form.
  * Island: client:load — EmailJS requires browser fetch API on mount.
  * No Firestore composable — purely client-side submission.
+ *
+ * Interaction model (per approved Step 9 mockup):
+ * - Blur-only field validation
+ * - 500-char counter on message
+ * - Inline circular spinner during submission
+ * - Snackbar feedback: success auto-dismisses after 4 s; error offers Retry
+ * - aria-live regions announce status changes to assistive technology
  */
-import { ref, reactive } from "vue";
+import { ref, reactive, computed, onUnmounted } from "vue";
 import emailjs from "@emailjs/browser";
 
 const SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID as string;
 const PUBLIC_KEY = import.meta.env.PUBLIC_EMAILJS_PUBLIC_KEY as string;
+
+const MAX_MESSAGE = 500;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+
+/* ── Form state ──────────────────────────────────────────────────────── */
 
 const form = reactive({
   from_name: "",
@@ -17,30 +29,53 @@ const form = reactive({
   message: "",
 });
 
-const status = ref<"idle" | "sending" | "success" | "error">("idle");
-const errorMessage = ref("");
+const touched = reactive({
+  from_name: false,
+  from_email: false,
+  message: false,
+});
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+const status = ref<"idle" | "sending" | "success" | "error">("idle");
+const submitError = ref("");
+
+let successTimer: ReturnType<typeof setTimeout> | null = null;
+
+/* ── Validation ──────────────────────────────────────────────────────── */
+
+const errors = computed(() => ({
+  from_name:
+    touched.from_name && !form.from_name.trim() ? "Name is required." : "",
+  from_email: touched.from_email
+    ? !form.from_email.trim()
+      ? "Email is required."
+      : !EMAIL_RE.test(form.from_email.trim())
+        ? "Enter a valid email address."
+        : ""
+    : "",
+  message:
+    touched.message && !form.message.trim() ? "Message is required." : "",
+}));
+
+const charCount = computed(() => form.message.length);
+
+const hasErrors = computed(
+  () => !!(errors.value.from_name || errors.value.from_email || errors.value.message),
+);
+
+/* ── Handlers ────────────────────────────────────────────────────────── */
+
+function onBlur(field: keyof typeof touched) {
+  touched[field] = true;
+}
 
 async function submit() {
-  if (
-    !form.from_name.trim() ||
-    !form.from_email.trim() ||
-    !form.message.trim()
-  ) {
-    errorMessage.value = "Please fill in all fields.";
-    status.value = "error";
-    return;
-  }
+  touched.from_name = true;
+  touched.from_email = true;
+  touched.message = true;
 
-  if (!EMAIL_RE.test(form.from_email.trim())) {
-    errorMessage.value = "Please enter a valid email address.";
-    status.value = "error";
-    return;
-  }
+  if (hasErrors.value) return;
 
   status.value = "sending";
-  errorMessage.value = "";
 
   try {
     await emailjs.send(
@@ -53,92 +88,326 @@ async function submit() {
       },
       { publicKey: PUBLIC_KEY },
     );
+
     status.value = "success";
     form.from_name = "";
     form.from_email = "";
     form.message = "";
+    touched.from_name = false;
+    touched.from_email = false;
+    touched.message = false;
+
+    successTimer = setTimeout(() => {
+      status.value = "idle";
+    }, 4000);
   } catch (err) {
     status.value = "error";
-    errorMessage.value =
+    submitError.value =
       err instanceof Error
         ? err.message
         : "Failed to send message. Please try again.";
   }
 }
+
+function retry() {
+  status.value = "idle";
+  submitError.value = "";
+}
+
+onUnmounted(() => {
+  if (successTimer) clearTimeout(successTimer);
+});
 </script>
 
 <template>
-  <form class="space-y-5" novalidate @submit.prevent="submit">
-    <div>
-      <label for="contact-name" class="mb-1.5 block text-sm font-medium"
-        >Name</label
-      >
-      <input
-        id="contact-name"
-        v-model="form.from_name"
-        type="text"
-        autocomplete="name"
-        placeholder="Your name"
-        required
-        class="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
-      />
-    </div>
-
-    <div>
-      <label for="contact-email" class="mb-1.5 block text-sm font-medium"
-        >Email</label
-      >
-      <input
-        id="contact-email"
-        v-model="form.from_email"
-        type="email"
-        autocomplete="email"
-        placeholder="your@email.com"
-        required
-        class="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
-      />
-    </div>
-
-    <div>
-      <label for="contact-message" class="mb-1.5 block text-sm font-medium"
-        >Message</label
-      >
-      <textarea
-        id="contact-message"
-        v-model="form.message"
-        rows="5"
-        placeholder="Tell me about your project…"
-        required
-        class="w-full resize-none rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]"
-      />
-    </div>
-
-    <!-- Submit -->
-    <button
-      type="submit"
-      :disabled="status === 'sending'"
-      class="w-full rounded-lg bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white transition hover:bg-[var(--color-accent-hover)] disabled:opacity-60"
-    >
-      <span v-if="status === 'sending'">Sending…</span>
-      <span v-else>Send Message</span>
-    </button>
-
-    <!-- Success -->
+  <!-- Hero card ─────────────────────────────────────────────────────── -->
+  <section
+    class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
+    aria-label="Contact"
+  >
+    <!-- Eyebrow -->
     <p
-      v-if="status === 'success'"
-      class="rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-950 dark:text-green-400"
-      role="status"
+      class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]"
     >
-      Message sent! I'll get back to you soon.
+      <span
+        class="h-2 w-2 rounded-full bg-[var(--color-cta)]"
+        aria-hidden="true"
+      />
+      Contact
     </p>
 
-    <!-- Error -->
-    <p
-      v-if="status === 'error'"
-      class="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400"
-      role="alert"
+    <!-- Title + subtitle -->
+    <div>
+      <h1
+        class="font-serif text-[clamp(2.125rem,6vw,3.625rem)] leading-[0.98] tracking-[-0.03em]"
+      >
+        Start with a clear message.
+      </h1>
+      <p class="mt-4 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]">
+        One form, a few expectations up front, and feedback states that feel
+        calm instead of noisy.
+      </p>
+    </div>
+
+    <!-- Two-column: info card + form card -->
+    <div
+      class="grid gap-5 md:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] md:items-start"
     >
-      {{ errorMessage }}
-    </p>
-  </form>
+
+      <!-- Info card (static) ──────────────────────────────────────── -->
+      <aside
+        class="grid gap-5 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-[22px] md:sticky md:top-24"
+        aria-label="Contact information"
+      >
+        <!-- Info blocks -->
+        <div class="grid gap-3.5">
+          <div
+            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
+          >
+            <strong
+              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
+              >Best for</strong
+            >
+            <p class="text-sm text-[var(--color-on-surface)]">
+              Project inquiries, frontend work, product polish, and
+              collaborations with a clear scope.
+            </p>
+          </div>
+          <div
+            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
+          >
+            <strong
+              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
+              >Reply style</strong
+            >
+            <p class="text-sm text-[var(--color-on-surface)]">
+              Short, direct replies first. If the project fits, follow-up moves
+              into details quickly.
+            </p>
+          </div>
+          <div
+            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
+          >
+            <strong
+              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
+              >Useful details</strong
+            >
+            <p class="text-sm text-[var(--color-on-surface)]">
+              Timeline, rough scope, and what kind of help you need make the
+              first reply faster.
+            </p>
+          </div>
+        </div>
+
+        <!-- Topic chips -->
+        <div class="flex flex-wrap gap-2.5">
+          <span
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            >Frontend systems</span
+          >
+          <span
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            >UI polish</span
+          >
+          <span
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            >Portfolio work</span
+          >
+        </div>
+      </aside>
+
+      <!-- Form card ───────────────────────────────────────────────── -->
+      <section
+        class="grid gap-5 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-[22px]"
+        aria-label="Send a message"
+      >
+        <!-- Form header -->
+        <div class="grid gap-2.5">
+          <h2
+            class="font-serif text-[clamp(1.75rem,4vw,2.5rem)] leading-none"
+          >
+            Send a message
+          </h2>
+          <p class="max-w-[54ch] text-sm text-[var(--color-on-surface-variant)]">
+            Fill in the fields below. Validation runs on blur — no interruptions
+            while you type.
+          </p>
+        </div>
+
+        <!-- Snackbar — success ──────────────────────────────────── -->
+        <div
+          v-if="status === 'success'"
+          class="flex items-start justify-between gap-4 rounded-[18px] border border-[color-mix(in_srgb,#166534_25%,var(--color-surface))] bg-[color-mix(in_srgb,rgba(22,101,52,0.12)_70%,var(--color-surface))] px-4 py-3.5 text-[#166534] dark:border-[color-mix(in_srgb,#86efac_25%,var(--color-surface))] dark:bg-[color-mix(in_srgb,rgba(134,239,172,0.14)_70%,var(--color-surface))] dark:text-[#86efac]"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div>
+            <strong class="block text-[14px] font-semibold">Message sent</strong>
+            <p class="mt-1 text-[13px]">
+              Your note is on the way. This confirmation dismisses automatically.
+            </p>
+          </div>
+        </div>
+
+        <!-- Snackbar — error ─────────────────────────────────────── -->
+        <div
+          v-if="status === 'error'"
+          class="flex items-start justify-between gap-4 rounded-[18px] border border-[color-mix(in_srgb,var(--color-error)_28%,var(--color-surface))] bg-[color-mix(in_srgb,var(--color-error)_10%,var(--color-surface))] px-4 py-3.5 text-[var(--color-error)]"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div>
+            <strong class="block text-[14px] font-semibold">Failed to send</strong>
+            <p class="mt-1 text-[13px]">{{ submitError }}</p>
+          </div>
+          <button
+            type="button"
+            class="inline-flex shrink-0 min-h-[34px] items-center rounded-full border border-current px-3.5 text-[13px] font-semibold hover:bg-[color-mix(in_srgb,currentColor_8%,transparent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+            @click="retry"
+          >
+            Retry
+          </button>
+        </div>
+
+        <!-- Form ────────────────────────────────────────────────── -->
+        <form class="grid gap-[18px]" novalidate @submit.prevent="submit">
+
+          <!-- Name field -->
+          <div class="grid gap-2.5">
+            <label
+              for="contact-name"
+              class="text-[13px] font-semibold text-[var(--color-on-surface)]"
+              >Name</label
+            >
+            <div class="grid gap-2">
+              <input
+                id="contact-name"
+                v-model="form.from_name"
+                type="text"
+                autocomplete="name"
+                inputmode="text"
+                placeholder="Your name"
+                :aria-invalid="!!errors.from_name || undefined"
+                :aria-describedby="errors.from_name ? 'name-error' : 'name-hint'"
+                class="w-full min-h-[56px] rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
+                :class="errors.from_name ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                @blur="onBlur('from_name')"
+              />
+              <p
+                v-if="errors.from_name"
+                id="name-error"
+                class="text-[12px] text-[var(--color-error)]"
+              >
+                {{ errors.from_name }}
+              </p>
+              <p
+                v-else
+                id="name-hint"
+                class="text-[12px] text-[var(--color-on-surface-variant)]"
+              >
+                Use your real name so the reply feels personal.
+              </p>
+            </div>
+          </div>
+
+          <!-- Email field -->
+          <div class="grid gap-2.5">
+            <label
+              for="contact-email"
+              class="text-[13px] font-semibold text-[var(--color-on-surface)]"
+              >Email</label
+            >
+            <div class="grid gap-2">
+              <input
+                id="contact-email"
+                v-model="form.from_email"
+                type="email"
+                autocomplete="email"
+                inputmode="email"
+                placeholder="you@example.com"
+                :aria-invalid="!!errors.from_email || undefined"
+                :aria-describedby="errors.from_email ? 'email-error' : undefined"
+                class="w-full min-h-[56px] rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
+                :class="errors.from_email ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                @blur="onBlur('from_email')"
+              />
+              <p
+                v-if="errors.from_email"
+                id="email-error"
+                class="text-[12px] text-[var(--color-error)]"
+              >
+                {{ errors.from_email }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Message field -->
+          <div class="grid gap-2.5">
+            <div class="flex items-center justify-between gap-3">
+              <label
+                for="contact-message"
+                class="text-[13px] font-semibold text-[var(--color-on-surface)]"
+                >Message</label
+              >
+              <span
+                class="text-[12px] text-[var(--color-on-surface-variant)]"
+                aria-live="polite"
+                aria-atomic="true"
+                >{{ charCount }} / {{ MAX_MESSAGE }}</span
+              >
+            </div>
+            <div class="grid gap-2">
+              <textarea
+                id="contact-message"
+                v-model="form.message"
+                rows="6"
+                :maxlength="MAX_MESSAGE"
+                placeholder="Tell me about the project, timeline, and what you need help with."
+                :aria-invalid="!!errors.message || undefined"
+                :aria-describedby="errors.message ? 'message-error' : undefined"
+                class="w-full min-h-[156px] resize-y rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
+                :class="errors.message ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                @blur="onBlur('message')"
+              />
+              <p
+                v-if="errors.message"
+                id="message-error"
+                class="text-[12px] text-[var(--color-error)]"
+              >
+                {{ errors.message }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Submit row -->
+          <div
+            class="flex flex-wrap items-center justify-between gap-4 pt-1 sm:flex-nowrap"
+          >
+            <p class="max-w-[38ch] text-[12px] text-[var(--color-on-surface-variant)]">
+              Your message will be sent directly. I reply to serious project
+              inquiries.
+            </p>
+            <button
+              type="submit"
+              :disabled="status === 'sending'"
+              class="inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-full border-0 bg-[var(--color-cta)] px-5 text-[14px] font-bold text-white transition-all duration-150 hover:bg-[#1d4ed8] hover:-translate-y-px disabled:pointer-events-none disabled:opacity-90 dark:hover:bg-[#93c5fd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto sm:min-w-[172px]"
+              :aria-busy="status === 'sending'"
+            >
+              <!-- Spinner -->
+              <span
+                v-if="status === 'sending'"
+                class="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin"
+                aria-hidden="true"
+              />
+              <span>{{ status === "sending" ? "Sending" : "Send Message" }}</span>
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+    </div>
+  </section>
 </template>
