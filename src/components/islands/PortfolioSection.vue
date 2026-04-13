@@ -31,6 +31,14 @@ function durationLabel(item: ExperienceItem): string {
   return isActive(item) ? `Since ${year}` : `${year}–${new Date(item["date-to"]!).getFullYear()}`;
 }
 
+/** Years of experience as a compact label, e.g. "6y" or "<1y". */
+function yearsLabel(item: ExperienceItem): string | null {
+  if (!item["date-from"]) return null;
+  const years = new Date().getFullYear() - new Date(item["date-from"]).getFullYear();
+  if (years < 1) return "<1y";
+  return `${years}y`;
+}
+
 // ── Hero strip stats ───────────────────────────────────────────────────────
 const pythonSince = computed(() => {
   const item = data.value.experience.languages.find((i) => i.title === "Python");
@@ -210,6 +218,16 @@ function delay(i: number, base = 0): number {
                 <span v-else>{{ item.title.slice(0,2) }}</span>
               </div>
               <div class="flex items-center gap-1.5">
+                <a
+                  v-if="item.link"
+                  :href="item.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="exp-link-btn"
+                  :aria-label="`Learn more about ${item.title}`"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
                 <span v-if="isActive(item)" class="active-dot" aria-label="Currently using" />
                 <span v-if="isActive(item)" class="active-label">Active</span>
                 <span v-else class="year-badge">{{ sinceYear(item['date-from']) }}</span>
@@ -258,6 +276,16 @@ function delay(i: number, base = 0): number {
                 <span v-else>{{ item.title.slice(0,2) }}</span>
               </div>
               <div class="flex items-center gap-1.5">
+                <a
+                  v-if="item.link"
+                  :href="item.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="exp-link-btn"
+                  :aria-label="`Learn more about ${item.title}`"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
                 <span v-if="isActive(item)" class="active-dot" aria-label="Currently using" />
                 <span v-if="isActive(item)" class="active-label">Active</span>
                 <span v-else class="year-badge">{{ sinceYear(item['date-from']) }}</span>
@@ -354,6 +382,9 @@ function delay(i: number, base = 0): number {
                 aria-label="Currently using"
               />
               {{ item.title }}
+              <span v-if="yearsLabel(item)" class="chip-years" aria-hidden="true">
+                {{ yearsLabel(item) }}
+              </span>
             </span>
           </Motion>
         </ul>
@@ -398,7 +429,14 @@ function delay(i: number, base = 0): number {
             </p>
             <ul class="flex flex-wrap gap-1.5" role="list">
               <li v-for="tech in data.techstack" :key="tech.id">
-                <span class="tag">{{ tech.title }}</span>
+                <a
+                  v-if="tech.link"
+                  :href="tech.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="tag tag--link"
+                >{{ tech.title }}</a>
+                <span v-else class="tag">{{ tech.title }}</span>
               </li>
             </ul>
           </div>
@@ -540,5 +578,52 @@ h2 { font-family: 'DM Serif Display', serif; }
   font-size: 11px; font-weight: 600;
   letter-spacing: .07em; text-transform: uppercase;
   color: var(--color-cta);
+}
+
+/* ── Years label inside language chip ───────────────────────────── */
+.chip-years {
+  font-size: 10px; font-weight: 600;
+  opacity: 0.5; margin-left: 2px;
+}
+
+/* ── External link button on exp cards ──────────────────────────── */
+.exp-link-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px;
+  color: var(--color-on-surface-variant);
+  background: var(--color-surface-variant);
+  transition: color 150ms, background 150ms;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.exp-link-btn:hover {
+  color: var(--color-cta);
+  background: rgba(37,99,235,.08);
+}
+[data-theme="dark"] .exp-link-btn:hover {
+  background: rgba(96,165,250,.10);
+}
+.exp-link-btn:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+
+/* ── Tech stack tag as link ─────────────────────────────────────── */
+.tag--link {
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, background 150ms;
+  text-decoration: none;
+}
+.tag--link:hover {
+  color: var(--color-cta);
+  border-color: var(--color-cta);
+  background: rgba(37,99,235,.06);
+}
+[data-theme="dark"] .tag--link:hover {
+  background: rgba(96,165,250,.08);
+}
+.tag--link:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
 }
 </style>
