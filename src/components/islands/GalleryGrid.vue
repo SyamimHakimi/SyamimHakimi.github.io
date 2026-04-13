@@ -3,25 +3,59 @@
  * GalleryGrid — paginated photo grid with cursor-based pagination.
  * Island: client:visible
  * Composable: useGallery()
+ *
+ * Scroll entrance animations use motion-v; stagger is skipped when
+ * prefers-reduced-motion is active.
  */
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { Motion } from "motion-v";
 import { useGallery } from "../../lib/composables/useGallery";
 import GalleryLightbox from "./GalleryLightbox.vue";
 
 const { photos, loading, loadingMore, hasMore, error, loadMore } = useGallery();
 
+// ── Theme filtering (client-side, loaded batch only) ───────────────────────
+const activeTheme = ref<string | null>(null);
+
+const availableThemes = computed(() => {
+  const seen = new Set<string>();
+  for (const p of photos.value) {
+    if (p.theme) seen.add(p.theme);
+  }
+  return [...seen];
+});
+
+const filteredPhotos = computed(() =>
+  activeTheme.value
+    ? photos.value.filter((p) => p.theme === activeTheme.value)
+    : photos.value,
+);
+
 const lightboxOpen = ref(false);
 const lightboxIndex = ref(0);
 
-function openLightbox(index: number) {
-  lightboxIndex.value = index;
+function openLightbox(photoId: string) {
+  const realIndex = photos.value.findIndex((p) => p.id === photoId);
+  lightboxIndex.value = realIndex >= 0 ? realIndex : 0;
   lightboxOpen.value = true;
+}
+
+// ── Motion helpers ─────────────────────────────────────────────────────────
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const tileInitial = prefersReducedMotion ? {} : { opacity: 0, y: 12 };
+const tileVisible = { opacity: 1, y: 0 };
+
+function delay(i: number): number {
+  return prefersReducedMotion ? 0 : (i * 40) / 1000;
 }
 </script>
 
 <template>
   <div>
-    <!-- Loading skeleton -->
+    <!-- Loading skeleton ─────────────────────────────────────────────────── -->
     <div
       v-if="loading"
       class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
@@ -31,79 +65,194 @@ function openLightbox(index: number) {
       <div
         v-for="i in 12"
         :key="i"
-        class="aspect-square animate-pulse rounded-lg bg-[var(--color-surface)]"
+        class="skeleton-rect aspect-square"
+        :style="{ animationDelay: `${(i - 1) * 60}ms` }"
       />
     </div>
 
-    <!-- Initial load error (no photos yet) -->
+    <!-- Initial load error ───────────────────────────────────────────────── -->
     <div
       v-else-if="error && photos.length === 0"
-      class="rounded-xl border border-red-200 bg-red-50 p-6 text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-400"
+      class="flex gap-4 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[var(--color-surface)] p-5"
       role="alert"
     >
-      <p class="font-medium">Failed to load gallery</p>
-      <p class="mt-1 text-sm opacity-80">{{ error }}</p>
+      <div
+        class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
+        style="background: rgba(220,38,38,0.10)"
+      >
+        <svg
+          width="18" height="18" viewBox="0 0 24 24"
+          fill="none" stroke="var(--color-error)"
+          stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-[var(--color-error)]">Failed to load gallery</p>
+        <p class="mt-1 text-sm text-[var(--color-on-surface-variant)]">{{ error }}</p>
+      </div>
     </div>
 
-    <!-- Empty -->
-    <p v-else-if="photos.length === 0" class="text-[var(--color-text-muted)]">
+    <!-- Empty ────────────────────────────────────────────────────────────── -->
+    <p v-else-if="photos.length === 0" class="text-[var(--color-on-surface-variant)]">
       No photos found.
     </p>
 
-    <!-- Grid (shown even if a later loadMore failed) -->
+    <!-- Grid ─────────────────────────────────────────────────────────────── -->
     <div v-else>
+      <!-- Count context line -->
+      <p class="mb-3 text-[13px] text-[var(--color-on-surface-variant)]">
+        <span v-if="activeTheme">
+          {{ filteredPhotos.length }} {{ activeTheme }} photo{{ filteredPhotos.length !== 1 ? "s" : "" }}
+          <span class="opacity-60">· from {{ photos.length }} loaded</span>
+        </span>
+        <span v-else>{{ photos.length }} favourite photo{{ photos.length !== 1 ? "s" : "" }}</span>
+      </p>
+
+      <!-- Theme filter bar -->
+      <div
+        v-if="availableThemes.length > 1"
+        class="mb-5 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter by theme"
+      >
+        <button
+          type="button"
+          class="filter-pill"
+          :class="{ active: activeTheme === null }"
+          @click="activeTheme = null"
+        >All</button>
+        <button
+          v-for="theme in availableThemes"
+          :key="theme"
+          type="button"
+          class="filter-pill"
+          :class="{ active: activeTheme === theme }"
+          @click="activeTheme = theme"
+        >{{ theme }}</button>
+      </div>
+
       <ul
-        class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+        class="columns-2 gap-3 sm:columns-3 lg:columns-4"
         role="list"
       >
-        <li v-for="(photo, index) in photos" :key="photo.id">
+        <Motion
+          v-for="(photo, index) in filteredPhotos"
+          :key="photo.id"
+          as="li"
+          class="mb-3 break-inside-avoid"
+          :initial="tileInitial"
+          :animate="tileVisible"
+          :transition="{ duration: 0.25, delay: delay(index % 12), easing: [0.2,0,0,1] }"
+        >
           <button
             type="button"
-            class="group aspect-square w-full overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)]"
+            class="group relative w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
             :aria-label="photo.title ?? `Photo ${index + 1}`"
-            @click="openLightbox(index)"
+            style="touch-action: manipulation; cursor: pointer"
+            @click="openLightbox(photo.id)"
           >
             <img
               v-if="photo.link"
               :src="photo.link"
               :alt="photo.title ?? ''"
               loading="lazy"
-              class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              class="block h-auto w-full transition-transform duration-300 group-hover:scale-105"
             />
             <div
               v-else
-              class="flex h-full w-full items-center justify-center bg-[var(--color-surface)] text-[var(--color-text-muted)] text-xs"
+              class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
             >
-              No image
+              <svg
+                width="22" height="22" viewBox="0 0 24 24"
+                fill="none" stroke="var(--color-on-surface-variant)"
+                stroke-width="1.5" aria-hidden="true"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span class="text-[10px] text-[var(--color-on-surface-variant)]">No image</span>
+            </div>
+
+            <!-- Hover overlay — title + recipe ──────────────────────────── -->
+            <div
+              class="pointer-events-none absolute inset-0 flex flex-col justify-end p-2.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
+              style="background: linear-gradient(to top, rgba(0,0,0,.70) 0%, rgba(0,0,0,.18) 55%, transparent 100%)"
+              aria-hidden="true"
+            >
+              <p
+                v-if="photo.title"
+                class="truncate text-[11px] font-semibold leading-tight text-white"
+              >
+                {{ photo.title }}
+              </p>
+              <p
+                v-if="photo.recipe"
+                class="mt-0.5 truncate text-[10px] text-white/70"
+              >
+                {{ photo.recipe }}
+              </p>
             </div>
           </button>
-        </li>
+        </Motion>
       </ul>
 
-      <!-- Pagination error (photos still visible) -->
-      <p
+      <!-- Pagination error ─────────────────────────────────────────────── -->
+      <div
         v-if="error && photos.length > 0"
-        class="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-400"
+        class="mt-4 flex gap-3 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[var(--color-surface)] p-4"
         role="alert"
       >
-        Failed to load more photos. Please try again.
-      </p>
+        <svg
+          width="16" height="16" viewBox="0 0 24 24"
+          fill="none" stroke="var(--color-error)"
+          stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+          class="mt-px flex-shrink-0" aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p class="text-sm text-[var(--color-on-surface-variant)]">
+          Failed to load more photos. Please try again.
+        </p>
+      </div>
 
-      <!-- Load more -->
-      <div v-if="hasMore" class="mt-8 flex justify-center">
+      <!-- Load more ───────────────────────────────────────────────────────── -->
+      <div v-if="hasMore" class="mt-8 flex flex-col items-center gap-2">
         <button
           type="button"
-          class="inline-flex items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-2.5 text-sm font-medium text-[var(--color-text)] transition hover:bg-[var(--color-border)] disabled:opacity-50"
+          class="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-6 py-2.5 text-sm font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:bg-[var(--color-surface-variant)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)] disabled:cursor-not-allowed disabled:opacity-50"
+          style="touch-action: manipulation"
           :disabled="loadingMore"
           @click="loadMore"
         >
-          <span v-if="loadingMore">Loading…</span>
-          <span v-else>Load more</span>
+          <svg
+            v-if="loadingMore"
+            class="h-3.5 w-3.5 animate-spin"
+            viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          </svg>
+          <span>{{ loadingMore ? "Loading…" : "Load more" }}</span>
         </button>
+        <p
+          v-if="activeTheme"
+          class="text-center text-[12px] text-[var(--color-on-surface-variant)]"
+        >
+          Load more to see all {{ activeTheme }} photos
+        </p>
       </div>
     </div>
 
-    <!-- Lightbox -->
+    <!-- Lightbox ─────────────────────────────────────────────────────────── -->
     <GalleryLightbox
       :photos="photos"
       :initial-index="lightboxIndex"
@@ -112,3 +261,33 @@ function openLightbox(index: number) {
     />
   </div>
 </template>
+
+<style scoped>
+.filter-pill {
+  padding: 7px 16px;
+  min-height: 36px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
+  touch-action: manipulation;
+}
+.filter-pill:hover {
+  border-color: var(--color-cta);
+  color: var(--color-on-surface);
+}
+.filter-pill.active {
+  background: var(--color-cta);
+  border-color: var(--color-cta);
+  color: #fff;
+  font-weight: 600;
+}
+.filter-pill:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+</style>

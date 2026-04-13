@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Step 5 — Gallery + Lightbox Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+/* ── Design tokens (light) ─────────────────────────────────────── */
+:root {
+  --color-bg:                 #f8f8f8;
+  --color-surface:            #ffffff;
+  --color-surface-variant:    #f1f1f4;
+  --color-on-surface:         #0f0f10;
+  --color-on-surface-variant: #6b6b75;
+  --color-outline:            #e2e2e6;
+  --color-cta:                #2563eb;
+  --color-cta-hover:          #1d4ed8;
+  --color-error:              #dc2626;
+  --radius-sm:    6px;
+  --radius-md:    12px;
+  --radius-lg:    16px;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+[data-theme="dark"] {
+  --color-bg:                 #0f0f10;
+  --color-surface:            #1a1a1e;
+  --color-surface-variant:    #26262c;
+  --color-on-surface:         #f0f0f2;
+  --color-on-surface-variant: #9595a0;
+  --color-outline:            #333338;
+  --color-cta:                #60a5fa;
+  --color-cta-hover:          #93c5fd;
+  --color-error:              #f87171;
+}
+
+/* ── Reset / base ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-on-surface);
+  line-height: 1.5;
+}
+h1 { font-family: 'DM Serif Display', serif; }
+
+/* ── Card system (mirroring global.css) ────────────────────────── */
+.card-elevated {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 200ms var(--ease-standard), transform 200ms var(--ease-standard);
+}
+[data-theme="dark"] .card-elevated { box-shadow: 0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3); }
+.card-outlined {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-outline);
+  padding: 20px;
+}
+.skeleton-rect {
+  background: linear-gradient(90deg, var(--color-surface-variant) 25%, var(--color-outline) 50%, var(--color-surface-variant) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius-sm);
+}
+.skeleton-line {
+  background: linear-gradient(90deg, var(--color-surface-variant) 25%, var(--color-outline) 50%, var(--color-surface-variant) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: 4px;
+  height: 12px;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Theme toggle ──────────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed; top: 16px; right: 16px; z-index: 999;
+  background: var(--color-surface);
+  border: 1px solid var(--color-outline);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px; font-family: inherit;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  transition: background 150ms;
+}
+.theme-toggle:hover { background: var(--color-surface-variant); }
+
+/* ── Section label ─────────────────────────────────────────────── */
+.section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--color-cta);
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--color-outline);
+}
+.mock-section {
+  max-width: 1152px; margin: 0 auto; padding: 48px 24px;
+  border-bottom: 1px dashed var(--color-outline);
+}
+.mock-section:last-child { border-bottom: none; }
+
+/* ── Page header ───────────────────────────────────────────────── */
+.page-header h1 {
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 400;
+  color: var(--color-on-surface);
+  line-height: 1.15;
+}
+.page-header p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.6;
+}
+.page-header .photo-count-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 14px;
+  padding: 5px 12px;
+  background: var(--color-surface-variant);
+  border-radius: 999px;
+  font-size: 12px; font-weight: 500;
+  color: var(--color-on-surface-variant);
+}
+.page-header .photo-count-chip .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--color-cta);
+}
+
+/* ── Gallery grid ──────────────────────────────────────────────── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+@media (min-width: 640px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); } }
+
+/* Thumbnail tile */
+.thumb-tile {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface-variant);
+  cursor: pointer;
+}
+.thumb-tile img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 350ms var(--ease-standard);
+}
+.thumb-tile:hover img, .thumb-tile:focus-visible img { transform: scale(1.05); }
+/* Hover overlay */
+.thumb-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.18) 50%, transparent 100%);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 250ms var(--ease-standard);
+}
+.thumb-tile:hover .thumb-overlay,
+.thumb-tile:focus-visible .thumb-overlay { opacity: 1; }
+.thumb-overlay .title {
+  font-size: 11px; font-weight: 600; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.thumb-overlay .recipe {
+  font-size: 10px; color: rgba(255,255,255,.72); margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Focus ring */
+.thumb-tile:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+}
+
+/* ── Skeleton loading state ────────────────────────────────────── */
+.skeleton-tile {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Load-more button ──────────────────────────────────────────── */
+.load-more-btn {
+  display: inline-flex; align-items: center; gap-8px;
+  padding: 10px 28px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  transition: background 150ms, border-color 150ms, box-shadow 150ms;
+  font-family: inherit;
+}
+.load-more-btn:hover {
+  background: var(--color-surface-variant);
+  border-color: var(--color-cta);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+.load-more-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.load-more-btn .spinner {
+  width: 14px; height: 14px;
+  border: 2px solid var(--color-outline);
+  border-top-color: var(--color-cta);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Error / empty states ──────────────────────────────────────── */
+.error-state {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+}
+.error-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(220,38,38,.10);
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Lightbox ──────────────────────────────────────────────────── */
+.lightbox-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(0,0,0,.92);
+  display: flex; align-items: center; justify-content: center;
+}
+/* Counter badge */
+.lb-counter {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,.85);
+  letter-spacing: .03em;
+}
+/* Close button */
+.lb-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: white;
+  transition: background 150ms;
+}
+.lb-close:hover { background: rgba(255,255,255,.22); }
+/* Nav buttons */
+.lb-nav {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,.12);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: white;
+  transition: background 150ms, transform 150ms;
+}
+.lb-nav:hover { background: rgba(255,255,255,.22); }
+.lb-nav.prev { left: 14px; }
+.lb-nav.next { right: 14px; }
+.lb-nav:hover.prev { transform: translateY(-50%) translateX(-2px); }
+.lb-nav:hover.next { transform: translateY(-50%) translateX(2px); }
+/* Image wrapper */
+.lb-image-wrap {
+  max-width: min(90dvw, 900px);
+  max-height: 80dvh;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0;
+  margin: 0 72px;
+}
+.lb-image-wrap img {
+  max-width: 100%; max-height: 72dvh;
+  border-radius: var(--radius-md);
+  object-fit: contain;
+  display: block;
+}
+/* Metadata bar */
+.lb-meta {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  margin-top: 10px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.lb-meta-title {
+  font-size: 13px; font-weight: 600;
+  color: rgba(255,255,255,.92);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lb-meta-tags {
+  display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;
+}
+.lb-tag {
+  font-size: 11px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  padding: 3px 9px;
+  color: rgba(255,255,255,.72);
+  white-space: nowrap;
+}
+/* Keyboard hint */
+.lb-kbd-hint {
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; align-items: center;
+}
+.lb-kbd-hint .hint-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: rgba(255,255,255,.45);
+}
+.lb-kbd-hint kbd {
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 10px; font-family: inherit;
+  color: rgba(255,255,255,.6);
+}
+
+/* ── Annotation helpers ────────────────────────────────────────── */
+.annotation {
+  background: #fff8dc;
+  border-left: 3px solid #f59e0b;
+  padding: 8px 12px;
+  font-size: 12px; color: #92400e;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 16px;
+}
+[data-theme="dark"] .annotation {
+  background: rgba(245,158,11,.12);
+  color: #fcd34d;
+}
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">
+  Toggle Dark Mode
+</button>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION A — Page header
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">A — Page Header (photography.astro)</div>
+  <div class="annotation">
+    Replaces legacy font-bold h1 + --color-text-muted subtitle. Matches index.astro header pattern.
+    Added: film camera icon disc + photo count chip.
+  </div>
+
+  <div style="max-width:780px">
+    <header class="page-header" style="margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,99,235,.10);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-cta)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <h1>Gallery</h1>
+      </div>
+      <p>Favourite frames — film simulations on a Fujifilm X-E4.</p>
+      <div class="photo-count-chip">
+        <span class="dot"></span>
+        48 photos · updated Apr 2026
+      </div>
+    </header>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION B — Loading skeleton
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">B — Loading State (skeleton grid)</div>
+  <div class="annotation">
+    Uses .skeleton-rect with shimmer animation. Matches aspect-ratio:1 of real tiles.
+    Staggered opacity via CSS animation-delay for a wave effect.
+  </div>
+
+  <div class="gallery-grid">
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:0ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:60ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:120ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:180ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:240ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:300ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:360ms"></div>
+    <div class="skeleton-tile skeleton-rect" style="animation-delay:420ms"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION C — Gallery grid (loaded) with hover overlay
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">C — Gallery Grid (loaded state) — hover a tile</div>
+  <div class="annotation">
+    Thumbnail hover: scale(1.05) + gradient overlay revealing title + recipe.
+    Token migration: --color-text → --color-on-surface, --color-accent → --color-cta, --color-border → --color-outline.
+    Focus-visible: 2px solid --color-cta ring.
+  </div>
+
+  <!-- Simulate hover on tile 3 for static preview -->
+  <style>
+    .thumb-tile.demo-hover img { transform: scale(1.05); }
+    .thumb-tile.demo-hover .thumb-overlay { opacity: 1; }
+  </style>
+
+  <div class="gallery-grid">
+    <!-- Tile 1 — normal -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Tokyo Street, Classic Chrome">
+      <img src="https://picsum.photos/seed/gallery1/400/400" alt="Tokyo Street" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Tokyo Street</div>
+        <div class="recipe">Classic Chrome</div>
+      </div>
+    </div>
+    <!-- Tile 2 — normal -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Shibuya Crossing, Eterna Cinema">
+      <img src="https://picsum.photos/seed/gallery2/400/400" alt="Shibuya Crossing" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Shibuya Crossing</div>
+        <div class="recipe">Eterna Cinema</div>
+      </div>
+    </div>
+    <!-- Tile 3 — simulated hover (CSS demo) -->
+    <div class="thumb-tile demo-hover" tabindex="0" role="button" aria-label="Afternoon Light, Velvia">
+      <img src="https://picsum.photos/seed/gallery3/400/400" alt="Afternoon Light" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Afternoon Light</div>
+        <div class="recipe">Velvia / Vivid</div>
+      </div>
+    </div>
+    <!-- Tile 4 — normal -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Wet Pavement, Acros">
+      <img src="https://picsum.photos/seed/gallery4/400/400" alt="Wet Pavement" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Wet Pavement</div>
+        <div class="recipe">Acros</div>
+      </div>
+    </div>
+    <!-- Tile 5 — normal -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Morning Coffee, Provia">
+      <img src="https://picsum.photos/seed/gallery5/400/400" alt="Morning Coffee" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Morning Coffee</div>
+        <div class="recipe">Provia / Standard</div>
+      </div>
+    </div>
+    <!-- Tile 6 — no image fallback -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="No image placeholder">
+      <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:var(--color-surface-variant)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-on-surface-variant)" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span style="font-size:10px;color:var(--color-on-surface-variant)">No image</span>
+      </div>
+    </div>
+    <!-- Tile 7 -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Rooftop View, Classic Neg">
+      <img src="https://picsum.photos/seed/gallery7/400/400" alt="Rooftop View" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Rooftop View</div>
+        <div class="recipe">Classic Neg.</div>
+      </div>
+    </div>
+    <!-- Tile 8 -->
+    <div class="thumb-tile" tabindex="0" role="button" aria-label="Night Market, Provia">
+      <img src="https://picsum.photos/seed/gallery8/400/400" alt="Night Market" loading="lazy" />
+      <div class="thumb-overlay">
+        <div class="title">Night Market</div>
+        <div class="recipe">Provia / Standard</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load more button -->
+  <div style="display:flex;justify-content:center;margin-top:32px;gap:12px;flex-wrap:wrap">
+    <button class="load-more-btn">
+      Load more
+    </button>
+    <button class="load-more-btn" disabled style="display:inline-flex;align-items:center;gap:8px">
+      <span class="spinner"></span>
+      Loading…
+    </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION D — Error state
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">D — Error State</div>
+  <div class="annotation">
+    Migrated to use --color-error token and matches PhotographyJourney error card pattern
+    (icon-disc + title + message). Replaced raw Tailwind red classes.
+  </div>
+
+  <div class="error-state" style="max-width:480px">
+    <div class="error-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-error)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <div>
+      <p style="font-size:14px;font-weight:600;color:var(--color-error)">Failed to load gallery</p>
+      <p style="font-size:13px;margin-top:4px;color:var(--color-on-surface-variant)">
+        Could not connect to Firestore. Check your connection and try again.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION E — Lightbox
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">E — Lightbox (click any tile above to open)</div>
+  <div class="annotation">
+    Key upgrades: nav buttons 48×48px (was 40px — below 44px touch target minimum).
+    Glassmorphic counter badge (top-center). Metadata bar (bottom, blur panel).
+    Keyboard hints (bottom). Backdrop click-to-close preserved. Reduced-motion: transition:none.
+  </div>
+
+  <!-- Static preview of lightbox -->
+  <div style="position:relative;border-radius:var(--radius-lg);overflow:hidden;background:rgba(0,0,0,.92);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;">
+
+    <!-- Counter -->
+    <div class="lb-counter" style="position:absolute">3 / 48</div>
+
+    <!-- Close -->
+    <div class="lb-close" style="position:absolute;top:14px;right:14px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </div>
+
+    <!-- Prev -->
+    <div class="lb-nav prev" style="position:absolute">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+
+    <!-- Image + meta -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:min(75%,600px);width:100%">
+      <img src="https://picsum.photos/seed/gallery3/700/500" alt="Afternoon Light" style="max-width:100%;max-height:52dvh;border-radius:var(--radius-md);object-fit:contain" />
+      <div class="lb-meta">
+        <span class="lb-meta-title">Afternoon Light</span>
+        <div class="lb-meta-tags">
+          <span class="lb-tag">Velvia / Vivid</span>
+          <span class="lb-tag">XF 23mm f/2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next -->
+    <div class="lb-nav next" style="position:absolute">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+
+    <!-- Keyboard hints -->
+    <div class="lb-kbd-hint" style="position:absolute;bottom:14px">
+      <div class="hint-item"><kbd>←</kbd><kbd>→</kbd> navigate</div>
+      <div class="hint-item"><kbd>Esc</kbd> close</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SECTION F — Change summary
+     ════════════════════════════════════════════════════════════════ -->
+<div class="mock-section">
+  <div class="section-label">F — Change Summary</div>
+
+  <div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">
+
+    <div class="card-outlined" style="padding:16px">
+      <p style="font-size:12px;font-weight:600;color:var(--color-cta);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">photography.astro</p>
+      <ul style="font-size:13px;color:var(--color-on-surface-variant);line-height:1.8;padding-left:14px">
+        <li>Remove <code>font-bold</code> from h1 → DM Serif Display matches index.astro</li>
+        <li>Replace <code>--color-text-muted</code> → <code>--color-on-surface-variant</code></li>
+        <li>Add camera icon disc + photo-count chip</li>
+      </ul>
+    </div>
+
+    <div class="card-outlined" style="padding:16px">
+      <p style="font-size:12px;font-weight:600;color:var(--color-cta);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">GalleryGrid.vue</p>
+      <ul style="font-size:13px;color:var(--color-on-surface-variant);line-height:1.8;padding-left:14px">
+        <li>Token migration: 4 legacy vars → design-system tokens</li>
+        <li>Add <code>.thumb-overlay</code> hover (gradient + title/recipe)</li>
+        <li>Skeleton: replace <code>animate-pulse</code> → <code>.skeleton-rect</code> shimmer</li>
+        <li>Load-more button → card-outlined style + CTA focus ring</li>
+        <li>Error state → match PhotographyJourney pattern</li>
+        <li>motion-v entrance stagger on tiles</li>
+      </ul>
+    </div>
+
+    <div class="card-outlined" style="padding:16px">
+      <p style="font-size:12px;font-weight:600;color:var(--color-cta);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">GalleryLightbox.vue</p>
+      <ul style="font-size:13px;color:var(--color-on-surface-variant);line-height:1.8;padding-left:14px">
+        <li>Nav buttons: 40px → 48px (meets 44px touch target)</li>
+        <li>Counter badge: glassmorphic pill (top-center)</li>
+        <li>Metadata: bottom frosted-glass bar (title + recipe + lens chips)</li>
+        <li>Keyboard hint strip (bottom, reduced-motion hidden)</li>
+        <li>Scoped style: <code>transition:none</code> when reduced-motion</li>
+        <li>Move <code>import { computed }</code> to top of script (cleanup)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

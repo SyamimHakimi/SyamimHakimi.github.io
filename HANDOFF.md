@@ -88,8 +88,9 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 2 | Navigation shell (rail, top bar, drawer, footer) | ✅ Option C approved | DONE | APPROVED | — | MERGED | #30 |
 | 3 | Card system (elevated, filled, outlined) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #31 |
 | 4 | Photography Journey (`PhotographyJourney.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #32 |
-| 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | PENDING | — | — | — | NOT STARTED | — |
-| 6 | Portfolio (`PortfolioSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
+| 5a | Gallery content enrichment (gear strip, theme filter, lightbox metadata) | ✅ Plan approved in session | DONE | APPROVED | — | MERGED | — |
+| 6 | Portfolio (`PortfolioSection.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
 | 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 8 | About (`AboutMe.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 9 | Contact (`ContactForm.vue`) | PENDING | — | — | — | NOT STARTED | — |
@@ -261,6 +262,92 @@ Ready to merge.
 Build 0 errors, 45/45 tests (9 new). All four legacy token aliases removed from the island. `buildPhotoStatsLineSeries` correctly filters `MM/YYYY` keys, sorts via `parseMonthKey`, and slices the last 12 months. `buildRecipeBarSeries` sorts descending and slices top 6. MutationObserver pattern matches `ThemeToggle.vue`. Shimmer skeleton mirrors the loaded layout. Error state uses `role="alert"` and `--color-error` border. motion-v stagger correctly returns 0 delays when `prefers-reduced-motion`. No `any` types. `index.astro` header uses global `h1` serif style and `--color-on-surface-variant` token. `chart.js` and `vue-chartjs` fully uninstalled — no remaining imports.
 
 Ready to merge.
+
+---
+
+### Redesign Step 5 — Gallery + Lightbox
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step5-gallery.html` — Approved via Telegram 2026-04-13
+**Branch:** `main` (committed directly — same pattern as Steps 3 & 4) | **PR:** —
+
+**Scope:**
+- `src/pages/photography.astro`: h1 → DM Serif Display (removed `font-bold`), `--color-text-muted` → `--color-on-surface-variant`, added camera icon disc
+- `src/components/islands/GalleryGrid.vue`: full token migration (4 legacy vars), hover overlay with gradient + title/recipe, `animate-pulse` → `.skeleton-rect` shimmer with per-tile stagger delay, load-more button card-outlined style + CTA focus ring + spinner icon, error states match `PhotographyJourney.vue` icon-disc pattern, motion-v entrance stagger (40ms per tile, modulo 12)
+- `src/components/islands/GalleryLightbox.vue`: nav buttons 40px → 48px (meets 44px touch target), counter badge glassmorphic pill (top-center), metadata bar frosted-glass panel (title + recipe + lens chips), keyboard hint strip (bottom, hidden when reduced-motion), `fade-leave-active` shortened to 0.15s, `import { computed }` moved to top of script
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] All legacy tokens (`--color-text-muted`, `--color-border`, `--color-accent`, `--color-text`) replaced
+- [x] Nav buttons ≥ 44px touch target
+- [x] Hover overlay: `aria-hidden="true"`, `pointer-events-none`, `group-focus-visible` trigger
+- [x] Skeleton uses `.skeleton-rect` shimmer (not `animate-pulse`)
+- [x] `prefersReducedMotion` guard on motion-v stagger
+- [x] Error states use `--color-error` token + `role="alert"`
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-13
+
+Build 0 errors, 0 warnings. All 4 legacy token aliases removed from both islands and the page shell. `--color-surface-variant`, `--radius-sm`, `--radius-md` all confirmed defined in `global.css`. Nav buttons correctly upgraded to 48×48px. Hover overlay uses `pointer-events-none` + `aria-hidden="true"` + `group-focus-visible:opacity-100` for keyboard accessibility. Skeleton shimmer uses card-system `.skeleton-rect` with per-tile `animation-delay`. Error states match `PhotographyJourney.vue` icon-disc pattern. motion-v stagger returns 0 when `prefers-reduced-motion`. `import { computed }` moved to top of `<script setup>`. `fade-leave-active` exit at 0.15s (faster than 0.2s enter). No `any` types.
+
+---
+
+### Redesign Step 5a — Gallery Content Enrichment
+
+**Owner:** Claude | **Reviewer:** Codex
+**Trigger:** User revisit request — gallery page felt bare; unused photo metadata (theme, date) and gear data identified as content opportunities.
+**Branch:** `feat/phase-a7-testing-performance-hardening` (current working branch) | **PR:** —
+
+**Scope:**
+- `src/pages/photography.astro`: Static gear strip below subtitle — camera icon + "Shot on · Fujifilm X-E4 · Sigma 10-18mm F2.8 · Sigma 18-50mm F2.8 · Viltrox 56mm F1.7" (static, gear rarely changes; no composable needed)
+- `src/components/islands/GalleryGrid.vue`: `activeTheme` ref + `availableThemes` computed (insertion-order dedup from loaded batch) + `filteredPhotos` computed; theme filter pill bar (`role="group"` + `aria-label`) shown only when >1 theme present; count context line ("N favourite photos" / "N {theme} photos · from M loaded"); load-more hint when filter active and more pages exist; `.filter-pill` scoped styles (outline → active CTA, `focus-visible` ring, `touch-action: manipulation`, `min-height: 36px`); `openLightbox` fixed from `(index)` → `(photoId)` with `findIndex` lookup to prevent wrong photo opening when filter is active; **masonry layout**: `grid grid-cols-*` → CSS `columns-2 sm:columns-3 lg:columns-4` with `break-inside-avoid mb-3` per tile, `aspect-square` removed from button, `h-auto` on img for natural photo proportions — masonry reflows automatically when theme filter changes
+- `src/components/islands/GalleryLightbox.vue`: `theme?: string` added to `Photo` interface; `formatDate(iso)` helper (en-MY locale, "Feb 2025" format); date chip + theme chip added to metadata bar alongside existing recipe + lens chips
+
+**P0 bug fixed during implementation:**
+`openLightbox(index)` was passing the filtered-list index to the lightbox, which uses the unfiltered `photos` array. With a theme filter active, this opened the wrong photo. Fixed to pass `photo.id` and use `findIndex` on the full array.
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] Filter bar hidden when ≤1 theme in loaded batch
+- [x] Filter resets to full loaded set when "All" clicked
+- [x] Lightbox opens correct photo regardless of active filter
+- [x] Date chip renders as "Mon YYYY" (en-MY locale)
+- [x] Gear strip visible in page header, `aria-hidden` on decorative SVG + separator dots
+- [x] `.filter-pill:focus-visible` outline present
+- [x] Masonry layout: photos render at natural aspect ratios, columns reflow on filter change
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-13
+
+Build 0 errors, 0 warnings. P0 lightbox index bug caught and fixed before commit: `openLightbox(photo.id)` with `findIndex` correctly resolves filtered-list index mismatch. `availableThemes` preserves insertion order via `Set` iteration. `filteredPhotos` falls back to full `photos.value` when `activeTheme` is null. Filter bar guarded by `availableThemes.length > 1`. Token compliance: all `var(--color-*)` — only `#fff` on `.filter-pill.active` (intentional, white on CTA blue). `role="group"` + `aria-label="Filter by theme"` on pill container. `aria-hidden` on gear strip camera icon and separator dots. `formatDate` uses `en-MY` locale (correct for user). Filter pill `min-height: 36px` meets MD3 filter chip spec. Masonry: CSS `columns-2/3/4` with `break-inside-avoid`, `h-auto` image renders at natural aspect ratio, no-image placeholder uses `aspect-[4/3]` fallback; UI/UX Pro Max review confirmed masonry as the recommended pattern for Photography Studio product type. Masonry reflows automatically when theme filter changes, creating magazine-style browsing per category.
+
+---
+
+### Redesign Step 6 — Portfolio
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step6-portfolio.html` — Approved via Telegram 2026-04-13
+**Branch:** `main` | **PR:** —
+
+**Scope:**
+- `src/pages/portfolio.astro`: h1 → DM Serif Display, briefcase icon disc, updated subtitle copy, `--color-text-muted` → `--color-on-surface-variant`
+- `src/components/islands/PortfolioSection.vue`: hero summary strip (computed Python/Vue years + FinTech/EV domain tags), experience cards with brand logo disc + active green dot + year badge + hover CTA left-border accent, section context lines, compact framework grid (30px logo + title + date), Languages renamed to "Languages & Databases" with active chip indicators, `card-elevated` personal project with eyebrow + tech stack tags, skeleton mirrors loaded layout, error state matches icon-disc pattern, motion-v stagger, dead code (`formatDate`) removed, 5 legacy tokens fully migrated
+
+**Acceptance criteria:**
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] All legacy tokens replaced (`--color-border`, `--color-text-muted`, `--color-accent`, `--color-bg`, `animate-pulse`)
+- [x] `isActive()` non-null assertion safe (only used when `date-to` present)
+- [x] `aria-hidden` on decorative SVGs, `role="alert"` on error, `aria-busy` + `aria-label` on loading
+- [x] `prefersReducedMotion` guard on motion-v stagger
+- [x] Dead code (`formatDate`) removed
+
+**Claude:** DONE | **Codex:** APPROVED | **Syamim:** —
+
+**Codex review:** APPROVED — 2026-04-13
+
+Build 0 errors, 0 warnings. All 5 legacy token aliases removed. `animate-pulse` fully replaced with `.skeleton-rect`/`.skeleton-line` shimmer. Raw Tailwind red error classes replaced with `--color-error` icon-disc pattern. `formatDate` dead code caught and removed before commit. `isActive()` non-null assertion on `date-to` safe — only reached when `!isActive(item)` confirms presence. Hero strip `pythonSince`/`vueSince` computed from live Firestore data, gracefully hidden if `null`. `prefersReducedMotion` guard returns 0 delays. All decorative SVGs have `aria-hidden="true"`. Active dot has `aria-label="Currently using"`. No `any` types.
 
 ---
 
