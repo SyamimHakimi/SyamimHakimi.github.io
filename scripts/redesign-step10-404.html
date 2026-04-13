@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Step 10 - 404 Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-variant: #f4f4f5;
+  --color-on-surface: #09090b;
+  --color-on-surface-variant: #52525b;
+  --color-outline: #e4e4e7;
+  --color-cta: #2563eb;
+  --color-cta-hover: #1d4ed8;
+  --color-cta-soft: rgba(37, 99, 235, 0.1);
+}
+[data-theme="dark"] {
+  --color-bg: #09090b;
+  --color-surface: #18181b;
+  --color-surface-variant: #27272a;
+  --color-on-surface: #fafafa;
+  --color-on-surface-variant: #d4d4d8;
+  --color-outline: #3f3f46;
+  --color-cta: #60a5fa;
+  --color-cta-hover: #93c5fd;
+  --color-cta-soft: rgba(96, 165, 250, 0.14);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  font-family: "DM Sans", system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(37, 99, 235, 0.08), transparent 22%),
+    radial-gradient(circle at 84% 20%, rgba(37, 99, 235, 0.06), transparent 18%),
+    linear-gradient(180deg, var(--color-bg) 0%, color-mix(in srgb, var(--color-bg) 92%, var(--color-surface-variant)) 100%);
+  color: var(--color-on-surface);
+  line-height: 1.5;
+}
+h1, h2 { font-family: "DM Serif Display", serif; font-weight: 400; }
+button, a { font: inherit; }
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px 64px;
+  overflow: hidden;
+}
+.backdrop-orb,
+.backdrop-ring {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.backdrop-orb {
+  width: 320px;
+  height: 320px;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-cta-soft) 86%, transparent) 0%, transparent 70%);
+  filter: blur(10px);
+}
+.backdrop-orb.left {
+  top: 14%;
+  left: -80px;
+}
+.backdrop-orb.right {
+  right: -90px;
+  bottom: 10%;
+}
+.backdrop-ring {
+  width: 420px;
+  height: 420px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-outline) 84%, var(--color-cta-soft));
+  opacity: 0.6;
+}
+.backdrop-ring.one {
+  top: -120px;
+  right: 6%;
+}
+.backdrop-ring.two {
+  bottom: -180px;
+  left: 4%;
+}
+.shell {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 760px);
+}
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  color: var(--color-cta);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.label::before,
+.label::after {
+  content: "";
+  width: 48px;
+  height: 1px;
+  background: var(--color-outline);
+}
+.hero-card {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  text-align: center;
+  border: 1px solid var(--color-outline);
+  border-radius: 32px;
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  padding: 38px 28px 30px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 60px rgba(9, 9, 11, 0.06);
+}
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--color-outline) 74%, transparent);
+  pointer-events: none;
+}
+.code-wrap {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+.error-code {
+  display: inline-block;
+  font-family: "DM Serif Display", serif;
+  font-size: clamp(84px, 20vw, 172px);
+  line-height: 0.88;
+  letter-spacing: -0.06em;
+  color: var(--color-cta);
+  text-shadow: 0 12px 28px color-mix(in srgb, var(--color-cta-soft) 74%, transparent);
+}
+.micro-copy {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--color-outline) 74%, var(--color-cta-soft));
+  background: color-mix(in srgb, var(--color-surface-variant) 84%, var(--color-cta-soft));
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+}
+.hero-title {
+  max-width: 12ch;
+  font-size: clamp(34px, 6vw, 58px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+}
+.hero-body {
+  max-width: 42ch;
+  color: var(--color-on-surface-variant);
+  font-size: 15px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.primary-button,
+.secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 150ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+    border-color 150ms cubic-bezier(0.2, 0, 0, 1),
+    color 150ms cubic-bezier(0.2, 0, 0, 1);
+}
+.primary-button {
+  background: var(--color-cta);
+  color: #fff;
+}
+.primary-button:hover {
+  background: var(--color-cta-hover);
+  transform: translateY(-1px);
+}
+.secondary-link {
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+}
+.secondary-link:hover {
+  border-color: color-mix(in srgb, var(--color-outline) 50%, var(--color-cta));
+  color: var(--color-cta);
+}
+.support-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.support-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-outline);
+  background: var(--color-surface-variant);
+  color: var(--color-on-surface-variant);
+  font-size: 12px;
+  font-weight: 500;
+}
+@media (max-width: 767px) {
+  .page {
+    padding: 24px 16px 56px;
+  }
+  .hero-card {
+    padding: 30px 18px 24px;
+    border-radius: 28px;
+  }
+  .hero-card::before {
+    inset: 10px;
+    border-radius: 22px;
+  }
+  .label::before,
+  .label::after {
+    width: 24px;
+  }
+  .actions {
+    width: 100%;
+  }
+  .primary-button,
+  .secondary-link {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+<button
+  class="theme-toggle"
+  onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'"
+>
+  Toggle Theme
+</button>
+
+<main class="page">
+  <div class="backdrop-orb left" aria-hidden="true"></div>
+  <div class="backdrop-orb right" aria-hidden="true"></div>
+  <div class="backdrop-ring one" aria-hidden="true"></div>
+  <div class="backdrop-ring two" aria-hidden="true"></div>
+
+  <div class="shell">
+    <div class="label">Step 10 - 404</div>
+
+    <section class="hero-card">
+      <div class="code-wrap">
+        <div class="micro-copy">Page not found</div>
+        <div class="error-code">404</div>
+      </div>
+
+      <h1 class="hero-title">The page is gone, not the route home.</h1>
+      <p class="hero-body">
+        Keep the error page calm and directional: a strong number treatment, a single
+        primary path back to the homepage, and subtle background accents that support
+        the scene without turning it into a poster.
+      </p>
+
+      <div class="actions">
+        <a class="primary-button" href="/">Back to Photography Journey</a>
+        <a class="secondary-link" href="/portfolio">Open Portfolio</a>
+      </div>
+
+      <div class="support-row">
+        <span class="support-chip">Centered MD3-style hero</span>
+        <span class="support-chip">Filled home CTA</span>
+        <span class="support-chip">Subtle abstract accents</span>
+      </div>
+    </section>
+  </div>
+</main>
+</body>
+</html>
