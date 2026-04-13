@@ -676,6 +676,8 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
                     :src="`/${tech['img-src']}`"
                     :alt="tech.title"
                     class="h-3.5 w-3.5 shrink-0 object-contain"
+                    width="14"
+                    height="14"
                     aria-hidden="true"
                   />
                   {{ tech.title }}
@@ -686,6 +688,8 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
                     :src="`/${tech['img-src']}`"
                     :alt="tech.title"
                     class="h-3.5 w-3.5 shrink-0 object-contain"
+                    width="14"
+                    height="14"
                     aria-hidden="true"
                   />
                   {{ tech.title }}
@@ -896,9 +900,9 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
   color: var(--color-on-surface-variant);
   background: var(--color-surface-variant);
   transition:

@@ -46,7 +46,7 @@ function toggle() {
     type="button"
     :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     :aria-pressed="isDark"
-    class="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-on-surface-variant)] transition-colors hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]"
+    class="flex h-11 w-11 items-center justify-center rounded-md text-[var(--color-on-surface-variant)] transition-colors hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]"
     @click="toggle"
   >
     <Moon v-if="!isDark" class="h-4 w-4" aria-hidden="true" />

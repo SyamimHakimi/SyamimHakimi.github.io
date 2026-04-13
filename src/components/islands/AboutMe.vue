@@ -190,34 +190,6 @@ function boardgameTags(tags: string | undefined): string[] {
               </div>
             </div>
 
-            <!-- Social chips row -->
-            <div
-              v-if="data.socialMedia.length > 0"
-              class="flex flex-wrap gap-2.5"
-              role="list"
-              aria-label="Social links"
-            >
-              <a
-                v-for="social in data.socialMedia"
-                :key="social.id"
-                :href="social.link"
-                :target="
-                  social.link.startsWith('mailto:') ? undefined : '_blank'
-                "
-                rel="noopener noreferrer"
-                role="listitem"
-                class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
-              >
-                <img
-                  v-if="socialIcon(social.name)"
-                  :src="socialIcon(social.name)!"
-                  :alt="social.name"
-                  class="h-4 w-4 shrink-0 object-contain opacity-70"
-                  aria-hidden="true"
-                />
-                {{ social.name }} — {{ social.text }}
-              </a>
-            </div>
           </div>
 
           <!-- Visual panel (decorative, hidden on mobile) -->
@@ -282,6 +254,8 @@ function boardgameTags(tags: string | undefined): string[] {
                       :src="gearImage(item)!"
                       :alt="item.brand + ' ' + item.name"
                       class="h-full w-full object-contain p-2"
+                      width="192"
+                      height="80"
                       loading="lazy"
                     />
                   </div>
@@ -293,13 +267,13 @@ function boardgameTags(tags: string | undefined): string[] {
                     :href="item.link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="mt-2 inline-flex min-h-[26px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
+                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
                   >
                     {{ gearMeta(item.type) }}
                   </a>
                   <span
                     v-else
-                    class="mt-2 inline-flex min-h-[26px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
+                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
                   >
                     {{ gearMeta(item.type) }}
                   </span>
