@@ -71,9 +71,10 @@ function icon(name: string, size = 20): string {
   <a
     href="/"
     aria-label="syamim. — home"
-    class="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-surface-variant)] text-xs font-bold tracking-wide text-[var(--color-on-surface)] transition-colors hover:bg-[var(--color-outline)]"
+    class="mb-6 flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-[var(--color-surface-variant)]"
   >
-    SH
+    <img src="/media/logos/light-small.svg" alt="" class="h-8 w-8 object-contain dark:hidden" aria-hidden="true" />
+    <img src="/media/logos/dark-small.svg" alt="" class="hidden h-8 w-8 object-contain dark:block" aria-hidden="true" />
   </a>
 
   <!-- Navigation items -->
