@@ -111,7 +111,7 @@ function boardgameTags(tags: string | undefined): string[] {
     <div v-else class="space-y-8">
       <!-- Profile card + visual panel ───────────────────────────────── -->
       <section
-        class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
+        class="grid gap-4 rounded-[20px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[28px] sm:p-6 md:p-8"
         aria-label="About Syamim"
       >
         <!-- Two-column: profile card + visual panel -->
@@ -119,18 +119,19 @@ function boardgameTags(tags: string | undefined): string[] {
           <!-- Profile card -->
           <div
             v-if="data.profile"
-            class="grid gap-4 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+            class="grid gap-4 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[24px] sm:p-5"
           >
             <!-- Avatar + name row -->
-            <div class="flex items-start gap-4">
+            <div class="flex items-start gap-3">
               <div
-                class="flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-[24px] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)]"
+                class="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[18px] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)] sm:h-[76px] sm:w-[76px] sm:rounded-[24px]"
                 aria-hidden="true"
               >
-                <User :size="30" :stroke-width="1.75" />
+                <User :size="24" :stroke-width="1.75" class="sm:hidden" />
+                <User :size="30" :stroke-width="1.75" class="hidden sm:block" />
               </div>
               <div>
-                <h2 class="font-serif text-[2.125rem] leading-none">
+                <h2 class="font-serif text-[1.625rem] leading-none sm:text-[2.125rem]">
                   {{ data.profile.Name }}
                 </h2>
                 <p
@@ -144,13 +145,13 @@ function boardgameTags(tags: string | undefined): string[] {
             <!-- Hobbies -->
             <p
               v-if="data.profile.Hobbies"
-              class="max-w-[52ch] text-[15px] text-[var(--color-on-surface)]"
+              class="text-[15px] text-[var(--color-on-surface)]"
             >
               {{ data.profile.Hobbies }}
             </p>
 
             <!-- Interest grid (static) -->
-            <div class="grid gap-2.5 sm:grid-cols-3">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-2.5">
               <div
                 class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3.5"
               >
@@ -248,7 +249,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Photography Gear ─────────────────────────────────────────── -->
         <section
           v-if="data.gear.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Photography gear"
         >
           <!-- Section header -->
@@ -266,16 +267,16 @@ function boardgameTags(tags: string | undefined): string[] {
               >
                 {{ label }}
               </p>
-              <div class="grid gap-3 sm:grid-cols-2">
+              <div class="grid grid-cols-2 gap-3">
                 <article
                   v-for="item in items"
                   :key="item.id"
-                  class="rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3.5"
+                  class="rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-3"
                 >
                   <!-- Gear product image -->
                   <div
                     v-if="gearImage(item)"
-                    class="mb-3 flex h-[96px] items-center justify-center overflow-hidden rounded-xl border border-[var(--color-outline)] bg-[var(--color-surface)]"
+                    class="mb-2.5 flex h-[80px] items-center justify-center overflow-hidden rounded-xl border border-[var(--color-outline)] bg-[var(--color-surface)] sm:h-[96px]"
                   >
                     <img
                       :src="gearImage(item)!"
@@ -284,7 +285,7 @@ function boardgameTags(tags: string | undefined): string[] {
                       loading="lazy"
                     />
                   </div>
-                  <strong class="block text-[15px] font-semibold">
+                  <strong class="block text-[13px] font-semibold leading-snug sm:text-[15px]">
                     {{ item.brand }} {{ item.name }}
                   </strong>
                   <a
@@ -311,7 +312,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Favourite Boardgames ─────────────────────────────────────── -->
         <section
           v-if="data.boardgames.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Favourite boardgames"
         >
           <!-- Section header -->
@@ -388,7 +389,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Connect ─────────────────────────────────────────────────── -->
         <section
           v-if="data.socialMedia.length > 0"
-          class="rounded-[22px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Connect"
         >
           <!-- Section header -->
