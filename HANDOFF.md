@@ -91,8 +91,8 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
 | 5a | Gallery content enrichment (gear strip, theme filter, lightbox metadata) | ✅ Plan approved in session | DONE | APPROVED | — | MERGED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
-| 7 | Services (`ServicesSection.vue`) | PENDING | — | — | — | NOT STARTED | — |
-| 8 | About (`AboutMe.vue`) | PENDING | — | — | — | NOT STARTED | — |
+| 7 | Services (`ServicesSection.vue`) | ✅ `scripts/redesign-step7-services.html` approved | — | — | APPROVED | IN PROGRESS | — |
+| 8 | About (`AboutMe.vue`) | MOCKUP PENDING | — | — | — | MOCKUP PENDING | — |
 | 9 | Contact (`ContactForm.vue`) | PENDING | — | — | — | NOT STARTED | — |
 | 10 | 404 (`404.astro`) | PENDING | — | — | — | NOT STARTED | — |
 
@@ -348,6 +348,43 @@ Build 0 errors, 0 warnings. P0 lightbox index bug caught and fixed before commit
 **Codex review:** APPROVED — 2026-04-13
 
 Build 0 errors, 0 warnings. All 5 legacy token aliases removed. `animate-pulse` fully replaced with `.skeleton-rect`/`.skeleton-line` shimmer. Raw Tailwind red error classes replaced with `--color-error` icon-disc pattern. `formatDate` dead code caught and removed before commit. `isActive()` non-null assertion on `date-to` safe — only reached when `!isActive(item)` confirms presence. Hero strip `pythonSince`/`vueSince` computed from live Firestore data, gracefully hidden if `null`. `prefersReducedMotion` guard returns 0 delays. All decorative SVGs have `aria-hidden="true"`. Active dot has `aria-label="Currently using"`. No `any` types.
+
+---
+
+### Redesign Step 7 — Services
+
+**Owner:** Claude | **Reviewer:** Codex
+**Mockup:** `scripts/redesign-step7-services.html` — approved on 2026-04-13 after v4 symmetry revision
+**Branch:** `feat/redesign-step7-services` | **PR:** —
+
+**Current status:** IN PROGRESS — mockup approved, implementation drafted and locally verified
+
+**Scope:**
+- `src/pages/services.astro`: align page header with the redesign system using the established serif heading treatment, token-based subtitle colour, and supporting icon disc if the approved mockup keeps it
+- `src/components/islands/ServicesSection.vue`: redesign service groups around numbered headers, filled service cards, and a stronger CTA path to `/contact`
+- Replace the current plain bordered cards with the approved card treatment using redesign tokens and shared card helpers
+- Introduce icon-disc presentation inside a minimum 48x48 tap target for each service card if included in the approved mockup
+- Preserve grouped service ordering from Firestore and keep the existing reduced-motion-aware stagger entrance pattern
+- Upgrade loading, empty, and error states to match the redesign system rather than the current legacy fallback styling
+- Add an extended FAB or equivalent contact CTA if that is what the approved mockup chooses
+
+**Acceptance criteria:**
+- [x] `ui-ux-pro-max` mockup saved as `scripts/redesign-step7-services.html`
+- [x] Telegram preview approved before implementation begins
+- [x] `npm run build` — 0 errors, 0 warnings
+- [x] `npm test` — all tests pass
+- [x] Service groups render with numbered headers and preserve Firestore-defined order
+- [x] Service cards use redesign tokens and meet minimum touch-target expectations for interactive affordances
+- [x] Loading state uses redesign shimmer rather than `animate-pulse`
+- [x] Error state uses `--color-error` treatment with `role="alert"`
+- [x] CTA to `/contact` is present in the approved form and remains accessible on mobile and desktop
+- [x] `prefers-reduced-motion` is respected for all motion-v entrances
+- [x] No `any` types
+
+**Implementation notes:**
+- `src/components/islands/ServicesSection.vue` now uses grouped metadata, symmetrical two-column card grids, token-based hero/CTA surfaces, shimmer loading, and redesign-aligned empty/error states.
+- `src/pages/services.astro` now matches the redesign header treatment with icon disc, serif heading, and token-based subtitle copy.
+- Group presentation metadata and ordering helpers live in `src/lib/utils/servicesSection.ts` with coverage in `src/lib/utils/servicesSection.test.ts`.
 
 ---
 
