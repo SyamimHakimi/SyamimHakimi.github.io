@@ -18,8 +18,12 @@ import VueApexCharts from "vue3-apexcharts";
 import { Motion } from "motion-v";
 import { useStatistics } from "../../lib/composables/useStatistics";
 import {
-  buildPhotoStatsLineOptions,
-  buildPhotoStatsLineSeries,
+  buildCumulativeLineOptions,
+  buildCumulativeLineSeries,
+  buildHeatmapOptions,
+  buildHeatmapSeries,
+  buildFocalLengthOptions,
+  buildFocalLengthSeries,
   buildRecipeBarOptions,
   buildRecipeBarSeries,
   type ChartPalette,
@@ -34,6 +38,7 @@ const palette = ref<ChartPalette>({
   onSurfaceVariant: "#52525b",
   outline: "#e4e4e7",
   surface: "#ffffff",
+  surfaceVariant: "#f4f4f5",
 });
 
 function resolvePalette(): ChartPalette {
@@ -45,6 +50,7 @@ function resolvePalette(): ChartPalette {
     onSurfaceVariant: get("--color-on-surface-variant", "#52525b"),
     outline:          get("--color-outline",            "#e4e4e7"),
     surface:          get("--color-surface",            "#ffffff"),
+    surfaceVariant:   get("--color-surface-variant",    "#f4f4f5"),
   };
 }
 
@@ -69,15 +75,15 @@ onUnmounted(() => {
   themeObserver?.disconnect();
 });
 
-// ── Line chart (photoStats — monthly counts) ───────────────────────────────
+// ── Cumulative line chart (photoStats — all-time growth) ───────────────────
 const lineData = computed(() =>
-  buildPhotoStatsLineSeries(statistics.value?.photoStats),
+  buildCumulativeLineSeries(statistics.value?.photoStats),
 );
 const lineOptions = computed(() =>
-  buildPhotoStatsLineOptions(
+  buildCumulativeLineOptions(
     { palette: palette.value, prefersReducedMotion },
     lineData.value.categories,
-    Math.max(0, lineData.value.categories.length - 1),
+    Math.max(0, lineData.value.series[0]?.data.length - 1),
   ),
 );
 
@@ -89,6 +95,29 @@ const barOptions = computed(() =>
   buildRecipeBarOptions(
     { palette: palette.value, prefersReducedMotion },
     barData.value.categories,
+  ),
+);
+
+// ── Heatmap (shooting calendar) ────────────────────────────────────────────
+const heatmapData = computed(() =>
+  buildHeatmapSeries(statistics.value?.photoStats),
+);
+const heatmapOptions = computed(() =>
+  buildHeatmapOptions({ palette: palette.value, prefersReducedMotion }),
+);
+
+// ── Donut (focal lengths) ──────────────────────────────────────────────────
+const donutData = computed(() =>
+  buildFocalLengthSeries(statistics.value?.focalStats),
+);
+const donutTotal = computed(() =>
+  donutData.value.series.reduce((sum, v) => sum + v, 0),
+);
+const donutOptions = computed(() =>
+  buildFocalLengthOptions(
+    { palette: palette.value, prefersReducedMotion },
+    donutData.value.labels,
+    donutTotal.value,
   ),
 );
 
@@ -126,6 +155,18 @@ function delay(i: number, base = 0, step = 60): number {
             <div class="skeleton-rect flex-1" style="height:9px;border-radius:999px"/>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
+      <div class="card-outlined">
+        <div class="skeleton-line mb-1.5" style="width:50%;height:13px"/>
+        <div class="skeleton-line mb-4" style="width:65%;height:10px"/>
+        <div class="skeleton-rect" style="height:110px"/>
+      </div>
+      <div class="card-outlined">
+        <div class="skeleton-line mb-1.5" style="width:45%;height:13px"/>
+        <div class="skeleton-line mb-4" style="width:55%;height:10px"/>
+        <div class="skeleton-rect" style="height:180px;border-radius:50%"/>
       </div>
     </div>
   </div>
@@ -191,10 +232,10 @@ function delay(i: number, base = 0, step = 60): number {
       </Motion>
     </div>
 
-    <!-- Chart row — stacked mobile, line(3fr) + bar(2fr) on sm+ -->
+    <!-- Chart row 1 — stacked mobile, cumulative line(3fr) + bar(2fr) on sm+ -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_2fr]">
 
-      <!-- Monthly photos line chart -->
+      <!-- Cumulative photos line chart -->
       <Motion
         as="div"
         class="card-outlined"
@@ -206,14 +247,14 @@ function delay(i: number, base = 0, step = 60): number {
           Photos Over Time
         </p>
         <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Monthly shots — last 12 months
+          Cumulative total since first shoot
         </p>
         <VueApexCharts
           type="area"
           height="160"
           :options="lineOptions"
           :series="lineData.series"
-          aria-label="Monthly photo count line graph"
+          aria-label="Cumulative photo count area chart"
         />
       </Motion>
 
@@ -238,6 +279,71 @@ function delay(i: number, base = 0, step = 60): number {
           :series="barData.series"
           aria-label="Film recipe usage horizontal bar chart"
         />
+      </Motion>
+
+    </div>
+
+    <!-- Chart row 2 — stacked mobile, heatmap(2fr) + donut(1fr) on sm+ -->
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
+
+      <!-- Shooting calendar heatmap -->
+      <Motion
+        as="div"
+        class="card-outlined overflow-hidden"
+        :initial="cardInitial"
+        :animate="cardVisible"
+        :transition="{ duration: 0.3, delay: delay(0, 360), easing: [0.2,0,0,1] }"
+      >
+        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
+          Shooting Calendar
+        </p>
+        <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
+          Photos per month by year
+        </p>
+        <VueApexCharts
+          type="heatmap"
+          height="110"
+          width="100%"
+          :options="heatmapOptions"
+          :series="heatmapData"
+          aria-label="Shooting calendar heatmap by year and month"
+        />
+        <!-- Custom legend -->
+        <div class="mt-1 flex items-center justify-end gap-1.5 text-[10px] text-[var(--color-on-surface-variant)]">
+          <span>Less</span>
+          <div
+            class="h-2 w-14 rounded-sm"
+            style="background: linear-gradient(to right, var(--color-surface-variant), var(--color-cta))"
+            aria-hidden="true"
+          ></div>
+          <span>More</span>
+        </div>
+      </Motion>
+
+      <!-- Focal lengths donut -->
+      <Motion
+        as="div"
+        class="card-outlined flex flex-col overflow-hidden"
+        :initial="cardInitial"
+        :animate="cardVisible"
+        :transition="{ duration: 0.3, delay: delay(1, 360), easing: [0.2,0,0,1] }"
+      >
+        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
+          Focal Lengths
+        </p>
+        <p class="mb-1 text-[11px] text-[var(--color-on-surface-variant)]">
+          Shots by focal length
+        </p>
+        <div class="w-full overflow-hidden">
+          <VueApexCharts
+            type="donut"
+            height="200"
+            width="100%"
+            :options="donutOptions"
+            :series="donutData.series"
+            aria-label="Focal length usage donut chart"
+          />
+        </div>
       </Motion>
 
     </div>

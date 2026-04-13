@@ -4,6 +4,12 @@ import {
   buildPhotoStatsLineOptions,
   buildRecipeBarSeries,
   buildRecipeBarOptions,
+  buildCumulativeLineSeries,
+  buildCumulativeLineOptions,
+  buildHeatmapSeries,
+  buildHeatmapOptions,
+  buildFocalLengthSeries,
+  buildFocalLengthOptions,
   parseMonthKey,
   toChartEntries,
   type ChartPalette,
@@ -15,6 +21,7 @@ const palette: ChartPalette = {
   onSurfaceVariant: "#52525b",
   outline: "#e4e4e7",
   surface: "#ffffff",
+  surfaceVariant: "#f4f4f5",
 };
 
 // ── toChartEntries ─────────────────────────────────────────────────────────
@@ -176,5 +183,179 @@ describe("buildRecipeBarOptions", () => {
     ) as { colors: string[] };
 
     expect(opts.colors[0]).toBe(palette.cta);
+  });
+});
+
+// ── buildCumulativeLineSeries ──────────────────────────────────────────────
+
+describe("buildCumulativeLineSeries", () => {
+  it("returns empty series for undefined input", () => {
+    const { series, categories } = buildCumulativeLineSeries(undefined);
+    expect(series[0]?.data).toHaveLength(0);
+    expect(categories).toHaveLength(0);
+  });
+
+  it("produces a monotonically increasing running total", () => {
+    const { series } = buildCumulativeLineSeries({
+      "1/2024": 10,
+      "2/2024": 20,
+      "3/2024": 5,
+    });
+    expect(series[0]?.data).toEqual([10, 30, 35]);
+  });
+
+  it("uses ALL months, not just last 12", () => {
+    const stats: Record<string, number> = {};
+    for (let m = 1; m <= 20; m++) stats[`${m > 12 ? m - 12 : m}/2024`] = 1;
+    // Even with more than 12 unique months this won't dedupe properly, so use 2 years
+    const twoYears: Record<string, number> = {};
+    for (let m = 1; m <= 12; m++) twoYears[`${m}/2023`] = 1;
+    for (let m = 1; m <= 6; m++) twoYears[`${m}/2024`] = 1;
+    const { series } = buildCumulativeLineSeries(twoYears);
+    expect(series[0]?.data).toHaveLength(18); // all 18 months
+    expect(series[0]?.data.at(-1)).toBe(18); // running total = 18
+  });
+
+  it("shows every 4th category label, rest are empty strings", () => {
+    const stats: Record<string, number> = {};
+    for (let m = 1; m <= 12; m++) stats[`${m}/2024`] = m;
+    const { categories } = buildCumulativeLineSeries(stats);
+    expect(categories[0]).toMatch(/Jan/i);
+    expect(categories[1]).toBe("");
+    expect(categories[2]).toBe("");
+    expect(categories[3]).toBe("");
+    expect(categories[4]).toMatch(/May/i);
+  });
+});
+
+// ── buildCumulativeLineOptions ─────────────────────────────────────────────
+
+describe("buildCumulativeLineOptions", () => {
+  it("disables animation when reduced motion is preferred", () => {
+    const opts = buildCumulativeLineOptions(
+      { palette, prefersReducedMotion: true },
+      [],
+      0,
+    ) as { chart: { animations: { enabled: boolean } } };
+    expect(opts.chart.animations.enabled).toBe(false);
+  });
+
+  it("tooltip formatter includes 'total photos'", () => {
+    const opts = buildCumulativeLineOptions(
+      { palette, prefersReducedMotion: false },
+      [],
+      0,
+    ) as { tooltip: { y: { formatter: (v: number) => string } } };
+    expect(opts.tooltip.y.formatter(42)).toBe("42 total photos");
+  });
+});
+
+// ── buildHeatmapSeries ─────────────────────────────────────────────────────
+
+describe("buildHeatmapSeries", () => {
+  it("returns empty array for undefined input", () => {
+    expect(buildHeatmapSeries(undefined)).toHaveLength(0);
+  });
+
+  it("groups by year and orders newest first", () => {
+    const rows = buildHeatmapSeries({
+      "3/2023": 5,
+      "6/2024": 10,
+      "1/2025": 3,
+    });
+    expect(rows[0]?.name).toBe("2025");
+    expect(rows[1]?.name).toBe("2024");
+    expect(rows[2]?.name).toBe("2023");
+  });
+
+  it("each row has 12 data points (one per month)", () => {
+    const rows = buildHeatmapSeries({ "3/2024": 7 });
+    expect(rows[0]?.data).toHaveLength(12);
+  });
+
+  it("places the count in the correct month slot", () => {
+    const rows = buildHeatmapSeries({ "3/2024": 7 });
+    // month index 2 = March (0-indexed)
+    const march = rows[0]?.data.find((d) => d.x === "Mar");
+    expect(march?.y).toBe(7);
+  });
+
+  it("fills missing months with 0", () => {
+    const rows = buildHeatmapSeries({ "6/2024": 4 });
+    const jan = rows[0]?.data.find((d) => d.x === "Jan");
+    expect(jan?.y).toBe(0);
+  });
+});
+
+// ── buildHeatmapOptions ────────────────────────────────────────────────────
+
+describe("buildHeatmapOptions", () => {
+  it("uses surfaceVariant for zero-value range", () => {
+    const opts = buildHeatmapOptions({ palette, prefersReducedMotion: false }) as {
+      plotOptions: { heatmap: { colorScale: { ranges: { from: number; color: string }[] } } };
+    };
+    const zeroRange = opts.plotOptions.heatmap.colorScale.ranges.find((r) => r.from === 0);
+    expect(zeroRange?.color).toBe(palette.surfaceVariant);
+  });
+
+  it("highest range uses solid cta color", () => {
+    const opts = buildHeatmapOptions({ palette, prefersReducedMotion: false }) as {
+      plotOptions: { heatmap: { colorScale: { ranges: { from: number; color: string }[] } } };
+    };
+    const ranges = opts.plotOptions.heatmap.colorScale.ranges;
+    expect(ranges.at(-1)?.color).toBe(palette.cta);
+  });
+});
+
+// ── buildFocalLengthSeries ─────────────────────────────────────────────────
+
+describe("buildFocalLengthSeries", () => {
+  it("returns empty arrays for undefined input", () => {
+    const { series, labels } = buildFocalLengthSeries(undefined);
+    expect(series).toHaveLength(0);
+    expect(labels).toHaveLength(0);
+  });
+
+  it("sorts descending by count", () => {
+    const { series, labels } = buildFocalLengthSeries({ "18-50": 80, "56": 30, "10-18": 50 });
+    expect(series[0]).toBe(80);
+    expect(labels[0]).toBe("18-50");
+  });
+
+  it("appends 'mm' to pure-digit focal length labels", () => {
+    const { labels } = buildFocalLengthSeries({ "56": 30, "18-50": 80 });
+    expect(labels.find((l) => l.includes("56"))).toBe("56mm");
+    expect(labels.find((l) => l.includes("18-50"))).toBe("18-50"); // hyphenated — no suffix
+  });
+});
+
+// ── buildFocalLengthOptions ────────────────────────────────────────────────
+
+describe("buildFocalLengthOptions", () => {
+  it("first slice color is solid cta", () => {
+    const opts = buildFocalLengthOptions(
+      { palette, prefersReducedMotion: false },
+      ["56mm", "18-50mm"],
+      110,
+    ) as { colors: string[] };
+    expect(opts.colors[0]).toBe(palette.cta);
+  });
+
+  it("total shown in donut centre equals the provided total", () => {
+    const opts = buildFocalLengthOptions(
+      { palette, prefersReducedMotion: false },
+      ["56mm"],
+      42,
+    ) as { plotOptions: { pie: { donut: { labels: { total: { formatter: () => string } } } } } };
+    expect(opts.plotOptions.pie.donut.labels.total.formatter()).toBe("42");
+  });
+
+  it("disables animation when reduced motion is preferred", () => {
+    const opts = buildFocalLengthOptions(
+      { palette, prefersReducedMotion: true },
+      [],
+      0,
+    ) as { chart: { animations: { enabled: boolean } } };
+    expect(opts.chart.animations.enabled).toBe(false);
   });
 });
