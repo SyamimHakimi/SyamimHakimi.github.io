@@ -104,6 +104,7 @@ jobs:
     name: Deploy Firestore rules + indexes
     needs: deploy-site
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
