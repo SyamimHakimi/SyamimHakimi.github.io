@@ -42,7 +42,14 @@ const ogImage = new URL(image, Astro.site).toString();
     <meta name="twitter:image" content={ogImage} />
 
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/media/logos/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/media/logos/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/media/logos/favicon-16x16.png" />
+    <link rel="icon" type="image/svg+xml" href="/media/logos/light-small.svg" />
+    <link rel="apple-touch-icon" href="/media/logos/apple-touch-icon.png" />
+    <link rel="manifest" href="/media/logos/site.webmanifest" />
 
     <!-- Google Fonts — DM Serif Display 400 + DM Sans 400/500 -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
