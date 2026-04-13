@@ -2,6 +2,7 @@
 /**
  * Contact — route `/contact`.
  * Island: ContactForm.vue (client:load — EmailJS requires browser fetch API)
+ * The island owns its own hero section, info card, and form layout.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import ContactForm from "../components/islands/ContactForm.vue";
@@ -11,14 +12,7 @@ import ContactForm from "../components/islands/ContactForm.vue";
   title="Contact — syamim."
   description="Get in touch with Syamim Hakimi — web development enquiries and collaborations."
 >
-  <div class="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-    <header class="mb-10">
-      <h1 class="text-3xl font-bold sm:text-4xl">Contact</h1>
-      <p class="mt-2 text-[var(--color-text-muted)]">
-        Have a project in mind? Let&apos;s talk.
-      </p>
-    </header>
-
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <ContactForm client:load />
   </div>
 </PageLayout>

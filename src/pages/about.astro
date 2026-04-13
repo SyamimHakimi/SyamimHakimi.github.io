@@ -3,6 +3,7 @@
  * About — route `/about`.
  * Island: AboutMe.vue (client:visible)
  * Composable: useAboutMe()
+ * The island owns its own hero section and h1.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import AboutMe from "../components/islands/AboutMe.vue";
@@ -12,14 +13,7 @@ import AboutMe from "../components/islands/AboutMe.vue";
   title="About — syamim."
   description="About Syamim Hakimi — profile, photography gear, favourite boardgames, and social links."
 >
-  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-    <header class="mb-10">
-      <h1 class="text-3xl font-bold sm:text-4xl">About</h1>
-      <p class="mt-2 text-[var(--color-text-muted)]">
-        Developer by day, photographer on weekends, boardgame enthusiast always.
-      </p>
-    </header>
-
+  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
     <AboutMe client:visible />
   </div>
 </PageLayout>
