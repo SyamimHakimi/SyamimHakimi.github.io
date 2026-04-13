@@ -68,7 +68,10 @@ onMounted(() => document.addEventListener("keydown", onKeydown));
 onUnmounted(() => document.removeEventListener("keydown", onKeydown));
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-MY", { month: "short", year: "numeric" });
+  return new Date(iso).toLocaleDateString("en-MY", {
+    month: "short",
+    year: "numeric",
+  });
 }
 </script>
 
@@ -110,7 +113,9 @@ function formatDate(iso: string): string {
         </button>
 
         <!-- Image + metadata ──────────────────────────────────────────── -->
-        <div class="mx-[64px] flex max-h-[90dvh] max-w-[90dvw] flex-col items-center gap-0">
+        <div
+          class="mx-[64px] flex max-h-[90dvh] max-w-[90dvw] flex-col items-center gap-0"
+        >
           <img
             v-if="current.link"
             :src="current.link"
@@ -121,7 +126,13 @@ function formatDate(iso: string): string {
 
           <!-- Metadata bar -->
           <div
-            v-if="current.title || current.recipe || current.lens || current.date || current.theme"
+            v-if="
+              current.title ||
+              current.recipe ||
+              current.lens ||
+              current.date ||
+              current.theme
+            "
             class="lb-meta mt-2.5 w-full"
           >
             <span
@@ -131,10 +142,18 @@ function formatDate(iso: string): string {
               {{ current.title }}
             </span>
             <div class="flex flex-shrink-0 flex-wrap justify-end gap-1.5">
-              <span v-if="current.date" class="lb-tag lb-tag--dim">{{ formatDate(current.date) }}</span>
-              <span v-if="current.theme" class="lb-tag lb-tag--dim">{{ current.theme }}</span>
-              <span v-if="current.recipe" class="lb-tag">{{ current.recipe }}</span>
-              <span v-if="current.lens" class="lb-tag lb-tag--dim">{{ current.lens }}</span>
+              <span v-if="current.date" class="lb-tag lb-tag--dim">{{
+                formatDate(current.date)
+              }}</span>
+              <span v-if="current.theme" class="lb-tag lb-tag--dim">{{
+                current.theme
+              }}</span>
+              <span v-if="current.recipe" class="lb-tag">{{
+                current.recipe
+              }}</span>
+              <span v-if="current.lens" class="lb-tag lb-tag--dim">{{
+                current.lens
+              }}</span>
             </div>
           </div>
         </div>
@@ -166,14 +185,22 @@ function formatDate(iso: string): string {
 
 <style scoped>
 /* Backdrop transition */
-.fade-enter-active { transition: opacity 0.2s ease; }
-.fade-leave-active { transition: opacity 0.15s ease; }
+.fade-enter-active {
+  transition: opacity 0.2s ease;
+}
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
 .fade-enter-from,
-.fade-leave-to { opacity: 0; }
+.fade-leave-to {
+  opacity: 0;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .fade-enter-active,
-  .fade-leave-active { transition: none; }
+  .fade-leave-active {
+    transition: none;
+  }
 }
 
 /* Counter badge */
@@ -212,7 +239,9 @@ function formatDate(iso: string): string {
   transition: background 150ms;
   touch-action: manipulation;
 }
-.lb-btn:hover { background: rgba(255, 255, 255, 0.22); }
+.lb-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
 .lb-btn:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.6);
   outline-offset: 2px;
@@ -238,10 +267,12 @@ function formatDate(iso: string): string {
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
   padding: 3px 9px;
-  color: rgba(255, 255, 255, 0.80);
+  color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
 }
-.lb-tag--dim { color: rgba(255, 255, 255, 0.50); }
+.lb-tag--dim {
+  color: rgba(255, 255, 255, 0.5);
+}
 
 /* Keyboard hints */
 .lb-hint {
@@ -249,10 +280,10 @@ function formatDate(iso: string): string {
   align-items: center;
   gap: 4px;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.40);
+  color: rgba(255, 255, 255, 0.4);
 }
 .lb-hint kbd {
-  background: rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 4px;
   padding: 1px 5px;

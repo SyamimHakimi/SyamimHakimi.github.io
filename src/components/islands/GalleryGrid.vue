@@ -78,27 +78,39 @@ function delay(i: number): number {
     >
       <div
         class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
-        style="background: rgba(220,38,38,0.10)"
+        style="background: rgba(220, 38, 38, 0.1)"
       >
         <svg
-          width="18" height="18" viewBox="0 0 24 24"
-          fill="none" stroke="var(--color-error)"
-          stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-error)"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
           aria-hidden="true"
         >
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
       </div>
       <div>
-        <p class="text-sm font-semibold text-[var(--color-error)]">Failed to load gallery</p>
-        <p class="mt-1 text-sm text-[var(--color-on-surface-variant)]">{{ error }}</p>
+        <p class="text-sm font-semibold text-[var(--color-error)]">
+          Failed to load gallery
+        </p>
+        <p class="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+          {{ error }}
+        </p>
       </div>
     </div>
 
     <!-- Empty ────────────────────────────────────────────────────────────── -->
-    <p v-else-if="photos.length === 0" class="text-[var(--color-on-surface-variant)]">
+    <p
+      v-else-if="photos.length === 0"
+      class="text-[var(--color-on-surface-variant)]"
+    >
       No photos found.
     </p>
 
@@ -107,10 +119,16 @@ function delay(i: number): number {
       <!-- Count context line -->
       <p class="mb-3 text-[13px] text-[var(--color-on-surface-variant)]">
         <span v-if="activeTheme">
-          {{ filteredPhotos.length }} {{ activeTheme }} photo{{ filteredPhotos.length !== 1 ? "s" : "" }}
+          {{ filteredPhotos.length }} {{ activeTheme }} photo{{
+            filteredPhotos.length !== 1 ? "s" : ""
+          }}
           <span class="opacity-60">· from {{ photos.length }} loaded</span>
         </span>
-        <span v-else>{{ photos.length }} favourite photo{{ photos.length !== 1 ? "s" : "" }}</span>
+        <span v-else
+          >{{ photos.length }} favourite photo{{
+            photos.length !== 1 ? "s" : ""
+          }}</span
+        >
       </p>
 
       <!-- Theme filter bar -->
@@ -125,7 +143,9 @@ function delay(i: number): number {
           class="filter-pill"
           :class="{ active: activeTheme === null }"
           @click="activeTheme = null"
-        >All</button>
+        >
+          All
+        </button>
         <button
           v-for="theme in availableThemes"
           :key="theme"
@@ -133,13 +153,12 @@ function delay(i: number): number {
           class="filter-pill"
           :class="{ active: activeTheme === theme }"
           @click="activeTheme = theme"
-        >{{ theme }}</button>
+        >
+          {{ theme }}
+        </button>
       </div>
 
-      <ul
-        class="columns-2 gap-3 sm:columns-3 lg:columns-4"
-        role="list"
-      >
+      <ul class="columns-2 gap-3 sm:columns-3 lg:columns-4" role="list">
         <Motion
           v-for="(photo, index) in filteredPhotos"
           :key="photo.id"
@@ -147,7 +166,11 @@ function delay(i: number): number {
           class="mb-3 break-inside-avoid"
           :initial="tileInitial"
           :animate="tileVisible"
-          :transition="{ duration: 0.25, delay: delay(index % 12), easing: [0.2,0,0,1] }"
+          :transition="{
+            duration: 0.25,
+            delay: delay(index % 12),
+            easing: [0.2, 0, 0, 1],
+          }"
         >
           <button
             type="button"
@@ -168,21 +191,34 @@ function delay(i: number): number {
               class="flex aspect-[4/3] w-full flex-col items-center justify-center gap-1.5 bg-[var(--color-surface-variant)]"
             >
               <svg
-                width="22" height="22" viewBox="0 0 24 24"
-                fill="none" stroke="var(--color-on-surface-variant)"
-                stroke-width="1.5" aria-hidden="true"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--color-on-surface-variant)"
+                stroke-width="1.5"
+                aria-hidden="true"
               >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
               </svg>
-              <span class="text-[10px] text-[var(--color-on-surface-variant)]">No image</span>
+              <span class="text-[10px] text-[var(--color-on-surface-variant)]"
+                >No image</span
+              >
             </div>
 
             <!-- Hover overlay — title + recipe ──────────────────────────── -->
             <div
               class="pointer-events-none absolute inset-0 flex flex-col justify-end p-2.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
-              style="background: linear-gradient(to top, rgba(0,0,0,.70) 0%, rgba(0,0,0,.18) 55%, transparent 100%)"
+              style="
+                background: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.7) 0%,
+                  rgba(0, 0, 0, 0.18) 55%,
+                  transparent 100%
+                );
+              "
               aria-hidden="true"
             >
               <p
@@ -209,14 +245,20 @@ function delay(i: number): number {
         role="alert"
       >
         <svg
-          width="16" height="16" viewBox="0 0 24 24"
-          fill="none" stroke="var(--color-error)"
-          stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
-          class="mt-px flex-shrink-0" aria-hidden="true"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="var(--color-error)"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="mt-px flex-shrink-0"
+          aria-hidden="true"
         >
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         <p class="text-sm text-[var(--color-on-surface-variant)]">
           Failed to load more photos. Please try again.
@@ -235,11 +277,15 @@ function delay(i: number): number {
           <svg
             v-if="loadingMore"
             class="h-3.5 w-3.5 animate-spin"
-            viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2.5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
             aria-hidden="true"
           >
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            <path
+              d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+            />
           </svg>
           <span>{{ loadingMore ? "Loading…" : "Load more" }}</span>
         </button>

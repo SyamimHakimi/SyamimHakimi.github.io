@@ -59,7 +59,12 @@ const errors = computed(() => ({
 const charCount = computed(() => form.message.length);
 
 const hasErrors = computed(
-  () => !!(errors.value.from_name || errors.value.from_email || errors.value.message),
+  () =>
+    !!(
+      errors.value.from_name ||
+      errors.value.from_email ||
+      errors.value.message
+    ),
 );
 
 /* ── Handlers ────────────────────────────────────────────────────────── */
@@ -143,7 +148,9 @@ onUnmounted(() => {
       >
         Start with a clear message.
       </h1>
-      <p class="mt-4 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]">
+      <p
+        class="mt-4 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]"
+      >
         One form, a few expectations up front, and feedback states that feel
         calm instead of noisy.
       </p>
@@ -153,7 +160,6 @@ onUnmounted(() => {
     <div
       class="grid gap-5 md:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] md:items-start"
     >
-
       <!-- Info card (static) ──────────────────────────────────────── -->
       <aside
         class="grid gap-5 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-[22px] md:sticky md:top-24"
@@ -223,12 +229,12 @@ onUnmounted(() => {
       >
         <!-- Form header -->
         <div class="grid gap-2.5">
-          <h2
-            class="font-serif text-[clamp(1.75rem,4vw,2.5rem)] leading-none"
-          >
+          <h2 class="font-serif text-[clamp(1.75rem,4vw,2.5rem)] leading-none">
             Send a message
           </h2>
-          <p class="max-w-[54ch] text-sm text-[var(--color-on-surface-variant)]">
+          <p
+            class="max-w-[54ch] text-sm text-[var(--color-on-surface-variant)]"
+          >
             Fill in the fields below. Validation runs on blur — no interruptions
             while you type.
           </p>
@@ -243,9 +249,12 @@ onUnmounted(() => {
           aria-atomic="true"
         >
           <div>
-            <strong class="block text-[14px] font-semibold">Message sent</strong>
+            <strong class="block text-[14px] font-semibold"
+              >Message sent</strong
+            >
             <p class="mt-1 text-[13px]">
-              Your note is on the way. This confirmation dismisses automatically.
+              Your note is on the way. This confirmation dismisses
+              automatically.
             </p>
           </div>
         </div>
@@ -259,7 +268,9 @@ onUnmounted(() => {
           aria-atomic="true"
         >
           <div>
-            <strong class="block text-[14px] font-semibold">Failed to send</strong>
+            <strong class="block text-[14px] font-semibold"
+              >Failed to send</strong
+            >
             <p class="mt-1 text-[13px]">{{ submitError }}</p>
           </div>
           <button
@@ -273,7 +284,6 @@ onUnmounted(() => {
 
         <!-- Form ────────────────────────────────────────────────── -->
         <form class="grid gap-[18px]" novalidate @submit.prevent="submit">
-
           <!-- Name field -->
           <div class="grid gap-2.5">
             <label
@@ -290,9 +300,15 @@ onUnmounted(() => {
                 inputmode="text"
                 placeholder="Your name"
                 :aria-invalid="!!errors.from_name || undefined"
-                :aria-describedby="errors.from_name ? 'name-error' : 'name-hint'"
+                :aria-describedby="
+                  errors.from_name ? 'name-error' : 'name-hint'
+                "
                 class="w-full min-h-[56px] rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
-                :class="errors.from_name ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                :class="
+                  errors.from_name
+                    ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]'
+                    : ''
+                "
                 @blur="onBlur('from_name')"
               />
               <p
@@ -328,9 +344,15 @@ onUnmounted(() => {
                 inputmode="email"
                 placeholder="you@example.com"
                 :aria-invalid="!!errors.from_email || undefined"
-                :aria-describedby="errors.from_email ? 'email-error' : undefined"
+                :aria-describedby="
+                  errors.from_email ? 'email-error' : undefined
+                "
                 class="w-full min-h-[56px] rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
-                :class="errors.from_email ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                :class="
+                  errors.from_email
+                    ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]'
+                    : ''
+                "
                 @blur="onBlur('from_email')"
               />
               <p
@@ -368,7 +390,11 @@ onUnmounted(() => {
                 :aria-invalid="!!errors.message || undefined"
                 :aria-describedby="errors.message ? 'message-error' : undefined"
                 class="w-full min-h-[156px] resize-y rounded-2xl border border-transparent border-b-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_90%,var(--color-surface))] px-4 py-3 text-[var(--color-on-surface)] placeholder:text-[color-mix(in_srgb,var(--color-on-surface-variant)_82%,transparent)] outline-none transition-all duration-150 focus:border-[var(--color-cta)] focus:[box-shadow:inset_0_0_0_1px_var(--color-cta)]"
-                :class="errors.message ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]' : ''"
+                :class="
+                  errors.message
+                    ? 'border-b-[var(--color-error)] [box-shadow:inset_0_0_0_1px_color-mix(in_srgb,var(--color-error)_42%,transparent)] bg-[color-mix(in_srgb,var(--color-error)_7%,var(--color-surface))]'
+                    : ''
+                "
                 @blur="onBlur('message')"
               />
               <p
@@ -385,7 +411,9 @@ onUnmounted(() => {
           <div
             class="flex flex-wrap items-center justify-between gap-4 pt-1 sm:flex-nowrap"
           >
-            <p class="max-w-[38ch] text-[12px] text-[var(--color-on-surface-variant)]">
+            <p
+              class="max-w-[38ch] text-[12px] text-[var(--color-on-surface-variant)]"
+            >
               Your message will be sent directly. I reply to serious project
               inquiries.
             </p>
@@ -401,13 +429,13 @@ onUnmounted(() => {
                 class="h-4 w-4 rounded-full border-2 border-white/35 border-t-white animate-spin"
                 aria-hidden="true"
               />
-              <span>{{ status === "sending" ? "Sending" : "Send Message" }}</span>
+              <span>{{
+                status === "sending" ? "Sending" : "Send Message"
+              }}</span>
             </button>
           </div>
-
         </form>
       </section>
-
     </div>
   </section>
 </template>
