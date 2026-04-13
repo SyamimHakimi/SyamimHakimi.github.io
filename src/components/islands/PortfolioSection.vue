@@ -11,6 +11,7 @@ import { computed } from "vue";
 import { Motion } from "motion-v";
 import { usePortfolio } from "../../lib/composables/usePortfolio";
 import type { ExperienceItem } from "../../lib/composables/usePortfolio";
+import { useMotionAnimation } from "../../lib/composables/useMotionAnimation";
 
 const { data, loading, error } = usePortfolio();
 
@@ -51,16 +52,7 @@ const vueSince = computed(() => {
 });
 
 // ── Motion helpers ─────────────────────────────────────────────────────────
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const cardInitial = prefersReducedMotion ? {} : { opacity: 0, y: 12 };
-const cardVisible = { opacity: 1, y: 0 };
-
-function delay(i: number, base = 0): number {
-  return prefersReducedMotion ? 0 : (base + i * 50) / 1000;
-}
+const { prefersReducedMotion, cardInitial, cardVisible, delay } = useMotionAnimation();
 </script>
 
 <template>

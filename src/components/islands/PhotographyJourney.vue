@@ -17,6 +17,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { Motion } from "motion-v";
 import { useStatistics } from "../../lib/composables/useStatistics";
+import { useMotionAnimation } from "../../lib/composables/useMotionAnimation";
 import {
   buildCumulativeLineOptions,
   buildCumulativeLineSeries,
@@ -54,9 +55,7 @@ function resolvePalette(): ChartPalette {
   };
 }
 
-const prefersReducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const { prefersReducedMotion } = useMotionAnimation();
 
 let themeObserver: MutationObserver | null = null;
 

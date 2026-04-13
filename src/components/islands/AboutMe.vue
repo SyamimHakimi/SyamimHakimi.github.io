@@ -10,6 +10,8 @@ import {
   useAboutMe,
   type PhotographyGear,
 } from "../../lib/composables/useAboutMe";
+import SectionHeader from "../ui/SectionHeader.vue";
+import ErrorAlert from "../ui/ErrorAlert.vue";
 
 const { data, loading, error } = useAboutMe();
 
@@ -64,14 +66,11 @@ function boardgameTags(tags: string | undefined): string[] {
     </div>
 
     <!-- ── Error ───────────────────────────────────────────────────────── -->
-    <div
+    <ErrorAlert
       v-else-if="error"
-      class="rounded-[18px] border border-[color-mix(in_srgb,var(--color-error)_35%,var(--color-surface))] bg-[color-mix(in_srgb,var(--color-error)_10%,var(--color-surface))] p-5 text-[var(--color-error)]"
-      role="alert"
-    >
-      <p class="font-medium">Failed to load profile</p>
-      <p class="mt-1 text-sm opacity-80">{{ error }}</p>
-    </div>
+      title="Failed to load profile"
+      :message="error"
+    />
 
     <!-- ── Content ─────────────────────────────────────────────────────── -->
     <div v-else class="space-y-8">
@@ -237,21 +236,11 @@ function boardgameTags(tags: string | undefined): string[] {
           aria-label="Photography gear"
         >
           <!-- Section header -->
-          <div class="mb-5">
-            <div class="mb-2 flex items-center gap-3.5">
-              <span class="icon-disc" aria-hidden="true">
-                <Camera :size="18" :stroke-width="1.75" />
-              </span>
-              <h2
-                class="font-serif text-[clamp(1.5rem,3vw,2.125rem)] leading-[1.02]"
-              >
-                Photography Gear
-              </h2>
-            </div>
-            <p class="max-w-[56ch] text-sm text-[var(--color-on-surface-variant)]">
-              Grouped by type — the current carry setup for street and travel.
-            </p>
-          </div>
+          <SectionHeader
+            :icon="Camera"
+            title="Photography Gear"
+            subtitle="Grouped by type — the current carry setup for street and travel."
+          />
 
           <!-- Gear groups -->
           <div class="grid gap-3.5">
@@ -298,22 +287,11 @@ function boardgameTags(tags: string | undefined): string[] {
           aria-label="Favourite boardgames"
         >
           <!-- Section header -->
-          <div class="mb-5">
-            <div class="mb-2 flex items-center gap-3.5">
-              <span class="icon-disc" aria-hidden="true">
-                <Layers3 :size="18" :stroke-width="1.75" />
-              </span>
-              <h2
-                class="font-serif text-[clamp(1.5rem,3vw,2.125rem)] leading-[1.02]"
-              >
-                Favourite Boardgames
-              </h2>
-            </div>
-            <p class="max-w-[56ch] text-sm text-[var(--color-on-surface-variant)]">
-              A horizontal strip keeps the section tactile without overwhelming the
-              page.
-            </p>
-          </div>
+          <SectionHeader
+            :icon="Layers3"
+            title="Favourite Boardgames"
+            subtitle="A horizontal strip keeps the section tactile without overwhelming the page."
+          />
 
           <!-- Scroll hint -->
           <div
@@ -384,22 +362,11 @@ function boardgameTags(tags: string | undefined): string[] {
           aria-label="Connect"
         >
           <!-- Section header -->
-          <div class="mb-5">
-            <div class="mb-2 flex items-center gap-3.5">
-              <span class="icon-disc" aria-hidden="true">
-                <MessageSquare :size="18" :stroke-width="1.75" />
-              </span>
-              <h2
-                class="font-serif text-[clamp(1.5rem,3vw,2.125rem)] leading-[1.02]"
-              >
-                Connect
-              </h2>
-            </div>
-            <p class="max-w-[56ch] text-sm text-[var(--color-on-surface-variant)]">
-              Direct links — recognizable platform names first, then a short
-              qualifier.
-            </p>
-          </div>
+          <SectionHeader
+            :icon="MessageSquare"
+            title="Connect"
+            subtitle="Direct links — recognizable platform names first, then a short qualifier."
+          />
 
           <!-- Social chips -->
           <div
