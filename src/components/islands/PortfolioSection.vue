@@ -11,12 +11,15 @@ import { computed } from "vue";
 import { usePortfolio } from "../../lib/composables/usePortfolio";
 import type { ExperienceItem } from "../../lib/composables/usePortfolio";
 import { useReducedMotion } from "../../lib/composables/useReducedMotion";
+import {
+  buildPortfolioHeroItems,
+  PORTFOLIO_EXPERIENCE_SECTIONS,
+} from "../../lib/utils/portfolioSection";
 import ErrorAlert from "../ui/ErrorAlert.vue";
-import ExperienceCard from "../ui/ExperienceCard.vue";
+import ExperienceSection from "../ui/ExperienceSection.vue";
 
 const { data, loading, error } = usePortfolio();
 
-// ── Date helpers ───────────────────────────────────────────────────────────
 function sinceYear(iso: string | undefined): string | null {
   if (!iso) return null;
   return String(new Date(iso).getFullYear());
@@ -44,20 +47,26 @@ function yearsLabel(item: ExperienceItem): string | null {
   return `${years}y`;
 }
 
-// ── Hero strip stats ───────────────────────────────────────────────────────
 const pythonSince = computed(() => {
   const item = data.value.experience.languages.find(
-    (i) => i.title === "Python",
+    (entry) => entry.title === "Python",
   );
   return item?.["date-from"] ? new Date(item["date-from"]).getFullYear() : null;
 });
 
 const vueSince = computed(() => {
-  const item = data.value.experience.frameworks.find((i) =>
-    i.title.toLowerCase().includes("vue"),
+  const item = data.value.experience.frameworks.find((entry) =>
+    entry.title.toLowerCase().includes("vue"),
   );
   return item?.["date-from"] ? new Date(item["date-from"]).getFullYear() : null;
 });
+
+const heroItems = computed(() =>
+  buildPortfolioHeroItems(
+    pythonSince.value ? new Date().getFullYear() - pythonSince.value : null,
+    vueSince.value ? new Date().getFullYear() - vueSince.value : null,
+  ),
+);
 
 const { prefersReducedMotion } = useReducedMotion();
 
@@ -68,14 +77,12 @@ function revealDelay(index: number, base = 0): string {
 
 <template>
   <div>
-    <!-- ── Loading skeleton ──────────────────────────────────────────── -->
     <div
       v-if="loading"
       class="space-y-9"
       aria-busy="true"
       aria-label="Loading portfolio"
     >
-      <!-- Hero strip skeleton -->
       <div
         class="flex flex-wrap items-center gap-3 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
       >
@@ -98,7 +105,6 @@ function revealDelay(index: number, base = 0): string {
         />
       </div>
 
-      <!-- Section blocks × 3 (platforms, protocols, frameworks) -->
       <div
         v-for="(cols, si) in [
           [3, 100],
@@ -126,7 +132,6 @@ function revealDelay(index: number, base = 0): string {
         </div>
       </div>
 
-      <!-- Languages chip row -->
       <div class="space-y-3">
         <div class="skeleton-line" style="width: 160px; height: 16px" />
         <div class="flex flex-wrap gap-2">
@@ -139,7 +144,6 @@ function revealDelay(index: number, base = 0): string {
         </div>
       </div>
 
-      <!-- Project card skeleton -->
       <div class="space-y-3" style="max-width: 720px">
         <div class="skeleton-line" style="width: 130px; height: 16px" />
         <div
@@ -162,209 +166,53 @@ function revealDelay(index: number, base = 0): string {
       </div>
     </div>
 
-    <!-- ── Error ──────────────────────────────────────────────────────── -->
     <ErrorAlert
       v-else-if="error"
       title="Failed to load portfolio"
       :message="error"
     />
 
-    <!-- ── Loaded ─────────────────────────────────────────────────────── -->
     <div v-else class="space-y-12">
-      <!-- Hero summary strip -->
       <div
         class="reveal-up flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
         :style="{ animationDelay: revealDelay(0) }"
       >
-        <span v-if="pythonSince" class="hero-stat">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
+        <template
+          v-for="(item, index) in heroItems"
+          :key="`${item.kind}-${item.label}`"
+        >
+          <div
+            v-if="index > 0 && item.kind === 'stat'"
+            class="h-4 w-px bg-[var(--color-outline)]"
             aria-hidden="true"
-          >
-            <polyline points="16 18 22 12 16 6" />
-            <polyline points="8 6 2 12 8 18" />
-          </svg>
-          {{ new Date().getFullYear() - pythonSince }}+ yrs Python
-        </span>
-        <div
-          v-if="pythonSince && vueSince"
-          class="h-4 w-px bg-[var(--color-outline)]"
-          aria-hidden="true"
-        />
-        <span v-if="vueSince" class="hero-stat">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <polygon points="12 2 2 7 12 22 22 7 12 2" />
-          </svg>
-          {{ new Date().getFullYear() - vueSince }}+ yrs Vue
-        </span>
-        <div class="h-4 w-px bg-[var(--color-outline)]" aria-hidden="true" />
-        <span class="hero-stat">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          </svg>
-          AWS · Firebase
-        </span>
-        <div class="h-4 w-px bg-[var(--color-outline)]" aria-hidden="true" />
-        <span class="hero-domain-tag">
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <rect x="1" y="4" width="22" height="16" rx="2" />
-            <line x1="1" y1="10" x2="23" y2="10" />
-          </svg>
-          FinTech
-        </span>
-        <span class="hero-domain-tag">
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            aria-hidden="true"
-          >
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-          </svg>
-          EV Charging
-        </span>
+          />
+          <span :class="item.kind === 'tag' ? 'hero-domain-tag' : 'hero-stat'">
+            <component
+              :is="item.icon"
+              :size="item.kind === 'tag' ? 11 : 13"
+              aria-hidden="true"
+            />
+            {{ item.label }}
+          </span>
+        </template>
       </div>
 
-      <!-- Platforms ─────────────────────────────────────────────────── -->
-      <section
-        v-if="data.experience.platforms.length > 0"
-        aria-label="Platforms experience"
-      >
-        <div
-          class="reveal-up mb-3 flex items-center gap-2.5"
-          :style="{ animationDelay: revealDelay(0, 80) }"
-        >
-          <h2 class="text-xl">Platforms</h2>
-          <span class="count-badge">{{
-            data.experience.platforms.length
-          }}</span>
-        </div>
-        <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
-          Cloud infrastructure, payment rails, and developer platforms I've
-          shipped with.
-        </p>
-        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
-          <li
-            v-for="(item, i) in data.experience.platforms"
-            :key="item.id"
-            class="reveal-up experience-card-item"
-            :style="{ animationDelay: revealDelay(i, 120) }"
-          >
-            <ExperienceCard
-              :item="item"
-              :active="isActive(item)"
-              :duration-label="durationLabel(item)"
-              :since-year="sinceYear(item['date-from'])"
-            />
-          </li>
-        </ul>
-      </section>
+      <ExperienceSection
+        v-for="section in PORTFOLIO_EXPERIENCE_SECTIONS"
+        :id="section.key"
+        :key="section.key"
+        :title="section.title"
+        :description="section.description"
+        :items="data.experience[section.key]"
+        :compact="section.compact"
+        :grid-class="section.gridClass"
+        :header-animation-delay="revealDelay(0, 80)"
+        :item-animation-delay="(index) => revealDelay(index, 120)"
+        :is-active="isActive"
+        :duration-label="durationLabel"
+        :since-year="sinceYear"
+      />
 
-      <!-- Protocols ─────────────────────────────────────────────────── -->
-      <section
-        v-if="data.experience.protocols.length > 0"
-        aria-label="Protocols experience"
-      >
-        <div
-          class="reveal-up mb-3 flex items-center gap-2.5"
-          :style="{ animationDelay: revealDelay(0, 80) }"
-        >
-          <h2 class="text-xl">Protocols</h2>
-          <span class="count-badge">{{
-            data.experience.protocols.length
-          }}</span>
-        </div>
-        <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
-          Specialised communication standards I've implemented in production.
-        </p>
-        <ul class="grid gap-3 sm:grid-cols-2" role="list">
-          <li
-            v-for="(item, i) in data.experience.protocols"
-            :key="item.id"
-            class="reveal-up experience-card-item"
-            :style="{ animationDelay: revealDelay(i, 120) }"
-          >
-            <ExperienceCard
-              :item="item"
-              :active="isActive(item)"
-              :duration-label="durationLabel(item)"
-              :since-year="sinceYear(item['date-from'])"
-            />
-          </li>
-        </ul>
-      </section>
-
-      <!-- Frameworks ────────────────────────────────────────────────── -->
-      <section
-        v-if="data.experience.frameworks.length > 0"
-        aria-label="Frameworks experience"
-      >
-        <div
-          class="reveal-up mb-3 flex items-center gap-2.5"
-          :style="{ animationDelay: revealDelay(0, 80) }"
-        >
-          <h2 class="text-xl">Frameworks</h2>
-          <span class="count-badge">{{
-            data.experience.frameworks.length
-          }}</span>
-        </div>
-        <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
-          Backend and frontend frameworks I use to build fast, maintainable
-          products.
-        </p>
-        <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3" role="list">
-          <li
-            v-for="(item, i) in data.experience.frameworks"
-            :key="item.id"
-            class="reveal-up experience-card-item"
-            :style="{ animationDelay: revealDelay(i, 120) }"
-          >
-            <ExperienceCard
-              compact
-              :item="item"
-              :active="isActive(item)"
-              :duration-label="durationLabel(item)"
-            />
-          </li>
-        </ul>
-      </section>
-
-      <!-- Languages & Databases ─────────────────────────────────────── -->
       <section
         v-if="data.experience.languages.length > 0"
         aria-label="Languages and databases"
@@ -410,7 +258,6 @@ function revealDelay(index: number, base = 0): string {
         </p>
       </section>
 
-      <!-- Personal Project ───────────────────────────────────────────── -->
       <section v-if="data.project" aria-label="Personal projects">
         <div
           class="reveal-up mb-3"
@@ -489,7 +336,6 @@ function revealDelay(index: number, base = 0): string {
 </template>
 
 <style scoped>
-/* ── Hero strip ─────────────────────────────────────────────────── */
 .hero-stat {
   display: inline-flex;
   align-items: center;
@@ -498,6 +344,7 @@ function revealDelay(index: number, base = 0): string {
   font-weight: 500;
   color: var(--color-on-surface);
 }
+
 .hero-domain-tag {
   display: inline-flex;
   align-items: center;
@@ -510,15 +357,16 @@ function revealDelay(index: number, base = 0): string {
   color: var(--color-cta);
   border: 1px solid rgba(37, 99, 235, 0.18);
 }
+
 [data-theme="dark"] .hero-domain-tag {
   background: rgba(96, 165, 250, 0.1);
   border-color: rgba(96, 165, 250, 0.25);
 }
 
-/* ── Section headings ───────────────────────────────────────────── */
 h2 {
   font-family: "DM Serif Display", serif;
 }
+
 .count-badge {
   font-size: 11px;
   font-weight: 600;
@@ -529,7 +377,6 @@ h2 {
   padding: 2px 8px;
 }
 
-/* ── Active indicators ──────────────────────────────────────────── */
 .active-dot {
   width: 7px;
   height: 7px;
@@ -540,7 +387,6 @@ h2 {
   display: inline-block;
 }
 
-/* ── Languages chips ────────────────────────────────────────────── */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -554,7 +400,6 @@ h2 {
   border: 1px solid var(--color-outline);
 }
 
-/* ── Tech stack tags ────────────────────────────────────────────── */
 .tag {
   display: inline-flex;
   align-items: center;
@@ -567,7 +412,6 @@ h2 {
   border: 1px solid var(--color-outline);
 }
 
-/* ── Project eyebrow ────────────────────────────────────────────── */
 .project-eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -576,7 +420,6 @@ h2 {
   color: var(--color-cta);
 }
 
-/* ── Years label inside language chip ───────────────────────────── */
 .chip-years {
   font-size: 10px;
   font-weight: 600;
@@ -584,7 +427,6 @@ h2 {
   margin-left: 2px;
 }
 
-/* ── Tech stack tag as link ─────────────────────────────────────── */
 .tag--link {
   cursor: pointer;
   transition:
@@ -593,14 +435,17 @@ h2 {
     background 150ms;
   text-decoration: none;
 }
+
 .tag--link:hover {
   color: var(--color-cta);
   border-color: var(--color-cta);
   background: rgba(37, 99, 235, 0.06);
 }
+
 [data-theme="dark"] .tag--link:hover {
   background: rgba(96, 165, 250, 0.08);
 }
+
 .tag--link:focus-visible {
   outline: 2px solid var(--color-cta);
   outline-offset: 2px;

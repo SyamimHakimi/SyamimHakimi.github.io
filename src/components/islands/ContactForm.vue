@@ -14,6 +14,7 @@
 import { ref, reactive, computed, onUnmounted } from "vue";
 import emailjs from "@emailjs/browser";
 import { Motion } from "motion-v";
+import DetailTileGrid from "../ui/DetailTileGrid.vue";
 
 const SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID as string;
@@ -43,6 +44,23 @@ let successTimer: ReturnType<typeof setTimeout> | null = null;
 
 const feedbackInitial = { opacity: 0, y: 10, scale: 0.985 };
 const feedbackVisible = { opacity: 1, y: 0, scale: 1 };
+const contactNotes = [
+  {
+    title: "Best for",
+    description:
+      "Project inquiries, frontend work, product polish, and collaborations with a clear scope.",
+  },
+  {
+    title: "Reply style",
+    description:
+      "Short, direct replies first. If the project fits, follow-up moves into details quickly.",
+  },
+  {
+    title: "Useful details",
+    description:
+      "Timeline, rough scope, and what kind of help you need make the first reply faster.",
+  },
+] as const;
 
 /* ── Validation ──────────────────────────────────────────────────────── */
 
@@ -141,44 +159,11 @@ onUnmounted(() => {
         aria-label="Contact information"
       >
         <!-- Info blocks -->
-        <div class="grid gap-3.5">
-          <div
-            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
-          >
-            <strong
-              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
-              >Best for</strong
-            >
-            <p class="text-sm text-[var(--color-on-surface)]">
-              Project inquiries, frontend work, product polish, and
-              collaborations with a clear scope.
-            </p>
-          </div>
-          <div
-            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
-          >
-            <strong
-              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
-              >Reply style</strong
-            >
-            <p class="text-sm text-[var(--color-on-surface)]">
-              Short, direct replies first. If the project fits, follow-up moves
-              into details quickly.
-            </p>
-          </div>
-          <div
-            class="grid gap-1.5 rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-4 py-3.5"
-          >
-            <strong
-              class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
-              >Useful details</strong
-            >
-            <p class="text-sm text-[var(--color-on-surface)]">
-              Timeline, rough scope, and what kind of help you need make the
-              first reply faster.
-            </p>
-          </div>
-        </div>
+        <DetailTileGrid
+          :items="[...contactNotes]"
+          columns-class="grid-cols-1"
+          tile-class="px-4 py-3.5"
+        />
 
         <!-- Topic chips -->
         <div class="flex flex-wrap gap-2.5">
