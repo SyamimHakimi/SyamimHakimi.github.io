@@ -1,188 +1,30 @@
 <script setup lang="ts">
 /**
- * PhotographyJourney — photography statistics: 4 stat cards, monthly photos
- * line chart, and film recipe horizontal bar chart.
+ * PhotographyJourney — photography statistics: summary cards plus chart panels.
  *
- * Island: client:visible — ApexCharts requires browser APIs.
- * Composable: useStatistics()
+ * Island: client:visible — Firestore data and chart rendering both require
+ * browser APIs.
  *
- * Chart palette is resolved from CSS custom properties at mount and re-resolved
- * whenever data-theme changes (MutationObserver), keeping charts in sync with
- * the user's light/dark preference.
- *
- * Scroll entrance animations use lightweight CSS reveal classes; motion is
- * skipped when prefers-reduced-motion is active.
+ * The heavy ApexCharts runtime is loaded through an async child component so
+ * the primary photography island bundle stays smaller and easier to maintain.
  */
-import { computed, onMounted, onUnmounted, ref } from "vue";
-import VueApexCharts from "vue3-apexcharts";
+import { defineAsyncComponent } from "vue";
 import { useStatistics } from "../../lib/composables/useStatistics";
 import { useReducedMotion } from "../../lib/composables/useReducedMotion";
-import {
-  buildCumulativeLineOptions,
-  buildCumulativeLineSeries,
-  buildHeatmapOptions,
-  buildHeatmapSeries,
-  buildFocalLengthOptions,
-  buildFocalLengthSeries,
-  buildRecipeBarOptions,
-  buildRecipeBarSeries,
-  type ChartPalette,
-} from "../../lib/utils/statisticsCharts";
+
+const PhotographyJourneyCharts = defineAsyncComponent(
+  () => import("./PhotographyJourneyCharts.vue"),
+);
 
 const { statistics, loading, error } = useStatistics();
-
-// ── Chart palette ──────────────────────────────────────────────────────────
-const palette = ref<ChartPalette>({
-  cta: "#b45309",
-  onSurface: "#09090b",
-  onSurfaceVariant: "#52525b",
-  outline: "#e4e4e7",
-  surface: "#ffffff",
-  surfaceVariant: "#f4f4f5",
-});
-
-function resolvePalette(): ChartPalette {
-  const s = getComputedStyle(document.documentElement);
-  const get = (v: string, fb: string) => s.getPropertyValue(v).trim() || fb;
-  return {
-    cta: get("--color-cta", "#b45309"),
-    onSurface: get("--color-on-surface", "#09090b"),
-    onSurfaceVariant: get("--color-on-surface-variant", "#52525b"),
-    outline: get("--color-outline", "#e4e4e7"),
-    surface: get("--color-surface", "#ffffff"),
-    surfaceVariant: get("--color-surface-variant", "#f4f4f5"),
-  };
-}
-
 const { prefersReducedMotion } = useReducedMotion();
 
-let themeObserver: MutationObserver | null = null;
-
-onMounted(() => {
-  palette.value = resolvePalette();
-  themeObserver = new MutationObserver(() => {
-    palette.value = resolvePalette();
-  });
-  themeObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["data-theme"],
-  });
-});
-
-onUnmounted(() => {
-  themeObserver?.disconnect();
-});
-
-// ── Cumulative line chart (photoStats — all-time growth) ───────────────────
-const lineData = computed(() =>
-  buildCumulativeLineSeries(statistics.value?.photoStats),
-);
-const lineOptions = computed(() =>
-  buildCumulativeLineOptions(
-    {
-      palette: palette.value,
-      prefersReducedMotion: prefersReducedMotion.value,
-    },
-    lineData.value.categories,
-    Math.max(0, lineData.value.series[0]?.data.length - 1),
-  ),
-);
-
-// ── Bar chart (recipeStats — film simulations) ─────────────────────────────
-const barData = computed(() =>
-  buildRecipeBarSeries(statistics.value?.recipeStats),
-);
-const barOptions = computed(() =>
-  buildRecipeBarOptions(
-    {
-      palette: palette.value,
-      prefersReducedMotion: prefersReducedMotion.value,
-    },
-    barData.value.categories,
-  ),
-);
-
-// ── Heatmap (shooting calendar) ────────────────────────────────────────────
-const heatmapData = computed(() =>
-  buildHeatmapSeries(statistics.value?.photoStats),
-);
-const heatmapOptions = computed(() =>
-  buildHeatmapOptions({
-    palette: palette.value,
-    prefersReducedMotion: prefersReducedMotion.value,
-  }),
-);
-
-// ── Donut (focal lengths) ──────────────────────────────────────────────────
-const donutData = computed(() =>
-  buildFocalLengthSeries(statistics.value?.focalStats),
-);
-const donutTotal = computed(() =>
-  donutData.value.series.reduce((sum, v) => sum + v, 0),
-);
-const donutOptions = computed(() =>
-  buildFocalLengthOptions(
-    {
-      palette: palette.value,
-      prefersReducedMotion: prefersReducedMotion.value,
-    },
-    donutData.value.labels,
-    donutTotal.value,
-  ),
-);
-
-// ── Screen-reader chart summaries ─────────────────────────────────────────
-const lineSrSummary = computed(() => {
-  const s = statistics.value;
-  if (!s) return "";
-  const total = s.stats.total_photos ?? 0;
-  const firstYear = lineData.value.categories[0] ?? "";
-  const lastYear =
-    lineData.value.categories[lineData.value.categories.length - 1] ?? "";
-  return `Cumulative photo count from ${firstYear} to ${lastYear}, reaching ${total.toLocaleString()} total photos.`;
-});
-
-const barSrSummary = computed(() => {
-  const entries = barData.value.categories
-    .map((name, i) => `${name}: ${barData.value.series[0]?.data[i] ?? 0}`)
-    .join(", ");
-  return `Film recipe usage — ${entries}.`;
-});
-
-const heatmapSrSummary = computed(() => {
-  const s = statistics.value;
-  if (!s) return "";
-  const total = s.stats.total_photos ?? 0;
-  const outings = s.stats.total_outings ?? 0;
-  return `Shooting calendar heatmap showing ${total.toLocaleString()} photos across ${outings} outings by month and year.`;
-});
-
-const donutSrSummary = computed(() => {
-  if (!donutData.value.series.length) return "";
-  const parts = donutData.value.labels.map(
-    (label, i) => `${label}: ${donutData.value.series[i]}`,
-  );
-  return `Focal length distribution — ${parts.join(", ")}.`;
-});
-
-// ── Heatmap legend range ──────────────────────────────────────────────────
-const heatmapMaxPhotos = computed(() => {
-  let max = 0;
-  for (const row of heatmapData.value) {
-    for (const pt of row.data as { y: number }[]) {
-      if (pt.y > max) max = pt.y;
-    }
-  }
-  return max;
-});
-
-function revealDelay(i: number, base = 0, step = 60): string {
-  return prefersReducedMotion.value ? "0ms" : `${base + i * step}ms`;
+function revealDelay(index: number, base = 0, step = 60): string {
+  return prefersReducedMotion.value ? "0ms" : `${base + index * step}ms`;
 }
 </script>
 
 <template>
-  <!-- ── Loading skeleton ─────────────────────────────────────────────────── -->
   <div
     v-if="loading"
     class="space-y-3"
@@ -233,7 +75,6 @@ function revealDelay(i: number, base = 0, step = 60): string {
     </div>
   </div>
 
-  <!-- ── Error state ──────────────────────────────────────────────────────── -->
   <div
     v-else-if="error"
     class="flex gap-4 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[var(--color-surface)] p-6"
@@ -269,9 +110,7 @@ function revealDelay(i: number, base = 0, step = 60): string {
     </div>
   </div>
 
-  <!-- ── Loaded state ─────────────────────────────────────────────────────── -->
   <div v-else-if="statistics" class="space-y-3">
-    <!-- Stat row — 2-col mobile, 4-col sm+ -->
     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
       <div
         v-for="(stat, i) in [
@@ -324,117 +163,63 @@ function revealDelay(i: number, base = 0, step = 60): string {
       </div>
     </div>
 
-    <!-- Chart row 1 — stacked mobile, cumulative line(3fr) + bar(2fr) on sm+ -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_2fr]">
-      <!-- Cumulative photos line chart -->
-      <div
-        class="reveal-up card-outlined overflow-visible"
-        :style="{ animationDelay: revealDelay(0, 240) }"
-      >
-        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
-          Photos Over Time
-        </p>
-        <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Cumulative total since first shoot
-        </p>
-        <VueApexCharts
-          type="area"
-          height="160"
-          :options="lineOptions"
-          :series="lineData.series"
-          aria-label="Cumulative photo count area chart"
-        />
-        <p v-if="lineSrSummary" class="sr-only">{{ lineSrSummary }}</p>
-      </div>
-
-      <!-- Film recipe bar chart -->
-      <div
-        class="reveal-up card-outlined overflow-visible"
-        :style="{ animationDelay: revealDelay(1, 240) }"
-      >
-        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
-          Film Recipes
-        </p>
-        <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Simulation usage count
-        </p>
-        <VueApexCharts
-          type="bar"
-          height="160"
-          :options="barOptions"
-          :series="barData.series"
-          aria-label="Film recipe usage horizontal bar chart"
-        />
-        <p v-if="barSrSummary" class="sr-only">{{ barSrSummary }}</p>
-      </div>
-    </div>
-
-    <!-- Chart row 2 — stacked mobile, heatmap(2fr) + donut(1fr) on sm+ -->
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
-      <!-- Shooting calendar heatmap -->
-      <div
-        class="reveal-up card-outlined overflow-visible"
-        :style="{ animationDelay: revealDelay(0, 360) }"
-      >
-        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
-          Shooting Calendar
-        </p>
-        <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Photos per month by year
-        </p>
-        <VueApexCharts
-          type="heatmap"
-          height="110"
-          width="100%"
-          :options="heatmapOptions"
-          :series="heatmapData"
-          aria-label="Shooting calendar heatmap by year and month"
-        />
-        <p v-if="heatmapSrSummary" class="sr-only">{{ heatmapSrSummary }}</p>
-        <!-- Custom legend with numeric range -->
-        <div
-          class="mt-1 flex items-center justify-end gap-1.5 text-[10px] text-[var(--color-on-surface-variant)]"
-          aria-label="Colour scale: 0 photos (light) to {{ heatmapMaxPhotos }} photos (dark)"
-        >
-          <span>0</span>
-          <div
-            class="h-2 w-14 rounded-sm"
-            style="
-              background: linear-gradient(
-                to right,
-                var(--color-surface-variant),
-                var(--color-cta)
-              );
-            "
-            aria-hidden="true"
-          ></div>
-          <span>{{ heatmapMaxPhotos }}+ photos</span>
+    <Suspense>
+      <PhotographyJourneyCharts
+        :statistics="statistics"
+        :prefers-reduced-motion="prefersReducedMotion"
+      />
+      <template #fallback>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_2fr]">
+          <div class="card-outlined">
+            <div
+              class="skeleton-line mb-1.5"
+              style="width: 45%; height: 13px"
+            />
+            <div class="skeleton-line mb-4" style="width: 60%; height: 10px" />
+            <div class="skeleton-rect" style="height: 160px" />
+          </div>
+          <div class="card-outlined">
+            <div
+              class="skeleton-line mb-1.5"
+              style="width: 40%; height: 13px"
+            />
+            <div class="skeleton-line mb-4" style="width: 55%; height: 10px" />
+            <div class="flex flex-col gap-2.5">
+              <div v-for="j in 6" :key="j" class="flex items-center gap-2">
+                <div
+                  class="skeleton-line flex-shrink-0"
+                  style="width: 80px; height: 10px"
+                />
+                <div
+                  class="skeleton-rect flex-1"
+                  style="height: 9px; border-radius: 999px"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <!-- Focal lengths donut -->
-      <div
-        class="reveal-up card-outlined flex flex-col overflow-visible"
-        :style="{ animationDelay: revealDelay(1, 360) }"
-      >
-        <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
-          Focal Lengths
-        </p>
-        <p class="mb-1 text-[11px] text-[var(--color-on-surface-variant)]">
-          Shots by focal length
-        </p>
-        <div class="w-full overflow-visible">
-          <VueApexCharts
-            type="donut"
-            height="200"
-            width="100%"
-            :options="donutOptions"
-            :series="donutData.series"
-            aria-label="Focal length usage donut chart"
-          />
-          <p v-if="donutSrSummary" class="sr-only">{{ donutSrSummary }}</p>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
+          <div class="card-outlined">
+            <div
+              class="skeleton-line mb-1.5"
+              style="width: 50%; height: 13px"
+            />
+            <div class="skeleton-line mb-4" style="width: 65%; height: 10px" />
+            <div class="skeleton-rect" style="height: 110px" />
+          </div>
+          <div class="card-outlined">
+            <div
+              class="skeleton-line mb-1.5"
+              style="width: 45%; height: 13px"
+            />
+            <div class="skeleton-line mb-4" style="width: 55%; height: 10px" />
+            <div
+              class="skeleton-rect"
+              style="height: 180px; border-radius: 50%"
+            />
+          </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </Suspense>
   </div>
 </template>

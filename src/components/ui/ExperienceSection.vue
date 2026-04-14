@@ -31,7 +31,7 @@ defineProps<{
       :style="{ animationDelay: headerAnimationDelay }"
     >
       <h2 class="text-xl">{{ title }}</h2>
-      <span class="count-badge">{{ items.length }}</span>
+      <span class="pill pill--counter">{{ items.length }}</span>
     </div>
     <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
       {{ description }}
