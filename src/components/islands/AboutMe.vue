@@ -101,7 +101,7 @@ function boardgameTags(tags: string | undefined): string[] {
     <div v-else class="space-y-8">
       <!-- Profile card + visual panel ───────────────────────────────── -->
       <section
-        class="grid gap-4 rounded-[20px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[28px] sm:p-6 md:p-8"
+        class="panel-shell grid gap-4 p-4 sm:p-6 md:p-8"
         aria-label="About Syamim"
       >
         <!-- Two-column: profile card + visual panel -->
@@ -261,7 +261,7 @@ function boardgameTags(tags: string | undefined): string[] {
                     {{ item.brand }}
                   </p>
                   <span
-                    class="shrink-0 rounded-full bg-[color:var(--color-cta-soft)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
+                    class="pill pill--accent shrink-0 min-h-0 px-2 py-0.5 text-[9px] tracking-[0.06em]"
                   >
                     {{ gearMeta(item.type) }}
                   </span>
@@ -344,7 +344,7 @@ function boardgameTags(tags: string | undefined): string[] {
                 <span
                   v-for="tag in boardgameTags(game.tags)"
                   :key="tag"
-                  class="inline-flex min-h-[28px] items-center rounded-full border border-[var(--color-outline)] bg-[var(--color-surface)] px-2.5 text-xs font-medium text-[var(--color-on-surface-variant)]"
+                  class="pill"
                 >
                   {{ tag }}
                 </span>
@@ -379,7 +379,7 @@ function boardgameTags(tags: string | undefined): string[] {
               :target="social.link.startsWith('mailto:') ? undefined : '_blank'"
               rel="noopener noreferrer"
               role="listitem"
-              class="inline-flex max-w-full min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+              class="pill pill--soft pill-link max-w-full min-h-[40px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
             >
               <img
                 v-if="socialIcon(social.name)"

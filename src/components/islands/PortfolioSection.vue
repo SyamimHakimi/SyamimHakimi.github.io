@@ -5,13 +5,14 @@
  * Composable: usePortfolio()
  *
  * UI: hero summary strip, experience cards with brand logo + active indicator
- * + year badge, card-outlined hover accent, motion-v entrance stagger.
+ * + year badge, with lightweight CSS entrance stagger.
  */
 import { computed } from "vue";
-import { Motion } from "motion-v";
 import { usePortfolio } from "../../lib/composables/usePortfolio";
 import type { ExperienceItem } from "../../lib/composables/usePortfolio";
-import { useMotionAnimation } from "../../lib/composables/useMotionAnimation";
+import { useReducedMotion } from "../../lib/composables/useReducedMotion";
+import ErrorAlert from "../ui/ErrorAlert.vue";
+import ExperienceCard from "../ui/ExperienceCard.vue";
 
 const { data, loading, error } = usePortfolio();
 
@@ -58,8 +59,11 @@ const vueSince = computed(() => {
   return item?.["date-from"] ? new Date(item["date-from"]).getFullYear() : null;
 });
 
-// ── Motion helpers ─────────────────────────────────────────────────────────
-const { cardInitial, cardVisible, delay } = useMotionAnimation();
+const { prefersReducedMotion } = useReducedMotion();
+
+function revealDelay(index: number, base = 0): string {
+  return prefersReducedMotion.value ? "0ms" : `${base + index * 50}ms`;
+}
 </script>
 
 <template>
@@ -159,50 +163,18 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
     </div>
 
     <!-- ── Error ──────────────────────────────────────────────────────── -->
-    <div
+    <ErrorAlert
       v-else-if="error"
-      class="flex gap-4 rounded-[var(--radius-md)] border border-[var(--color-error)] bg-[var(--color-surface)] p-5"
-      role="alert"
-    >
-      <div
-        class="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full"
-        style="background: rgba(220, 38, 38, 0.1)"
-      >
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="var(--color-error)"
-          stroke-width="1.75"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
-      </div>
-      <div>
-        <p class="text-sm font-semibold text-[var(--color-error)]">
-          Failed to load portfolio
-        </p>
-        <p class="mt-1 text-sm text-[var(--color-on-surface-variant)]">
-          {{ error }}
-        </p>
-      </div>
-    </div>
+      title="Failed to load portfolio"
+      :message="error"
+    />
 
     <!-- ── Loaded ─────────────────────────────────────────────────────── -->
     <div v-else class="space-y-12">
       <!-- Hero summary strip -->
-      <Motion
-        as="div"
-        class="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{ duration: 0.3, delay: delay(0), easing: [0.2, 0, 0, 1] }"
+      <div
+        class="reveal-up flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
+        :style="{ animationDelay: revealDelay(0) }"
       >
         <span v-if="pythonSince" class="hero-stat">
           <svg
@@ -286,102 +258,40 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
           </svg>
           EV Charging
         </span>
-      </Motion>
+      </div>
 
       <!-- Platforms ─────────────────────────────────────────────────── -->
       <section
         v-if="data.experience.platforms.length > 0"
         aria-label="Platforms experience"
       >
-        <Motion
-          as="div"
-          class="mb-3 flex items-center gap-2.5"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(0, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+        <div
+          class="reveal-up mb-3 flex items-center gap-2.5"
+          :style="{ animationDelay: revealDelay(0, 80) }"
         >
           <h2 class="text-xl">Platforms</h2>
           <span class="count-badge">{{
             data.experience.platforms.length
           }}</span>
-        </Motion>
+        </div>
         <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
           Cloud infrastructure, payment rails, and developer platforms I've
           shipped with.
         </p>
         <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="list">
-          <Motion
+          <li
             v-for="(item, i) in data.experience.platforms"
             :key="item.id"
-            as="li"
-            class="card-outlined exp-card"
-            :initial="cardInitial"
-            :animate="cardVisible"
-            :transition="{
-              duration: 0.25,
-              delay: delay(i, 120),
-              easing: [0.2, 0, 0, 1],
-            }"
+            class="reveal-up experience-card-item"
+            :style="{ animationDelay: revealDelay(i, 120) }"
           >
-            <div class="mb-2.5 flex items-start justify-between gap-2">
-              <div class="exp-logo">
-                <img
-                  v-if="item['img-src']"
-                  :src="`/${item['img-src']}`"
-                  :alt="item.title"
-                />
-                <span v-else>{{ item.title.slice(0, 2) }}</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <a
-                  v-if="item.link"
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="exp-link-btn"
-                  :aria-label="`Learn more about ${item.title}`"
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                    />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                </a>
-                <span
-                  v-if="isActive(item)"
-                  class="active-dot"
-                  aria-label="Currently using"
-                />
-                <span v-if="isActive(item)" class="active-label">Active</span>
-                <span v-else class="year-badge">{{
-                  sinceYear(item["date-from"])
-                }}</span>
-              </div>
-            </div>
-            <p class="exp-title">{{ item.title }}</p>
-            <p v-if="item.description" class="exp-desc">
-              {{ item.description }}
-            </p>
-            <div v-if="isActive(item)" class="mt-2.5">
-              <span class="year-badge">{{ durationLabel(item) }}</span>
-            </div>
-          </Motion>
+            <ExperienceCard
+              :item="item"
+              :active="isActive(item)"
+              :duration-label="durationLabel(item)"
+              :since-year="sinceYear(item['date-from'])"
+            />
+          </li>
         </ul>
       </section>
 
@@ -390,94 +300,32 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
         v-if="data.experience.protocols.length > 0"
         aria-label="Protocols experience"
       >
-        <Motion
-          as="div"
-          class="mb-3 flex items-center gap-2.5"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(0, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+        <div
+          class="reveal-up mb-3 flex items-center gap-2.5"
+          :style="{ animationDelay: revealDelay(0, 80) }"
         >
           <h2 class="text-xl">Protocols</h2>
           <span class="count-badge">{{
             data.experience.protocols.length
           }}</span>
-        </Motion>
+        </div>
         <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
           Specialised communication standards I've implemented in production.
         </p>
         <ul class="grid gap-3 sm:grid-cols-2" role="list">
-          <Motion
+          <li
             v-for="(item, i) in data.experience.protocols"
             :key="item.id"
-            as="li"
-            class="card-outlined exp-card"
-            :initial="cardInitial"
-            :animate="cardVisible"
-            :transition="{
-              duration: 0.25,
-              delay: delay(i, 120),
-              easing: [0.2, 0, 0, 1],
-            }"
+            class="reveal-up experience-card-item"
+            :style="{ animationDelay: revealDelay(i, 120) }"
           >
-            <div class="mb-2.5 flex items-start justify-between gap-2">
-              <div class="exp-logo">
-                <img
-                  v-if="item['img-src']"
-                  :src="`/${item['img-src']}`"
-                  :alt="item.title"
-                />
-                <span v-else>{{ item.title.slice(0, 2) }}</span>
-              </div>
-              <div class="flex items-center gap-1.5">
-                <a
-                  v-if="item.link"
-                  :href="item.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="exp-link-btn"
-                  :aria-label="`Learn more about ${item.title}`"
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                    />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                </a>
-                <span
-                  v-if="isActive(item)"
-                  class="active-dot"
-                  aria-label="Currently using"
-                />
-                <span v-if="isActive(item)" class="active-label">Active</span>
-                <span v-else class="year-badge">{{
-                  sinceYear(item["date-from"])
-                }}</span>
-              </div>
-            </div>
-            <p class="exp-title">{{ item.title }}</p>
-            <p v-if="item.description" class="exp-desc">
-              {{ item.description }}
-            </p>
-            <div v-if="isActive(item)" class="mt-2.5">
-              <span class="year-badge">{{ durationLabel(item) }}</span>
-            </div>
-          </Motion>
+            <ExperienceCard
+              :item="item"
+              :active="isActive(item)"
+              :duration-label="durationLabel(item)"
+              :since-year="sinceYear(item['date-from'])"
+            />
+          </li>
         </ul>
       </section>
 
@@ -486,69 +334,33 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
         v-if="data.experience.frameworks.length > 0"
         aria-label="Frameworks experience"
       >
-        <Motion
-          as="div"
-          class="mb-3 flex items-center gap-2.5"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(0, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+        <div
+          class="reveal-up mb-3 flex items-center gap-2.5"
+          :style="{ animationDelay: revealDelay(0, 80) }"
         >
           <h2 class="text-xl">Frameworks</h2>
           <span class="count-badge">{{
             data.experience.frameworks.length
           }}</span>
-        </Motion>
+        </div>
         <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
           Backend and frontend frameworks I use to build fast, maintainable
           products.
         </p>
         <ul class="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3" role="list">
-          <Motion
+          <li
             v-for="(item, i) in data.experience.frameworks"
             :key="item.id"
-            as="li"
-            class="card-outlined"
-            style="padding: 14px"
-            :initial="cardInitial"
-            :animate="cardVisible"
-            :transition="{
-              duration: 0.25,
-              delay: delay(i, 120),
-              easing: [0.2, 0, 0, 1],
-            }"
+            class="reveal-up experience-card-item"
+            :style="{ animationDelay: revealDelay(i, 120) }"
           >
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <div class="exp-logo exp-logo--sm">
-                  <img
-                    v-if="item['img-src']"
-                    :src="`/${item['img-src']}`"
-                    :alt="item.title"
-                  />
-                  <span v-else>{{ item.title.slice(0, 2) }}</span>
-                </div>
-                <div>
-                  <p
-                    class="text-[13px] font-semibold text-[var(--color-on-surface)]"
-                  >
-                    {{ item.title }}
-                  </p>
-                  <p class="text-[11px] text-[var(--color-on-surface-variant)]">
-                    {{ durationLabel(item) }}
-                  </p>
-                </div>
-              </div>
-              <span
-                v-if="isActive(item)"
-                class="active-dot flex-shrink-0"
-                aria-label="Currently using"
-              />
-            </div>
-          </Motion>
+            <ExperienceCard
+              compact
+              :item="item"
+              :active="isActive(item)"
+              :duration-label="durationLabel(item)"
+            />
+          </li>
         </ul>
       </section>
 
@@ -557,34 +369,21 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
         v-if="data.experience.languages.length > 0"
         aria-label="Languages and databases"
       >
-        <Motion
-          as="div"
-          class="mb-3 flex items-center gap-2.5"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(0, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+        <div
+          class="reveal-up mb-3 flex items-center gap-2.5"
+          :style="{ animationDelay: revealDelay(0, 80) }"
         >
           <h2 class="text-xl">Languages &amp; Databases</h2>
-        </Motion>
+        </div>
         <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
           What I write and query in day-to-day engineering work.
         </p>
         <ul class="flex flex-wrap gap-2" role="list">
-          <Motion
+          <li
             v-for="(item, i) in data.experience.languages"
             :key="item.id"
-            as="li"
-            :initial="cardInitial"
-            :animate="cardVisible"
-            :transition="{
-              duration: 0.25,
-              delay: delay(i, 120),
-              easing: [0.2, 0, 0, 1],
-            }"
+            class="reveal-up"
+            :style="{ animationDelay: revealDelay(i, 120) }"
           >
             <span class="chip" :class="{ 'opacity-60': !isActive(item) }">
               <span
@@ -601,7 +400,7 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
                 {{ yearsLabel(item) }}
               </span>
             </span>
-          </Motion>
+          </li>
         </ul>
         <p
           class="mt-3 flex items-center gap-1.5 text-[12px] text-[var(--color-on-surface-variant)]"
@@ -613,30 +412,16 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
 
       <!-- Personal Project ───────────────────────────────────────────── -->
       <section v-if="data.project" aria-label="Personal projects">
-        <Motion
-          as="div"
-          class="mb-3"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.25,
-            delay: delay(0, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+        <div
+          class="reveal-up mb-3"
+          :style="{ animationDelay: revealDelay(0, 80) }"
         >
           <h2 class="text-xl">Personal Project</h2>
-        </Motion>
-        <Motion
-          as="div"
-          class="card-elevated"
+        </div>
+        <div
+          class="reveal-up card-elevated"
           style="padding: 24px; max-width: 720px"
-          :initial="cardInitial"
-          :animate="cardVisible"
-          :transition="{
-            duration: 0.3,
-            delay: delay(1, 80),
-            easing: [0.2, 0, 0, 1],
-          }"
+          :style="{ animationDelay: revealDelay(1, 80) }"
         >
           <p class="project-eyebrow">syamim.hakimi.dev</p>
           <h3
@@ -697,7 +482,7 @@ const { cardInitial, cardVisible, delay } = useMotionAnimation();
               </li>
             </ul>
           </div>
-        </Motion>
+        </div>
       </section>
     </div>
   </div>
@@ -744,84 +529,6 @@ h2 {
   padding: 2px 8px;
 }
 
-/* ── Card-outlined hover accent ─────────────────────────────────── */
-.card-outlined {
-  position: relative;
-  overflow: hidden;
-  transition:
-    border-color 200ms cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 200ms cubic-bezier(0.2, 0, 0, 1);
-}
-.card-outlined::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--color-cta);
-  border-radius: 3px 0 0 3px;
-  transform: scaleY(0);
-  transform-origin: center;
-  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
-}
-.card-outlined:hover::before {
-  transform: scaleY(1);
-}
-.card-outlined:hover {
-  border-color: var(--color-cta);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-}
-[data-theme="dark"] .card-outlined:hover {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-}
-
-/* ── Experience card internals ──────────────────────────────────── */
-.exp-card {
-  display: flex;
-  flex-direction: column;
-}
-.exp-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-variant);
-  border: 1px solid var(--color-outline);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-on-surface-variant);
-}
-.exp-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 5px;
-}
-.exp-logo--sm {
-  width: 30px;
-  height: 30px;
-}
-.exp-logo--sm img {
-  padding: 4px;
-}
-.exp-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-on-surface);
-}
-.exp-desc {
-  font-size: 12px;
-  color: var(--color-on-surface-variant);
-  margin-top: 6px;
-  line-height: 1.55;
-  flex: 1;
-}
-
 /* ── Active indicators ──────────────────────────────────────────── */
 .active-dot {
   width: 7px;
@@ -831,24 +538,6 @@ h2 {
   flex-shrink: 0;
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
   display: inline-block;
-}
-.active-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: #16a34a;
-}
-[data-theme="dark"] .active-label {
-  color: #4ade80;
-}
-.year-badge {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--color-on-surface-variant);
-  background: var(--color-surface-variant);
-  border: 1px solid var(--color-outline);
-  border-radius: 999px;
-  padding: 2px 7px;
-  white-space: nowrap;
 }
 
 /* ── Languages chips ────────────────────────────────────────────── */
@@ -893,41 +582,6 @@ h2 {
   font-weight: 600;
   opacity: 0.5;
   margin-left: 2px;
-}
-
-/* ── External link button on exp cards ──────────────────────────── */
-.exp-link-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  color: var(--color-on-surface-variant);
-  background: var(--color-surface-variant);
-  transition:
-    color 150ms,
-    background 150ms;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.exp-link-btn:hover {
-  color: var(--color-cta);
-  background: rgba(37, 99, 235, 0.08);
-}
-.exp-link-btn:active {
-  background: rgba(37, 99, 235, 0.16);
-  transform: scale(0.95);
-}
-[data-theme="dark"] .exp-link-btn:hover {
-  background: rgba(96, 165, 250, 0.1);
-}
-[data-theme="dark"] .exp-link-btn:active {
-  background: rgba(96, 165, 250, 0.2);
-}
-.exp-link-btn:focus-visible {
-  outline: 2px solid var(--color-cta);
-  outline-offset: 2px;
 }
 
 /* ── Tech stack tag as link ─────────────────────────────────────── */

@@ -13,6 +13,7 @@
  */
 import { ref, reactive, computed, onUnmounted } from "vue";
 import emailjs from "@emailjs/browser";
+import { Motion } from "motion-v";
 
 const SERVICE_ID = import.meta.env.PUBLIC_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.PUBLIC_EMAILJS_TEMPLATE_ID as string;
@@ -39,6 +40,9 @@ const status = ref<"idle" | "sending" | "success" | "error">("idle");
 const submitError = ref("");
 
 let successTimer: ReturnType<typeof setTimeout> | null = null;
+
+const feedbackInitial = { opacity: 0, y: 10, scale: 0.985 };
+const feedbackVisible = { opacity: 1, y: 0, scale: 1 };
 
 /* ── Validation ──────────────────────────────────────────────────────── */
 
@@ -126,17 +130,14 @@ onUnmounted(() => {
 
 <template>
   <!-- Info card + form card ──────────────────────────────────────────── -->
-  <section
-    class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-6 md:p-8"
-    aria-label="Contact"
-  >
+  <section class="panel-shell grid gap-5 p-6 md:p-8" aria-label="Contact">
     <!-- Two-column: info card + form card -->
     <div
       class="grid gap-5 md:grid-cols-[minmax(280px,0.85fr)_minmax(0,1.15fr)] md:items-start"
     >
       <!-- Info card (static) ──────────────────────────────────────── -->
       <aside
-        class="grid gap-5 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-[22px] md:sticky md:top-24"
+        class="panel-shell panel-shell--lg grid gap-5 p-[22px] md:sticky md:top-24"
         aria-label="Contact information"
       >
         <!-- Info blocks -->
@@ -182,15 +183,15 @@ onUnmounted(() => {
         <!-- Topic chips -->
         <div class="flex flex-wrap gap-2.5">
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
             >Frontend systems</span
           >
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
             >UI polish</span
           >
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
             >Portfolio work</span
           >
         </div>
@@ -198,7 +199,7 @@ onUnmounted(() => {
 
       <!-- Form card ───────────────────────────────────────────────── -->
       <section
-        class="grid gap-5 rounded-[24px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-[22px]"
+        class="panel-shell panel-shell--lg grid gap-5 p-[22px]"
         aria-label="Send a message"
       >
         <!-- Form header -->
@@ -215,12 +216,16 @@ onUnmounted(() => {
         </div>
 
         <!-- Snackbar — success ──────────────────────────────────── -->
-        <div
+        <Motion
           v-if="status === 'success'"
+          as="div"
           class="flex items-start justify-between gap-4 rounded-[18px] border border-[color-mix(in_srgb,#166534_25%,var(--color-surface))] bg-[color-mix(in_srgb,rgba(22,101,52,0.12)_70%,var(--color-surface))] px-4 py-3.5 text-[#166534] dark:border-[color-mix(in_srgb,#86efac_25%,var(--color-surface))] dark:bg-[color-mix(in_srgb,rgba(134,239,172,0.14)_70%,var(--color-surface))] dark:text-[#86efac]"
           role="status"
           aria-live="polite"
           aria-atomic="true"
+          :initial="feedbackInitial"
+          :animate="feedbackVisible"
+          :transition="{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }"
         >
           <div>
             <strong class="block text-[14px] font-semibold"
@@ -231,15 +236,19 @@ onUnmounted(() => {
               automatically.
             </p>
           </div>
-        </div>
+        </Motion>
 
         <!-- Snackbar — error ─────────────────────────────────────── -->
-        <div
+        <Motion
           v-if="status === 'error'"
+          as="div"
           class="flex items-start justify-between gap-4 rounded-[18px] border border-[color-mix(in_srgb,var(--color-error)_28%,var(--color-surface))] bg-[color-mix(in_srgb,var(--color-error)_10%,var(--color-surface))] px-4 py-3.5 text-[var(--color-error)]"
           role="alert"
           aria-live="assertive"
           aria-atomic="true"
+          :initial="feedbackInitial"
+          :animate="feedbackVisible"
+          :transition="{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }"
         >
           <div>
             <strong class="block text-[14px] font-semibold"
@@ -254,7 +263,7 @@ onUnmounted(() => {
           >
             Retry
           </button>
-        </div>
+        </Motion>
 
         <!-- Form ────────────────────────────────────────────────── -->
         <form class="grid gap-[18px]" novalidate @submit.prevent="submit">
@@ -394,7 +403,7 @@ onUnmounted(() => {
             <button
               type="submit"
               :disabled="status === 'sending'"
-              class="inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-full border-0 bg-[var(--color-cta)] px-5 text-[14px] font-bold text-white transition-all duration-150 hover:bg-[var(--color-accent-hover)] hover:-translate-y-px disabled:pointer-events-none disabled:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto sm:min-w-[172px]"
+              class="button-primary w-full gap-2.5 disabled:pointer-events-none disabled:opacity-90 sm:w-auto sm:min-w-[172px]"
               :aria-busy="status === 'sending'"
             >
               <!-- Spinner -->

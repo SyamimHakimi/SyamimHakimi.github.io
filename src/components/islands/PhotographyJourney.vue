@@ -10,14 +10,13 @@
  * whenever data-theme changes (MutationObserver), keeping charts in sync with
  * the user's light/dark preference.
  *
- * Scroll entrance animations use motion-v; stagger and translate are skipped
- * when prefers-reduced-motion is active.
+ * Scroll entrance animations use lightweight CSS reveal classes; motion is
+ * skipped when prefers-reduced-motion is active.
  */
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import VueApexCharts from "vue3-apexcharts";
-import { Motion } from "motion-v";
 import { useStatistics } from "../../lib/composables/useStatistics";
-import { useMotionAnimation } from "../../lib/composables/useMotionAnimation";
+import { useReducedMotion } from "../../lib/composables/useReducedMotion";
 import {
   buildCumulativeLineOptions,
   buildCumulativeLineSeries,
@@ -55,7 +54,7 @@ function resolvePalette(): ChartPalette {
   };
 }
 
-const { prefersReducedMotion } = useMotionAnimation();
+const { prefersReducedMotion } = useReducedMotion();
 
 let themeObserver: MutationObserver | null = null;
 
@@ -80,7 +79,10 @@ const lineData = computed(() =>
 );
 const lineOptions = computed(() =>
   buildCumulativeLineOptions(
-    { palette: palette.value, prefersReducedMotion },
+    {
+      palette: palette.value,
+      prefersReducedMotion: prefersReducedMotion.value,
+    },
     lineData.value.categories,
     Math.max(0, lineData.value.series[0]?.data.length - 1),
   ),
@@ -92,7 +94,10 @@ const barData = computed(() =>
 );
 const barOptions = computed(() =>
   buildRecipeBarOptions(
-    { palette: palette.value, prefersReducedMotion },
+    {
+      palette: palette.value,
+      prefersReducedMotion: prefersReducedMotion.value,
+    },
     barData.value.categories,
   ),
 );
@@ -102,7 +107,10 @@ const heatmapData = computed(() =>
   buildHeatmapSeries(statistics.value?.photoStats),
 );
 const heatmapOptions = computed(() =>
-  buildHeatmapOptions({ palette: palette.value, prefersReducedMotion }),
+  buildHeatmapOptions({
+    palette: palette.value,
+    prefersReducedMotion: prefersReducedMotion.value,
+  }),
 );
 
 // ── Donut (focal lengths) ──────────────────────────────────────────────────
@@ -114,7 +122,10 @@ const donutTotal = computed(() =>
 );
 const donutOptions = computed(() =>
   buildFocalLengthOptions(
-    { palette: palette.value, prefersReducedMotion },
+    {
+      palette: palette.value,
+      prefersReducedMotion: prefersReducedMotion.value,
+    },
     donutData.value.labels,
     donutTotal.value,
   ),
@@ -126,7 +137,8 @@ const lineSrSummary = computed(() => {
   if (!s) return "";
   const total = s.stats.total_photos ?? 0;
   const firstYear = lineData.value.categories[0] ?? "";
-  const lastYear = lineData.value.categories[lineData.value.categories.length - 1] ?? "";
+  const lastYear =
+    lineData.value.categories[lineData.value.categories.length - 1] ?? "";
   return `Cumulative photo count from ${firstYear} to ${lastYear}, reaching ${total.toLocaleString()} total photos.`;
 });
 
@@ -164,12 +176,8 @@ const heatmapMaxPhotos = computed(() => {
   return max;
 });
 
-// ── Motion helpers ─────────────────────────────────────────────────────────
-const cardInitial = prefersReducedMotion ? {} : { opacity: 0, y: 16 };
-const cardVisible = { opacity: 1, y: 0 };
-
-function delay(i: number, base = 0, step = 60): number {
-  return prefersReducedMotion ? 0 : (base + i * step) / 1000;
+function revealDelay(i: number, base = 0, step = 60): string {
+  return prefersReducedMotion.value ? "0ms" : `${base + i * step}ms`;
 }
 </script>
 
@@ -265,7 +273,7 @@ function delay(i: number, base = 0, step = 60): number {
   <div v-else-if="statistics" class="space-y-3">
     <!-- Stat row — 2-col mobile, 4-col sm+ -->
     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <Motion
+      <div
         v-for="(stat, i) in [
           {
             eyebrow: 'Outings',
@@ -290,11 +298,8 @@ function delay(i: number, base = 0, step = 60): number {
           },
         ]"
         :key="stat.eyebrow"
-        as="div"
-        class="card-elevated"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{ duration: 0.3, delay: delay(i), easing: [0.2, 0, 0, 1] }"
+        class="reveal-up card-elevated"
+        :style="{ animationDelay: revealDelay(i) }"
       >
         <p
           class="mb-2.5 text-[10px] font-medium uppercase tracking-[.08em] text-[var(--color-on-surface-variant)]"
@@ -316,22 +321,15 @@ function delay(i: number, base = 0, step = 60): number {
         <p class="mt-1 text-xs text-[var(--color-on-surface-variant)]">
           {{ stat.label }}
         </p>
-      </Motion>
+      </div>
     </div>
 
     <!-- Chart row 1 — stacked mobile, cumulative line(3fr) + bar(2fr) on sm+ -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-[3fr_2fr]">
       <!-- Cumulative photos line chart -->
-      <Motion
-        as="div"
-        class="card-outlined overflow-visible"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{
-          duration: 0.3,
-          delay: delay(0, 240),
-          easing: [0.2, 0, 0, 1],
-        }"
+      <div
+        class="reveal-up card-outlined overflow-visible"
+        :style="{ animationDelay: revealDelay(0, 240) }"
       >
         <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
           Photos Over Time
@@ -347,19 +345,12 @@ function delay(i: number, base = 0, step = 60): number {
           aria-label="Cumulative photo count area chart"
         />
         <p v-if="lineSrSummary" class="sr-only">{{ lineSrSummary }}</p>
-      </Motion>
+      </div>
 
       <!-- Film recipe bar chart -->
-      <Motion
-        as="div"
-        class="card-outlined overflow-visible"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{
-          duration: 0.3,
-          delay: delay(1, 240),
-          easing: [0.2, 0, 0, 1],
-        }"
+      <div
+        class="reveal-up card-outlined overflow-visible"
+        :style="{ animationDelay: revealDelay(1, 240) }"
       >
         <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
           Film Recipes
@@ -375,22 +366,15 @@ function delay(i: number, base = 0, step = 60): number {
           aria-label="Film recipe usage horizontal bar chart"
         />
         <p v-if="barSrSummary" class="sr-only">{{ barSrSummary }}</p>
-      </Motion>
+      </div>
     </div>
 
     <!-- Chart row 2 — stacked mobile, heatmap(2fr) + donut(1fr) on sm+ -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr]">
       <!-- Shooting calendar heatmap -->
-      <Motion
-        as="div"
-        class="card-outlined overflow-visible"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{
-          duration: 0.3,
-          delay: delay(0, 360),
-          easing: [0.2, 0, 0, 1],
-        }"
+      <div
+        class="reveal-up card-outlined overflow-visible"
+        :style="{ animationDelay: revealDelay(0, 360) }"
       >
         <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
           Shooting Calendar
@@ -426,19 +410,12 @@ function delay(i: number, base = 0, step = 60): number {
           ></div>
           <span>{{ heatmapMaxPhotos }}+ photos</span>
         </div>
-      </Motion>
+      </div>
 
       <!-- Focal lengths donut -->
-      <Motion
-        as="div"
-        class="card-outlined flex flex-col overflow-visible"
-        :initial="cardInitial"
-        :animate="cardVisible"
-        :transition="{
-          duration: 0.3,
-          delay: delay(1, 360),
-          easing: [0.2, 0, 0, 1],
-        }"
+      <div
+        class="reveal-up card-outlined flex flex-col overflow-visible"
+        :style="{ animationDelay: revealDelay(1, 360) }"
       >
         <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
           Focal Lengths
@@ -457,7 +434,7 @@ function delay(i: number, base = 0, step = 60): number {
           />
           <p v-if="donutSrSummary" class="sr-only">{{ donutSrSummary }}</p>
         </div>
-      </Motion>
+      </div>
     </div>
   </div>
 </template>
