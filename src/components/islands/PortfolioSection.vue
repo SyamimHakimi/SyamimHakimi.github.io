@@ -186,7 +186,9 @@ function revealDelay(index: number, base = 0): string {
             class="h-4 w-px bg-[var(--color-outline)]"
             aria-hidden="true"
           />
-          <span :class="item.kind === 'tag' ? 'hero-domain-tag' : 'hero-stat'">
+          <span
+            :class="item.kind === 'tag' ? 'pill pill--accent' : 'stat-inline'"
+          >
             <component
               :is="item.icon"
               :size="item.kind === 'tag' ? 11 : 13"
@@ -233,10 +235,13 @@ function revealDelay(index: number, base = 0): string {
             class="reveal-up"
             :style="{ animationDelay: revealDelay(i, 120) }"
           >
-            <span class="chip" :class="{ 'opacity-60': !isActive(item) }">
+            <span
+              class="pill pill--soft text-[13px] text-[var(--color-on-surface)]"
+              :class="{ 'opacity-60': !isActive(item) }"
+            >
               <span
                 v-if="isActive(item)"
-                class="active-dot"
+                class="status-dot"
                 aria-label="Currently using"
               />
               {{ item.title }}
@@ -253,7 +258,7 @@ function revealDelay(index: number, base = 0): string {
         <p
           class="mt-3 flex items-center gap-1.5 text-[12px] text-[var(--color-on-surface-variant)]"
         >
-          <span class="active-dot" aria-hidden="true" />
+          <span class="status-dot" aria-hidden="true" />
           Currently using
         </p>
       </section>
@@ -270,7 +275,7 @@ function revealDelay(index: number, base = 0): string {
           style="padding: 24px; max-width: 720px"
           :style="{ animationDelay: revealDelay(1, 80) }"
         >
-          <p class="project-eyebrow">syamim.hakimi.dev</p>
+          <p class="eyebrow-accent">syamim.hakimi.dev</p>
           <h3
             class="mt-1 text-[20px] font-normal text-[var(--color-on-surface)]"
           >
@@ -301,7 +306,7 @@ function revealDelay(index: number, base = 0): string {
                   :href="tech.link"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="tag tag--link"
+                  class="tag tag-link"
                 >
                   <img
                     v-if="tech['img-src']"
@@ -336,88 +341,8 @@ function revealDelay(index: number, base = 0): string {
 </template>
 
 <style scoped>
-.hero-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-on-surface);
-}
-
-.hero-domain-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  background: rgba(37, 99, 235, 0.08);
-  color: var(--color-cta);
-  border: 1px solid rgba(37, 99, 235, 0.18);
-}
-
-[data-theme="dark"] .hero-domain-tag {
-  background: rgba(96, 165, 250, 0.1);
-  border-color: rgba(96, 165, 250, 0.25);
-}
-
 h2 {
   font-family: "DM Serif Display", serif;
-}
-
-.count-badge {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-on-surface-variant);
-  background: var(--color-surface-variant);
-  border: 1px solid var(--color-outline);
-  border-radius: 999px;
-  padding: 2px 8px;
-}
-
-.active-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #22c55e;
-  flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
-  display: inline-block;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  background: var(--color-surface-variant);
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-on-surface);
-  border: 1px solid var(--color-outline);
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-on-surface-variant);
-  border: 1px solid var(--color-outline);
-}
-
-.project-eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--color-cta);
 }
 
 .chip-years {
@@ -425,29 +350,5 @@ h2 {
   font-weight: 600;
   opacity: 0.5;
   margin-left: 2px;
-}
-
-.tag--link {
-  cursor: pointer;
-  transition:
-    color 150ms,
-    border-color 150ms,
-    background 150ms;
-  text-decoration: none;
-}
-
-.tag--link:hover {
-  color: var(--color-cta);
-  border-color: var(--color-cta);
-  background: rgba(37, 99, 235, 0.06);
-}
-
-[data-theme="dark"] .tag--link:hover {
-  background: rgba(96, 165, 250, 0.08);
-}
-
-.tag--link:focus-visible {
-  outline: 2px solid var(--color-cta);
-  outline-offset: 2px;
 }
 </style>

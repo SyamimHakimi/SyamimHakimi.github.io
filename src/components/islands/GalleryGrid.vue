@@ -200,8 +200,9 @@ const SKELETON_COUNT = 12;
       >
         <button
           type="button"
-          class="filter-pill"
-          :class="{ active: activeTheme === null }"
+          class="pill pill-button px-4 text-[13px]"
+          :aria-pressed="activeTheme === null"
+          :class="{ 'is-active': activeTheme === null }"
           @click="activeTheme = null"
         >
           All
@@ -210,8 +211,9 @@ const SKELETON_COUNT = 12;
           v-for="theme in availableThemes"
           :key="theme"
           type="button"
-          class="filter-pill"
-          :class="{ active: activeTheme === theme }"
+          class="pill pill-button px-4 text-[13px]"
+          :aria-pressed="activeTheme === theme"
+          :class="{ 'is-active': activeTheme === theme }"
           @click="activeTheme = theme"
         >
           {{ theme }}
@@ -459,33 +461,5 @@ const SKELETON_COUNT = 12;
   .gallery-media-frame {
     aspect-ratio: 4 / 5;
   }
-}
-
-.filter-pill {
-  padding: 7px 16px;
-  min-height: 36px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--color-outline);
-  background: var(--color-surface);
-  color: var(--color-on-surface-variant);
-  cursor: pointer;
-  transition: all 150ms cubic-bezier(0.2, 0, 0, 1);
-  touch-action: manipulation;
-}
-.filter-pill:hover {
-  border-color: var(--color-cta);
-  color: var(--color-on-surface);
-}
-.filter-pill.active {
-  background: var(--color-cta);
-  border-color: var(--color-cta);
-  color: #fff;
-  font-weight: 600;
-}
-.filter-pill:focus-visible {
-  outline: 2px solid var(--color-cta);
-  outline-offset: 2px;
 }
 </style>
