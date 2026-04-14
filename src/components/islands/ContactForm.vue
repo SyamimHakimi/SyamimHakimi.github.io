@@ -182,15 +182,15 @@ onUnmounted(() => {
         <!-- Topic chips -->
         <div class="flex flex-wrap gap-2.5">
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
             >Frontend systems</span
           >
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
             >UI polish</span
           >
           <span
-            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft,rgba(37,99,235,0.1)))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
+            class="inline-flex min-h-[36px] items-center rounded-full border border-[var(--color-outline)] bg-[color-mix(in_srgb,var(--color-surface-variant)_82%,var(--color-cta-soft))] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)]"
             >Portfolio work</span
           >
         </div>
@@ -394,7 +394,7 @@ onUnmounted(() => {
             <button
               type="submit"
               :disabled="status === 'sending'"
-              class="inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-full border-0 bg-[var(--color-cta)] px-5 text-[14px] font-bold text-white transition-all duration-150 hover:bg-[#1d4ed8] hover:-translate-y-px disabled:pointer-events-none disabled:opacity-90 dark:hover:bg-[#93c5fd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto sm:min-w-[172px]"
+              class="inline-flex w-full min-h-[48px] items-center justify-center gap-2.5 rounded-full border-0 bg-[var(--color-cta)] px-5 text-[14px] font-bold text-white transition-all duration-150 hover:bg-[var(--color-accent-hover)] hover:-translate-y-px disabled:pointer-events-none disabled:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto sm:min-w-[172px]"
               :aria-busy="status === 'sending'"
             >
               <!-- Spinner -->

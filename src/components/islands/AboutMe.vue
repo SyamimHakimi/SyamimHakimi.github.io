@@ -124,7 +124,7 @@ function boardgameTags(tags: string | undefined): string[] {
             <!-- Avatar + name row -->
             <div class="flex items-start gap-3">
               <div
-                class="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[18px] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)] sm:h-[76px] sm:w-[76px] sm:rounded-[24px]"
+                class="flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-[18px] bg-[color:var(--color-cta-soft)] text-[var(--color-cta)] sm:h-[76px] sm:w-[76px] sm:rounded-[24px]"
                 aria-hidden="true"
               >
                 <User :size="24" :stroke-width="1.75" class="sm:hidden" />
@@ -267,13 +267,13 @@ function boardgameTags(tags: string | undefined): string[] {
                     :href="item.link"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
+                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft)] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
                   >
                     {{ gearMeta(item.type) }}
                   </a>
                   <span
                     v-else
-                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
+                    class="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-[color:var(--color-cta-soft)] px-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
                   >
                     {{ gearMeta(item.type) }}
                   </span>
@@ -340,7 +340,7 @@ function boardgameTags(tags: string | undefined): string[] {
               role="listitem"
             >
               <span
-                class="inline-flex min-h-[28px] items-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] px-2.5 text-xs font-bold text-[var(--color-cta)]"
+                class="inline-flex min-h-[28px] items-center rounded-full bg-[color:var(--color-cta-soft)] px-2.5 text-xs font-bold text-[var(--color-cta)]"
               >
                 {{ game.score }}
               </span>

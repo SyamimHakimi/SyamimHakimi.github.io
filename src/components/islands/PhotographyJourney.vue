@@ -34,7 +34,7 @@ const { statistics, loading, error } = useStatistics();
 
 // ── Chart palette ──────────────────────────────────────────────────────────
 const palette = ref<ChartPalette>({
-  cta: "#2563eb",
+  cta: "#b45309",
   onSurface: "#09090b",
   onSurfaceVariant: "#52525b",
   outline: "#e4e4e7",
@@ -46,7 +46,7 @@ function resolvePalette(): ChartPalette {
   const s = getComputedStyle(document.documentElement);
   const get = (v: string, fb: string) => s.getPropertyValue(v).trim() || fb;
   return {
-    cta: get("--color-cta", "#2563eb"),
+    cta: get("--color-cta", "#b45309"),
     onSurface: get("--color-on-surface", "#09090b"),
     onSurfaceVariant: get("--color-on-surface-variant", "#52525b"),
     outline: get("--color-outline", "#e4e4e7"),
