@@ -87,7 +87,7 @@ function icon(name: string, size = 20): string {
           class:list={[
             "flex min-h-[48px] w-full flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 transition-colors",
             isActive(link.href)
-              ? "bg-[rgba(37,99,235,0.10)] dark:bg-[rgba(96,165,250,0.12)] text-[var(--color-cta)]"
+              ? "bg-[color:var(--color-cta-soft)] text-[var(--color-cta)]"
               : "text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]",
           ]}
         >
@@ -190,7 +190,7 @@ function icon(name: string, size = 20): string {
           class:list={[
             "flex items-center gap-3.5 rounded-r-3xl py-2.5 pl-5 text-sm font-medium transition-colors",
             isActive(link.href)
-              ? "bg-[rgba(37,99,235,0.10)] dark:bg-[rgba(96,165,250,0.12)] text-[var(--color-cta)]"
+              ? "bg-[color:var(--color-cta-soft)] text-[var(--color-cta)]"
               : "text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-variant)] hover:text-[var(--color-on-surface)]",
           ]}
         >

@@ -16,12 +16,12 @@ import {
 } from "./statisticsCharts";
 
 const palette: ChartPalette = {
-  cta: "#2563eb",
-  onSurface: "#09090b",
-  onSurfaceVariant: "#52525b",
-  outline: "#e4e4e7",
+  cta: "#b45309",
+  onSurface: "#1c1917",
+  onSurfaceVariant: "#78716c",
+  outline: "#e7e5e4",
   surface: "#ffffff",
-  surfaceVariant: "#f4f4f5",
+  surfaceVariant: "#fef3c7",
 };
 
 // ── toChartEntries ─────────────────────────────────────────────────────────

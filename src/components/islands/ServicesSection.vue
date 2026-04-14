@@ -186,7 +186,7 @@ function iconForService(title: string, groupId: number) {
           <div class="space-y-3">
             <div class="flex items-center gap-4">
               <span
-                class="flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--color-cta)_20%,transparent)] bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-sm font-semibold text-[var(--color-cta)]"
+                class="flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--color-cta)_20%,transparent)] bg-[color:var(--color-cta-soft)] text-sm font-semibold text-[var(--color-cta)]"
               >
                 {{ String(id).padStart(2, "0") }}
               </span>
@@ -244,7 +244,7 @@ function iconForService(title: string, groupId: number) {
             <div class="flex items-start justify-between gap-3">
               <span class="flex h-12 w-12 items-center justify-center">
                 <span
-                  class="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--color-cta-soft,rgba(37,99,235,0.1))] text-[var(--color-cta)]"
+                  class="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--color-cta-soft)] text-[var(--color-cta)]"
                 >
                   <component
                     :is="iconForService(service.title, id)"
@@ -297,7 +297,7 @@ function iconForService(title: string, groupId: number) {
 
       <section
         id="services-cta"
-        class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[color:color-mix(in_srgb,var(--color-surface)_94%,var(--color-cta-soft,rgba(37,99,235,0.1)))] p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end"
+        class="grid gap-5 rounded-[28px] border border-[var(--color-outline)] bg-[color:color-mix(in_srgb,var(--color-surface)_94%,var(--color-cta-soft))] p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end"
         aria-labelledby="services-cta-title"
       >
         <div class="space-y-3">
@@ -321,7 +321,7 @@ function iconForService(title: string, groupId: number) {
 
         <a
           href="/contact"
-          class="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--color-cta)] px-5 text-sm font-medium text-white shadow-[0_10px_30px_rgba(37,99,235,0.2)] transition hover:bg-[var(--color-cta-hover)]"
+          class="inline-flex min-h-12 items-center justify-center rounded-full bg-[var(--color-cta)] px-5 text-sm font-medium text-white shadow-[0_10px_30px_color-mix(in_srgb,var(--color-cta)_20%,transparent)] transition hover:bg-[var(--color-accent-hover)]"
         >
           Start a Conversation
         </a>
