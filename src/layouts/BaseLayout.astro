@@ -44,12 +44,16 @@ const ogImage = new URL(image, Astro.site).toString();
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Favicons -->
+    <!--
+      SVG favicon with embedded @media (prefers-color-scheme: dark) — the only
+      cross-browser way to adapt the favicon to OS dark mode. The `media`
+      attribute on <link rel="icon"> is Safari-only and ignored by Chrome/Edge.
+      PNG/ICO serve as fallbacks for older browsers.
+    -->
+    <link rel="icon" type="image/svg+xml" href="/media/logos/favicon.svg" />
     <link rel="icon" href="/media/logos/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/media/logos/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/media/logos/favicon-16x16.png" />
-    <!-- SVG favicon: dark-small for dark OS theme, light-small for light OS theme -->
-    <link rel="icon" type="image/svg+xml" href="/media/logos/dark-small.svg" media="(prefers-color-scheme: dark)" />
-    <link rel="icon" type="image/svg+xml" href="/media/logos/light-small.svg" media="(prefers-color-scheme: light)" />
     <link rel="apple-touch-icon" href="/media/logos/apple-touch-icon.png" />
     <link rel="manifest" href="/media/logos/site.webmanifest" />
 
