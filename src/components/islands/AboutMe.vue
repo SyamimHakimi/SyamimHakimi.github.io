@@ -221,7 +221,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Photography Gear ─────────────────────────────────────────── -->
         <section
           v-if="data.gear.length > 0"
-          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
+          class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Photography gear"
         >
           <!-- Section header -->
@@ -286,7 +286,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Favourite Boardgames ─────────────────────────────────────── -->
         <section
           v-if="data.boardgames.length > 0"
-          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
+          class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Favourite boardgames"
         >
           <!-- Section header -->
@@ -363,7 +363,7 @@ function boardgameTags(tags: string | undefined): string[] {
         <!-- Connect ─────────────────────────────────────────────────── -->
         <section
           v-if="data.socialMedia.length > 0"
-          class="rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
+          class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Connect"
         >
           <!-- Section header -->
@@ -386,7 +386,7 @@ function boardgameTags(tags: string | undefined): string[] {
               :target="social.link.startsWith('mailto:') ? undefined : '_blank'"
               rel="noopener noreferrer"
               role="listitem"
-              class="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
+              class="inline-flex max-w-full min-h-[40px] items-center gap-2 rounded-full border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-3.5 text-[13px] font-medium text-[var(--color-on-surface)] transition-all duration-150 hover:border-[var(--color-cta)] hover:text-[var(--color-cta)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2"
             >
               <img
                 v-if="socialIcon(social.name)"
