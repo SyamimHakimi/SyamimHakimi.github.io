@@ -4,7 +4,6 @@
  * Island: client:visible
  * Composable: useAboutMe()
  */
-import { computed } from "vue";
 import { User, Camera, Layers3, MessageSquare } from "lucide-vue-next";
 import {
   useAboutMe,
@@ -16,12 +15,6 @@ import ErrorAlert from "../ui/ErrorAlert.vue";
 const { data, loading, error } = useAboutMe();
 
 /* ── Gear helpers ──────────────────────────────────────────────────────── */
-
-const GEAR_TYPE_LABEL: Record<number, string> = {
-  1: "Camera Body",
-  2: "Lenses",
-  3: "Lenses",
-};
 
 const GEAR_TYPE_META: Record<number, string> = {
   1: "Body",
@@ -58,16 +51,6 @@ const SOCIAL_ICON: Record<string, string> = {
 function socialIcon(name: string): string | null {
   return SOCIAL_ICON[name.toLowerCase()] ?? null;
 }
-
-const gearGroups = computed<[string, PhotographyGear[]][]>(() => {
-  const groups = new Map<string, PhotographyGear[]>();
-  for (const item of data.value.gear) {
-    const label = GEAR_TYPE_LABEL[item.type] ?? "Accessories";
-    if (!groups.has(label)) groups.set(label, []);
-    groups.get(label)!.push(item);
-  }
-  return [...groups.entries()];
-});
 
 function gearMeta(type: number): string {
   return GEAR_TYPE_META[type] ?? "";
@@ -131,7 +114,9 @@ function boardgameTags(tags: string | undefined): string[] {
                 <User :size="30" :stroke-width="1.75" class="hidden sm:block" />
               </div>
               <div>
-                <h2 class="font-serif text-[1.625rem] leading-none sm:text-[2.125rem]">
+                <h2
+                  class="font-serif text-[1.625rem] leading-none sm:text-[2.125rem]"
+                >
                   {{ data.profile.Name }}
                 </h2>
                 <p
@@ -189,7 +174,6 @@ function boardgameTags(tags: string | undefined): string[] {
                 >
               </div>
             </div>
-
           </div>
 
           <!-- Visual panel (decorative, hidden on mobile) -->
@@ -231,122 +215,60 @@ function boardgameTags(tags: string | undefined): string[] {
             subtitle="Grouped by type — the current carry setup for street and travel."
           />
 
-          <!--
-            Bento-style gear layout:
-            • Camera Body group → hero card: horizontal layout on sm+, image prominent
-            • Lenses group → compact 2–3 column grid, image + info stacked
-            Both use elevated card style with warm image background (no cold border).
-          -->
-          <div class="grid gap-4">
-            <div v-for="[label, items] in gearGroups" :key="label">
-
-              <!-- Group label -->
-              <p class="mb-2.5 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
-                {{ label }}
-              </p>
-
-              <!-- Camera Body — single wide hero card -->
-              <div v-if="items.length === 1 && items[0].type === 1" class="grid gap-3">
-                <article
-                  v-for="item in items"
-                  :key="item.id"
-                  class="flex flex-col gap-4 rounded-2xl bg-[var(--color-surface)] p-4 shadow-[0_2px_10px_rgba(0,0,0,0.07)] sm:flex-row sm:items-center sm:gap-5 sm:p-5"
-                  style="box-shadow: 0 2px 10px color-mix(in srgb, var(--color-on-surface) 7%, transparent);"
-                >
-                  <!-- Hero image — larger, warm tint background -->
-                  <div
-                    v-if="gearImage(item)"
-                    class="flex shrink-0 items-center justify-center overflow-hidden rounded-xl sm:h-[130px] sm:w-[200px]"
-                    style="background: var(--color-surface-variant); height: 120px;"
-                  >
-                    <img
-                      :src="gearImage(item)!"
-                      :alt="item.brand + ' ' + item.name"
-                      class="h-full w-auto max-w-full object-contain p-3"
-                      width="240"
-                      height="130"
-                      loading="lazy"
-                    />
-                  </div>
-                  <!-- Info -->
-                  <div class="flex flex-1 flex-col gap-2">
-                    <p class="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
-                      {{ item.brand }}
-                    </p>
-                    <strong class="text-[17px] font-semibold leading-snug text-[var(--color-on-surface)] sm:text-[19px]">
-                      {{ item.name }}
-                    </strong>
-                    <div class="mt-1 flex items-center gap-2">
-                      <span class="inline-flex items-center rounded-full bg-[color:var(--color-cta-soft)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]">
-                        {{ gearMeta(item.type) }}
-                      </span>
-                      <a
-                        v-if="item.link"
-                        :href="item.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="inline-flex min-h-[32px] items-center text-[12px] font-medium text-[var(--color-on-surface-variant)] underline-offset-2 hover:text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
-                      >
-                        View specs ↗
-                      </a>
-                    </div>
-                  </div>
-                </article>
+          <!-- Compact flat list — one row per item: thumbnail · brand/name · type badge -->
+          <div class="grid gap-2">
+            <a
+              v-for="item in data.gear"
+              :key="item.id"
+              :href="item.link || undefined"
+              :target="item.link ? '_blank' : undefined"
+              rel="noopener noreferrer"
+              :role="item.link ? 'link' : undefined"
+              class="flex min-h-[56px] items-center gap-3 rounded-xl px-3 py-2"
+              :class="
+                item.link
+                  ? 'hover:bg-[var(--color-surface-variant)] transition-colors duration-150 cursor-pointer'
+                  : 'cursor-default'
+              "
+              style="background: var(--color-surface)"
+            >
+              <!-- Thumbnail -->
+              <div
+                class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg"
+                style="background: var(--color-surface-variant)"
+              >
+                <img
+                  v-if="gearImage(item)"
+                  :src="gearImage(item)!"
+                  :alt="item.brand + ' ' + item.name"
+                  class="h-full w-full object-contain p-1"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                />
               </div>
 
-              <!-- Lenses — compact 2-column grid -->
-              <div v-else class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                <article
-                  v-for="item in items"
-                  :key="item.id"
-                  class="flex flex-col rounded-2xl bg-[var(--color-surface)] p-3 shadow-[0_1px_6px_rgba(0,0,0,0.06)]"
-                  style="box-shadow: 0 1px 6px color-mix(in srgb, var(--color-on-surface) 6%, transparent);"
+              <!-- Info -->
+              <div class="min-w-0 flex-1">
+                <p
+                  class="text-[10px] font-semibold uppercase tracking-[0.09em] text-[var(--color-on-surface-variant)]"
                 >
-                  <!-- Compact image -->
-                  <div
-                    v-if="gearImage(item)"
-                    class="mb-2.5 flex h-[88px] items-center justify-center overflow-hidden rounded-xl"
-                    style="background: var(--color-surface-variant);"
-                  >
-                    <img
-                      :src="gearImage(item)!"
-                      :alt="item.brand + ' ' + item.name"
-                      class="h-full w-auto max-w-full object-contain p-2"
-                      width="120"
-                      height="88"
-                      loading="lazy"
-                    />
-                  </div>
-                  <!-- Brand -->
-                  <p class="mb-0.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--color-on-surface-variant)]">
-                    {{ item.brand }}
-                  </p>
-                  <!-- Name -->
-                  <strong class="block text-[12px] font-semibold leading-snug text-[var(--color-on-surface)]">
-                    {{ item.name }}
-                  </strong>
-                  <!-- Type badge -->
-                  <div class="mt-auto pt-2.5">
-                    <a
-                      v-if="item.link"
-                      :href="item.link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="inline-flex min-h-[32px] items-center rounded-full bg-[color:var(--color-cta-soft)] px-2.5 text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)]"
-                    >
-                      {{ gearMeta(item.type) }}
-                    </a>
-                    <span
-                      v-else
-                      class="inline-flex min-h-[32px] items-center rounded-full bg-[color:var(--color-cta-soft)] px-2.5 text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
-                    >
-                      {{ gearMeta(item.type) }}
-                    </span>
-                  </div>
-                </article>
+                  {{ item.brand }}
+                </p>
+                <strong
+                  class="block truncate text-[13px] font-medium leading-snug text-[var(--color-on-surface)]"
+                >
+                  {{ item.name }}
+                </strong>
               </div>
 
-            </div>
+              <!-- Type badge -->
+              <span
+                class="shrink-0 rounded-full bg-[color:var(--color-cta-soft)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
+              >
+                {{ gearMeta(item.type) }}
+              </span>
+            </a>
           </div>
         </section>
 
