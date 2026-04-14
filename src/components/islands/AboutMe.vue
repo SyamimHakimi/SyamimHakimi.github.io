@@ -4,6 +4,7 @@
  * Island: client:visible
  * Composable: useAboutMe()
  */
+import { computed } from "vue";
 import { User, Camera, Layers3, MessageSquare } from "lucide-vue-next";
 import {
   useAboutMe,
@@ -21,6 +22,17 @@ const GEAR_TYPE_META: Record<number, string> = {
   2: "Zoom",
   3: "Prime",
 };
+
+/** Groups gear items by type, preserving the Body → Zoom → Prime order. */
+const gearGroups = computed(() => {
+  const order = [1, 2, 3];
+  return order
+    .map((type) => ({
+      label: GEAR_TYPE_META[type] ?? "",
+      items: data.value.gear.filter((g) => g.type === type),
+    }))
+    .filter((g) => g.items.length > 0);
+});
 
 /** Maps brand + name to a local product image path. */
 const GEAR_IMAGE: Record<string, string> = {
@@ -50,10 +62,6 @@ const SOCIAL_ICON: Record<string, string> = {
 
 function socialIcon(name: string): string | null {
   return SOCIAL_ICON[name.toLowerCase()] ?? null;
-}
-
-function gearMeta(type: number): string {
-  return GEAR_TYPE_META[type] ?? "";
 }
 
 /* ── Boardgame helpers ─────────────────────────────────────────────────── */
@@ -215,60 +223,63 @@ function boardgameTags(tags: string | undefined): string[] {
             subtitle="Grouped by type — the current carry setup for street and travel."
           />
 
-          <!-- Compact flat list — one row per item: thumbnail · brand/name · type badge -->
-          <div class="grid gap-2">
-            <a
-              v-for="item in data.gear"
-              :key="item.id"
-              :href="item.link || undefined"
-              :target="item.link ? '_blank' : undefined"
-              rel="noopener noreferrer"
-              :role="item.link ? 'link' : undefined"
-              class="flex min-h-[56px] items-center gap-3 rounded-xl px-3 py-2"
-              :class="
-                item.link
-                  ? 'hover:bg-[var(--color-surface-variant)] transition-colors duration-150 cursor-pointer'
-                  : 'cursor-default'
-              "
-              style="background: var(--color-surface)"
-            >
-              <!-- Thumbnail -->
-              <div
-                class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg"
-                style="background: var(--color-surface-variant)"
+          <!-- Grouped list — one group per type: Body → Zoom → Prime -->
+          <div class="grid gap-4">
+            <div v-for="group in gearGroups" :key="group.label">
+              <!-- Group label -->
+              <p
+                class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
               >
-                <img
-                  v-if="gearImage(item)"
-                  :src="gearImage(item)!"
-                  :alt="item.brand + ' ' + item.name"
-                  class="h-full w-full object-contain p-1"
-                  width="44"
-                  height="44"
-                  loading="lazy"
-                />
-              </div>
+                {{ group.label }}
+              </p>
 
-              <!-- Info -->
-              <div class="min-w-0 flex-1">
-                <p
-                  class="text-[10px] font-semibold uppercase tracking-[0.09em] text-[var(--color-on-surface-variant)]"
+              <!-- Items in this group -->
+              <div class="grid gap-1">
+                <a
+                  v-for="item in group.items"
+                  :key="item.id"
+                  :href="item.link || undefined"
+                  :target="item.link ? '_blank' : undefined"
+                  rel="noopener noreferrer"
+                  :role="item.link ? 'link' : undefined"
+                  class="flex min-h-[56px] items-center gap-3 rounded-xl px-3 py-2 transition-colors duration-150"
+                  :class="
+                    item.link
+                      ? 'hover:bg-[var(--color-surface-variant)] cursor-pointer'
+                      : 'cursor-default'
+                  "
                 >
-                  {{ item.brand }}
-                </p>
-                <strong
-                  class="block truncate text-[13px] font-medium leading-snug text-[var(--color-on-surface)]"
-                >
-                  {{ item.name }}
-                </strong>
-              </div>
+                  <!-- Thumbnail — white bg so product shots blend seamlessly -->
+                  <div
+                    class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-outline)] bg-white"
+                  >
+                    <img
+                      v-if="gearImage(item)"
+                      :src="gearImage(item)!"
+                      :alt="item.brand + ' ' + item.name"
+                      class="h-full w-full object-contain p-1"
+                      width="44"
+                      height="44"
+                      loading="lazy"
+                    />
+                  </div>
 
-              <!-- Type badge -->
-              <span
-                class="shrink-0 rounded-full bg-[color:var(--color-cta-soft)] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
-              >
-                {{ gearMeta(item.type) }}
-              </span>
-            </a>
+                  <!-- Info -->
+                  <div class="min-w-0 flex-1">
+                    <p
+                      class="text-[10px] font-semibold uppercase tracking-[0.09em] text-[var(--color-on-surface-variant)]"
+                    >
+                      {{ item.brand }}
+                    </p>
+                    <strong
+                      class="block truncate text-[13px] font-medium leading-snug text-[var(--color-on-surface)]"
+                    >
+                      {{ item.name }}
+                    </strong>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 
