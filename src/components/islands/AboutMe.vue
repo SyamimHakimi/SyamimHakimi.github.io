@@ -50,6 +50,7 @@ function gearImage(item: PhotographyGear): string | null {
 
 /** Maps social platform name to a local SVG icon path. */
 const SOCIAL_ICON: Record<string, string> = {
+  email: "/media/svg/social-logos/email.svg",
   github: "/media/svg/social-logos/github.svg",
   linkedin: "/media/svg/social-logos/linkedin.svg",
   instagram: "/media/svg/social-logos/instagram.svg",
