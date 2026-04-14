@@ -21,11 +21,16 @@ import { db } from "../firebase";
 function coerceDate(val: unknown): unknown {
   if (val == null || typeof val === "string") return val;
   if (typeof val === "object") {
-    if ("toDate" in val && typeof (val as { toDate: unknown }).toDate === "function") {
+    if (
+      "toDate" in val &&
+      typeof (val as { toDate: unknown }).toDate === "function"
+    ) {
       return (val as { toDate(): Date }).toDate().toISOString();
     }
     if ("seconds" in val) {
-      return new Date((val as { seconds: number }).seconds * 1000).toISOString();
+      return new Date(
+        (val as { seconds: number }).seconds * 1000,
+      ).toISOString();
     }
   }
   return val;

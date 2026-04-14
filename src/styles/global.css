@@ -220,11 +220,29 @@
     100% { background-position:  400px 0; }
   }
 
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .skeleton-line,
     .skeleton-rect,
     .skeleton-circle {
       animation: none;
+    }
+
+    .reveal-up {
+      animation: none;
+      opacity: 1;
+      transform: none;
     }
   }
 }
@@ -479,7 +497,7 @@
     background: var(--color-surface-variant);
   }
 
-  /* Badge — compact inline label (e.g. "5 yrs" experience) */
+  /* Badge – compact inline label (e.g. "5 yrs" experience) */
   .badge {
     display: inline-flex;
     align-items: center;
@@ -490,5 +508,143 @@
     background: var(--color-cta-soft);
     color: var(--color-cta);
     white-space: nowrap;
+  }
+
+  /* Surface panels – common section / widget wrappers used across islands */
+  .panel-shell {
+    background: var(--color-surface);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-xl);
+  }
+
+  .panel-shell--md {
+    border-radius: var(--radius-md);
+  }
+
+  .panel-shell--lg {
+    border-radius: var(--radius-lg);
+  }
+
+  .panel-shell--soft {
+    background: color-mix(in srgb, var(--color-surface) 94%, var(--color-cta-soft));
+  }
+
+  .panel-inset {
+    background: var(--color-surface-variant);
+    border: 1px solid var(--color-outline);
+    border-radius: var(--radius-lg);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--color-outline);
+    background: var(--color-surface);
+    color: var(--color-on-surface-variant);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .pill--soft {
+    background: var(--color-surface-variant);
+  }
+
+  .pill--accent {
+    background: var(--color-cta-soft);
+    border-color: color-mix(in srgb, var(--color-cta) 20%, transparent);
+    color: var(--color-cta);
+    font-weight: 600;
+  }
+
+  .pill--counter {
+    min-height: 32px;
+    padding-inline: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .pill-link {
+    text-decoration: none;
+    transition:
+      color 150ms var(--ease-standard),
+      border-color 150ms var(--ease-standard),
+      background-color 150ms var(--ease-standard);
+  }
+
+  .pill-link:hover {
+    color: var(--color-cta);
+    border-color: var(--color-cta);
+    background: color-mix(in srgb, var(--color-cta-soft) 72%, var(--color-surface));
+  }
+
+  .pill-link:focus-visible {
+    outline: 2px solid var(--color-cta);
+    outline-offset: 2px;
+  }
+
+  .button-primary,
+  .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    border-radius: 999px;
+    padding-inline: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background-color 150ms var(--ease-standard),
+      border-color 150ms var(--ease-standard),
+      color 150ms var(--ease-standard),
+      transform 150ms var(--ease-standard);
+  }
+
+  .button-primary {
+    border: 0;
+    background: var(--color-cta);
+    color: #fff;
+  }
+
+  .button-primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .button-secondary {
+    border: 1px solid var(--color-outline);
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+  }
+
+  .button-secondary:hover {
+    border-color: var(--color-cta);
+    background: var(--color-surface-variant);
+    color: var(--color-cta);
+  }
+
+  .button-primary:focus-visible,
+  .button-secondary:focus-visible {
+    outline: 2px solid var(--color-cta);
+    outline-offset: 2px;
+  }
+
+  .empty-state {
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-variant);
+    padding: 24px;
+    color: var(--color-on-surface-variant);
+  }
+
+  .reveal-up {
+    opacity: 0;
+    animation: reveal-up 300ms var(--ease-standard) forwards;
+    will-change: opacity, transform;
   }
 }

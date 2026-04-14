@@ -5,6 +5,7 @@
  * Props: photos array, initial index, open flag
  */
 import { computed, ref, watch, onMounted, onUnmounted } from "vue";
+import { Motion } from "motion-v";
 import { X, ChevronLeft, ChevronRight } from "lucide-vue-next";
 
 interface Photo {
@@ -47,6 +48,15 @@ const prefersReducedMotion =
   typeof window !== "undefined" &&
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+const overlayInitial = prefersReducedMotion ? {} : { opacity: 0 };
+const overlayVisible = { opacity: 1 };
+const frameInitial = prefersReducedMotion
+  ? {}
+  : { opacity: 0, scale: 0.985, y: 10 };
+const frameVisible = { opacity: 1, scale: 1, y: 0 };
+const chromeInitial = prefersReducedMotion ? {} : { opacity: 0, y: 6 };
+const chromeVisible = { opacity: 1, y: 0 };
+
 function prev() {
   if (currentIndex.value > 0) currentIndex.value--;
 }
@@ -87,45 +97,85 @@ function formatDate(iso: string): string {
         @click.self="close"
       >
         <!-- Counter badge ─────────────────────────────────────────────── -->
-        <div class="lb-counter">
+        <Motion
+          as="div"
+          class="lb-counter"
+          :initial="chromeInitial"
+          :animate="chromeVisible"
+          :transition="{
+            duration: prefersReducedMotion ? 0 : 0.2,
+            delay: prefersReducedMotion ? 0 : 0.08,
+            ease: 'easeOut',
+          }"
+        >
           {{ currentIndex + 1 }} / {{ photos.length }}
-        </div>
+        </Motion>
 
         <!-- Close button ──────────────────────────────────────────────── -->
-        <button
+        <Motion
+          as="button"
           type="button"
           class="lb-btn absolute right-3.5 top-3.5"
           aria-label="Close lightbox"
+          :initial="chromeInitial"
+          :animate="chromeVisible"
+          :transition="{
+            duration: prefersReducedMotion ? 0 : 0.2,
+            delay: prefersReducedMotion ? 0 : 0.12,
+            ease: 'easeOut',
+          }"
           @click="close"
         >
           <X class="h-[18px] w-[18px]" aria-hidden="true" />
-        </button>
+        </Motion>
 
         <!-- Prev ──────────────────────────────────────────────────────── -->
-        <button
+        <Motion
           v-if="currentIndex > 0"
+          as="button"
           type="button"
           class="lb-btn absolute left-3.5 top-1/2 -translate-y-1/2"
           aria-label="Previous photo"
+          :initial="chromeInitial"
+          :animate="chromeVisible"
+          :transition="{
+            duration: prefersReducedMotion ? 0 : 0.2,
+            ease: 'easeOut',
+          }"
           @click="prev"
         >
           <ChevronLeft class="h-5 w-5" aria-hidden="true" />
-        </button>
+        </Motion>
 
         <!-- Image + metadata ──────────────────────────────────────────── -->
-        <div
+        <Motion
+          :key="current.id"
+          as="div"
           class="mx-[64px] flex max-h-[90dvh] max-w-[90dvw] flex-col items-center gap-0"
+          :initial="frameInitial"
+          :animate="frameVisible"
+          :transition="{
+            duration: prefersReducedMotion ? 0 : 0.26,
+            ease: [0.22, 1, 0.36, 1],
+          }"
         >
-          <img
+          <Motion
             v-if="current.link"
+            as="img"
             :src="current.link"
             :alt="current.title ?? 'Photo'"
             loading="eager"
             class="max-h-[74dvh] max-w-full rounded-[var(--radius-md)] object-contain"
+            :initial="overlayInitial"
+            :animate="overlayVisible"
+            :transition="{
+              duration: prefersReducedMotion ? 0 : 0.22,
+              ease: 'easeOut',
+            }"
           />
 
           <!-- Metadata bar -->
-          <div
+          <Motion
             v-if="
               current.title ||
               current.recipe ||
@@ -133,7 +183,15 @@ function formatDate(iso: string): string {
               current.date ||
               current.theme
             "
+            as="div"
             class="lb-meta mt-2.5 w-full"
+            :initial="chromeInitial"
+            :animate="chromeVisible"
+            :transition="{
+              duration: prefersReducedMotion ? 0 : 0.2,
+              delay: prefersReducedMotion ? 0 : 0.06,
+              ease: 'easeOut',
+            }"
           >
             <span
               v-if="current.title"
@@ -155,29 +213,40 @@ function formatDate(iso: string): string {
                 current.lens
               }}</span>
             </div>
-          </div>
-        </div>
+          </Motion>
+        </Motion>
 
         <!-- Next ──────────────────────────────────────────────────────── -->
-        <button
+        <Motion
           v-if="currentIndex < photos.length - 1"
+          as="button"
           type="button"
           class="lb-btn absolute right-3.5 top-1/2 -translate-y-1/2"
           aria-label="Next photo"
+          :initial="chromeInitial"
+          :animate="chromeVisible"
+          :transition="{
+            duration: prefersReducedMotion ? 0 : 0.2,
+            ease: 'easeOut',
+          }"
           @click="next"
         >
           <ChevronRight class="h-5 w-5" aria-hidden="true" />
-        </button>
+        </Motion>
 
         <!-- Keyboard hints ────────────────────────────────────────────── -->
-        <div
+        <Motion
           v-if="!prefersReducedMotion"
+          as="div"
           class="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3"
           aria-hidden="true"
+          :initial="chromeInitial"
+          :animate="chromeVisible"
+          :transition="{ duration: 0.2, delay: 0.14, ease: 'easeOut' }"
         >
           <span class="lb-hint"><kbd>←</kbd><kbd>→</kbd> navigate</span>
           <span class="lb-hint"><kbd>Esc</kbd> close</span>
-        </div>
+        </Motion>
       </div>
     </Transition>
   </Teleport>
