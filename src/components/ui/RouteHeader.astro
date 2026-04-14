@@ -1,0 +1,39 @@
+---
+/**
+ * Shared page-intro header for top-level routes.
+ *
+ * Props:
+ * - `eyebrow`: short uppercase section label shown beside the icon slot.
+ * - `title`: page heading rendered as the route H1.
+ * - `description`: supporting copy under the title.
+ * - `compact`: when true, uses the tighter spacing variant used by `/about`.
+ *
+ * Slots:
+ * - `icon`: required icon artwork rendered inside the shared icon disc.
+ * - `meta`: optional extra content rendered below the description.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  compact?: boolean;
+}
+
+const { eyebrow, title, description, compact = false } = Astro.props;
+---
+
+<header class:list={[compact ? "mb-8 sm:mb-10" : "mb-10"]}>
+  <div class="mb-3 flex items-center gap-3">
+    <span class="icon-disc" aria-hidden="true">
+      <slot name="icon" />
+    </span>
+    <p class="text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]">
+      {eyebrow}
+    </p>
+  </div>
+  <h1>{title}</h1>
+  <p class="mt-3 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]">
+    {description}
+  </p>
+  <slot name="meta" />
+</header>

@@ -5,7 +5,6 @@
  * Composable: useServices()
  */
 import {
-  ArrowRight,
   BriefcaseBusiness,
   Database,
   Layers3,
@@ -15,10 +14,15 @@ import {
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useServices } from "../../lib/composables/useServices";
-import { groupServices } from "../../lib/utils/servicesSection";
+import {
+  groupServices,
+  SERVICE_CARD_TAGS,
+  SERVICES_OVERVIEW_METRICS,
+} from "../../lib/utils/servicesSection";
 import { useReducedMotion } from "../../lib/composables/useReducedMotion";
 import ErrorAlert from "../ui/ErrorAlert.vue";
 import MetricCard from "../ui/MetricCard.vue";
+import ServiceCard from "../ui/ServiceCard.vue";
 
 const { services, loading, error } = useServices();
 const { prefersReducedMotion } = useReducedMotion();
@@ -94,16 +98,10 @@ function iconForService(title: string, groupId: number) {
 
       <div class="grid gap-3" aria-label="Service highlights">
         <MetricCard
-          value="3"
-          description="Service groups with a consistent structure and one clear CTA path."
-        />
-        <MetricCard
-          value="48px"
-          description="Minimum target for icon-disc affordances and primary action controls."
-        />
-        <MetricCard
-          value="1"
-          description="Primary route to contact, kept stable across mobile and desktop."
+          v-for="metric in SERVICES_OVERVIEW_METRICS"
+          :key="metric.value"
+          :value="metric.value"
+          :description="metric.description"
         />
       </div>
     </section>
@@ -180,62 +178,18 @@ function iconForService(title: string, groupId: number) {
         </div>
 
         <div class="grid gap-4 md:grid-cols-2">
-          <article
+          <ServiceCard
             v-for="(service, index) in groupServices"
             :key="service.id"
-            class="reveal-up relative grid gap-4 overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-5 transition hover:-translate-y-0.5 hover:border-[color:color-mix(in_srgb,var(--color-cta)_24%,var(--color-outline))] hover:shadow-[0_12px_28px_rgba(0,0,0,0.05)]"
-            :style="{
-              animationDelay: revealDelay(
-                groupIndex >= 3 ? 0 : groupIndex * 2 + index,
-              ),
-            }"
-          >
-            <span
-              class="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-[var(--color-cta)] to-transparent"
-              aria-hidden="true"
-            />
-
-            <div class="flex items-start justify-between gap-3">
-              <span class="flex h-12 w-12 items-center justify-center">
-                <span
-                  class="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--color-cta-soft)] text-[var(--color-cta)]"
-                >
-                  <component
-                    :is="iconForService(service.title, id)"
-                    aria-hidden="true"
-                    class="h-4.5 w-4.5"
-                  />
-                </span>
-              </span>
-              <span class="pill pill--counter">
-                {{ meta.summary }}
-              </span>
-            </div>
-
-            <div class="space-y-2">
-              <h3 class="text-2xl leading-[1.06] tracking-[-0.02em]">
-                {{ service.title }}
-              </h3>
-              <p
-                class="max-w-[44ch] text-sm text-[var(--color-on-surface-variant)]"
-              >
-                {{ service.description }}
-              </p>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <div class="flex flex-wrap gap-2">
-                <span class="pill pill--soft"> Scoped delivery </span>
-                <span class="pill pill--soft"> Review-ready </span>
-              </div>
-              <span
-                class="inline-flex items-center gap-1 text-sm font-semibold text-[var(--color-cta)]"
-              >
-                Contact
-                <ArrowRight aria-hidden="true" class="h-4 w-4" />
-              </span>
-            </div>
-          </article>
+            :title="service.title"
+            :description="service.description"
+            :summary="meta.summary"
+            :tags="SERVICE_CARD_TAGS"
+            :icon="iconForService(service.title, id)"
+            :animation-delay="
+              revealDelay(groupIndex >= 3 ? 0 : groupIndex * 2 + index)
+            "
+          />
         </div>
       </section>
 

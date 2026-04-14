@@ -13,6 +13,11 @@ export interface ServiceGroup {
   services: Service[];
 }
 
+export interface ServiceOverviewMetric {
+  value: string;
+  description: string;
+}
+
 const GROUP_META: Record<number, ServiceGroupMeta> = {
   1: {
     title: "Product Delivery",
@@ -36,6 +41,28 @@ const GROUP_META: Record<number, ServiceGroupMeta> = {
     icon: "review",
   },
 };
+
+/** Shared overview metrics used in the services page intro. */
+export const SERVICES_OVERVIEW_METRICS: readonly ServiceOverviewMetric[] = [
+  {
+    value: "3",
+    description:
+      "Service groups with a consistent structure and one clear CTA path.",
+  },
+  {
+    value: "48px",
+    description:
+      "Minimum target for icon-disc affordances and primary action controls.",
+  },
+  {
+    value: "1",
+    description:
+      "Primary route to contact, kept stable across mobile and desktop.",
+  },
+];
+
+/** Shared footer tags for individual service cards. */
+export const SERVICE_CARD_TAGS = ["Scoped delivery", "Review-ready"] as const;
 
 /**
  * Returns the presentation metadata for a service group.

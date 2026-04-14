@@ -8,7 +8,7 @@
 import { vi } from "vitest";
 
 // ── Firebase stub ──────────────────────────────────────────────────────────
-// Composable files import from 'firebase/firestore' and 'firebase/app'.
+// Composable files import from 'firebase/firestore/lite' and 'firebase/app'.
 // We replace them with no-op stubs so the real SDK is never parsed.
 
 vi.mock("firebase/app", () => ({
@@ -17,7 +17,7 @@ vi.mock("firebase/app", () => ({
   getApps: vi.fn(() => []),
 }));
 
-vi.mock("firebase/firestore", () => ({
+vi.mock("firebase/firestore/lite", () => ({
   getFirestore: vi.fn(() => ({})),
   collection: vi.fn(),
   doc: vi.fn(),
@@ -28,7 +28,6 @@ vi.mock("firebase/firestore", () => ({
   orderBy: vi.fn(),
   limit: vi.fn(),
   startAfter: vi.fn(),
-  onSnapshot: vi.fn(),
 }));
 
 // ── Vue stub ───────────────────────────────────────────────────────────────

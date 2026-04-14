@@ -9,7 +9,7 @@ import {
   where,
   type QueryDocumentSnapshot,
   type DocumentData,
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { z } from "zod";
 import { db } from "../firebase";
 
