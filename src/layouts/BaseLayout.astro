@@ -47,7 +47,9 @@ const ogImage = new URL(image, Astro.site).toString();
     <link rel="icon" href="/media/logos/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/media/logos/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/media/logos/favicon-16x16.png" />
-    <link rel="icon" type="image/svg+xml" href="/media/logos/light-small.svg" />
+    <!-- SVG favicon: dark-small for dark OS theme, light-small for light OS theme -->
+    <link rel="icon" type="image/svg+xml" href="/media/logos/dark-small.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/media/logos/light-small.svg" media="(prefers-color-scheme: light)" />
     <link rel="apple-touch-icon" href="/media/logos/apple-touch-icon.png" />
     <link rel="manifest" href="/media/logos/site.webmanifest" />
 

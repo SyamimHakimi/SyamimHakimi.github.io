@@ -446,7 +446,7 @@ function delay(i: number, base = 0, step = 60): number {
         <p class="mb-1 text-[11px] text-[var(--color-on-surface-variant)]">
           Shots by focal length
         </p>
-        <div class="w-full overflow-hidden">
+        <div class="w-full overflow-visible">
           <VueApexCharts
             type="donut"
             height="200"

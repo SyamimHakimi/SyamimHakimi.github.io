@@ -479,14 +479,18 @@ export function buildHeatmapOptions({
         },
       },
     },
-    grid: { padding: { top: 0, right: 0, bottom: 0, left: 0 } },
+    grid: { padding: { top: 0, right: 0, bottom: 0, left: 4 } },
     xaxis: {
       labels: { style: { colors: palette.onSurfaceVariant, fontSize: "9px" } },
       axisBorder: { show: false },
       axisTicks: { show: false },
     },
     yaxis: {
-      labels: { style: { colors: palette.onSurfaceVariant, fontSize: "10px" } },
+      labels: {
+        style: { colors: palette.onSurfaceVariant, fontSize: "10px" },
+        minWidth: 36,
+        maxWidth: 36,
+      },
     },
     tooltip: {
       theme: "none",
@@ -505,7 +509,9 @@ export function buildHeatmapOptions({
  * from `focalStats`.
  *
  * Sorts entries descending by count. Pure-digit labels (e.g. "56") are
- * suffixed with "mm" for readability.
+ * suffixed with "mm" for readability. Entries representing less than 3% of
+ * total shots are collapsed into a single "Other" slice to prevent the legend
+ * from accumulating many insignificant entries.
  *
  * @param focalStats Firestore `focal-stats` document data.
  * @returns `series` (counts) and `labels` for ApexCharts donut.
@@ -514,9 +520,22 @@ export function buildFocalLengthSeries(
   focalStats: Record<string, string | number> | undefined,
 ): { series: number[]; labels: string[] } {
   const entries = toChartEntries(focalStats).sort(([, a], [, b]) => b - a);
+  const total = entries.reduce((sum, [, v]) => sum + v, 0);
+
+  if (total === 0) return { series: [], labels: [] };
+
+  const MIN_SHARE = 0.03; // collapse entries < 3% of total into "Other"
+  const significant = entries.filter(([, v]) => v / total >= MIN_SHARE);
+  const otherSum = entries
+    .filter(([, v]) => v / total < MIN_SHARE)
+    .reduce((sum, [, v]) => sum + v, 0);
+
+  const filtered: [string, number][] =
+    otherSum > 0 ? [...significant, ["Other", otherSum]] : significant;
+
   return {
-    series: entries.map(([, v]) => v),
-    labels: entries.map(([label]) =>
+    series: filtered.map(([, v]) => v),
+    labels: filtered.map(([label]) =>
       /^\d+$/.test(label) ? `${label}mm` : label,
     ),
   };
