@@ -13,9 +13,31 @@ import { db } from "../firebase";
 // ── Schemas ────────────────────────────────────────────────────────────────
 
 /**
+ * Coerces a Firestore Timestamp object to an ISO 8601 string.
+ * Firestore Timestamps arrive as objects with either a `toDate()` method
+ * (Timestamp class instance) or a plain `{ seconds, nanoseconds }` shape.
+ * Strings and nullish values pass through unchanged.
+ */
+function coerceDate(val: unknown): unknown {
+  if (val == null || typeof val === "string") return val;
+  if (typeof val === "object") {
+    if ("toDate" in val && typeof (val as { toDate: unknown }).toDate === "function") {
+      return (val as { toDate(): Date }).toDate().toISOString();
+    }
+    if ("seconds" in val) {
+      return new Date((val as { seconds: number }).seconds * 1000).toISOString();
+    }
+  }
+  return val;
+}
+
+/** Accepts either an ISO string or a Firestore Timestamp and returns an optional string. */
+const dateField = z.preprocess(coerceDate, z.string().optional());
+
+/**
  * Validates a document from `experience/{category}/item` subcollections
  * (categories: `platforms`, `protocols`, `frameworks`, `languages`).
- * `date-from` / `date-to` are ISO 8601 strings from Firestore Timestamps.
+ * `date-from` / `date-to` accept both plain ISO strings and Firestore Timestamps.
  */
 export const ExperienceItemSchema = z.object({
   id: z.string(),
@@ -23,8 +45,8 @@ export const ExperienceItemSchema = z.object({
   description: z.string().optional(),
   link: z.string().optional(),
   "img-src": z.string().optional(),
-  "date-from": z.string().optional(),
-  "date-to": z.string().optional(),
+  "date-from": dateField,
+  "date-to": dateField,
 });
 
 /**
