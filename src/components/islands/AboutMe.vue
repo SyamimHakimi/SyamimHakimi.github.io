@@ -223,18 +223,18 @@ function boardgameTags(tags: string | undefined): string[] {
             subtitle="Grouped by type — the current carry setup for street and travel."
           />
 
-          <!-- Grouped list — one group per type: Body → Zoom → Prime -->
-          <div class="grid gap-4">
+          <!-- Grouped list — Body → Zoom → Prime; 2-col at sm+ to fill width -->
+          <div class="grid gap-3">
             <div v-for="group in gearGroups" :key="group.label">
               <!-- Group label -->
               <p
-                class="mb-1.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
+                class="mb-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
               >
                 {{ group.label }}
               </p>
 
-              <!-- Items in this group -->
-              <div class="grid gap-1">
+              <!-- Items in this group — 2-col grid on sm+ -->
+              <div class="grid gap-1 sm:grid-cols-2">
                 <a
                   v-for="item in group.items"
                   :key="item.id"
@@ -242,7 +242,7 @@ function boardgameTags(tags: string | undefined): string[] {
                   :target="item.link ? '_blank' : undefined"
                   rel="noopener noreferrer"
                   :role="item.link ? 'link' : undefined"
-                  class="flex min-h-[56px] items-center gap-3 rounded-xl px-3 py-2 transition-colors duration-150"
+                  class="flex min-h-[52px] items-center gap-3 rounded-xl px-3 py-2 transition-colors duration-150"
                   :class="
                     item.link
                       ? 'hover:bg-[var(--color-surface-variant)] cursor-pointer'
@@ -251,15 +251,15 @@ function boardgameTags(tags: string | undefined): string[] {
                 >
                   <!-- Thumbnail — white bg so product shots blend seamlessly -->
                   <div
-                    class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-outline)] bg-white"
+                    class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-outline)] bg-white"
                   >
                     <img
                       v-if="gearImage(item)"
                       :src="gearImage(item)!"
                       :alt="item.brand + ' ' + item.name"
                       class="h-full w-full object-contain p-1"
-                      width="44"
-                      height="44"
+                      width="40"
+                      height="40"
                       loading="lazy"
                     />
                   </div>
