@@ -1,5 +1,5 @@
 import { ref, onMounted } from "vue";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore/lite";
 import { z } from "zod";
 import { db } from "../firebase";
 

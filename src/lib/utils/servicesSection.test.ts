@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Service } from "../composables/useServices";
-import { getServiceGroupMeta, groupServices } from "./servicesSection";
+import {
+  getServiceGroupMeta,
+  groupServices,
+  SERVICE_CARD_TAGS,
+  SERVICES_OVERVIEW_METRICS,
+} from "./servicesSection";
 
 const services: Service[] = [
   {
@@ -60,5 +65,18 @@ describe("groupServices", () => {
     expect(result[1]?.services.map((service) => service.id)).toEqual([
       "service-c",
     ]);
+  });
+});
+
+describe("shared service presentation constants", () => {
+  it("exposes stable overview metrics for the services hero", () => {
+    expect(SERVICES_OVERVIEW_METRICS).toHaveLength(3);
+    expect(SERVICES_OVERVIEW_METRICS[0]).toMatchObject({
+      value: "3",
+    });
+  });
+
+  it("keeps the shared footer tags used by service cards", () => {
+    expect(SERVICE_CARD_TAGS).toEqual(["Scoped delivery", "Review-ready"]);
   });
 });

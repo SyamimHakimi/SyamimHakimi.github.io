@@ -1,5 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore/lite";
 
 // Firebase client config — public API keys, safe to commit.
 // See: https://firebase.google.com/docs/web/setup#available-libraries
@@ -16,4 +16,6 @@ const firebaseConfig = {
 const app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
+// The site only performs read-only document and collection fetches, so the
+// lighter Firestore client keeps the shared island bundle smaller.
 export const db = getFirestore(app);

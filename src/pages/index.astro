@@ -6,6 +6,7 @@
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import PhotographyJourney from "../components/islands/PhotographyJourney.vue";
+import RouteHeader from "../components/ui/RouteHeader.astro";
 ---
 
 <PageLayout
@@ -13,23 +14,18 @@ import PhotographyJourney from "../components/islands/PhotographyJourney.vue";
   description="Syamim Hakimi's photography journey — statistics, featured photos, and film simulation recipes."
 >
   <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <header class="mb-10">
-      <div class="mb-3 flex items-center gap-3">
-        <span class="icon-disc" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-            <polyline points="17 6 23 6 23 12"/>
-          </svg>
-        </span>
-        <p class="text-[11px] font-bold uppercase tracking-[0.11em] text-[var(--color-on-surface-variant)]">
-          Photography Journey
-        </p>
-      </div>
-      <h1>Photography Journey</h1>
-      <p class="mt-3 max-w-[52ch] text-base text-[var(--color-on-surface-variant)]">
-        A visual diary — film simulations, statistics, and favourite frames.
-      </p>
-    </header>
+    <RouteHeader
+      eyebrow="Photography Journey"
+      title="Photography Journey"
+      description="A visual diary — film simulations, statistics, and favourite frames."
+    >
+      <Fragment slot="icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          <polyline points="17 6 23 6 23 12"/>
+        </svg>
+      </Fragment>
+    </RouteHeader>
 
     <PhotographyJourney client:visible />
   </div>
