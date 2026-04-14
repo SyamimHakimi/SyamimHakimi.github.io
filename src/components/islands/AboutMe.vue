@@ -23,16 +23,14 @@ const GEAR_TYPE_META: Record<number, string> = {
   3: "Prime",
 };
 
-/** Groups gear items by type, preserving the Body → Zoom → Prime order. */
-const gearGroups = computed(() => {
-  const order = [1, 2, 3];
-  return order
-    .map((type) => ({
-      label: GEAR_TYPE_META[type] ?? "",
-      items: data.value.gear.filter((g) => g.type === type),
-    }))
-    .filter((g) => g.items.length > 0);
-});
+/** Gear sorted Body → Zoom → Prime for the product-card grid. */
+const sortedGear = computed(() =>
+  [...data.value.gear].sort((a, b) => a.type - b.type),
+);
+
+function gearMeta(type: number): string {
+  return GEAR_TYPE_META[type] ?? "";
+}
 
 /** Maps brand + name to a local product image path. */
 const GEAR_IMAGE: Record<string, string> = {
@@ -224,63 +222,57 @@ function boardgameTags(tags: string | undefined): string[] {
             subtitle="Grouped by type — the current carry setup for street and travel."
           />
 
-          <!-- Grouped list — Body → Zoom → Prime; 2-col at sm+ to fill width -->
-          <div class="grid gap-3">
-            <div v-for="group in gearGroups" :key="group.label">
-              <!-- Group label -->
-              <p
-                class="mb-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]"
+          <!-- Product-card grid — image is the hero, 2-col → 4-col -->
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <a
+              v-for="item in sortedGear"
+              :key="item.id"
+              :href="item.link || undefined"
+              :target="item.link ? '_blank' : undefined"
+              rel="noopener noreferrer"
+              :role="item.link ? 'link' : undefined"
+              class="group flex flex-col overflow-hidden rounded-[16px] border border-[var(--color-outline)] transition-shadow duration-150"
+              :class="
+                item.link ? 'hover:shadow-md cursor-pointer' : 'cursor-default'
+              "
+              style="background: var(--color-surface-variant)"
+            >
+              <!-- Image area — white bg, takes most of the card -->
+              <div
+                class="flex aspect-square w-full items-center justify-center bg-white p-4"
               >
-                {{ group.label }}
-              </p>
-
-              <!-- Items in this group — 2-col grid on sm+ -->
-              <div class="grid gap-1 sm:grid-cols-2">
-                <a
-                  v-for="item in group.items"
-                  :key="item.id"
-                  :href="item.link || undefined"
-                  :target="item.link ? '_blank' : undefined"
-                  rel="noopener noreferrer"
-                  :role="item.link ? 'link' : undefined"
-                  class="flex min-h-[52px] items-center gap-3 rounded-xl px-3 py-2 transition-colors duration-150"
-                  :class="
-                    item.link
-                      ? 'hover:bg-[var(--color-surface-variant)] cursor-pointer'
-                      : 'cursor-default'
-                  "
-                >
-                  <!-- Thumbnail — white bg so product shots blend seamlessly -->
-                  <div
-                    class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[var(--color-outline)] bg-white"
-                  >
-                    <img
-                      v-if="gearImage(item)"
-                      :src="gearImage(item)!"
-                      :alt="item.brand + ' ' + item.name"
-                      class="h-full w-full object-contain p-1"
-                      width="40"
-                      height="40"
-                      loading="lazy"
-                    />
-                  </div>
-
-                  <!-- Info -->
-                  <div class="min-w-0 flex-1">
-                    <p
-                      class="text-[10px] font-semibold uppercase tracking-[0.09em] text-[var(--color-on-surface-variant)]"
-                    >
-                      {{ item.brand }}
-                    </p>
-                    <strong
-                      class="block truncate text-[13px] font-medium leading-snug text-[var(--color-on-surface)]"
-                    >
-                      {{ item.name }}
-                    </strong>
-                  </div>
-                </a>
+                <img
+                  v-if="gearImage(item)"
+                  :src="gearImage(item)!"
+                  :alt="item.brand + ' ' + item.name"
+                  class="h-full w-full object-contain transition-transform duration-200 group-hover:scale-105"
+                  width="120"
+                  height="120"
+                  loading="lazy"
+                />
               </div>
-            </div>
+
+              <!-- Info strip -->
+              <div class="flex flex-col gap-0.5 px-3 py-2.5">
+                <div class="flex items-center justify-between gap-1">
+                  <p
+                    class="text-[10px] font-semibold uppercase tracking-[0.09em] text-[var(--color-on-surface-variant)]"
+                  >
+                    {{ item.brand }}
+                  </p>
+                  <span
+                    class="shrink-0 rounded-full bg-[color:var(--color-cta-soft)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.06em] text-[var(--color-cta)]"
+                  >
+                    {{ gearMeta(item.type) }}
+                  </span>
+                </div>
+                <strong
+                  class="block truncate text-[12px] font-medium leading-snug text-[var(--color-on-surface)]"
+                >
+                  {{ item.name }}
+                </strong>
+              </div>
+            </a>
           </div>
         </section>
 
