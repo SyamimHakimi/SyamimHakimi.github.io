@@ -1,32 +1,221 @@
 ---
 /**
- * Photography Journey — default route `/`.
- * Island: PhotographyJourney.vue (client:visible)
- * Composable: useStatistics()
+ * Home — default route `/`.
+ * Landing page: hero + bento grid overview of all sections.
+ * Photo grid island: LandingPhotos.vue (client:visible)
  */
 import PageLayout from "../layouts/PageLayout.astro";
-import PhotographyJourney from "../components/islands/PhotographyJourney.vue";
-import RouteHeader from "../components/ui/RouteHeader.astro";
+import LandingPhotos from "../components/islands/LandingPhotos.vue";
 ---
 
 <PageLayout
-  title="Photography Journey — syamim."
-  description="Syamim Hakimi's photography journey — statistics, featured photos, and film simulation recipes."
+  title="syamim. — Software Engineer & Photographer"
+  description="Syamim Hakimi — software engineer based in Malaysia. I build clean, thoughtful software and occasionally point a camera at beautiful things."
 >
-  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <RouteHeader
-      eyebrow="Photography Journey"
-      title="Photography Journey"
-      description="A visual diary — film simulations, statistics, and favourite frames."
-    >
-      <Fragment slot="icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-          <polyline points="17 6 23 6 23 12"/>
-        </svg>
-      </Fragment>
-    </RouteHeader>
+  <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
 
-    <PhotographyJourney client:visible />
+    <!-- ══════════════════════════════════════════════════════════
+         ROW 1 — Hero (2/3) + Photo grid (1/3)
+         ══════════════════════════════════════════════════════════ -->
+    <div class="mb-3.5 grid grid-cols-1 gap-3.5 lg:grid-cols-[2fr_1fr]">
+
+      <!-- Hero cell -->
+      <div class="panel-shell flex min-h-[320px] flex-col justify-between p-8 lg:p-10">
+        <div>
+          <!-- Status line -->
+          <div class="mb-6 flex items-center gap-2.5">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span class="text-[12px] font-medium text-[var(--color-on-surface-variant)]">
+              Open to freelance · Kuala Lumpur, MY
+            </span>
+          </div>
+
+          <!-- Name + role -->
+          <h1 class="mb-2 font-serif text-[clamp(36px,5vw,52px)] font-normal leading-[1.1] text-[var(--color-on-surface)]">
+            Syamim Hakimi.
+          </h1>
+          <p class="mb-4 text-[17px] font-normal text-[var(--color-on-surface-variant)]">
+            Software Engineer &amp;
+            <em class="not-italic font-medium text-[var(--color-cta)]">occasional photographer</em>
+          </p>
+
+          <!-- Bio -->
+          <p class="mb-8 max-w-[44ch] text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+            I build clean, thoughtful software — from full-stack web apps to
+            system architecture. Outside the terminal I enjoy photography and
+            boardgames.
+          </p>
+        </div>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap gap-3">
+          <a href="/portfolio" class="button-primary gap-2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+            </svg>
+            View Portfolio
+          </a>
+          <a href="/contact" class="button-secondary gap-2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Get in Touch
+          </a>
+        </div>
+      </div>
+
+      <!-- Photo grid — Vue island -->
+      <div class="min-h-[260px] lg:min-h-0">
+        <LandingPhotos client:visible />
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ROW 2 — Portfolio · Services · About
+         ══════════════════════════════════════════════════════════ -->
+    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+
+      <!-- Portfolio -->
+      <a
+        href="/portfolio"
+        class="card-elevated group flex flex-col no-underline transition-transform hover:-translate-y-0.5"
+        aria-label="Portfolio — see my work"
+      >
+        <div class="icon-disc mb-4" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <h2 class="mb-2 font-serif text-[22px] font-normal leading-tight text-[var(--color-on-surface)]">Portfolio</h2>
+        <p class="mb-5 flex-1 text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]">
+          Full-stack engineering across web, mobile, and cloud. Systems
+          designed for scale, maintainability, and great UX.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mb-5">
+          <span class="chip">TypeScript</span>
+          <span class="chip">Vue</span>
+          <span class="chip">Firebase</span>
+          <span class="chip">Python</span>
+        </div>
+        <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-cta)]">
+          See my work
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- Services -->
+      <a
+        href="/services"
+        class="card-outlined group flex flex-col no-underline transition-transform hover:-translate-y-0.5"
+        aria-label="Services — work with me"
+      >
+        <div class="icon-disc mb-4" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/>
+            <path d="M5 11h14l-1 8H6l-1-8Z"/>
+          </svg>
+        </div>
+        <h2 class="mb-2 font-serif text-[22px] font-normal leading-tight text-[var(--color-on-surface)]">Services</h2>
+        <p class="mb-5 flex-1 text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]">
+          Available for freelance and consulting — web development, system
+          design, code reviews, and technical mentoring.
+        </p>
+        <div class="flex flex-wrap gap-1.5 mb-5">
+          <span class="chip">Web Dev</span>
+          <span class="chip">Consulting</span>
+          <span class="chip">Mentoring</span>
+        </div>
+        <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-cta)]">
+          Work with me
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
+
+      <!-- About -->
+      <a
+        href="/about"
+        class="card-filled group flex flex-col no-underline transition-transform hover:-translate-y-0.5"
+        aria-label="About me"
+      >
+        <div class="icon-disc mb-4" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <h2 class="mb-2 font-serif text-[22px] font-normal leading-tight text-[var(--color-on-surface)]">About me</h2>
+        <p class="mb-5 flex-1 text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]">
+          Off the clock — the hobbies, gear, and games that keep me going.
+        </p>
+        <div class="mb-5 flex flex-col gap-2.5">
+          <div class="flex items-center gap-2.5">
+            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[13px] font-medium text-[var(--color-on-surface)]">Photography</p>
+              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Fujifilm · Film simulations</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[13px] font-medium text-[var(--color-on-surface)]">Boardgames</p>
+              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Strategy · Favourites</p>
+            </div>
+          </div>
+        </div>
+        <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-cta)]">
+          More about me
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </span>
+      </a>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ROW 3 — Behind the scenes tech note
+         ══════════════════════════════════════════════════════════ -->
+    <div class="panel-inset flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4">
+      <div class="flex items-center gap-2 text-[var(--color-cta)]">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6"/>
+          <polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span class="eyebrow-accent">Behind the scenes</span>
+      </div>
+      <div class="h-4 w-px bg-[var(--color-outline)] hidden sm:block" aria-hidden="true"></div>
+      <p class="text-[12px] text-[var(--color-on-surface-variant)]">
+        All content served live from Firebase Firestore — no redeployment needed to update anything on this site.
+      </p>
+      <div class="ml-auto flex flex-wrap gap-1.5">
+        <span class="pill pill--soft text-[10px]">Astro 6</span>
+        <span class="pill pill--soft text-[10px]">Vue 3 Islands</span>
+        <span class="pill pill--soft text-[10px]">Firebase Firestore</span>
+        <span class="pill pill--soft text-[10px]">TypeScript</span>
+        <span class="pill pill--soft text-[10px]">Live · No Redeploy</span>
+      </div>
+    </div>
+
   </div>
 </PageLayout>
