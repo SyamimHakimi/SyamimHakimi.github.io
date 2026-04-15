@@ -11,12 +11,14 @@ import type { Statistics } from "../../lib/composables/useStatistics";
 import {
   buildCumulativeLineOptions,
   buildCumulativeLineSeries,
+  buildDistributionBarOptions,
+  buildDistributionBarSeries,
+  buildHeatmapColorRanges,
   buildHeatmapOptions,
   buildHeatmapSeries,
   buildFocalLengthOptions,
   buildFocalLengthSeries,
-  buildRecipeBarOptions,
-  buildRecipeBarSeries,
+  buildNiceAxisScale,
   type ChartPalette,
 } from "../../lib/utils/statisticsCharts";
 
@@ -86,14 +88,15 @@ const lineOptions = computed(() =>
     },
     lineData.value.categories,
     Math.max(0, lineData.value.series[0]?.data.length - 1),
+    Math.max(0, ...(lineData.value.series[0]?.data ?? [0])),
   ),
 );
 
 const barData = computed(() =>
-  buildRecipeBarSeries(props.statistics.recipeStats),
+  buildDistributionBarSeries(props.statistics.themeStats),
 );
 const barOptions = computed(() =>
-  buildRecipeBarOptions(
+  buildDistributionBarOptions(
     {
       palette: palette.value,
       prefersReducedMotion: props.prefersReducedMotion,
@@ -105,11 +108,26 @@ const barOptions = computed(() =>
 const heatmapData = computed(() =>
   buildHeatmapSeries(props.statistics.photoStats),
 );
+const heatmapMaxPhotos = computed(() => {
+  let max = 0;
+  for (const row of heatmapData.value) {
+    for (const point of row.data as { y: number }[]) {
+      if (point.y > max) max = point.y;
+    }
+  }
+  return max;
+});
+const heatmapRanges = computed(() =>
+  buildHeatmapColorRanges(palette.value, heatmapMaxPhotos.value),
+);
 const heatmapOptions = computed(() =>
-  buildHeatmapOptions({
-    palette: palette.value,
-    prefersReducedMotion: props.prefersReducedMotion,
-  }),
+  buildHeatmapOptions(
+    {
+      palette: palette.value,
+      prefersReducedMotion: props.prefersReducedMotion,
+    },
+    heatmapMaxPhotos.value,
+  ),
 );
 
 const donutData = computed(() =>
@@ -143,7 +161,7 @@ const barSrSummary = computed(() => {
       (name, index) => `${name}: ${barData.value.series[0]?.data[index] ?? 0}`,
     )
     .join(", ");
-  return `Film recipe usage — ${entries}.`;
+  return `Theme distribution — ${entries}.`;
 });
 
 const heatmapSrSummary = computed(() => {
@@ -160,15 +178,9 @@ const donutSrSummary = computed(() => {
   return `Focal length distribution — ${parts.join(", ")}.`;
 });
 
-const heatmapMaxPhotos = computed(() => {
-  let max = 0;
-  for (const row of heatmapData.value) {
-    for (const point of row.data as { y: number }[]) {
-      if (point.y > max) max = point.y;
-    }
-  }
-  return max;
-});
+const cumulativeAxisScale = computed(() =>
+  buildNiceAxisScale(Math.max(0, ...(lineData.value.series[0]?.data ?? [0]))),
+);
 
 function revealDelay(index: number, base = 0, step = 60): string {
   return props.prefersReducedMotion ? "0ms" : `${base + index * step}ms`;
@@ -186,7 +198,10 @@ function revealDelay(index: number, base = 0, step = 60): string {
           Photos Over Time
         </p>
         <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Cumulative total since first shoot
+          Cumulative total since first shoot, with denser scale steps
+        </p>
+        <p class="mb-2 text-[10px] text-[var(--color-on-surface-variant)]">
+          Scale: 0 to {{ cumulativeAxisScale.max.toLocaleString() }} photos
         </p>
         <VueApexCharts
           type="area"
@@ -203,17 +218,17 @@ function revealDelay(index: number, base = 0, step = 60): string {
         :style="{ animationDelay: revealDelay(1, 240) }"
       >
         <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
-          Film Recipes
+          Themes
         </p>
         <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Simulation usage count
+          Top classified themes by photo count
         </p>
         <VueApexCharts
           type="bar"
           height="160"
           :options="barOptions"
           :series="barData.series"
-          aria-label="Film recipe usage horizontal bar chart"
+          aria-label="Theme distribution horizontal bar chart"
         />
         <p v-if="barSrSummary" class="sr-only">{{ barSrSummary }}</p>
       </div>
@@ -240,22 +255,25 @@ function revealDelay(index: number, base = 0, step = 60): string {
         />
         <p v-if="heatmapSrSummary" class="sr-only">{{ heatmapSrSummary }}</p>
         <div
-          class="mt-1 flex items-center justify-end gap-1.5 text-[10px] text-[var(--color-on-surface-variant)]"
-          :aria-label="`Colour scale: 0 photos (light) to ${heatmapMaxPhotos}+ photos (dark)`"
+          class="mt-2 flex flex-wrap items-center justify-end gap-2 text-[10px] text-[var(--color-on-surface-variant)]"
+          :aria-label="`Colour scale with ${heatmapRanges.length} intensity steps up to ${heatmapMaxPhotos} photos per month`"
         >
-          <span>0</span>
-          <div
-            class="h-2 w-14 rounded-sm"
-            style="
-              background: linear-gradient(
-                to right,
-                var(--color-surface-variant),
-                var(--color-cta)
-              );
-            "
-            aria-hidden="true"
-          />
-          <span>{{ heatmapMaxPhotos }}+ photos</span>
+          <span
+            v-for="range in heatmapRanges"
+            :key="range.label"
+            class="inline-flex items-center gap-1.5"
+          >
+            <span
+              class="h-2.5 w-2.5 rounded-[4px] border"
+              :style="{
+                backgroundColor: range.color,
+                borderColor:
+                  'color-mix(in srgb, var(--color-outline) 40%, transparent)',
+              }"
+              aria-hidden="true"
+            />
+            <span>{{ range.label }}</span>
+          </span>
         </div>
       </div>
 

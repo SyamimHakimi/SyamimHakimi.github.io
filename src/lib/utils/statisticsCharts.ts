@@ -35,6 +35,13 @@ export interface ChartThemeOptions {
   prefersReducedMotion: boolean;
 }
 
+export interface HeatmapColorRange {
+  from: number;
+  to: number;
+  color: string;
+  label: string;
+}
+
 // ── Internal helpers ───────────────────────────────────────────────────────
 
 /**
@@ -46,6 +53,98 @@ function hexToRgba(hex: string, alpha: number): string {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/**
+ * Builds a readable y-axis scale for large cumulative totals.
+ *
+ * @param maxValue Highest plotted value.
+ * @returns Rounded axis max and tick count.
+ */
+export function buildNiceAxisScale(maxValue: number): {
+  max: number;
+  tickAmount: number;
+} {
+  if (!Number.isFinite(maxValue) || maxValue <= 0) {
+    return { max: 4, tickAmount: 4 };
+  }
+
+  if (maxValue <= 24) {
+    return { max: Math.max(4, Math.ceil(maxValue / 4) * 4), tickAmount: 4 };
+  }
+
+  const magnitude = 10 ** Math.floor(Math.log10(maxValue));
+  const candidates = [1, 1.5, 2, 2.5, 5, 10];
+  let step = magnitude;
+
+  for (const candidate of candidates) {
+    const nextStep = candidate * magnitude;
+    if (Math.ceil(maxValue / nextStep) <= 6) {
+      step = nextStep;
+      break;
+    }
+  }
+
+  const axisMax = Math.ceil(maxValue / step) * step;
+  const intervals = Math.max(4, Math.min(6, Math.round(axisMax / step)));
+
+  return {
+    max: axisMax,
+    tickAmount: intervals,
+  };
+}
+
+/**
+ * Builds a discrete heatmap colour scale derived from the actual monthly max.
+ *
+ * @param palette Resolved chart palette.
+ * @param maxValue Highest non-zero monthly photo count in the heatmap.
+ * @returns Ordered zero + non-zero ranges for Apex heatmap colourScale and legend UI.
+ */
+export function buildHeatmapColorRanges(
+  palette: ChartPalette,
+  maxValue: number,
+): HeatmapColorRange[] {
+  const zeroRange: HeatmapColorRange = {
+    from: 0,
+    to: 0,
+    color: palette.surfaceVariant,
+    label: "0",
+  };
+
+  if (!Number.isFinite(maxValue) || maxValue <= 0) {
+    return [zeroRange];
+  }
+
+  const steps = [0.15, 0.3, 0.5, 0.7, 1];
+  const colors = [
+    hexToRgba(palette.cta, 0.18),
+    hexToRgba(palette.cta, 0.32),
+    hexToRgba(palette.cta, 0.5),
+    hexToRgba(palette.cta, 0.7),
+    palette.cta,
+  ];
+
+  let previousUpper = 0;
+  const ranges = steps.map((ratio, index) => {
+    const upper =
+      index === steps.length - 1
+        ? maxValue
+        : Math.max(previousUpper + 1, Math.round(maxValue * ratio));
+    const range: HeatmapColorRange = {
+      from: previousUpper + 1,
+      to: upper,
+      color: colors[index]!,
+      label:
+        previousUpper + 1 === upper
+          ? `${upper}`
+          : `${previousUpper + 1}\u2013${upper}`,
+    };
+    previousUpper = upper;
+    return range;
+  });
+
+  return [zeroRange, ...ranges];
 }
 
 // ── Shared helpers ─────────────────────────────────────────────────────────
@@ -193,21 +292,21 @@ export function buildPhotoStatsLineOptions(
   };
 }
 
-// ── Bar chart (film recipes) ───────────────────────────────────────────────
+// ── Bar chart (theme distribution) ─────────────────────────────────────────
 
 /**
- * Builds the ApexCharts series and y-axis categories for the film recipe
- * horizontal bar chart from `recipeStats`.
+ * Builds the ApexCharts series and y-axis categories for a horizontal
+ * distribution bar chart from a label/count map.
  *
- * Sorts descending by count and takes the top 6 recipes.
+ * Sorts descending by count and takes the top 6 labels.
  *
- * @param recipeStats Firestore `recipe-stats` document data.
+ * @param statsMap Firestore statistics document data.
  * @returns `series` for ApexCharts and `categories` for the y-axis.
  */
-export function buildRecipeBarSeries(
-  recipeStats: Record<string, string | number> | undefined,
+export function buildDistributionBarSeries(
+  statsMap: Record<string, string | number> | undefined,
 ): { series: { name: string; data: number[] }[]; categories: string[] } {
-  const entries = toChartEntries(recipeStats)
+  const entries = toChartEntries(statsMap)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 6);
 
@@ -218,13 +317,13 @@ export function buildRecipeBarSeries(
 }
 
 /**
- * Builds ApexCharts options for the film recipe horizontal bar chart.
+ * Builds ApexCharts options for the horizontal distribution bar chart.
  *
  * @param opts Palette and reduced-motion flag.
- * @param categories Y-axis recipe labels produced by `buildRecipeBarSeries`.
+ * @param categories Y-axis labels produced by `buildDistributionBarSeries`.
  * @returns ApexCharts options object.
  */
-export function buildRecipeBarOptions(
+export function buildDistributionBarOptions(
   { palette, prefersReducedMotion }: ChartThemeOptions,
   categories: string[],
 ): object {
@@ -323,7 +422,9 @@ export function buildCumulativeLineOptions(
   { palette, prefersReducedMotion }: ChartThemeOptions,
   categories: string[],
   lastIndex: number,
+  maxValue: number,
 ): object {
+  const axisScale = buildNiceAxisScale(maxValue);
   return {
     chart: {
       type: "area",
@@ -375,10 +476,16 @@ export function buildCumulativeLineOptions(
       tooltip: { enabled: false },
     },
     yaxis: {
-      tickAmount: 4,
+      min: 0,
+      max: axisScale.max,
+      tickAmount: axisScale.tickAmount,
+      forceNiceScale: true,
       labels: {
         style: { colors: palette.onSurfaceVariant, fontSize: "9px" },
-        formatter: (v: number) => String(Math.round(v)),
+        formatter: (v: number) =>
+          v >= 1000
+            ? `${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k`
+            : String(Math.round(v)),
       },
     },
     tooltip: {
@@ -450,11 +557,11 @@ export function buildHeatmapSeries(
  * @param opts Palette and reduced-motion flag.
  * @returns ApexCharts options object.
  */
-export function buildHeatmapOptions({
-  palette,
-  prefersReducedMotion,
-}: ChartThemeOptions): object {
-  const { cta, surfaceVariant } = palette;
+export function buildHeatmapOptions(
+  { palette, prefersReducedMotion }: ChartThemeOptions,
+  maxValue: number,
+): object {
+  const ranges = buildHeatmapColorRanges(palette, maxValue);
   return {
     chart: {
       type: "heatmap",
@@ -469,13 +576,12 @@ export function buildHeatmapOptions({
         radius: 3,
         enableShades: false,
         colorScale: {
-          ranges: [
-            { from: 0, to: 0, color: surfaceVariant, name: "0" },
-            { from: 1, to: 8, color: hexToRgba(cta, 0.18), name: "1–8" },
-            { from: 9, to: 18, color: hexToRgba(cta, 0.42), name: "9–18" },
-            { from: 19, to: 30, color: hexToRgba(cta, 0.7), name: "19–30" },
-            { from: 31, to: 9999, color: cta, name: "31+" },
-          ],
+          ranges: ranges.map((range) => ({
+            from: range.from,
+            to: range.to,
+            color: range.color,
+            name: range.label,
+          })),
         },
       },
     },

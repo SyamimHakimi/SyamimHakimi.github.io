@@ -2,14 +2,16 @@ import { describe, expect, it } from "vitest";
 import {
   buildPhotoStatsLineSeries,
   buildPhotoStatsLineOptions,
-  buildRecipeBarSeries,
-  buildRecipeBarOptions,
+  buildDistributionBarSeries,
+  buildDistributionBarOptions,
   buildCumulativeLineSeries,
   buildCumulativeLineOptions,
+  buildHeatmapColorRanges,
   buildHeatmapSeries,
   buildHeatmapOptions,
   buildFocalLengthSeries,
   buildFocalLengthOptions,
+  buildNiceAxisScale,
   parseMonthKey,
   toChartEntries,
   type ChartPalette,
@@ -134,9 +136,9 @@ describe("buildPhotoStatsLineOptions", () => {
   });
 });
 
-// ── buildRecipeBarSeries ───────────────────────────────────────────────────
+// ── buildDistributionBarSeries ─────────────────────────────────────────────
 
-describe("buildRecipeBarSeries", () => {
+describe("buildDistributionBarSeries", () => {
   it("sorts descending and takes top 6", () => {
     const stats = {
       A: 10,
@@ -147,25 +149,24 @@ describe("buildRecipeBarSeries", () => {
       F: 60,
       G: 5,
     };
-    const { series, categories } = buildRecipeBarSeries(stats);
+    const { series, categories } = buildDistributionBarSeries(stats);
     expect(categories).toHaveLength(6);
-    // Should be sorted descending: D(80), F(60), B(50), C(30), A(10 or E(20))
     expect(categories[0]).toBe("D");
     expect(series[0]?.data[0]).toBe(80);
   });
 
   it("returns empty series for undefined input", () => {
-    const { series, categories } = buildRecipeBarSeries(undefined);
+    const { series, categories } = buildDistributionBarSeries(undefined);
     expect(series[0]?.data).toHaveLength(0);
     expect(categories).toHaveLength(0);
   });
 });
 
-// ── buildRecipeBarOptions ──────────────────────────────────────────────────
+// ── buildDistributionBarOptions ────────────────────────────────────────────
 
-describe("buildRecipeBarOptions", () => {
+describe("buildDistributionBarOptions", () => {
   it("sets horizontal bar orientation", () => {
-    const opts = buildRecipeBarOptions(
+    const opts = buildDistributionBarOptions(
       { palette, prefersReducedMotion: false },
       ["Classic Chrome"],
     ) as { plotOptions: { bar: { horizontal: boolean } } };
@@ -174,7 +175,7 @@ describe("buildRecipeBarOptions", () => {
   });
 
   it("disables animation when reduced motion is preferred", () => {
-    const opts = buildRecipeBarOptions(
+    const opts = buildDistributionBarOptions(
       { palette, prefersReducedMotion: true },
       [],
     ) as { chart: { animations: { enabled: boolean } } };
@@ -183,12 +184,24 @@ describe("buildRecipeBarOptions", () => {
   });
 
   it("uses palette.cta as bar color", () => {
-    const opts = buildRecipeBarOptions(
+    const opts = buildDistributionBarOptions(
       { palette, prefersReducedMotion: false },
       [],
     ) as { colors: string[] };
 
     expect(opts.colors[0]).toBe(palette.cta);
+  });
+});
+
+// ── buildNiceAxisScale ─────────────────────────────────────────────────────
+
+describe("buildNiceAxisScale", () => {
+  it("returns a sensible default scale for empty charts", () => {
+    expect(buildNiceAxisScale(0)).toEqual({ max: 4, tickAmount: 4 });
+  });
+
+  it("rounds large totals to readable axis intervals", () => {
+    expect(buildNiceAxisScale(8071)).toEqual({ max: 9000, tickAmount: 6 });
   });
 });
 
@@ -242,6 +255,7 @@ describe("buildCumulativeLineOptions", () => {
       { palette, prefersReducedMotion: true },
       [],
       0,
+      8071,
     ) as { chart: { animations: { enabled: boolean } } };
     expect(opts.chart.animations.enabled).toBe(false);
   });
@@ -251,8 +265,21 @@ describe("buildCumulativeLineOptions", () => {
       { palette, prefersReducedMotion: false },
       [],
       0,
+      8071,
     ) as { tooltip: { y: { formatter: (v: number) => string } } };
     expect(opts.tooltip.y.formatter(42)).toBe("42 total photos");
+  });
+
+  it("uses a rounded max and multiple ticks for large totals", () => {
+    const opts = buildCumulativeLineOptions(
+      { palette, prefersReducedMotion: false },
+      [],
+      0,
+      8071,
+    ) as { yaxis: { max: number; tickAmount: number } };
+
+    expect(opts.yaxis.max).toBe(9000);
+    expect(opts.yaxis.tickAmount).toBe(6);
   });
 });
 
@@ -293,14 +320,35 @@ describe("buildHeatmapSeries", () => {
   });
 });
 
+// ── buildHeatmapColorRanges ────────────────────────────────────────────────
+
+describe("buildHeatmapColorRanges", () => {
+  it("returns a zero-only scale when there is no data", () => {
+    const ranges = buildHeatmapColorRanges(palette, 0);
+    expect(ranges).toEqual([
+      { from: 0, to: 0, color: palette.surfaceVariant, label: "0" },
+    ]);
+  });
+
+  it("builds dynamic non-zero ranges up to the provided max", () => {
+    const ranges = buildHeatmapColorRanges(palette, 965);
+    expect(ranges[0]?.label).toBe("0");
+    expect(ranges.at(-1)?.to).toBe(965);
+    expect(ranges).toHaveLength(6);
+  });
+});
+
 // ── buildHeatmapOptions ────────────────────────────────────────────────────
 
 describe("buildHeatmapOptions", () => {
   it("uses surfaceVariant for zero-value range", () => {
-    const opts = buildHeatmapOptions({
-      palette,
-      prefersReducedMotion: false,
-    }) as {
+    const opts = buildHeatmapOptions(
+      {
+        palette,
+        prefersReducedMotion: false,
+      },
+      965,
+    ) as {
       plotOptions: {
         heatmap: { colorScale: { ranges: { from: number; color: string }[] } };
       };
@@ -312,16 +360,35 @@ describe("buildHeatmapOptions", () => {
   });
 
   it("highest range uses solid cta color", () => {
-    const opts = buildHeatmapOptions({
-      palette,
-      prefersReducedMotion: false,
-    }) as {
+    const opts = buildHeatmapOptions(
+      {
+        palette,
+        prefersReducedMotion: false,
+      },
+      965,
+    ) as {
       plotOptions: {
         heatmap: { colorScale: { ranges: { from: number; color: string }[] } };
       };
     };
     const ranges = opts.plotOptions.heatmap.colorScale.ranges;
     expect(ranges.at(-1)?.color).toBe(palette.cta);
+  });
+
+  it("keeps the highest bucket tied to the actual max value", () => {
+    const opts = buildHeatmapOptions(
+      {
+        palette,
+        prefersReducedMotion: false,
+      },
+      965,
+    ) as {
+      plotOptions: {
+        heatmap: { colorScale: { ranges: { to: number }[] } };
+      };
+    };
+
+    expect(opts.plotOptions.heatmap.colorScale.ranges.at(-1)?.to).toBe(965);
   });
 });
 
