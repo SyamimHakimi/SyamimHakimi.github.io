@@ -56,6 +56,29 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 /**
+ * Blends a foreground hex colour against a background hex at the given alpha,
+ * returning a fully-opaque hex string. ApexCharts heatmap colorScale ranges
+ * only accept hex colours — rgba strings are silently ignored, causing chart
+ * cells to render a different colour than the custom legend swatches.
+ *
+ * @param hex Foreground colour, e.g. '#b45309'.
+ * @param background Background colour to blend against, e.g. '#ffffff'.
+ * @param alpha Opacity of the foreground layer (0–1).
+ */
+function blendHex(hex: string, background: string, alpha: number): string {
+  const fr = parseInt(hex.slice(1, 3), 16);
+  const fg = parseInt(hex.slice(3, 5), 16);
+  const fb = parseInt(hex.slice(5, 7), 16);
+  const br = parseInt(background.slice(1, 3), 16);
+  const bg = parseInt(background.slice(3, 5), 16);
+  const bb = parseInt(background.slice(5, 7), 16);
+  const rr = Math.round(fr * alpha + br * (1 - alpha));
+  const rg = Math.round(fg * alpha + bg * (1 - alpha));
+  const rb = Math.round(fb * alpha + bb * (1 - alpha));
+  return `#${rr.toString(16).padStart(2, "0")}${rg.toString(16).padStart(2, "0")}${rb.toString(16).padStart(2, "0")}`;
+}
+
+/**
  * Builds a readable y-axis scale for large cumulative totals.
  *
  * @param maxValue Highest plotted value.
@@ -117,11 +140,14 @@ export function buildHeatmapColorRanges(
   }
 
   const steps = [0.15, 0.3, 0.5, 0.7, 1];
+  // Use blendHex (not hexToRgba) so ApexCharts receives solid hex strings.
+  // ApexCharts heatmap colorScale only accepts hex — rgba values are silently
+  // dropped, causing chart cells to mismatch the custom legend swatches.
   const colors = [
-    hexToRgba(palette.cta, 0.18),
-    hexToRgba(palette.cta, 0.32),
-    hexToRgba(palette.cta, 0.5),
-    hexToRgba(palette.cta, 0.7),
+    blendHex(palette.cta, palette.surface, 0.18),
+    blendHex(palette.cta, palette.surface, 0.32),
+    blendHex(palette.cta, palette.surface, 0.5),
+    blendHex(palette.cta, palette.surface, 0.7),
     palette.cta,
   ];
 
