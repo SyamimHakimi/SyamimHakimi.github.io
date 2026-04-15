@@ -17,6 +17,7 @@ scripts/*.png
 # Local agent/tool working directories
 .codex/
 .codex-temp/
+.private-data/
 
 # Logs and CI artifacts
 logs
