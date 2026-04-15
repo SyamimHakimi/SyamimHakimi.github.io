@@ -94,10 +94,10 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
         <a
           v-if="index === 3"
           href="/photography"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded-[var(--radius-lg)] bg-[rgba(28,25,23,0.52)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 focus-visible:opacity-100"
+          class="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded-[var(--radius-lg)] bg-[var(--color-scrim)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 focus-visible:opacity-100"
           aria-label="View full gallery"
         >
-          <span class="text-center text-[12px] font-600 leading-tight text-white">
+          <span class="text-center text-[12px] font-semibold leading-tight text-white">
             More in<br />Gallery
           </span>
           <span class="flex items-center gap-1 text-[11px] text-white/75">
