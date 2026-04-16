@@ -23,6 +23,8 @@ test("mergeManifestRecords preserves manual fields from previous scans", () => {
         capture_date: "2026-04-12T07:58:34.000Z",
         favourite: true,
         theme_final: "Street",
+        storage_download_token: "token-123",
+        download_url: "https://example.com/photo.jpg",
         notes: "keep",
       },
     ],
@@ -48,6 +50,8 @@ test("mergeManifestRecords preserves manual fields from previous scans", () => {
     theme_suggested: "Portrait",
     favourite: true,
     theme_final: "Street",
+    storage_download_token: "token-123",
+    download_url: "https://example.com/photo.jpg",
     notes: "keep",
   });
 });
