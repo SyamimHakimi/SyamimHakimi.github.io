@@ -45,36 +45,63 @@ export interface HeatmapColorRange {
 // ── Internal helpers ───────────────────────────────────────────────────────
 
 /**
- * Converts a 6-digit hex colour to an rgba string with the given alpha.
- * Requires `hex` to be a '#rrggbb' string (as produced by CSS custom properties).
+ * Parses a CSS colour string into [r, g, b] integers (0–255).
+ * Handles: '#rrggbb', '#rgb', 'rgb(r, g, b)', 'rgba(r, g, b, a)'.
+ * Returns null if the format is unrecognised.
  */
-function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${alpha})`;
+function parseCssColor(color: string): [number, number, number] | null {
+  const c = color.trim();
+  // #rrggbb
+  if (/^#[0-9a-f]{6}$/i.test(c)) {
+    return [
+      parseInt(c.slice(1, 3), 16),
+      parseInt(c.slice(3, 5), 16),
+      parseInt(c.slice(5, 7), 16),
+    ];
+  }
+  // #rgb → expand to #rrggbb
+  if (/^#[0-9a-f]{3}$/i.test(c)) {
+    return [
+      parseInt(c[1]! + c[1]!, 16),
+      parseInt(c[2]! + c[2]!, 16),
+      parseInt(c[3]! + c[3]!, 16),
+    ];
+  }
+  // rgb(r, g, b) or rgba(r, g, b, a)
+  const m = c.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  if (m) {
+    return [parseInt(m[1]!, 10), parseInt(m[2]!, 10), parseInt(m[3]!, 10)];
+  }
+  return null;
 }
 
 /**
- * Blends a foreground hex colour against a background hex at the given alpha,
- * returning a fully-opaque hex string. ApexCharts heatmap colorScale ranges
- * only accept hex colours — rgba strings are silently ignored, causing chart
- * cells to render a different colour than the custom legend swatches.
+ * Blends a foreground CSS colour against a background CSS colour at the given
+ * alpha, returning a fully-opaque hex string. ApexCharts heatmap colorScale
+ * ranges only accept hex colours — rgba strings are silently ignored, causing
+ * chart cells to render a different colour than the custom legend swatches.
  *
- * @param hex Foreground colour, e.g. '#b45309'.
- * @param background Background colour to blend against, e.g. '#ffffff'.
+ * Supports #rrggbb, #rgb, rgb(), and rgba() input formats. Falls back to the
+ * foreground colour (alpha = 1) if either colour cannot be parsed.
+ *
+ * @param fg Foreground colour, e.g. '#b45309' or 'rgb(180, 83, 9)'.
+ * @param background Background colour to blend against.
  * @param alpha Opacity of the foreground layer (0–1).
  */
-function blendHex(hex: string, background: string, alpha: number): string {
-  const fr = parseInt(hex.slice(1, 3), 16);
-  const fg = parseInt(hex.slice(3, 5), 16);
-  const fb = parseInt(hex.slice(5, 7), 16);
-  const br = parseInt(background.slice(1, 3), 16);
-  const bg = parseInt(background.slice(3, 5), 16);
-  const bb = parseInt(background.slice(5, 7), 16);
-  const rr = Math.round(fr * alpha + br * (1 - alpha));
-  const rg = Math.round(fg * alpha + bg * (1 - alpha));
-  const rb = Math.round(fb * alpha + bb * (1 - alpha));
+function blendHex(fg: string, background: string, alpha: number): string {
+  const f = parseCssColor(fg);
+  const b = parseCssColor(background);
+  if (!f || !b) {
+    // Fallback: return foreground as solid hex if either parse fails
+    const safe = parseCssColor(fg);
+    if (safe) {
+      return `#${safe[0].toString(16).padStart(2, "0")}${safe[1].toString(16).padStart(2, "0")}${safe[2].toString(16).padStart(2, "0")}`;
+    }
+    return fg.startsWith("#") ? fg : "#000000";
+  }
+  const rr = Math.round(f[0] * alpha + b[0] * (1 - alpha));
+  const rg = Math.round(f[1] * alpha + b[1] * (1 - alpha));
+  const rb = Math.round(f[2] * alpha + b[2] * (1 - alpha));
   return `#${rr.toString(16).padStart(2, "0")}${rg.toString(16).padStart(2, "0")}${rb.toString(16).padStart(2, "0")}`;
 }
 
