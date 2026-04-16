@@ -1,0 +1,35 @@
+---
+/**
+ * Home page technology note shown beneath the landing cards.
+ *
+ * Keeps the "live Firestore / no redeploy" message and technology pills in a
+ * dedicated component so the route file stays declarative.
+ */
+const techPills = [
+  "Astro 6",
+  "Vue 3 Islands",
+  "Firebase Firestore",
+  "TypeScript",
+  "Live · No Redeploy",
+];
+---
+
+<div class="panel-inset flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4">
+  <div class="flex items-center gap-2 text-[var(--color-cta)]">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="16 18 22 12 16 6"></polyline>
+      <polyline points="8 6 2 12 8 18"></polyline>
+    </svg>
+    <span class="eyebrow-accent">Behind the scenes</span>
+  </div>
+  <div class="hidden h-4 w-px bg-[var(--color-outline)] sm:block" aria-hidden="true"></div>
+  <p class="text-[12px] text-[var(--color-on-surface-variant)]">
+    All content served live from Firebase Firestore - no redeployment needed
+    to update anything on this site.
+  </p>
+  <div class="ml-auto flex flex-wrap gap-1.5">
+    {techPills.map((pill) => (
+      <span class="pill pill--soft text-[10px]">{pill}</span>
+    ))}
+  </div>
+</div>

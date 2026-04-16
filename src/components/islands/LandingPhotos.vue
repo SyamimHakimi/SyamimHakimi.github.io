@@ -23,6 +23,10 @@ import {
 } from "firebase/firestore/lite";
 import { db } from "../../lib/firebase";
 import { PhotoSchema, type Photo } from "../../lib/composables/useGallery";
+import {
+  getLandingPhotoPlaceholderCount,
+  selectLandingPhotos,
+} from "../../lib/utils/landingPhotos";
 
 const photos = ref<Photo[]>([]);
 const loading = ref(true);
@@ -33,21 +37,15 @@ const imageStatuses = ref<Record<string, ImageStatus>>({});
 function onImageLoad(id: string) {
   imageStatuses.value = { ...imageStatuses.value, [id]: "loaded" };
 }
+
 function onImageError(id: string) {
   imageStatuses.value = { ...imageStatuses.value, [id]: "error" };
 }
-function isImageLoading(id: string) {
-  return imageStatuses.value[id] !== "loaded" && imageStatuses.value[id] !== "error";
-}
 
-/** Fisher-Yates shuffle — returns a new array. */
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j]!, a[i]!];
-  }
-  return a;
+function isImageLoading(id: string) {
+  return (
+    imageStatuses.value[id] !== "loaded" && imageStatuses.value[id] !== "error"
+  );
 }
 
 onMounted(async () => {
@@ -62,7 +60,7 @@ onMounted(async () => {
     const fetched = snap.docs.map((d) =>
       PhotoSchema.parse({ id: d.id, ...d.data() }),
     );
-    photos.value = shuffle(fetched).slice(0, 4);
+    photos.value = selectLandingPhotos(fetched);
   } catch {
     // Silently fail — grid stays empty rather than breaking the page
   } finally {
@@ -71,19 +69,16 @@ onMounted(async () => {
 });
 
 const displayPhotos = computed(() => photos.value.slice(0, 4));
+const placeholderCount = computed(() =>
+  getLandingPhotoPlaceholderCount(displayPhotos.value.length),
+);
 </script>
 
 <template>
   <div class="grid h-full grid-cols-2 grid-rows-2 gap-2.5">
-
     <!-- ── Grid-level skeleton (while Firestore fetches) ──────────────────── -->
     <template v-if="loading">
-      <div
-        v-for="i in 4"
-        :key="i"
-        class="lp-card"
-        aria-hidden="true"
-      >
+      <div v-for="i in 4" :key="i" class="lp-card" aria-hidden="true">
         <div class="lp-frame skeleton-rect" />
       </div>
     </template>
@@ -95,7 +90,9 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
         :key="photo.id"
         href="/photography"
         class="lp-card group"
-        :aria-label="index === 3 ? 'View full gallery' : (photo.title ?? 'View gallery')"
+        :aria-label="
+          index === 3 ? 'View full gallery' : (photo.title ?? 'View gallery')
+        "
       >
         <div class="lp-frame">
           <!-- Per-image shimmer — visible until <img> fires load -->
@@ -121,10 +118,18 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
             v-else
             class="flex h-full w-full items-center justify-center bg-[var(--color-surface-variant)]"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-on-surface-variant)" stroke-width="1.5" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <polyline points="21 15 16 10 5 21"/>
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--color-on-surface-variant)"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
             </svg>
           </div>
 
@@ -134,14 +139,26 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
             class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-[var(--color-scrim)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
             aria-hidden="true"
           >
-            <span class="text-center text-[12px] font-semibold leading-tight text-white">
+            <span
+              class="text-center text-[12px] font-semibold leading-tight text-white"
+            >
               More in<br />Gallery
             </span>
             <span class="flex items-center gap-1 text-[11px] text-white/75">
               View all
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
               </svg>
             </span>
           </div>
@@ -150,7 +167,7 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
 
       <!-- Fill empty cells if fewer than 4 photos loaded -->
       <div
-        v-for="i in Math.max(0, 4 - displayPhotos.length)"
+        v-for="i in placeholderCount"
         :key="`fill-${i}`"
         class="lp-card"
         aria-hidden="true"
@@ -158,7 +175,6 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
         <div class="lp-frame bg-[var(--color-surface-variant)]" />
       </div>
     </template>
-
   </div>
 </template>
 
@@ -183,7 +199,8 @@ const displayPhotos = computed(() => photos.value.slice(0, 4));
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--color-surface-variant) 78%, var(--color-cta-soft)) 0%,
+    color-mix(in srgb, var(--color-surface-variant) 78%, var(--color-cta-soft))
+      0%,
     var(--color-surface-variant) 100%
   );
 }

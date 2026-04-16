@@ -604,8 +604,8 @@ export function buildHeatmapSeries(
  * Builds ApexCharts options for the shooting calendar heatmap.
  *
  * Uses a 5-stop opacity scale on `palette.cta` for non-zero cells;
- * zero cells use `palette.surfaceVariant`. `palette.cta` must be a 6-digit
- * hex string (e.g. '#2563eb') for the `hexToRgba` helper to work correctly.
+ * zero cells use `palette.surfaceVariant`. Colour blending accepts hex and
+ * rgb/rgba strings so theme-resolved CSS values stay usable here.
  *
  * @param opts Palette and reduced-motion flag.
  * @returns ApexCharts options object.
@@ -704,7 +704,7 @@ export function buildFocalLengthSeries(
  * Builds ApexCharts options for the focal length donut chart.
  *
  * Slice colours use `palette.cta` at decreasing opacity (100% → 65% → 38% → …).
- * `palette.cta` must be a 6-digit hex string for `hexToRgba` to work.
+ * The colour parser accepts hex and rgb/rgba strings.
  *
  * @param opts Palette and reduced-motion flag.
  * @param labels Slice labels from `buildFocalLengthSeries`.
