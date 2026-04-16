@@ -275,7 +275,6 @@ function revealDelay(index: number, base = 0): string {
           style="padding: 24px; max-width: 720px"
           :style="{ animationDelay: revealDelay(1, 80) }"
         >
-          <p class="eyebrow-accent">syamim.hakimi.dev</p>
           <h3
             class="mt-1 text-[20px] font-normal text-[var(--color-on-surface)]"
           >
