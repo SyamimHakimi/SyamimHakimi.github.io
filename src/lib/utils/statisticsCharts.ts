@@ -717,14 +717,12 @@ export function buildFocalLengthOptions(
   total: number,
 ): object {
   const ALPHA_STEPS = [1, 0.65, 0.38, 0.22];
-  const colors = labels.map((_, i) =>
-    i === 0
-      ? palette.cta
-      : hexToRgba(
-          palette.cta,
-          ALPHA_STEPS[Math.min(i, ALPHA_STEPS.length - 1)],
-        ),
-  );
+  const colors = labels.map((_, i) => {
+    if (i === 0) return palette.cta;
+    const rgb = parseCssColor(palette.cta);
+    const a = ALPHA_STEPS[Math.min(i, ALPHA_STEPS.length - 1)] ?? 0.22;
+    return rgb ? `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})` : palette.cta;
+  });
 
   return {
     chart: {
