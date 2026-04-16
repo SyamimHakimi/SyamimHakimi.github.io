@@ -5,6 +5,7 @@ import {
   buildFirebaseDownloadUrl,
   buildPhotoDocument,
   buildStoragePath,
+  resolveDownloadToken,
   selectUploadRecords,
 } from "./photo-upload-lib.mjs";
 
@@ -89,14 +90,44 @@ test("buildPhotoDocument maps manifest fields into the public photo schema", () 
   );
 
   assert.equal(result.docId, "abc");
-  assert.deepEqual(result.payload, {
-    date: "2026-04-12T07:58:34.000Z",
-    lens: "SIGMA 18-50mm F2.8 DC DN | Contemporary 021",
-    focal_length: 75,
-    theme: "Street",
-    recipe: "Classic Chrome",
-    title: "evening walk",
-    favourite: true,
-    link: "https://firebasestorage.googleapis.com/v0/b/portfolio-9e62d.firebasestorage.app/o/photos%2Fabc.jpg?alt=media&token=token-123",
-  });
+  assert.ok(result.payload.date instanceof Date);
+  assert.equal(result.payload.date.toISOString(), "2026-04-12T07:58:34.000Z");
+  assert.equal(
+    result.payload.lens,
+    "SIGMA 18-50mm F2.8 DC DN | Contemporary 021",
+  );
+  assert.equal(result.payload.focal_length, 75);
+  assert.equal(result.payload.theme, "Street");
+  assert.equal(result.payload.recipe, "Classic Chrome");
+  assert.equal(result.payload.title, "evening walk");
+  assert.equal(result.payload.favourite, true);
+  assert.equal(
+    result.payload.link,
+    "https://firebasestorage.googleapis.com/v0/b/portfolio-9e62d.firebasestorage.app/o/photos%2Fabc.jpg?alt=media&token=token-123",
+  );
+});
+
+test("resolveDownloadToken reuses the persisted storage token", () => {
+  assert.equal(
+    resolveDownloadToken({ storage_download_token: "token-123" }),
+    "token-123",
+  );
+});
+
+test("buildPhotoDocument prefers the persisted download URL when present", () => {
+  const result = buildPhotoDocument(
+    {
+      hash: "abc",
+      capture_date: "2026-04-12T07:58:34.000Z",
+      favourite: true,
+      download_url: "https://example.com/photo.jpg",
+    },
+    {
+      bucket: "portfolio-9e62d.firebasestorage.app",
+      objectPath: "photos/abc.jpg",
+      downloadToken: "token-123",
+    },
+  );
+
+  assert.equal(result.payload.link, "https://example.com/photo.jpg");
 });

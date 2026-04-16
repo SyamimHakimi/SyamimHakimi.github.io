@@ -12,9 +12,12 @@ const MANUAL_FIELDS = [
   "uploaded",
   "firebase_doc_id",
   "storage_path",
+  "storage_download_token",
+  "download_url",
   "uploaded_width",
   "uploaded_height",
   "uploaded_at",
+  "firestore_synced_at",
   "title",
   "notes",
 ];

@@ -1,6 +1,6 @@
 /**
- * Upload photos to Firebase Storage and create/update `photos` Firestore docs
- * from the private local manifest.
+ * Upload photos to Firebase Storage and upsert `photos` Firestore docs from the
+ * private local manifest.
  */
 
 import { createSign } from "node:crypto";
@@ -10,9 +10,10 @@ import process from "node:process";
 import sharp from "sharp";
 
 import {
+  buildFirebaseDownloadUrl,
   buildPhotoDocument,
   buildStoragePath,
-  createDownloadToken,
+  resolveDownloadToken,
   selectUploadRecords,
 } from "./photo-upload-lib.mjs";
 import { loadManifest, saveManifest } from "./photography-manifest-lib.mjs";
@@ -194,6 +195,10 @@ function encodeFirestoreValue(value) {
     return { nullValue: null };
   }
 
+  if (value instanceof Date) {
+    return { timestampValue: value.toISOString() };
+  }
+
   if (typeof value === "string") {
     return { stringValue: value };
   }
@@ -310,6 +315,35 @@ async function uploadObject(
   }
 }
 
+async function setStorageDownloadToken(
+  accessToken,
+  bucket,
+  objectPath,
+  downloadToken,
+) {
+  const response = await fetch(
+    `https://storage.googleapis.com/storage/v1/b/${bucket}/o/${encodeURIComponent(objectPath)}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        metadata: {
+          firebaseStorageDownloadTokens: downloadToken,
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `Storage metadata patch failed for ${objectPath}: ${response.status} ${await response.text()}`,
+    );
+  }
+}
+
 async function buildUploadAsset(filePath) {
   const extension = path.extname(filePath).toLowerCase();
   const source = sharp(filePath, { failOn: "none" }).rotate();
@@ -373,7 +407,7 @@ async function main() {
   if (!options.write) {
     console.log("");
     console.log(
-      "Dry run only. Re-run with --write to upload files and create Firestore docs.",
+      "Dry run only. Re-run with --write to upload files and upsert Firestore docs.",
     );
     return;
   }
@@ -391,8 +425,25 @@ async function main() {
       typeof record.storage_path === "string" && record.storage_path
         ? record.storage_path
         : buildStoragePath(record);
-    const uploadAsset = await buildUploadAsset(String(record.file_path));
-    const downloadToken = createDownloadToken();
+    const shouldUploadObject = options.force || record.uploaded !== true;
+    const downloadToken = resolveDownloadToken(record);
+    const downloadUrl = buildFirebaseDownloadUrl({
+      bucket: options.bucket,
+      objectPath,
+      token: downloadToken,
+    });
+    const uploadAsset = shouldUploadObject
+      ? await buildUploadAsset(String(record.file_path))
+      : {
+          width:
+            typeof record.uploaded_width === "number"
+              ? record.uploaded_width
+              : null,
+          height:
+            typeof record.uploaded_height === "number"
+              ? record.uploaded_height
+              : null,
+        };
     const { docId, payload } = buildPhotoDocument(record, {
       bucket: options.bucket,
       objectPath,
@@ -405,28 +456,24 @@ async function main() {
       `photos/${docId}`,
     );
 
-    if (existingDocument && !options.force) {
-      manifestByHash.set(String(record.hash), {
-        ...record,
-        uploaded: true,
-        firebase_doc_id: docId,
-        storage_path: objectPath,
-        uploaded_at:
-          typeof record.uploaded_at === "string"
-            ? record.uploaded_at
-            : new Date().toISOString(),
-      });
-      continue;
+    if (shouldUploadObject) {
+      await uploadObject(
+        accessToken,
+        options.bucket,
+        objectPath,
+        uploadAsset.buffer,
+        uploadAsset.contentType,
+        downloadToken,
+      );
     }
 
-    await uploadObject(
+    await setStorageDownloadToken(
       accessToken,
       options.bucket,
       objectPath,
-      uploadAsset.buffer,
-      uploadAsset.contentType,
       downloadToken,
     );
+
     await writeFirestoreDocument(
       accessToken,
       projectId,
@@ -439,10 +486,20 @@ async function main() {
       uploaded: true,
       firebase_doc_id: docId,
       storage_path: objectPath,
+      storage_download_token: downloadToken,
+      download_url: downloadUrl,
       uploaded_width: uploadAsset.width,
       uploaded_height: uploadAsset.height,
-      uploaded_at: new Date().toISOString(),
+      uploaded_at:
+        typeof record.uploaded_at === "string" && !shouldUploadObject
+          ? record.uploaded_at
+          : new Date().toISOString(),
+      firestore_synced_at: new Date().toISOString(),
     });
+
+    console.log(
+      `${existingDocument ? "Synced" : "Created"} photos/${docId} (${shouldUploadObject ? "uploaded binary + doc" : "doc sync only"})`,
+    );
   }
 
   await saveManifest(manifestPath, [...manifestByHash.values()]);

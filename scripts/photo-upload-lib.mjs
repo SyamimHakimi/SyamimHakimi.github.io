@@ -67,6 +67,26 @@ export function buildFirebaseDownloadUrl(input) {
 }
 
 /**
+ * Resolve the Firebase Storage download token for a manifest record.
+ *
+ * Reusing the persisted token keeps the public image URL stable across later
+ * Firestore doc syncs.
+ *
+ * @param {Record<string, unknown>} record
+ * @returns {string}
+ */
+export function resolveDownloadToken(record) {
+  if (
+    typeof record.storage_download_token === "string" &&
+    record.storage_download_token
+  ) {
+    return record.storage_download_token;
+  }
+
+  return createDownloadToken();
+}
+
+/**
  * Convert a manifest record into a Firestore `photos` document payload.
  *
  * @param {Record<string, unknown>} record
@@ -74,6 +94,11 @@ export function buildFirebaseDownloadUrl(input) {
  * @returns {{ docId: string, payload: Record<string, unknown> }}
  */
 export function buildPhotoDocument(record, upload) {
+  const captureDate =
+    typeof record.capture_date === "string"
+      ? new Date(record.capture_date)
+      : null;
+
   const theme =
     typeof record.theme_final === "string"
       ? record.theme_final
@@ -82,7 +107,10 @@ export function buildPhotoDocument(record, upload) {
         : undefined;
 
   const payload = {
-    date: record.capture_date,
+    date:
+      captureDate && !Number.isNaN(captureDate.getTime())
+        ? captureDate
+        : record.capture_date,
     lens: record.lens_label,
     focal_length:
       typeof record.focal_length_35mm_value === "number"
@@ -94,11 +122,14 @@ export function buildPhotoDocument(record, upload) {
     recipe: typeof record.recipe === "string" ? record.recipe : undefined,
     title: typeof record.title === "string" ? record.title : undefined,
     favourite: record.favourite === true ? true : undefined,
-    link: buildFirebaseDownloadUrl({
-      bucket: upload.bucket,
-      objectPath: upload.objectPath,
-      token: upload.downloadToken,
-    }),
+    link:
+      typeof record.download_url === "string" && record.download_url
+        ? record.download_url
+        : buildFirebaseDownloadUrl({
+            bucket: upload.bucket,
+            objectPath: upload.objectPath,
+            token: upload.downloadToken,
+          }),
   };
 
   return {
