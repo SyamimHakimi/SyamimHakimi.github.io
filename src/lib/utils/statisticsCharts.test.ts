@@ -336,6 +336,19 @@ describe("buildHeatmapColorRanges", () => {
     expect(ranges.at(-1)?.to).toBe(965);
     expect(ranges).toHaveLength(6);
   });
+
+  it("accepts rgb palette values when blending heatmap buckets", () => {
+    const rgbPalette: ChartPalette = {
+      ...palette,
+      cta: "rgb(180, 83, 9)",
+      surface: "rgb(255, 255, 255)",
+    };
+
+    const ranges = buildHeatmapColorRanges(rgbPalette, 100);
+
+    expect(ranges[1]?.color).toMatch(/^#[0-9a-f]{6}$/i);
+    expect(ranges.at(-1)?.color).toBe("rgb(180, 83, 9)");
+  });
 });
 
 // ── buildHeatmapOptions ────────────────────────────────────────────────────
@@ -450,5 +463,21 @@ describe("buildFocalLengthOptions", () => {
       0,
     ) as { chart: { animations: { enabled: boolean } } };
     expect(opts.chart.animations.enabled).toBe(false);
+  });
+
+  it("accepts rgb palette values for lower-opacity slices", () => {
+    const opts = buildFocalLengthOptions(
+      {
+        palette: {
+          ...palette,
+          cta: "rgb(180, 83, 9)",
+        },
+        prefersReducedMotion: false,
+      },
+      ["56mm", "18-50mm"],
+      110,
+    ) as { colors: string[] };
+
+    expect(opts.colors).toEqual(["rgb(180, 83, 9)", "rgba(180,83,9,0.65)"]);
   });
 });

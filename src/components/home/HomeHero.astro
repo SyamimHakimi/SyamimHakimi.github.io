@@ -1,0 +1,48 @@
+---
+/**
+ * Hero panel for the home page landing layout.
+ *
+ * Encapsulates the introduction copy and primary calls to action so the
+ * landing route can stay focused on composition rather than inline markup.
+ */
+---
+
+<div class="panel-shell flex min-h-[320px] flex-col justify-between p-8 lg:p-10">
+  <div>
+    <div class="mb-6 flex items-center gap-2.5">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="text-[12px] font-medium text-[var(--color-on-surface-variant)]">
+        Open to freelance · Kuala Lumpur, MY
+      </span>
+    </div>
+
+    <h1 class="mb-2 font-serif text-[clamp(36px,5vw,52px)] font-normal leading-[1.1] text-[var(--color-on-surface)]">
+      Syamim Hakimi.
+    </h1>
+    <p class="mb-4 text-[17px] font-normal text-[var(--color-on-surface-variant)]">
+      Software Engineer &amp;
+      <em class="not-italic font-medium text-[var(--color-cta)]">occasional photographer</em>
+    </p>
+
+    <p class="mb-8 max-w-[44ch] text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+      I build clean, thoughtful software - from full-stack web apps to system
+      architecture. Outside the terminal I enjoy photography and boardgames.
+    </p>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <a href="/portfolio" class="button-primary gap-2">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+      </svg>
+      View Portfolio
+    </a>
+    <a href="/contact" class="button-secondary gap-2">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      Get in Touch
+    </a>
+  </div>
+</div>
