@@ -30,6 +30,7 @@ import {
 
 const photos = ref<Photo[]>([]);
 const loading = ref(true);
+const fetchError = ref(false);
 
 type ImageStatus = "loading" | "loaded" | "error";
 const imageStatuses = ref<Record<string, ImageStatus>>({});
@@ -62,7 +63,7 @@ onMounted(async () => {
     );
     photos.value = selectLandingPhotos(fetched);
   } catch {
-    // Silently fail — grid stays empty rather than breaking the page
+    fetchError.value = true;
   } finally {
     loading.value = false;
   }
@@ -75,7 +76,26 @@ const placeholderCount = computed(() =>
 </script>
 
 <template>
-  <div class="grid h-full grid-cols-2 grid-rows-2 gap-2.5">
+  <!-- ── Error state (Firestore unavailable) ──────────────────────────────── -->
+  <div
+    v-if="!loading && fetchError"
+    class="flex h-full flex-col items-center justify-center gap-2.5 rounded-[var(--radius-sm)] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] p-6 text-center"
+    role="alert"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-on-surface-variant)" stroke-width="1.5" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <p class="text-[12px] leading-snug text-[var(--color-on-surface-variant)]">
+      Photos unavailable
+    </p>
+    <a href="/photography" class="text-[11px] font-medium text-[var(--color-cta)] hover:underline">
+      Browse gallery →
+    </a>
+  </div>
+
+  <div v-else class="grid h-full grid-cols-2 grid-rows-2 gap-2.5">
     <!-- ── Grid-level skeleton (while Firestore fetches) ──────────────────── -->
     <template v-if="loading">
       <div v-for="i in 4" :key="i" class="lp-card" aria-hidden="true">
@@ -106,7 +126,7 @@ const placeholderCount = computed(() =>
           <img
             v-if="photo.link"
             :src="photo.link"
-            :alt="photo.title ?? ''"
+            :alt="photo.title || `Gallery photo ${index + 1}`"
             loading="lazy"
             class="lp-image transition-transform duration-300 group-hover:scale-[1.03]"
             @load="onImageLoad(photo.id)"
@@ -177,6 +197,8 @@ const placeholderCount = computed(() =>
     </template>
   </div>
 </template>
+
+
 
 <style scoped>
 /* Mirror GalleryGrid's card + frame styles for visual consistency */

@@ -223,11 +223,11 @@ const SKELETON_COUNT = 12;
       <!-- Uniform grid — 2 → 3 → 4 columns by breakpoint -->
       <ul class="gallery-grid" role="list">
         <!-- Photo tiles -->
-        <li v-for="photo in filteredPhotos" :key="photo.id">
+        <li v-for="(photo, index) in filteredPhotos" :key="photo.id">
           <button
             type="button"
             class="group relative block w-full overflow-hidden rounded-[var(--radius-sm)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-cta)]"
-            :aria-label="photo.title ?? `Photo ${index + 1}`"
+            :aria-label="photo.title || `Photo ${index + 1}`"
             style="touch-action: manipulation; cursor: pointer"
             @click="openLightbox(photo.id)"
           >
@@ -264,7 +264,7 @@ const SKELETON_COUNT = 12;
                 <img
                   v-else-if="photo.link"
                   :src="photo.link"
-                  :alt="photo.title ?? ''"
+                  :alt="photo.title || `Gallery photo ${index + 1}`"
                   loading="lazy"
                   :data-photo-id="photo.id"
                   class="gallery-image relative z-0 transition-all duration-300 group-hover:scale-[1.02]"
