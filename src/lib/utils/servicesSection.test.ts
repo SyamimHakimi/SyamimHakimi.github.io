@@ -3,7 +3,6 @@ import type { Service } from "../composables/useServices";
 import {
   getServiceGroupMeta,
   groupServices,
-  SERVICE_CARD_TAGS,
   SERVICES_OVERVIEW_METRICS,
 } from "./servicesSection";
 
@@ -47,7 +46,7 @@ describe("getServiceGroupMeta", () => {
       title: "Service Group 9",
       description:
         "Specialized engineering support scoped around delivery needs.",
-      summary: "Specialized support",
+      engagement: "Specialized",
       icon: "scope",
     });
   });
@@ -72,11 +71,7 @@ describe("shared service presentation constants", () => {
   it("exposes stable overview metrics for the services hero", () => {
     expect(SERVICES_OVERVIEW_METRICS).toHaveLength(3);
     expect(SERVICES_OVERVIEW_METRICS[0]).toMatchObject({
-      value: "3",
+      value: "4+ yrs",
     });
-  });
-
-  it("keeps the shared footer tags used by service cards", () => {
-    expect(SERVICE_CARD_TAGS).toEqual(["Scoped delivery", "Review-ready"]);
   });
 });
