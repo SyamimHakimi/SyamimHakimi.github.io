@@ -40,7 +40,6 @@ watch(
   () => props.initialIndex,
   (v) => {
     currentIndex.value = v;
-    imageError.value = false;
   },
 );
 
@@ -168,8 +167,9 @@ function formatDate(iso: string): string {
           <!-- Image error fallback -->
           <div
             v-if="imageError || !current.link"
-            class="flex max-h-[74dvh] min-h-[200px] min-w-[200px] flex-col items-center justify-center gap-3 rounded-[var(--radius-md)] bg-[rgba(255,255,255,0.05)]"
-            aria-label="Image unavailable"
+            class="flex w-[min(60dvw,420px)] flex-col items-center justify-center gap-3 rounded-[var(--radius-md)] bg-[rgba(255,255,255,0.05)] py-16"
+            role="img"
+            :aria-label="`Image unavailable${current.title ? ': ' + current.title : ''}`"
           >
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" aria-hidden="true">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
