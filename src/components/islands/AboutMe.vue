@@ -112,7 +112,6 @@ const sortedGear = computed(() =>
 
       <div class="grid gap-5">
         <section
-          v-if="data.gear.length > 0"
           class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Photography gear"
         >
@@ -122,7 +121,12 @@ const sortedGear = computed(() =>
             subtitle="Grouped by type — the current carry setup for street and travel."
           />
 
-          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div v-if="data.gear.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
+            <Camera class="h-5 w-5 text-[var(--color-on-surface-variant)] opacity-40" aria-hidden="true" />
+            <p class="text-[12px] text-[var(--color-on-surface-variant)]">No gear listed yet</p>
+          </div>
+
+          <div v-else class="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <a
               v-for="item in sortedGear"
               :key="item.id"
@@ -174,7 +178,6 @@ const sortedGear = computed(() =>
         </section>
 
         <section
-          v-if="data.boardgames.length > 0"
           class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Favourite boardgames"
         >
@@ -184,6 +187,12 @@ const sortedGear = computed(() =>
             subtitle="A horizontal strip keeps the section tactile without overwhelming the page."
           />
 
+          <div v-if="data.boardgames.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
+            <Layers3 class="h-5 w-5 text-[var(--color-on-surface-variant)] opacity-40" aria-hidden="true" />
+            <p class="text-[12px] text-[var(--color-on-surface-variant)]">No boardgames listed yet</p>
+          </div>
+
+          <template v-else>
           <div
             class="mb-3 flex flex-wrap items-center justify-between gap-3 text-[var(--color-on-surface-variant)]"
           >
@@ -244,10 +253,10 @@ const sortedGear = computed(() =>
               </div>
             </article>
           </div>
+          </template>
         </section>
 
         <section
-          v-if="data.socialMedia.length > 0"
           class="overflow-hidden rounded-[18px] border border-[var(--color-outline)] bg-[var(--color-surface)] p-4 sm:rounded-[22px] sm:p-5"
           aria-label="Connect"
         >
@@ -257,7 +266,13 @@ const sortedGear = computed(() =>
             subtitle="Direct links — recognizable platform names first, then a short qualifier."
           />
 
+          <div v-if="data.socialMedia.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
+            <MessageSquare class="h-5 w-5 text-[var(--color-on-surface-variant)] opacity-40" aria-hidden="true" />
+            <p class="text-[12px] text-[var(--color-on-surface-variant)]">No social links listed yet</p>
+          </div>
+
           <div
+            v-else
             class="flex flex-wrap gap-2.5"
             role="list"
             aria-label="Social links"

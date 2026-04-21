@@ -264,7 +264,7 @@ const SKELETON_COUNT = 12;
                 <img
                   v-else-if="photo.link"
                   :src="photo.link"
-                  :alt="photo.title ?? ''"
+                  :alt="photo.title || `Gallery photo ${index + 1}`"
                   loading="lazy"
                   :data-photo-id="photo.id"
                   class="gallery-image relative z-0 transition-all duration-300 group-hover:scale-[1.02]"

@@ -34,13 +34,19 @@ const emit = defineEmits<{
 }>();
 
 const currentIndex = ref(props.initialIndex);
+const imageError = ref(false);
 
 watch(
   () => props.initialIndex,
   (v) => {
     currentIndex.value = v;
+    imageError.value = false;
   },
 );
+
+watch(currentIndex, () => {
+  imageError.value = false;
+});
 
 const current = computed(() => props.photos[currentIndex.value]);
 
@@ -159,8 +165,22 @@ function formatDate(iso: string): string {
             ease: [0.22, 1, 0.36, 1],
           }"
         >
+          <!-- Image error fallback -->
+          <div
+            v-if="imageError || !current.link"
+            class="flex max-h-[74dvh] min-h-[200px] min-w-[200px] flex-col items-center justify-center gap-3 rounded-[var(--radius-md)] bg-[rgba(255,255,255,0.05)]"
+            aria-label="Image unavailable"
+          >
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <p class="text-[12px] text-[rgba(255,255,255,0.4)]">Image unavailable</p>
+          </div>
+
           <Motion
-            v-if="current.link"
+            v-else
             as="img"
             :src="current.link"
             :alt="current.title ?? 'Photo'"
@@ -172,6 +192,7 @@ function formatDate(iso: string): string {
               duration: prefersReducedMotion ? 0 : 0.22,
               ease: 'easeOut',
             }"
+            @error="imageError = true"
           />
 
           <!-- Metadata bar -->
