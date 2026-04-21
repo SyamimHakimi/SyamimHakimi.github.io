@@ -16,7 +16,6 @@ import { computed } from "vue";
 import { useServices } from "../../lib/composables/useServices";
 import {
   groupServices,
-  SERVICE_CARD_TAGS,
   SERVICES_OVERVIEW_METRICS,
 } from "../../lib/utils/servicesSection";
 import { useReducedMotion } from "../../lib/composables/useReducedMotion";
@@ -85,8 +84,8 @@ function iconForService(title: string, groupId: number) {
         </h2>
         <p class="max-w-2xl text-[var(--color-on-surface-variant)]">
           Focused support across implementation, platform foundations, and
-          review work. The page stays structured and direct, with one clear
-          contact path after the service groups.
+          review work — scoped to what the project needs, without the overhead
+          of a full agency.
         </p>
         <div class="flex flex-wrap gap-3">
           <a href="#services-cta" class="button-primary"> Start a Project </a>
@@ -131,12 +130,6 @@ function iconForService(title: string, groupId: number) {
     </div>
 
     <div v-else id="service-groups" class="space-y-8">
-      <p class="max-w-3xl text-sm text-[var(--color-on-surface-variant)]">
-        The service groups stay symmetric and structured so the page feels calm
-        and readable while still carrying more personality than the original
-        utility-only layout.
-      </p>
-
       <section
         v-for="({ id, meta, services: groupServices }, groupIndex) in grouped"
         :key="id"
@@ -169,10 +162,7 @@ function iconForService(title: string, groupId: number) {
 
           <div class="flex flex-wrap gap-2">
             <span class="pill pill--counter">
-              {{ groupServices.length }} services
-            </span>
-            <span class="pill pill--counter">
-              {{ meta.summary }}
+              {{ meta.engagement }}
             </span>
           </div>
         </div>
@@ -183,8 +173,6 @@ function iconForService(title: string, groupId: number) {
             :key="service.id"
             :title="service.title"
             :description="service.description"
-            :summary="meta.summary"
-            :tags="SERVICE_CARD_TAGS"
             :icon="iconForService(service.title, id)"
             :animation-delay="
               revealDelay(groupIndex >= 3 ? 0 : groupIndex * 2 + index)
@@ -203,17 +191,17 @@ function iconForService(title: string, groupId: number) {
             class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
           >
             <span class="h-2 w-2 rounded-full bg-[var(--color-cta)]" />
-            Clear conversion path
+            Ready to collaborate?
           </p>
           <h2
             id="services-cta-title"
             class="max-w-[16ch] text-[clamp(1.75rem,4vw,2.5rem)] leading-[0.98] tracking-[-0.03em]"
           >
-            Once the structure is clear, the next action should be clear too.
+            If the scope fits, let's make it work.
           </h2>
           <p class="max-w-3xl text-sm text-[var(--color-on-surface-variant)]">
-            The page ends with one direct route to contact. No competing visual
-            weight, no extra conversion branches.
+            If the kind of work described above matches what you need, one
+            message is enough to start the conversation.
           </p>
         </div>
 
