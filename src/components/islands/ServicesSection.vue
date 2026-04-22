@@ -1,121 +1,66 @@
 <script setup lang="ts">
-/**
- * ServicesSection - grouped services experience for the `/services` page.
- * Island: client:visible - runtime Firestore data requires hydration.
- * Composable: useServices()
- */
-import {
-  BriefcaseBusiness,
-  Database,
-  Layers3,
-  ShieldCheck,
-  Sparkles,
-  Workflow,
-} from "lucide-vue-next";
 import { computed } from "vue";
 import { useServices } from "../../lib/composables/useServices";
 import {
   groupServices,
   SERVICES_OVERVIEW_METRICS,
 } from "../../lib/utils/servicesSection";
-import { useReducedMotion } from "../../lib/composables/useReducedMotion";
 import ErrorAlert from "../ui/ErrorAlert.vue";
-import MetricCard from "../ui/MetricCard.vue";
-import ServiceCard from "../ui/ServiceCard.vue";
 
 const { services, loading, error } = useServices();
-const { prefersReducedMotion } = useReducedMotion();
-
 const grouped = computed(() => groupServices(services.value));
-
-function revealDelay(index: number): string {
-  return prefersReducedMotion.value ? "0ms" : `${index * 40}ms`;
-}
-
-function iconForService(title: string, groupId: number) {
-  const normalizedTitle = title.toLowerCase();
-
-  if (normalizedTitle.includes("ux") || normalizedTitle.includes("polish")) {
-    return Sparkles;
-  }
-
-  if (normalizedTitle.includes("api") || normalizedTitle.includes("schema")) {
-    return Database;
-  }
-
-  if (
-    normalizedTitle.includes("review") ||
-    normalizedTitle.includes("hardening")
-  ) {
-    return ShieldCheck;
-  }
-
-  if (
-    normalizedTitle.includes("workflow") ||
-    normalizedTitle.includes("integration")
-  ) {
-    return Workflow;
-  }
-
-  if (groupId === 1) return BriefcaseBusiness;
-  if (groupId === 2) return Layers3;
-
-  return ShieldCheck;
-}
 </script>
 
 <template>
-  <div class="space-y-10">
-    <section
-      class="panel-shell grid gap-4 p-6 md:grid-cols-2"
-      aria-label="Services overview"
+  <div>
+    <!-- Intro strip ─────────────────────────────────────────────────── -->
+    <div
+      class="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-b-2 border-[var(--color-on-surface)] pb-6"
     >
-      <div class="space-y-4">
-        <p
-          class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-        >
-          <span class="h-2 w-2 rounded-full bg-[var(--color-cta)]" />
-          Software Engineering Services
-        </p>
-        <h2
-          class="max-w-[11ch] text-[clamp(2.125rem,5vw,3.625rem)] leading-[0.98] tracking-[-0.03em]"
-        >
-          Build work that feels clear, deliberate, and properly finished.
-        </h2>
-        <p class="max-w-2xl text-[var(--color-on-surface-variant)]">
-          Focused support across implementation, platform foundations, and
-          review work — scoped to what the project needs, without the overhead
-          of a full agency.
-        </p>
-        <div class="flex flex-wrap gap-3">
-          <a href="#services-cta" class="button-primary"> Start a Project </a>
-          <a href="#service-groups" class="button-secondary">
-            Browse Services
-          </a>
-        </div>
-      </div>
-
-      <div class="grid gap-3" aria-label="Service highlights">
-        <MetricCard
+      <h2
+        class="font-serif text-[clamp(1.5rem,3vw,2rem)] leading-none tracking-[-0.02em]"
+      >
+        Services
+      </h2>
+      <div class="flex flex-wrap gap-x-6 gap-y-1">
+        <span
           v-for="metric in SERVICES_OVERVIEW_METRICS"
           :key="metric.value"
-          :value="metric.value"
-          :description="metric.description"
-        />
+          class="text-[13px] text-[var(--color-on-surface-variant)]"
+        >
+          <strong class="font-semibold text-[var(--color-on-surface)]">{{
+            metric.value
+          }}</strong>
+          {{ metric.short }}
+        </span>
       </div>
-    </section>
+    </div>
 
+    <!-- Loading skeleton ────────────────────────────────────────────── -->
     <div
       v-if="loading"
-      class="grid gap-4 md:grid-cols-2"
       aria-busy="true"
       aria-label="Loading services"
     >
-      <div v-for="i in 6" :key="i" class="panel-shell panel-shell--lg p-5">
-        <div class="skeleton-rect h-28" />
-        <div class="skeleton-line mt-4 w-1/2" />
-        <div class="skeleton-line mt-3 w-5/6" />
-        <div class="skeleton-line mt-3 w-2/3" />
+      <div
+        v-for="i in 3"
+        :key="i"
+        class="border-b border-[var(--color-outline)] py-7"
+      >
+        <div class="mb-5 grid gap-4 md:grid-cols-[160px_1fr_auto]">
+          <div class="skeleton-line w-16" />
+          <div class="space-y-2">
+            <div class="skeleton-line w-32" />
+            <div class="skeleton-line w-3/4" />
+          </div>
+          <div class="skeleton-line w-20" />
+        </div>
+        <div class="space-y-3 md:pl-[176px]">
+          <div v-for="j in 3" :key="j" class="grid gap-3 py-3 md:grid-cols-2 border-t border-[var(--color-outline)] first:border-t-0">
+            <div class="skeleton-line w-1/2" />
+            <div class="skeleton-line w-3/4" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -125,90 +70,81 @@ function iconForService(title: string, groupId: number) {
       :message="error"
     />
 
-    <div v-else-if="services.length === 0" class="empty-state">
+    <div v-else-if="services.length === 0" class="empty-state py-12">
       No services are available right now.
     </div>
 
-    <div v-else id="service-groups" class="space-y-8">
+    <!-- Service groups ───────────────────────────────────────────────── -->
+    <div v-else>
       <section
         v-for="({ id, meta, services: groupServices }, groupIndex) in grouped"
         :key="id"
-        class="space-y-4"
+        class="border-b border-[var(--color-outline)] py-7 last:border-b-0"
         :aria-labelledby="`service-group-title-${id}`"
       >
-        <div class="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
-          <div class="space-y-3">
-            <div class="flex items-center gap-4">
-              <span
-                class="flex h-13 w-13 shrink-0 items-center justify-center rounded-full border border-[color:color-mix(in_srgb,var(--color-cta)_20%,transparent)] bg-[color:var(--color-cta-soft)] text-sm font-semibold text-[var(--color-cta)]"
-              >
-                {{ String(id).padStart(2, "0") }}
-              </span>
-              <div>
-                <h2
-                  :id="`service-group-title-${id}`"
-                  class="text-[clamp(1.5rem,3vw,2.125rem)] leading-[1.02] tracking-[-0.02em]"
-                >
-                  {{ meta.title }}
-                </h2>
-                <p
-                  class="mt-1 max-w-3xl text-sm text-[var(--color-on-surface-variant)]"
-                >
-                  {{ meta.description }}
-                </p>
-              </div>
-            </div>
+        <!-- Group header: number | title + desc | engagement pill -->
+        <div class="mb-4 grid gap-3 md:grid-cols-[160px_1fr_auto] md:items-start">
+          <p
+            class="text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)] md:pt-0.5"
+          >
+            Group {{ String(groupIndex + 1).padStart(2, "0") }}
+          </p>
+
+          <div>
+            <h3
+              :id="`service-group-title-${id}`"
+              class="text-[15px] font-bold leading-snug text-[var(--color-on-surface)]"
+            >
+              {{ meta.title }}
+            </h3>
+            <p
+              class="mt-1 max-w-[52ch] text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]"
+            >
+              {{ meta.description }}
+            </p>
           </div>
 
-          <div class="flex flex-wrap gap-2">
-            <span class="pill pill--counter">
-              {{ meta.engagement }}
-            </span>
-          </div>
+          <span class="pill pill--counter self-start">{{
+            meta.engagement
+          }}</span>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-2">
-          <ServiceCard
-            v-for="(service, index) in groupServices"
+        <!-- Service rows: name | description -->
+        <div class="md:pl-[176px]">
+          <div
+            v-for="service in groupServices"
             :key="service.id"
-            :title="service.title"
-            :description="service.description"
-            :icon="iconForService(service.title, id)"
-            :animation-delay="
-              revealDelay(groupIndex >= 3 ? 0 : groupIndex * 2 + index)
-            "
-          />
+            class="grid gap-1 border-t border-[var(--color-outline)] py-3 first:border-t-0 md:grid-cols-2 md:gap-6"
+          >
+            <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
+              {{ service.title }}
+            </p>
+            <p
+              class="text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]"
+            >
+              {{ service.description }}
+            </p>
+          </div>
         </div>
       </section>
 
+      <!-- CTA ─────────────────────────────────────────────────────────── -->
       <section
-        id="services-cta"
-        class="panel-shell panel-shell--soft grid gap-5 p-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end"
+        class="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
         aria-labelledby="services-cta-title"
       >
-        <div class="space-y-3">
-          <p
-            class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]"
-          >
-            <span class="h-2 w-2 rounded-full bg-[var(--color-cta)]" />
-            Ready to collaborate?
-          </p>
+        <div class="space-y-1">
           <h2
             id="services-cta-title"
-            class="max-w-[16ch] text-[clamp(1.75rem,4vw,2.5rem)] leading-[0.98] tracking-[-0.03em]"
+            class="text-[15px] font-bold leading-snug text-[var(--color-on-surface)]"
           >
             If the scope fits, let's make it work.
           </h2>
-          <p class="max-w-3xl text-sm text-[var(--color-on-surface-variant)]">
-            If the kind of work described above matches what you need, one
-            message is enough to start the conversation.
+          <p class="text-[13px] text-[var(--color-on-surface-variant)]">
+            One message is enough to start the conversation.
           </p>
         </div>
-
-        <a
-          href="/contact"
-          class="button-primary shadow-[0_10px_30px_color-mix(in_srgb,var(--color-cta)_20%,transparent)]"
-        >
+        <a href="/contact" class="button-primary shrink-0">
           Start a Conversation
         </a>
       </section>
