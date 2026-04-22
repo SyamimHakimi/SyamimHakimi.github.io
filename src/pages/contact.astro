@@ -1,8 +1,8 @@
 ---
 /**
  * Contact — route `/contact`.
- * Island: ContactForm.vue (client:load — EmailJS requires browser fetch API)
- * The island owns the info card and form layout.
+ * Island: ContactForm.vue (client:visible — static contact links, no JS on mount)
+ * The island owns the info card and contact layout.
  * The page-level header (eyebrow + h1 + subtitle) lives here, matching the
  * other pages.
  */
@@ -19,7 +19,7 @@ import RouteHeader from "../components/ui/RouteHeader.astro";
     <RouteHeader
       eyebrow="Contact"
       title="Start with a clear message."
-      description="One form, a few expectations up front, and feedback states that feel calm instead of noisy."
+      description="Direct channels — no forms, no middleware. Pick the one that suits your project."
     >
       <Fragment slot="icon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -28,6 +28,6 @@ import RouteHeader from "../components/ui/RouteHeader.astro";
       </Fragment>
     </RouteHeader>
 
-    <ContactForm client:load />
+    <ContactForm client:visible />
   </div>
 </PageLayout>
