@@ -16,6 +16,7 @@ export interface ServiceGroup {
 export interface ServiceOverviewMetric {
   value: string;
   description: string;
+  short: string;
 }
 
 const GROUP_META: Record<number, ServiceGroupMeta> = {
@@ -46,16 +47,19 @@ const GROUP_META: Record<number, ServiceGroupMeta> = {
 export const SERVICES_OVERVIEW_METRICS: readonly ServiceOverviewMetric[] = [
   {
     value: "4+ yrs",
+    short: "experience",
     description:
       "Professional software engineering across product, platform, and review work.",
   },
   {
     value: "Full-stack",
+    short: "delivery",
     description:
       "Front-end, back-end, data layer — scoped to what the project needs.",
   },
   {
     value: "Async-first",
+    short: "workflow",
     description:
       "Remote-friendly. Clear handoffs, documented decisions, review-ready output.",
   },
