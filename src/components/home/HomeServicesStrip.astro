@@ -1,0 +1,47 @@
+---
+/**
+ * Thin strip below the hero grid advertising freelance availability.
+ * Links through to /services for the full service catalogue.
+ */
+const skills = ["TypeScript", "Vue", "Firebase", "Python"];
+---
+
+<div
+  class="panel-inset mb-3.5 flex flex-wrap items-center gap-x-5 gap-y-3 px-5 py-4"
+>
+  <div class="icon-disc !h-9 !w-9 flex-shrink-0" aria-hidden="true">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+    </svg>
+  </div>
+
+  <div class="flex-1">
+    <p class="text-[13px] font-semibold text-[var(--color-on-surface)]">
+      Available for freelance work
+    </p>
+    <p class="text-[12px] text-[var(--color-on-surface-variant)]">
+      Web development · System design · Code reviews · Technical mentoring
+    </p>
+  </div>
+
+  <div class="flex flex-wrap gap-1.5" aria-label="Core skills">
+    {skills.map((s) => <span class="chip">{s}</span>)}
+  </div>
+
+  <a
+    href="/services"
+    class="button-secondary flex-shrink-0 px-5 text-[13px]"
+  >
+    See Services
+  </a>
+</div>

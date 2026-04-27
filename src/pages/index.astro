@@ -1,14 +1,16 @@
 ---
 /**
  * Home — default route `/`.
- * Landing page: hero + bento grid overview of all sections.
- * Photo grid island: LandingPhotos.vue (client:visible)
+ * Editorial hero: photography canvas (left dominant) + identity stack (right).
+ * Photo grid island: LandingPhotos.vue (via HomePhotoCanvas, client:visible)
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+import HomePhotoCanvas from "../components/home/HomePhotoCanvas.astro";
+import HomeFreelancePanel from "../components/home/HomeFreelancePanel.astro";
+import HomeServicesStrip from "../components/home/HomeServicesStrip.astro";
 import HomeSectionCard from "../components/home/HomeSectionCard.astro";
 import HomeTechNote from "../components/home/HomeTechNote.astro";
-import LandingPhotos from "../components/islands/LandingPhotos.vue";
 
 const homeCards = {
   portfolio: {
@@ -51,20 +53,29 @@ const homeCards = {
   description="Syamim Hakimi — software engineer based in Malaysia. I build clean, thoughtful software and occasionally point a camera at beautiful things."
 >
   <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-    <div class="mb-3.5 grid grid-cols-1 gap-3.5 lg:grid-cols-[2fr_1fr]">
-      <HomeHero />
-      <div class="min-h-[260px] lg:min-h-0">
-        <LandingPhotos client:visible />
+
+    <!-- Editorial hero: photo canvas (dominant left) + identity stack (right) -->
+    <div class="mb-3.5 grid grid-cols-1 gap-3.5 lg:grid-cols-[5fr_4fr]">
+      <HomePhotoCanvas />
+
+      <!-- Identity stack: hero panel above, freelance panel below -->
+      <div class="flex flex-col gap-3.5">
+        <HomeHero />
+        <HomeFreelancePanel />
       </div>
     </div>
 
-    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+    <!-- Services availability strip -->
+    <HomeServicesStrip />
+
+    <!-- Section bento grid: 1-col mobile → 2-col tablet → 3-col desktop -->
+    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
       <HomeSectionCard {...homeCards.portfolio} />
       <HomeSectionCard {...homeCards.services} />
       <HomeSectionCard {...homeCards.about}>
         <div class="flex flex-col gap-2.5">
           <div class="flex items-center gap-2.5">
-            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
+            <div class="icon-disc !h-8 !w-8 flex-shrink-0" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                 <circle cx="12" cy="13" r="4"></circle>
@@ -76,7 +87,7 @@ const homeCards = {
             </div>
           </div>
           <div class="flex items-center gap-2.5">
-            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
+            <div class="icon-disc !h-8 !w-8 flex-shrink-0" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="5" width="20" height="14" rx="2"></rect>
                 <line x1="2" y1="10" x2="22" y2="10"></line>
