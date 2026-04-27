@@ -1,38 +1,16 @@
 ---
 /**
  * Home — default route `/`.
- * Hero + bento grid overview of all sections.
+ * Landing page: hero + bento grid overview of all sections.
  * Photo grid island: LandingPhotos.vue (client:visible)
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import HomeHero from "../components/home/HomeHero.astro";
 import HomeSectionCard from "../components/home/HomeSectionCard.astro";
-import HomeFreelanceStrip from "../components/home/HomeFreelanceStrip.astro";
+import HomeTechNote from "../components/home/HomeTechNote.astro";
 import LandingPhotos from "../components/islands/LandingPhotos.vue";
 
 const homeCards = {
-  photography: {
-    href: "/photography",
-    title: "Photography",
-    description:
-      "Street and nature photography from Kuala Lumpur, shot on a Fujifilm camera with film simulations. No heavy post-processing — just light, moment, and composition.",
-    ctaText: "Browse gallery",
-    ariaLabel: "Photography gallery",
-    variant: "card-elevated" as const,
-    chips: ["Fujifilm", "Street", "Film Sims"],
-    icon: `<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>`,
-  },
-  services: {
-    href: "/services",
-    title: "Services",
-    description:
-      "Available for freelance — web development, API design, system architecture, and code review. Direct engagement, clear scope, real deliverables.",
-    ctaText: "Work with me",
-    ariaLabel: "Services - work with me",
-    variant: "card-outlined" as const,
-    chips: ["Web Dev", "API Design", "Code Review"],
-    icon: `<path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/>`,
-  },
   portfolio: {
     href: "/portfolio",
     title: "Portfolio",
@@ -40,15 +18,26 @@ const homeCards = {
       "Full-stack engineering across web, mobile, and cloud. Systems designed for scale, maintainability, and great UX.",
     ctaText: "See my work",
     ariaLabel: "Portfolio - see my work",
-    variant: "card-outlined" as const,
+    variant: "card-elevated" as const,
     chips: ["TypeScript", "Vue", "Firebase", "Python"],
     icon: `<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>`,
+  },
+  services: {
+    href: "/services",
+    title: "Services",
+    description:
+      "Available for freelance and consulting - web development, system design, code reviews, and technical mentoring.",
+    ctaText: "Work with me",
+    ariaLabel: "Services - work with me",
+    variant: "card-outlined" as const,
+    chips: ["Web Dev", "Consulting", "Mentoring"],
+    icon: `<path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/>`,
   },
   about: {
     href: "/about",
     title: "About me",
     description:
-      "Off the clock — the hobbies, gear, and games that keep me going.",
+      "Off the clock - the hobbies, gear, and games that keep me going.",
     ctaText: "More about me",
     ariaLabel: "About me",
     variant: "card-filled" as const,
@@ -59,11 +48,9 @@ const homeCards = {
 
 <PageLayout
   title="syamim. — Software Engineer & Photographer"
-  description="Syamim Hakimi — software engineer and photographer based in Kuala Lumpur. Available for freelance web development projects."
+  description="Syamim Hakimi — software engineer based in Malaysia. I build clean, thoughtful software and occasionally point a camera at beautiful things."
 >
   <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-
-    <!-- Hero + photo panel -->
     <div class="mb-3.5 grid grid-cols-1 gap-3.5 lg:grid-cols-[2fr_1fr]">
       <HomeHero />
       <div class="min-h-[260px] lg:min-h-0">
@@ -71,17 +58,23 @@ const homeCards = {
       </div>
     </div>
 
-    <!-- Row 1: Photography (featured) + Services -->
-    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-[2fr_1fr]">
-      <HomeSectionCard {...homeCards.photography} />
-      <HomeSectionCard {...homeCards.services} />
-    </div>
-
-    <!-- Row 2: Portfolio + About -->
-    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+    <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-3">
       <HomeSectionCard {...homeCards.portfolio} />
+      <HomeSectionCard {...homeCards.services} />
       <HomeSectionCard {...homeCards.about}>
         <div class="flex flex-col gap-2.5">
+          <div class="flex items-center gap-2.5">
+            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </div>
+            <div>
+              <p class="text-[13px] font-medium text-[var(--color-on-surface)]">Photography</p>
+              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Fujifilm · Film simulations</p>
+            </div>
+          </div>
           <div class="flex items-center gap-2.5">
             <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -94,23 +87,10 @@ const homeCards = {
               <p class="text-[11px] text-[var(--color-on-surface-variant)]">Strategy · Favourites</p>
             </div>
           </div>
-          <div class="flex items-center gap-2.5">
-            <div class="icon-disc !w-8 !h-8 flex-shrink-0" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2m0 4a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-6-6m0 2a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-[13px] font-medium text-[var(--color-on-surface)]">Gardening</p>
-              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Plants · Outdoor</p>
-            </div>
-          </div>
         </div>
       </HomeSectionCard>
     </div>
 
-    <!-- Freelance availability strip -->
-    <HomeFreelanceStrip />
-
+    <HomeTechNote />
   </div>
 </PageLayout>
