@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option A — Split Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #fffbeb;
+    --surface:      #ffffff;
+    --surface-var:  #fef3c7;
+    --on-surface:   #1c1917;
+    --on-muted:     #78716c;
+    --cta:          #b45309;
+    --cta-soft:     rgba(180,83,9,0.10);
+    --outline:      #e7e5e4;
+    --dark-bg:      #1c1917;
+    --dark-surface: #292524;
+    --dark-outline: #44403c;
+    --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-xl: 28px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+    --ease: cubic-bezier(0.2,0,0,1);
+  }
+  [data-theme="dark"] {
+    --bg: #1c1917; --surface: #292524; --surface-var: #44403c;
+    --on-surface: #fafaf9; --on-muted: #d6d3d1; --cta: #fbbf24;
+    --cta-soft: rgba(251,191,36,0.12); --outline: #57534e;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg);
+    color: var(--on-surface);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  /* ── Theme toggle ── */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500;
+    cursor: pointer; color: var(--on-muted); box-shadow: var(--shadow-sm);
+    transition: all 0.15s var(--ease);
+  }
+  .theme-toggle:hover { box-shadow: var(--shadow-md); color: var(--on-surface); }
+  .theme-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cta); }
+
+  /* ── Layout ── */
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ── Status dot ── */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 500; color: var(--on-muted);
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.25); } 50% { box-shadow: 0 0 0 5px rgba(34,197,94,0.10); } }
+
+  /* ── Hero grid ── */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 14px;
+    margin-bottom: 14px;
+    min-height: 480px;
+  }
+
+  /* ── Left: Identity panel ── */
+  .identity-panel {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-xl);
+    padding: 40px 44px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+  }
+  .identity-top { flex: 1; }
+  .identity-name {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(38px, 4.5vw, 56px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: var(--on-surface);
+    margin: 14px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .identity-role {
+    font-size: 15px; font-weight: 400; color: var(--on-muted);
+    margin-bottom: 18px;
+  }
+  .identity-role em {
+    font-style: normal; font-weight: 600;
+    color: var(--cta);
+  }
+  .identity-desc {
+    font-size: 14px; line-height: 1.7; color: var(--on-muted);
+    max-width: 38ch; margin-bottom: 28px;
+  }
+
+  .tech-stack {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px;
+  }
+  .chip {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 9999px;
+    border: 1px solid var(--outline);
+    color: var(--on-muted); background: var(--surface);
+    transition: all 0.15s var(--ease);
+  }
+  .chip:hover { border-color: var(--cta); color: var(--cta); background: var(--cta-soft); }
+  .chip-cta {
+    background: var(--cta-soft); border-color: var(--cta); color: var(--cta);
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--cta); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 600;
+    padding: 10px 20px; cursor: pointer; text-decoration: none;
+    transition: all 0.15s var(--ease); box-shadow: 0 2px 8px rgba(180,83,9,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(180,83,9,0.35); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: transparent; color: var(--on-surface);
+    border: 1px solid var(--outline); border-radius: var(--radius-sm);
+    font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 500;
+    padding: 10px 20px; cursor: pointer; text-decoration: none;
+    transition: all 0.15s var(--ease);
+  }
+  .btn-secondary:hover { border-color: var(--on-surface); background: var(--surface-var); }
+
+  /* ── Right: Photo canvas ── */
+  .photo-canvas {
+    background: var(--dark-bg);
+    border-radius: var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+  }
+  .photo-grid-abs {
+    position: absolute; inset: 8px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .photo-tile {
+    border-radius: var(--radius-md);
+    background: var(--dark-surface);
+    overflow: hidden; position: relative;
+    transition: opacity 0.2s;
+  }
+  .photo-tile:hover { opacity: 0.85; }
+  .photo-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* Simulated photo colors */
+  .pt-1 { background: linear-gradient(135deg,#3d2c1e 0%,#5c4033 100%); }
+  .pt-2 { background: linear-gradient(135deg,#1a2c1a 0%,#2d4a2d 100%); }
+  .pt-3 { background: linear-gradient(135deg,#1c2433 0%,#2d3d52 100%); }
+  .pt-4 { background: linear-gradient(135deg,#2c1a2e 0%,#4a2d52 100%); }
+  .pt-5 { background: linear-gradient(135deg,#2e2416 0%,#4a3820 100%); }
+  .pt-6 { background: linear-gradient(135deg,#1c2820 0%,#2d4035 100%); }
+  .photo-tile::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  }
+
+  .canvas-fade {
+    position: absolute; inset-x: 0; bottom: 0; height: 52%;
+    background: linear-gradient(to top, var(--dark-bg) 10%, rgba(28,25,23,0.8) 60%, transparent);
+    pointer-events: none;
+  }
+  .canvas-overlay {
+    position: absolute; inset-x: 0; bottom: 0; z-index: 10;
+    padding: 24px 28px 28px;
+  }
+  .canvas-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--cta); margin-bottom: 8px;
+  }
+  [data-theme="dark"] .canvas-eyebrow { color: #fbbf24; }
+  .canvas-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(20px, 2.5vw, 27px); font-weight: 400;
+    line-height: 1.2; color: #fff; margin-bottom: 6px;
+  }
+  .canvas-desc { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 18px; max-width: 34ch; line-height: 1.6; }
+
+  .canvas-stats {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .stats-row { display: flex; gap: 20px; }
+  .stat-item {}
+  .stat-number {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 22px; line-height: 1; color: #fff; display: block;
+  }
+  .stat-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4); display: block; margin-top: 3px;
+  }
+  /* Skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, #3d3733 25%, #4a4440 50%, #3d3733 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skel-num { width: 36px; height: 22px; display: block; margin-bottom: 4px; }
+  .skel-lbl { width: 48px; height: 9px; display: block; }
+
+  .canvas-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #fff;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.08);
+    padding: 8px 16px; border-radius: 9999px;
+    text-decoration: none; backdrop-filter: blur(8px);
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .canvas-link:hover { background: rgba(255,255,255,0.15); }
+  .canvas-link svg { flex-shrink: 0; }
+
+  /* ── Freelance strip ── */
+  .fl-strip {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 16px;
+    background: var(--surface-var);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-lg);
+    padding: 14px 22px;
+    margin-bottom: 14px;
+  }
+  .fl-badge {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--cta-soft); border: 1px solid var(--cta);
+    border-radius: 9999px; padding: 5px 12px;
+    font-size: 11px; font-weight: 600; color: var(--cta);
+  }
+  .fl-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cta); }
+  .fl-text { flex: 1; font-size: 13px; font-weight: 500; color: var(--on-surface); }
+  .fl-sub { font-size: 11px; font-weight: 400; color: var(--on-muted); }
+
+  /* ── Bento cards ── */
+  .bento-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-bottom: 14px;
+  }
+  .bento-card {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-xl);
+    padding: 24px 26px;
+    display: flex; flex-direction: column;
+    gap: 12px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease), border-color 0.2s var(--ease);
+    cursor: pointer; text-decoration: none; color: inherit;
+  }
+  .bento-card:hover {
+    box-shadow: var(--shadow-md); transform: translateY(-2px);
+    border-color: var(--cta);
+  }
+  .bento-card.filled { background: var(--surface-var); }
+  .card-icon-disc {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--cta-soft); display: flex; align-items: center; justify-content: center;
+    color: var(--cta); flex-shrink: 0;
+  }
+  .card-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 18px; font-weight: 400; color: var(--on-surface);
+  }
+  .card-desc { font-size: 12px; line-height: 1.65; color: var(--on-muted); flex: 1; }
+  .card-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .card-chip {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; border: 1px solid var(--outline); color: var(--on-muted);
+  }
+  .card-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; color: var(--cta);
+    margin-top: auto; padding-top: 4px;
+  }
+  .card-cta:hover { gap: 8px; }
+
+  /* ── Tech note ── */
+  .tech-note {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-lg); padding: 12px 18px;
+  }
+  .tech-note-label { font-size: 11px; font-weight: 600; color: var(--cta); display: flex; align-items: center; gap: 5px; }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-left: auto; }
+  .tech-pill {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; background: var(--surface-var); color: var(--on-muted);
+    border: 1px solid var(--outline);
+  }
+  .tech-note-desc { font-size: 11px; color: var(--on-muted); }
+
+  /* ── Mobile ── */
+  @media (max-width: 900px) {
+    .page { padding: 20px 16px; }
+    .hero-grid { grid-template-columns: 1fr; min-height: auto; }
+    .identity-panel { padding: 28px 24px; }
+    .bento-grid { grid-template-columns: 1fr; }
+    .photo-canvas { min-height: 360px; }
+    .photo-grid-abs { grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); }
+  }
+
+  /* ── Mobile preview ── */
+  .mobile-preview-label {
+    font-size: 11px; font-weight: 600; color: var(--on-muted); text-transform: uppercase;
+    letter-spacing: 0.08em; text-align: center; margin: 32px 0 12px;
+  }
+  .mobile-frame {
+    max-width: 375px; margin: 0 auto;
+    border: 2px solid var(--outline); border-radius: 28px; overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .mobile-inner { background: var(--bg); padding: 0; }
+  .mobile-section { padding: 16px; }
+  .mobile-photo { height: 220px; background: var(--dark-bg); position: relative; overflow: hidden; }
+  .mobile-photo-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; padding: 4px; height: 100%; }
+  .mobile-photo-fade { position: absolute; inset-x: 0; bottom: 0; height: 50%; background: linear-gradient(to top, #1c1917, transparent); }
+  .mobile-photo-stats { position: absolute; inset-x: 0; bottom: 0; padding: 12px 14px; z-index: 10; }
+  .mobile-name { font-family: "DM Serif Display", Georgia, serif; font-size: 30px; font-weight: 400; margin: 16px 0 4px; }
+  .mobile-role { font-size: 13px; color: var(--on-muted); margin-bottom: 12px; }
+  .mobile-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+  .mobile-btns { display: flex; gap: 8px; margin-bottom: 16px; }
+  .mobile-btn-p { background: var(--cta); color: #fff; border: none; border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 600; cursor: pointer; flex: 1; }
+  .mobile-btn-s { background: transparent; color: var(--on-surface); border: 1px solid var(--outline); border-radius: 8px; padding: 9px 16px; font-size: 12px; font-weight: 500; cursor: pointer; flex: 1; }
+  .mobile-card { background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 16px; margin-bottom: 10px; }
+
+  svg { vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">
+  <span class="theme-dot"></span>
+  Toggle dark mode
+</button>
+
+<div class="page">
+
+  <!-- ── HERO GRID ── -->
+  <div class="hero-grid">
+
+    <!-- LEFT: Identity -->
+    <div class="identity-panel">
+      <div class="identity-top">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          Open to freelance · Kuala Lumpur, MY
+        </div>
+
+        <h1 class="identity-name">Syamim Hakimi.</h1>
+
+        <p class="identity-role">
+          Software Engineer &amp; <em>occasional photographer</em>
+        </p>
+
+        <p class="identity-desc">
+          I build clean, thoughtful software — full-stack web apps, system architecture, API design. When I'm not at the keyboard, I'm pointing a Fujifilm at interesting light.
+        </p>
+
+        <div class="tech-stack">
+          <span class="chip chip-cta">TypeScript</span>
+          <span class="chip chip-cta">Vue 3</span>
+          <span class="chip chip-cta">Python</span>
+          <span class="chip chip-cta">Firebase</span>
+          <span class="chip">Astro</span>
+          <span class="chip">System Design</span>
+          <span class="chip">API Design</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="cta-row">
+          <a href="#" class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            View Portfolio
+          </a>
+          <a href="#" class="btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Get in Touch
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Photo canvas -->
+    <div class="photo-canvas">
+      <div class="photo-grid-abs">
+        <div class="photo-tile pt-1"></div>
+        <div class="photo-tile pt-2"></div>
+        <div class="photo-tile pt-3"></div>
+        <div class="photo-tile pt-4"></div>
+        <div class="photo-tile pt-5"></div>
+        <div class="photo-tile pt-6"></div>
+      </div>
+      <div class="canvas-fade"></div>
+      <div class="canvas-overlay">
+        <p class="canvas-eyebrow">Photography Journey</p>
+        <h2 class="canvas-title">Me and my Fujifilm.</h2>
+        <p class="canvas-desc">Shooting film simulations — mostly for the love of it.</p>
+        <div class="canvas-stats">
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="skeleton skel-num"></span>
+              <span class="skeleton skel-lbl"></span>
+            </div>
+            <div class="stat-item">
+              <span class="skeleton skel-num"></span>
+              <span class="skeleton skel-lbl"></span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">X-T5</span>
+              <span class="stat-label">Camera</span>
+            </div>
+          </div>
+          <a href="#" class="canvas-link">
+            Browse gallery
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hero-grid -->
+
+  <!-- ── FREELANCE STRIP ── -->
+  <div class="fl-strip">
+    <div class="fl-badge">
+      <span class="fl-dot"></span>
+      Available now
+    </div>
+    <div>
+      <p class="fl-text">Open for freelance &amp; consulting engagements</p>
+      <p class="fl-sub">Web development · System design · Code reviews · Technical mentoring</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+      <span class="chip">Web Dev</span>
+      <span class="chip">Full-stack</span>
+      <span class="chip">API Design</span>
+      <span class="chip">Mentoring</span>
+    </div>
+    <a href="#" class="btn-secondary" style="white-space:nowrap;font-size:12px;padding:8px 16px;">See Services →</a>
+  </div>
+
+  <!-- ── BENTO GRID ── -->
+  <div class="bento-grid">
+
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="card-title">Portfolio</div>
+      <div class="card-desc">Full-stack engineering across web, mobile, and cloud. Systems built for scale, maintainability, and great UX.</div>
+      <div class="card-chips">
+        <span class="card-chip">TypeScript</span>
+        <span class="card-chip">Vue</span>
+        <span class="card-chip">Firebase</span>
+        <span class="card-chip">Python</span>
+      </div>
+      <div class="card-cta">
+        See my work
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/></svg>
+      </div>
+      <div class="card-title">Services</div>
+      <div class="card-desc">Available for freelance and consulting — web development, system design, code reviews, and technical mentoring.</div>
+      <div class="card-chips">
+        <span class="card-chip">Web Dev</span>
+        <span class="card-chip">Consulting</span>
+        <span class="card-chip">Mentoring</span>
+      </div>
+      <div class="card-cta">
+        Work with me
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <a href="#" class="bento-card filled">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="card-title">About me</div>
+      <div class="card-desc">Off the clock — the hobbies, gear, and games that keep me going.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div>
+            <p style="font-size:12px;font-weight:500;color:var(--on-surface);">Photography</p>
+            <p style="font-size:10px;color:var(--on-muted);">Fujifilm · Film simulations</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div>
+            <p style="font-size:12px;font-weight:500;color:var(--on-surface);">Boardgames</p>
+            <p style="font-size:10px;color:var(--on-muted);">Strategy · Favourites</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-cta">
+        More about me
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+  </div><!-- /bento-grid -->
+
+  <!-- ── TECH NOTE ── -->
+  <div class="tech-note">
+    <div class="tech-note-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Behind the scenes
+    </div>
+    <div style="width:1px;height:14px;background:var(--outline);"></div>
+    <span class="tech-note-desc">All content served live from Firebase Firestore — no redeployment needed</span>
+    <div class="tech-pills">
+      <span class="tech-pill">Astro 6</span>
+      <span class="tech-pill">Vue 3 Islands</span>
+      <span class="tech-pill">Firebase Firestore</span>
+      <span class="tech-pill">TypeScript</span>
+      <span class="tech-pill">Live · No Redeploy</span>
+    </div>
+  </div>
+
+  <!-- ── MOBILE PREVIEW ── -->
+  <div class="mobile-preview-label">↓ Mobile (375px)</div>
+  <div class="mobile-frame">
+    <div class="mobile-inner">
+      <!-- Photo canvas -->
+      <div class="mobile-photo">
+        <div class="mobile-photo-grid">
+          <div class="photo-tile pt-1" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-3" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-2" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-5" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-4" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-6" style="border-radius:8px;"></div>
+        </div>
+        <div class="mobile-photo-fade"></div>
+        <div class="mobile-photo-stats">
+          <p style="font-size:9px;color:#fbbf24;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;">Photography Journey</p>
+          <div style="display:flex;gap:14px;align-items:center;justify-content:space-between;">
+            <div style="display:flex;gap:14px;">
+              <div><span class="skeleton skel-num" style="width:28px;height:16px;"></span><span style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);">Photos</span></div>
+              <div><span class="skeleton skel-num" style="width:28px;height:16px;"></span><span style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);">Outings</span></div>
+              <div><span style="font-family:'DM Serif Display',serif;font-size:16px;color:#fff;display:block;">X-T5</span><span style="font-size:9px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);">Camera</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Identity -->
+      <div class="mobile-section">
+        <div class="status-pill" style="margin-bottom:10px;">
+          <span class="status-dot"></span>
+          Open to freelance · KL, MY
+        </div>
+        <div class="mobile-name">Syamim Hakimi.</div>
+        <p class="mobile-role">Software Engineer &amp; <span style="color:var(--cta);font-weight:600;">occasional photographer</span></p>
+        <div class="mobile-chips">
+          <span class="chip chip-cta" style="font-size:10px;">TypeScript</span>
+          <span class="chip chip-cta" style="font-size:10px;">Vue 3</span>
+          <span class="chip chip-cta" style="font-size:10px;">Python</span>
+          <span class="chip chip-cta" style="font-size:10px;">Firebase</span>
+        </div>
+        <div class="mobile-btns">
+          <button class="mobile-btn-p">View Portfolio</button>
+          <button class="mobile-btn-s">Get in Touch</button>
+        </div>
+        <div class="mobile-card">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:6px;">Portfolio</p>
+          <p style="font-size:13px;font-weight:600;margin-bottom:4px;">Full-stack Engineering</p>
+          <p style="font-size:11px;color:var(--on-muted);">Web apps, APIs, system architecture. TypeScript · Vue · Python · Firebase</p>
+        </div>
+        <div class="mobile-card" style="background:var(--surface-var);">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:6px;">Services</p>
+          <p style="font-size:13px;font-weight:600;margin-bottom:4px;">Available for Freelance</p>
+          <p style="font-size:11px;color:var(--on-muted);">Web dev · Consulting · Mentoring</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<div style="text-align:center;padding:20px 0 32px;font-size:11px;color:var(--on-muted);">
+  Option A — Split Identity · Engineering leads, photography is the visual counterpoint
+</div>
+
+</body>
+</html>

@@ -1,35 +1,49 @@
 ---
 /**
- * Identity panel for the home page editorial hero (right column).
- * Sits above HomeFreelancePanel; the photography canvas occupies the left.
+ * Editorial header for the home page.
+ * Two-line serif headline unifies both identities, followed by
+ * identity byline, description, and primary CTAs.
  */
 ---
 
-<div class="panel-shell flex flex-1 flex-col justify-between gap-6 p-6 sm:p-8">
-  <div>
-    <div class="mb-5 flex items-center gap-2.5">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span class="text-[12px] font-medium text-[var(--color-on-surface-variant)]">
-        Open to freelance · Kuala Lumpur, MY
-      </span>
-    </div>
+<header class="border-b border-[var(--color-outline)] pb-10 pt-12 sm:pt-14">
 
-    <h1
-      class="mb-2 font-serif text-[clamp(32px,4vw,46px)] font-normal leading-[1.1] text-[var(--color-on-surface)]"
+  <!-- Byline row: name · role · location + availability badge -->
+  <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
+    <div
+      class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] font-medium text-[var(--color-on-surface-variant)]"
     >
-      Syamim Hakimi.
-    </h1>
-    <p class="mb-4 text-[16px] font-normal text-[var(--color-on-surface-variant)]">
-      Software Engineer &amp;
-      <em class="not-italic font-medium text-[var(--color-cta)]">occasional photographer</em>
-    </p>
-
-    <p class="max-w-[40ch] text-[14px] leading-relaxed text-[var(--color-on-surface-variant)]">
-      I build clean, thoughtful software — full-stack web apps to system
-      architecture. When I'm not coding, I have a Fujifilm in hand.
-    </p>
+      <span>Syamim Hakimi</span>
+      <span class="h-3 w-px bg-[var(--color-outline)]" aria-hidden="true"></span>
+      <span>Software Engineer</span>
+      <span class="h-3 w-px bg-[var(--color-outline)]" aria-hidden="true"></span>
+      <span>Kuala Lumpur, MY</span>
+    </div>
+    <div
+      class="flex items-center gap-2 rounded-full border border-[var(--color-cta)] bg-[var(--color-cta-soft)] px-3.5 py-1.5"
+    >
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="text-[11px] font-semibold text-[var(--color-cta)]">Open to freelance</span>
+    </div>
   </div>
 
+  <!-- Editorial headline -->
+  <h1
+    class="mb-5 font-serif font-normal tracking-[-0.025em] text-[var(--color-on-surface)]"
+    style="font-size: clamp(42px, 7vw, 86px); line-height: 1.0;"
+  >
+    Building software.<br>
+    <em class="italic text-[var(--color-cta)]">Chasing light.</em>
+  </h1>
+
+  <!-- Description -->
+  <p class="mb-8 max-w-[52ch] text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+    I'm a <strong class="font-semibold text-[var(--color-on-surface)]">full-stack software engineer</strong>
+    building clean, thoughtful software for web and cloud. This site is both:
+    my engineering portfolio, and the journal where I track my photography journey.
+  </p>
+
+  <!-- CTAs -->
   <div class="flex flex-wrap gap-3">
     <a href="/portfolio" class="button-primary gap-2">
       <svg
@@ -60,10 +74,27 @@
         stroke-linejoin="round"
         aria-hidden="true"
       >
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-        ></path>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
       </svg>
       Get in Touch
     </a>
+    <a href="/photography" class="button-secondary gap-2">
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+      Photography Journal
+    </a>
   </div>
-</div>
+
+</header>

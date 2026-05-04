@@ -54,16 +54,5 @@ const counters = computed(() => [
       </span>
     </div>
 
-    <!-- Camera model: static, not a Firestore stat -->
-    <div>
-      <span class="block font-serif text-[20px] leading-none text-white">
-        X-T5
-      </span>
-      <span
-        class="mt-1 block text-[10px] uppercase tracking-[0.08em] text-white/50"
-      >
-        Camera
-      </span>
-    </div>
   </div>
 </template>

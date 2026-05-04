@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option B — Dashboard / Stat-forward</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #fffbeb;
+    --surface:      #ffffff;
+    --surface-var:  #fef3c7;
+    --on-surface:   #1c1917;
+    --on-muted:     #78716c;
+    --cta:          #b45309;
+    --cta-soft:     rgba(180,83,9,0.10);
+    --outline:      #e7e5e4;
+    --dark-bg:      #1c1917;
+    --dark-surface: #292524;
+    --dark-surface2:#3a3633;
+    --dark-outline: #44403c;
+    --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:28px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+    --ease: cubic-bezier(0.2,0,0,1);
+  }
+  [data-theme="dark"] {
+    --bg: #1c1917; --surface: #292524; --surface-var: #44403c;
+    --on-surface: #fafaf9; --on-muted: #d6d3d1; --cta: #fbbf24;
+    --cta-soft: rgba(251,191,36,0.12); --outline: #57534e;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg); color: var(--on-surface);
+    font-size: 14px; line-height: 1.6; min-height: 100vh;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500;
+    cursor: pointer; color: var(--on-muted); box-shadow: var(--shadow-sm);
+    transition: all 0.15s;
+  }
+  .theme-toggle:hover { box-shadow: var(--shadow-md); color: var(--on-surface); }
+  .theme-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cta); }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 500; color: var(--on-muted);
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.25); } 50% { box-shadow: 0 0 0 5px rgba(34,197,94,0.10); } }
+
+  /* ── Hero: wide single column ── */
+  .hero-wide {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-xl);
+    padding: 44px 52px;
+    margin-bottom: 14px;
+    display: flex; flex-direction: column;
+    box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
+  }
+  /* Subtle decorative accent corner */
+  .hero-wide::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--cta-soft) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+    flex-wrap: wrap;
+  }
+  .hero-left { flex: 1; min-width: 280px; }
+  .hero-right { flex-shrink: 0; text-align: right; }
+
+  .hero-name {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(44px, 5.5vw, 68px);
+    font-weight: 400; line-height: 1.0; letter-spacing: -0.02em;
+    color: var(--on-surface); margin: 12px 0 10px;
+  }
+  .hero-name-dot { color: var(--cta); }
+  .hero-role {
+    font-size: 16px; font-weight: 400; color: var(--on-muted);
+    margin-bottom: 16px;
+  }
+  .hero-role strong { color: var(--on-surface); font-weight: 600; }
+  .hero-desc {
+    font-size: 14px; line-height: 1.75; color: var(--on-muted);
+    max-width: 50ch; margin-bottom: 28px;
+  }
+
+  .cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--cta); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: "DM Sans", sans-serif;
+    font-size: 13px; font-weight: 600; padding: 10px 22px; cursor: pointer;
+    text-decoration: none; transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(180,83,9,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(180,83,9,0.35); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: transparent; color: var(--on-surface);
+    border: 1px solid var(--outline); border-radius: var(--radius-sm);
+    font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 500;
+    padding: 10px 22px; cursor: pointer; text-decoration: none; transition: all 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--on-surface); background: var(--surface-var); }
+
+  /* Skills row */
+  .hero-skills {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 20px;
+  }
+  .chip {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 500; padding: 4px 10px;
+    border-radius: 9999px; border: 1px solid var(--outline);
+    color: var(--on-muted); background: transparent; transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--cta); color: var(--cta); background: var(--cta-soft); }
+  .chip-cta { background: var(--cta-soft); border-color: var(--cta); color: var(--cta); }
+
+  /* Availability callout (right side of hero) */
+  .avail-callout {
+    background: var(--cta-soft); border: 1px solid var(--cta);
+    border-radius: var(--radius-lg); padding: 16px 20px;
+    text-align: left; min-width: 180px;
+  }
+  .avail-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--cta); margin-bottom: 4px;
+  }
+  .avail-title { font-size: 14px; font-weight: 600; color: var(--on-surface); margin-bottom: 2px; }
+  .avail-sub { font-size: 11px; color: var(--on-muted); }
+
+  /* ── Photography Dashboard ── */
+  .photo-dashboard {
+    background: var(--dark-bg);
+    border-radius: var(--radius-xl);
+    padding: 28px 32px;
+    margin-bottom: 14px;
+    position: relative; overflow: hidden;
+  }
+  /* Subtle grid lines as "dashboard feel" */
+  .photo-dashboard::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .dashboard-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px; flex-wrap: wrap; gap: 12px; position: relative;
+  }
+  .dashboard-title-row { display: flex; align-items: center; gap: 10px; }
+  .camera-icon-disc {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.2);
+    display: flex; align-items: center; justify-content: center; color: #fbbf24;
+  }
+  .dashboard-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 18px; color: #fafaf9; font-weight: 400;
+  }
+  .dashboard-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+  .dashboard-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 600; padding: 5px 12px;
+    border-radius: 9999px; color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.25);
+    background: rgba(251,191,36,0.08);
+  }
+  .dash-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80;
+    animation: pulse2 2s ease-in-out infinite; }
+  @keyframes pulse2 { 0%,100%{opacity:1;}50%{opacity:0.4;} }
+
+  /* ── Stat + photo grid layout ── */
+  .dash-body {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 28px; align-items: start; position: relative;
+  }
+  .stat-column { display: flex; flex-direction: column; gap: 12px; }
+
+  .stat-card {
+    background: var(--dark-surface); border: 1px solid var(--dark-outline);
+    border-radius: var(--radius-lg); padding: 18px 22px; min-width: 160px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { border-color: rgba(251,191,36,0.3); box-shadow: 0 0 0 1px rgba(251,191,36,0.1); }
+  .stat-card-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.35); margin-bottom: 8px;
+  }
+  .stat-card-value {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 36px; line-height: 1; color: #fafaf9; display: block;
+  }
+  .stat-card-sub { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+  /* Skeleton for stats */
+  .skeleton {
+    background: linear-gradient(90deg, #3d3733 25%, #4a4440 50%, #3d3733 75%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px;
+    display: block;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0;}100%{background-position:-200% 0;} }
+
+  .progress-note {
+    background: rgba(251,191,36,0.06); border: 1px solid rgba(251,191,36,0.15);
+    border-radius: var(--radius-md); padding: 14px 18px; margin-top: 4px;
+  }
+  .progress-note-eyebrow {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: #fbbf24; margin-bottom: 5px;
+  }
+  .progress-note-text { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .progress-note-text strong { color: #fbbf24; font-weight: 600; }
+
+  /* Photo mosaic */
+  .photo-mosaic {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 6px; height: 100%; min-height: 220px;
+  }
+  .photo-tile { border-radius: var(--radius-md); overflow: hidden; position: relative; transition: opacity 0.2s; }
+  .photo-tile:hover { opacity: 0.8; }
+  .photo-tile:first-child { grid-column: 1/3; grid-row: 1/3; border-radius: var(--radius-lg); }
+  .pt-1 { background: linear-gradient(135deg,#3d2c1e,#5c4033); }
+  .pt-2 { background: linear-gradient(135deg,#1a2c1a,#2d4a2d); }
+  .pt-3 { background: linear-gradient(135deg,#1c2433,#2d3d52); }
+  .pt-4 { background: linear-gradient(135deg,#2c1a2e,#4a2d52); }
+  .pt-5 { background: linear-gradient(135deg,#2e2416,#4a3820); }
+  .pt-6 { background: linear-gradient(135deg,#1c2820,#2d4035); }
+  .pt-7 { background: linear-gradient(135deg,#2a2020,#4a3333); }
+
+  .mosaic-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #fbbf24;
+    text-decoration: none; margin-top: 14px;
+    transition: gap 0.15s;
+  }
+  .mosaic-link:hover { gap: 10px; }
+
+  /* ── Section divider ── */
+  .section-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--on-muted);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--outline);
+  }
+
+  /* ── Bento grid ── */
+  .bento-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-bottom: 14px;
+  }
+  .bento-card {
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-xl); padding: 26px 28px;
+    display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+    text-decoration: none; color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  }
+  .bento-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--cta); }
+  .bento-card.filled { background: var(--surface-var); }
+  .bento-card.dark-card {
+    background: var(--dark-bg); border-color: var(--dark-outline); color: #fafaf9;
+  }
+  .bento-card.dark-card:hover { border-color: rgba(251,191,36,0.4); }
+
+  .card-icon-disc {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--cta-soft); color: var(--cta);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dark-card .card-icon-disc {
+    background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2);
+  }
+  .card-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 18px; font-weight: 400; color: var(--on-surface);
+  }
+  .dark-card .card-title { color: #fafaf9; }
+  .card-desc { font-size: 12px; line-height: 1.65; color: var(--on-muted); flex: 1; }
+  .dark-card .card-desc { color: rgba(255,255,255,0.5); }
+  .card-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .card-chip {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; border: 1px solid var(--outline); color: var(--on-muted);
+  }
+  .card-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; color: var(--cta);
+    margin-top: auto; padding-top: 4px; transition: gap 0.15s;
+  }
+  .card-cta:hover { gap: 8px; }
+  .dark-card .card-cta { color: #fbbf24; }
+
+  /* ── Tech note ── */
+  .tech-note {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-lg); padding: 12px 18px;
+  }
+  .tech-note-label { font-size: 11px; font-weight: 600; color: var(--cta); display: flex; align-items: center; gap: 5px; }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-left: auto; }
+  .tech-pill {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; background: var(--surface-var); color: var(--on-muted);
+    border: 1px solid var(--outline);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 900px) {
+    .page { padding: 20px 16px; }
+    .hero-wide { padding: 28px 24px; }
+    .hero-inner { flex-direction: column; gap: 20px; }
+    .hero-right { text-align: left; }
+    .dash-body { grid-template-columns: 1fr; }
+    .stat-column { flex-direction: row; flex-wrap: wrap; }
+    .stat-card { min-width: 120px; flex: 1; }
+    .photo-mosaic { grid-template-columns: repeat(3,1fr); grid-template-rows: auto; }
+    .photo-tile:first-child { grid-column: auto; grid-row: auto; }
+    .bento-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Mobile preview ── */
+  .mobile-preview-label {
+    font-size: 11px; font-weight: 600; color: var(--on-muted); text-transform: uppercase;
+    letter-spacing: 0.08em; text-align: center; margin: 32px 0 12px;
+  }
+  .mobile-frame {
+    max-width: 375px; margin: 0 auto;
+    border: 2px solid var(--outline); border-radius: 28px; overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  svg { vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">
+  <span class="theme-dot"></span>
+  Toggle dark mode
+</button>
+
+<div class="page">
+
+  <!-- ── WIDE HERO ── -->
+  <div class="hero-wide">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          Open to freelance · Kuala Lumpur, MY
+        </div>
+        <h1 class="hero-name">Syamim Hakimi<span class="hero-name-dot">.</span></h1>
+        <p class="hero-role"><strong>Full-stack Software Engineer</strong> — building for web, mobile &amp; cloud</p>
+        <p class="hero-desc">
+          I design and build clean, thoughtful software — from system architecture to the last pixel of UI. TypeScript, Vue, Python, Firebase are my daily tools. Outside of code, I track my photography journey obsessively.
+        </p>
+        <div class="cta-row">
+          <a href="#" class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            View Portfolio
+          </a>
+          <a href="#" class="btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Get in Touch
+          </a>
+        </div>
+        <div class="hero-skills">
+          <span class="chip chip-cta">TypeScript</span>
+          <span class="chip chip-cta">Vue 3</span>
+          <span class="chip chip-cta">Python</span>
+          <span class="chip chip-cta">Firebase</span>
+          <span class="chip">Astro</span>
+          <span class="chip">System Design</span>
+          <span class="chip">API Design</span>
+          <span class="chip">Full-stack</span>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="avail-callout">
+          <p class="avail-label">✦ Availability</p>
+          <p class="avail-title">Open to Freelance</p>
+          <p class="avail-sub">Starting from a sprint to<br>long-term partnerships</p>
+          <a href="#" style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:11px;font-weight:600;color:var(--cta);text-decoration:none;">
+            See Services
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PHOTOGRAPHY DASHBOARD ── -->
+  <div class="photo-dashboard">
+    <div class="dashboard-header">
+      <div class="dashboard-title-row">
+        <div class="camera-icon-disc">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <div>
+          <div class="dashboard-title">Photography Journal</div>
+          <div class="dashboard-sub">Fujifilm X-T5 · Film simulations · tracked since 2023</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div class="dashboard-badge">
+          <span class="dash-dot"></span>
+          Live from Firestore
+        </div>
+        <a href="#" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#fbbf24;text-decoration:none;border:1px solid rgba(251,191,36,0.2);padding:5px 12px;border-radius:9999px;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.08)'" onmouseout="this.style.background='transparent'">
+          Browse gallery
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="dash-body">
+      <!-- Stat column -->
+      <div class="stat-column">
+        <div class="stat-card">
+          <div class="stat-card-label">Total Photos</div>
+          <span class="skeleton" style="width:60px;height:38px;border-radius:6px;margin-bottom:4px;"></span>
+          <div class="stat-card-sub">and counting</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Outings</div>
+          <span class="skeleton" style="width:48px;height:38px;border-radius:6px;margin-bottom:4px;"></span>
+          <div class="stat-card-sub">shooting sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Camera</div>
+          <span style="font-family:'DM Serif Display',serif;font-size:28px;color:#fafaf9;line-height:1;">X-T5</span>
+          <div class="stat-card-sub">Fujifilm · APS-C</div>
+        </div>
+        <div class="progress-note">
+          <div class="progress-note-eyebrow">Journey milestone</div>
+          <p class="progress-note-text"><strong>Tracking every outing</strong> — photo counts, lens choices, film recipes. The data is live.</p>
+        </div>
+      </div>
+
+      <!-- Photo mosaic + link -->
+      <div>
+        <div class="photo-mosaic">
+          <div class="photo-tile pt-1"></div>
+          <div class="photo-tile pt-2"></div>
+          <div class="photo-tile pt-3"></div>
+          <div class="photo-tile pt-4"></div>
+          <div class="photo-tile pt-5"></div>
+          <div class="photo-tile pt-6"></div>
+          <div class="photo-tile pt-7"></div>
+        </div>
+        <a href="#" class="mosaic-link">
+          See the full gallery
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION LABEL ── -->
+  <div class="section-label">What I do &amp; who I am</div>
+
+  <!-- ── BENTO GRID ── -->
+  <div class="bento-grid">
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="card-title">Portfolio</div>
+      <div class="card-desc">Full-stack engineering across web, mobile, and cloud. Systems built for scale, maintainability, and great UX.</div>
+      <div class="card-chips">
+        <span class="card-chip">TypeScript</span>
+        <span class="card-chip">Vue</span>
+        <span class="card-chip">Firebase</span>
+        <span class="card-chip">Python</span>
+      </div>
+      <div class="card-cta">See my work <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/></svg>
+      </div>
+      <div class="card-title">Services</div>
+      <div class="card-desc">Available for freelance and consulting — web development, system design, code reviews, and technical mentoring.</div>
+      <div class="card-chips">
+        <span class="card-chip">Web Dev</span>
+        <span class="card-chip">Consulting</span>
+        <span class="card-chip">Mentoring</span>
+      </div>
+      <div class="card-cta">Work with me <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+    <a href="#" class="bento-card filled">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="card-title">About me</div>
+      <div class="card-desc">Off the clock — the hobbies, gear, and games that keep me going.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div><p style="font-size:12px;font-weight:500;">Photography</p><p style="font-size:10px;color:var(--on-muted);">Fujifilm · Film simulations</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div><p style="font-size:12px;font-weight:500;">Boardgames</p><p style="font-size:10px;color:var(--on-muted);">Strategy · Favourites</p></div>
+        </div>
+      </div>
+      <div class="card-cta">More about me <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+  </div>
+
+  <!-- ── TECH NOTE ── -->
+  <div class="tech-note">
+    <div class="tech-note-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Behind the scenes
+    </div>
+    <div style="width:1px;height:14px;background:var(--outline);"></div>
+    <span style="font-size:11px;color:var(--on-muted);">All content served live from Firebase Firestore — no redeployment needed</span>
+    <div class="tech-pills">
+      <span class="tech-pill">Astro 6</span>
+      <span class="tech-pill">Vue 3 Islands</span>
+      <span class="tech-pill">Firebase Firestore</span>
+      <span class="tech-pill">TypeScript</span>
+      <span class="tech-pill">Live · No Redeploy</span>
+    </div>
+  </div>
+
+  <!-- ── MOBILE PREVIEW ── -->
+  <div class="mobile-preview-label">↓ Mobile (375px)</div>
+  <div class="mobile-frame">
+    <div style="background:var(--bg);">
+      <!-- Mobile hero -->
+      <div style="padding:20px 18px 16px;">
+        <div class="status-pill" style="margin-bottom:12px;">
+          <span class="status-dot"></span> Open to freelance · KL, MY
+        </div>
+        <h1 style="font-family:'DM Serif Display',serif;font-size:34px;line-height:1.05;letter-spacing:-0.01em;margin-bottom:8px;">Syamim Hakimi<span style="color:var(--cta);">.</span></h1>
+        <p style="font-size:13px;color:var(--on-muted);margin-bottom:14px;"><strong style="color:var(--on-surface);">Full-stack Software Engineer</strong></p>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px;">
+          <span class="chip chip-cta" style="font-size:10px;">TypeScript</span>
+          <span class="chip chip-cta" style="font-size:10px;">Vue 3</span>
+          <span class="chip chip-cta" style="font-size:10px;">Python</span>
+          <span class="chip chip-cta" style="font-size:10px;">Firebase</span>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="btn-primary" style="flex:1;justify-content:center;font-size:12px;padding:9px 12px;">View Portfolio</a>
+          <a href="#" class="btn-secondary" style="flex:1;justify-content:center;font-size:12px;padding:9px 12px;">Get in Touch</a>
+        </div>
+      </div>
+      <!-- Mobile photo dashboard -->
+      <div style="background:var(--dark-bg);margin:0;padding:18px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <div class="camera-icon-disc" style="width:28px;height:28px;border-radius:7px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div>
+            <p style="font-family:'DM Serif Display',serif;font-size:15px;color:#fafaf9;">Photography Journal</p>
+            <p style="font-size:10px;color:rgba(255,255,255,0.4);">Fujifilm X-T5 · tracked since 2023</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+          <div style="background:var(--dark-surface);border:1px solid #44403c;border-radius:10px;padding:12px 10px;">
+            <span class="skeleton" style="width:36px;height:26px;border-radius:4px;margin-bottom:4px;"></span>
+            <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Photos</p>
+          </div>
+          <div style="background:var(--dark-surface);border:1px solid #44403c;border-radius:10px;padding:12px 10px;">
+            <span class="skeleton" style="width:28px;height:26px;border-radius:4px;margin-bottom:4px;"></span>
+            <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Outings</p>
+          </div>
+          <div style="background:var(--dark-surface);border:1px solid #44403c;border-radius:10px;padding:12px 10px;">
+            <span style="font-family:'DM Serif Display',serif;font-size:20px;color:#fafaf9;display:block;line-height:1;margin-bottom:4px;">X-T5</span>
+            <p style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Camera</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;height:80px;">
+          <div class="photo-tile pt-1" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-3" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-2" style="border-radius:8px;"></div>
+        </div>
+        <a href="#" style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-size:11px;font-weight:600;color:#fbbf24;text-decoration:none;">
+          See full gallery <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <!-- Mobile cards -->
+      <div style="padding:16px;">
+        <div style="background:var(--surface);border:1px solid var(--outline);border-radius:14px;padding:16px;margin-bottom:10px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:4px;">Portfolio</p>
+          <p style="font-size:14px;font-family:'DM Serif Display',serif;margin-bottom:4px;">Full-stack Engineering</p>
+          <p style="font-size:11px;color:var(--on-muted);">TypeScript · Vue · Python · Firebase</p>
+        </div>
+        <div style="background:var(--surface-var);border:1px solid var(--outline);border-radius:14px;padding:16px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:4px;">Services</p>
+          <p style="font-size:14px;font-family:'DM Serif Display',serif;margin-bottom:4px;">Available for Freelance</p>
+          <p style="font-size:11px;color:var(--on-muted);">Web dev · Consulting · Mentoring</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center;padding:20px 0 32px;font-size:11px;color:var(--on-muted);">
+  Option B — Dashboard / Stat-forward · Developer-built personal analytics feel
+</div>
+
+</body>
+</html>

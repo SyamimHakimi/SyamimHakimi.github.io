@@ -1,14 +1,13 @@
 ---
 /**
  * Home — default route `/`.
- * Editorial hero: photography canvas (left dominant) + identity stack (right).
- * Photo grid island: LandingPhotos.vue (via HomePhotoCanvas, client:visible)
+ * Option C: editorial hero → asymmetric panel row → dark stats strip → bento grid.
  */
 import PageLayout from "../layouts/PageLayout.astro";
 import HomeHero from "../components/home/HomeHero.astro";
+import HomeEngPanel from "../components/home/HomeEngPanel.astro";
 import HomePhotoCanvas from "../components/home/HomePhotoCanvas.astro";
-import HomeFreelancePanel from "../components/home/HomeFreelancePanel.astro";
-import HomeServicesStrip from "../components/home/HomeServicesStrip.astro";
+import HomeStatsStrip from "../components/home/HomeStatsStrip.astro";
 import HomeSectionCard from "../components/home/HomeSectionCard.astro";
 import HomeTechNote from "../components/home/HomeTechNote.astro";
 
@@ -28,7 +27,7 @@ const homeCards = {
     href: "/services",
     title: "Services",
     description:
-      "Available for freelance and consulting - web development, system design, code reviews, and technical mentoring.",
+      "Available for freelance and consulting — web development, system design, code reviews, and technical mentoring.",
     ctaText: "Work with me",
     ariaLabel: "Services - work with me",
     variant: "card-outlined" as const,
@@ -39,7 +38,7 @@ const homeCards = {
     href: "/about",
     title: "About me",
     description:
-      "Off the clock - the hobbies, gear, and games that keep me going.",
+      "Off the clock — the hobbies, gear, and games that keep me going.",
     ctaText: "More about me",
     ariaLabel: "About me",
     variant: "card-filled" as const,
@@ -54,19 +53,19 @@ const homeCards = {
 >
   <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
 
-    <!-- Editorial hero: photo canvas (dominant left) + identity stack (right) -->
-    <div class="mb-3.5 grid grid-cols-1 gap-3.5 lg:grid-cols-[5fr_4fr]">
-      <HomePhotoCanvas />
+    <!-- Editorial headline + CTAs -->
+    <HomeHero />
 
-      <!-- Identity stack: hero grows to fill, freelance panel anchors at bottom -->
-      <div class="flex flex-col gap-3.5 lg:h-full">
-        <HomeHero />
-        <HomeFreelancePanel />
-      </div>
+    <!-- Asymmetric panel row: engineering (2fr) + photo canvas (3fr) -->
+    <div class="mb-3.5 mt-8 grid grid-cols-1 gap-3.5 lg:grid-cols-[2fr_3fr] lg:items-stretch">
+      <HomeEngPanel />
+      <HomePhotoCanvas />
     </div>
 
-    <!-- Services availability strip -->
-    <HomeServicesStrip />
+    <!-- Dark photography callout strip -->
+    <div class="mb-3.5">
+      <HomeStatsStrip />
+    </div>
 
     <!-- Section bento grid: 1-col mobile → 2-col tablet → 3-col desktop -->
     <div class="mb-3.5 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -83,7 +82,7 @@ const homeCards = {
             </div>
             <div>
               <p class="text-[13px] font-medium text-[var(--color-on-surface)]">Photography</p>
-              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Fujifilm · Film simulations</p>
+              <p class="text-[11px] text-[var(--color-on-surface-variant)]">Film simulations · Outings</p>
             </div>
           </div>
           <div class="flex items-center gap-2.5">
