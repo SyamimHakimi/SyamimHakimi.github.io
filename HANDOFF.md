@@ -91,10 +91,10 @@ Plan: `docs/redesign-plan.md` | Mockup workflow: produce → preview → Telegra
 | 5 | Gallery + lightbox (`GalleryGrid.vue`, `GalleryLightbox.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
 | 5a | Gallery content enrichment (gear strip, theme filter, lightbox metadata) | ✅ Plan approved in session | DONE | APPROVED | — | MERGED | — |
 | 6 | Portfolio (`PortfolioSection.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | — |
-| 7 | Services (`ServicesSection.vue`) | ✅ `scripts/redesign-step7-services.html` approved | — | — | APPROVED | IN PROGRESS | — |
-| 8 | About (`AboutMe.vue`) | MOCKUP PENDING | — | — | — | MOCKUP PENDING | — |
-| 9 | Contact (`ContactForm.vue`) | PENDING | — | — | — | NOT STARTED | — |
-| 10 | 404 (`404.astro`) | PENDING | — | — | — | NOT STARTED | — |
+| 7 | Services (`ServicesSection.vue`) | ✅ `scripts/redesign-step7-services.html` approved | DONE | APPROVED | — | MERGED | #36 |
+| 8 | About (`AboutMe.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #37 |
+| 9 | Contact (`ContactForm.vue`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #37 |
+| 10 | 404 (`404.astro`) | ✅ Approved via Telegram | DONE | APPROVED | — | MERGED | #38 |
 
 **Status flow:** `NOT STARTED` → `MOCKUP PENDING` → `MOCKUP APPROVED` → `IN PROGRESS` → `REVIEW READY` → `MERGED`
 
