@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option C — Editorial Magazine Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-background: #fffbeb;
+    --color-surface: #ffffff;
+    --color-surface-variant: #fef3c7;
+    --color-on-surface: #1c1917;
+    --color-on-surface-variant: #78716c;
+    --color-outline: #e7e5e4;
+    --color-cta: #b45309;
+    --color-cta-soft: rgba(180,83,9,0.10);
+    --font-serif: "DM Serif Display", Georgia, serif;
+    --font-sans: "DM Sans", sans-serif;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    background: var(--color-background);
+    font-family: var(--font-sans);
+    color: var(--color-on-surface);
+  }
+
+  nav {
+    border-bottom: 1px solid var(--color-outline);
+    background: rgba(255,251,235,0.92);
+    backdrop-filter: blur(8px);
+    padding: 12px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo { font-family: var(--font-serif); font-size: 20px; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 13px; font-weight: 500; color: var(--color-on-surface-variant); text-decoration: none; }
+  .nav-links a.active { color: var(--color-on-surface); }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 40px 32px; }
+
+  /* ── Hero: editorial asymmetric ── */
+  .hero-editorial {
+    display: grid;
+    grid-template-columns: 5fr 4fr;
+    gap: 14px;
+    margin-bottom: 14px;
+    min-height: 420px;
+  }
+
+  /* LEFT: dark photography canvas (main feature) */
+  .hero-photo-canvas {
+    border-radius: var(--radius-lg);
+    background: #1c1917;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-bg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr 1fr;
+    gap: 2px;
+  }
+  .photo-bg-cell { }
+  .photo-bg-cell:nth-child(1) { background: linear-gradient(160deg, #5a4a3a 0%, #2a1f15 100%); grid-row: span 2; }
+  .photo-bg-cell:nth-child(2) { background: linear-gradient(160deg, #4a5a3a 0%, #2a3a1a 100%); }
+  .photo-bg-cell:nth-child(3) { background: linear-gradient(160deg, #3a4a5a 0%, #1a2a3a 100%); }
+
+  .photo-canvas-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.6) 100%);
+  }
+
+  .photo-canvas-content {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px 32px;
+  }
+
+  .photo-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-cta);
+  }
+
+  .photo-large-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.05;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .photo-large-heading em {
+    font-style: italic;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .photo-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .photo-counters { display: flex; gap: 24px; }
+  .photo-counter { }
+  .photo-counter-value {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1;
+  }
+  .photo-counter-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+  .photo-browse-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+  }
+  .photo-browse-btn:hover { background: rgba(255,255,255,0.2); }
+
+  /* RIGHT: identity stack */
+  .hero-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .identity-panel {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    padding: 32px 32px 28px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(34,197,94,0.15); }
+  }
+  .status-text { font-size: 12px; font-weight: 500; color: var(--color-on-surface-variant); }
+
+  .identity-name {
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 3.5vw, 38px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-on-surface);
+    margin-bottom: 8px;
+  }
+  .identity-role {
+    font-size: 14px;
+    color: var(--color-on-surface-variant);
+    margin-bottom: 18px;
+  }
+  .identity-role strong { font-weight: 600; color: var(--color-on-surface); }
+
+  .identity-desc {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--color-on-surface-variant);
+    margin-bottom: 0;
+  }
+
+  .identity-ctas { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 20px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--color-on-surface); color: var(--color-background);
+    border-radius: 999px; padding: 9px 20px;
+    font-size: 12.5px; font-weight: 600; text-decoration: none;
+  }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: transparent; color: var(--color-on-surface);
+    border: 1.5px solid var(--color-outline);
+    border-radius: 999px; padding: 9px 20px;
+    font-size: 12.5px; font-weight: 600; text-decoration: none;
+  }
+  .btn-cta {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--color-cta); color: #fff;
+    border-radius: 999px; padding: 9px 20px;
+    font-size: 12.5px; font-weight: 600; text-decoration: none;
+  }
+
+  /* Freelance accent panel (dark) */
+  .freelance-panel {
+    background: var(--color-on-surface);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+  }
+  .freelance-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    margin-bottom: 8px;
+  }
+  .freelance-heading {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 400;
+    color: #fafaf9;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .freelance-sub {
+    font-size: 12px;
+    color: rgba(250,250,249,0.6);
+    margin-bottom: 14px;
+  }
+  .freelance-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .freelance-tag {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11px; font-weight: 500;
+    color: rgba(250,250,249,0.75);
+  }
+
+  /* ── Services strip ── */
+  .services-strip {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    padding: 18px 28px;
+    margin-bottom: 14px;
+  }
+  .strip-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--color-cta-soft);
+    color: var(--color-cta);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .strip-body { }
+  .strip-title { font-size: 14px; font-weight: 600; color: var(--color-on-surface); margin-bottom: 3px; }
+  .strip-desc { font-size: 12px; color: var(--color-on-surface-variant); }
+  .strip-skills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .strip-skill {
+    background: var(--color-cta-soft);
+    border-radius: 999px; padding: 3px 10px;
+    font-size: 11px; font-weight: 500; color: var(--color-cta);
+  }
+
+  /* ── Bento ── */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .card { border-radius: var(--radius-md); padding: 20px; display: flex; flex-direction: column; }
+  .card-elevated { background: var(--color-surface); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .card-outlined { background: transparent; border: 1.5px solid var(--color-outline); }
+  .card-filled { background: var(--color-surface-variant); }
+
+  .icon-disc {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--color-cta-soft); color: var(--color-cta);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .card-title { font-family: var(--font-serif); font-size: 20px; font-weight: 400; color: var(--color-on-surface); margin-bottom: 8px; line-height: 1.2; }
+  .card-desc { font-size: 12.5px; line-height: 1.6; color: var(--color-on-surface-variant); flex: 1; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+  .chip { background: var(--color-cta-soft); border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 500; color: var(--color-cta); }
+  .card-cta { margin-top: 16px; display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--color-cta); }
+
+  .mini-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .mini-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--color-cta-soft); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .mini-title { font-size: 12.5px; font-weight: 600; color: var(--color-on-surface); }
+  .mini-sub { font-size: 11px; color: var(--color-on-surface-variant); }
+
+  .tech-note {
+    margin-top: 14px;
+    background: var(--color-surface-variant);
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .tech-note-label { font-size: 11.5px; color: var(--color-on-surface-variant); }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tech-pill { background: var(--color-outline); border-radius: 999px; padding: 3px 10px; font-size: 11px; font-weight: 500; color: var(--color-on-surface-variant); }
+
+  .option-badge {
+    position: fixed; top: 14px; right: 14px;
+    background: var(--color-cta); color: #fff;
+    font-family: var(--font-sans); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: 999px; padding: 6px 14px; z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<div class="option-badge">Option C</div>
+
+<nav>
+  <span class="nav-logo">syamim.</span>
+  <div class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#">Photography</a>
+    <a href="#">Portfolio</a>
+    <a href="#">Services</a>
+    <a href="#">About</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- Hero: editorial — photography canvas (left, dominant) + identity stack (right) -->
+  <div class="hero-editorial">
+
+    <!-- Photography canvas: dominant left panel -->
+    <div class="hero-photo-canvas">
+      <div class="photo-bg">
+        <div class="photo-bg-cell"></div>
+        <div class="photo-bg-cell"></div>
+        <div class="photo-bg-cell"></div>
+      </div>
+      <div class="photo-canvas-overlay"></div>
+      <div class="photo-canvas-content">
+        <div class="photo-eyebrow">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Photography
+        </div>
+        <div style="flex:1;display:flex;align-items:center;">
+          <div>
+            <h2 class="photo-large-heading">
+              Seeing the world<br>
+              through <em>film.</em>
+            </h2>
+            <p style="font-size:13px;color:rgba(255,255,255,0.65);max-width:36ch;line-height:1.65;">
+              Fujifilm X-T5 · Film simulations from Provia to Acros.
+              Every frame an attempt to hold a moment still.
+            </p>
+          </div>
+        </div>
+        <div class="photo-bottom">
+          <div class="photo-counters">
+            <div class="photo-counter">
+              <div class="photo-counter-value">340+</div>
+              <div class="photo-counter-label">Photos</div>
+            </div>
+            <div class="photo-counter">
+              <div class="photo-counter-value">12</div>
+              <div class="photo-counter-label">Albums</div>
+            </div>
+            <div class="photo-counter">
+              <div class="photo-counter-value">X-T5</div>
+              <div class="photo-counter-label">Camera</div>
+            </div>
+          </div>
+          <a href="#" class="photo-browse-btn">
+            Browse gallery
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Identity stack: name + freelance -->
+    <div class="hero-identity">
+      <!-- Identity panel -->
+      <div class="identity-panel">
+        <div>
+          <div class="status-row">
+            <span class="status-dot"></span>
+            <span class="status-text">Open to freelance · KL, MY</span>
+          </div>
+          <h1 class="identity-name">Syamim Hakimi.</h1>
+          <p class="identity-role">
+            <strong>Software Engineer</strong> &amp; photographer
+          </p>
+          <p class="identity-desc">
+            I build clean, thoughtful software — from full-stack web apps
+            to system architecture. Outside the terminal I point a camera
+            at anything worth remembering.
+          </p>
+        </div>
+        <div class="identity-ctas">
+          <a href="#" class="btn-primary">View Portfolio</a>
+          <a href="#" class="btn-secondary">Get in Touch</a>
+        </div>
+      </div>
+
+      <!-- Freelance accent panel -->
+      <div class="freelance-panel">
+        <p class="freelance-label">Freelance &amp; Consulting</p>
+        <h3 class="freelance-heading">Let's build something together.</h3>
+        <p class="freelance-sub">Available for engagements from single sprints to long-term partnerships.</p>
+        <div class="freelance-tags">
+          <span class="freelance-tag">Web Dev</span>
+          <span class="freelance-tag">Full-stack</span>
+          <span class="freelance-tag">API Design</span>
+          <span class="freelance-tag">Mentoring</span>
+        </div>
+        <a href="#" class="btn-cta" style="font-size:12px;padding:8px 18px;">Start a Project</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Services strip -->
+  <div class="services-strip">
+    <div class="strip-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/></svg>
+    </div>
+    <div class="strip-body">
+      <p class="strip-title">Freelance services — what I can help with</p>
+      <p class="strip-desc">Web development · System design · Code reviews · Technical mentoring</p>
+    </div>
+    <div class="strip-skills">
+      <span class="strip-skill">TypeScript</span>
+      <span class="strip-skill">Vue</span>
+      <span class="strip-skill">Firebase</span>
+      <span class="strip-skill">Python</span>
+    </div>
+  </div>
+
+  <!-- Bento -->
+  <div class="bento">
+    <div class="card card-elevated">
+      <div class="icon-disc">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <h2 class="card-title">Portfolio</h2>
+      <p class="card-desc">Full-stack engineering across web, mobile, and cloud. Systems designed for scale, maintainability, and great UX.</p>
+      <div class="chips">
+        <span class="chip">TypeScript</span>
+        <span class="chip">Vue</span>
+        <span class="chip">Firebase</span>
+        <span class="chip">Python</span>
+      </div>
+      <span class="card-cta">See my work →</span>
+    </div>
+
+    <div class="card card-outlined">
+      <div class="icon-disc">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/></svg>
+      </div>
+      <h2 class="card-title">Services</h2>
+      <p class="card-desc">Available for freelance — web development, system design, code reviews, and technical mentoring.</p>
+      <div class="chips">
+        <span class="chip">Web Dev</span>
+        <span class="chip">Consulting</span>
+        <span class="chip">Mentoring</span>
+      </div>
+      <span class="card-cta">Work with me →</span>
+    </div>
+
+    <div class="card card-filled">
+      <div class="icon-disc">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <h2 class="card-title">About me</h2>
+      <p class="card-desc">Off the clock — hobbies, gear, and games that keep me going.</p>
+      <div style="margin-top:14px;">
+        <div class="mini-item">
+          <div class="mini-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+          <div><p class="mini-title">Photography</p><p class="mini-sub">Fujifilm · Film simulations</p></div>
+        </div>
+        <div class="mini-item">
+          <div class="mini-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+          <div><p class="mini-title">Boardgames</p><p class="mini-sub">Strategy · Favourites</p></div>
+        </div>
+      </div>
+      <span class="card-cta">More about me →</span>
+    </div>
+  </div>
+
+  <div class="tech-note">
+    <span class="tech-note-label">Built with</span>
+    <div class="tech-pills">
+      <span class="tech-pill">Astro 6</span>
+      <span class="tech-pill">Vue 3 Islands</span>
+      <span class="tech-pill">Firebase Firestore</span>
+      <span class="tech-pill">TypeScript</span>
+      <span class="tech-pill">Live · No Redeploy</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
