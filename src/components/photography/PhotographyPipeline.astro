@@ -1,0 +1,114 @@
+---
+/**
+ * Static explainer showing the 4-step data pipeline that populates
+ * the photography statistics on this page.
+ * No Firestore reads — purely informational markup.
+ */
+const steps = [
+  {
+    n: "1",
+    label: "Shoot",
+    title: "Camera captures EXIF",
+    desc: "Each photo embeds metadata automatically — date, focal length, aperture, shutter speed, and GPS coordinates — in the file itself.",
+    badge: "EXIF / XMP",
+    icon: `<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>`,
+  },
+  {
+    n: "2",
+    label: "Extract",
+    title: "Scripts parse & aggregate",
+    desc: "Node.js ingest scripts read every image, extract EXIF via exifr, and compute aggregates — totals, focal distributions, per-outing breakdowns.",
+    badge: "exifr · Node.js",
+    icon: `<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>`,
+  },
+  {
+    n: "3",
+    label: "Publish",
+    title: "Written to Firestore",
+    desc: "One CLI command pushes the processed stats to Firebase Firestore — one write per outing, no server required.",
+    badge: "Firebase Firestore",
+    icon: `<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>`,
+  },
+  {
+    n: "4",
+    label: "Display",
+    title: "Live on this page",
+    desc: "Vue islands read from Firestore at runtime. The numbers update the moment a new outing is published — no site rebuild needed.",
+    badge: "Vue 3 · Runtime",
+    icon: `<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>`,
+  },
+] as const;
+---
+
+<section aria-labelledby="pipeline-heading" class="panel-shell p-8 sm:p-10">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <p class="eyebrow-accent mb-3 flex items-center gap-2.5">
+      <span class="block h-px w-5 bg-[var(--color-cta)]" aria-hidden="true"></span>
+      Behind the data
+    </p>
+    <h2
+      id="pipeline-heading"
+      class="mb-2 font-serif text-[22px] font-normal leading-snug text-[var(--color-on-surface)]"
+    >
+      How this page stays up to date
+    </h2>
+    <p class="max-w-[60ch] text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]">
+      Every stat you see is derived from my actual shooting sessions — no manual entry.
+      Here's the pipeline that gets it from camera to screen.
+    </p>
+  </div>
+
+  <!-- Step grid: 2-col mobile → 4-col desktop, with connector line on desktop -->
+  <ol
+    class="relative grid list-none grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4 lg:gap-x-0"
+    aria-label="Data pipeline steps"
+  >
+    <!-- Connector line (desktop only) — sits behind the step numbers -->
+    <li
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-5 hidden border-t border-[var(--color-outline)] lg:block"
+      style="left: calc(12.5% + 8px); right: calc(12.5% + 8px);"
+    ></li>
+
+    {steps.map((step) => (
+      <li class="flex flex-col items-start lg:px-4 lg:first:pl-0 lg:last:pr-0">
+
+        <!-- Step number bubble (sits above connector line) -->
+        <div
+          class="relative z-10 mb-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[var(--color-outline)] bg-[var(--color-background)] font-serif text-[15px] text-[var(--color-cta)]"
+          aria-hidden="true"
+        >
+          {step.n}
+        </div>
+
+        <!-- Icon disc -->
+        <div
+          class="mb-3 flex h-9 w-9 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-cta-soft)] text-[var(--color-cta)]"
+          aria-hidden="true"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={step.icon} />
+        </div>
+
+        <!-- Text -->
+        <p class="mb-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-cta)]">
+          {step.label}
+        </p>
+        <p class="mb-1.5 text-[14px] font-semibold leading-snug text-[var(--color-on-surface)]">
+          {step.title}
+        </p>
+        <p class="mb-3 text-[12px] leading-relaxed text-[var(--color-on-surface-variant)]">
+          {step.desc}
+        </p>
+
+        <!-- Tech badge -->
+        <span class="rounded-[4px] border border-[var(--color-outline)] bg-[var(--color-surface-variant)] px-2 py-0.5 font-mono text-[10px] text-[var(--color-on-surface-variant)]">
+          {step.badge}
+        </span>
+
+      </li>
+    ))}
+  </ol>
+
+</section>

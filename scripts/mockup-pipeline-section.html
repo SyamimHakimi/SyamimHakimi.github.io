@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Pipeline Section — Photography Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Design tokens (matching site) ── */
+  :root {
+    --bg:           #fffbef;
+    --surface:      #ffffff;
+    --surface-var:  #fef3c7;
+    --on-surface:   #1c1917;
+    --on-muted:     #78716c;
+    --cta:          #b45309;
+    --cta-soft:     rgba(180,83,9,0.10);
+    --outline:      #e7e5e4;
+    --dark-bg:      #1c1917;
+    --dark-surface: #292524;
+    --dark-outline: #44403c;
+    --radius-md: 12px; --radius-lg: 16px; --radius-xl: 24px;
+    --ease: cubic-bezier(0.2,0,0,1);
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-serif: 'DM Serif Display', Georgia, serif;
+  }
+  [data-theme="dark"] {
+    --bg: #1c1917; --surface: #292524; --surface-var: #3c3734;
+    --on-surface: #fafaf9; --on-muted: #a8a29e; --outline: #44403c;
+    --dark-bg: #1c1917;
+  }
+
+  body { font-family: var(--font-sans); background: var(--bg); color: var(--on-surface); padding: 40px 20px; }
+
+  /* ── Theme toggle ── */
+  .theme-btn {
+    position: fixed; top: 16px; right: 16px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: 999px; padding: 6px 14px;
+    font-size: 12px; font-weight: 500; color: var(--on-muted);
+    cursor: pointer;
+  }
+
+  /* ── Container ── */
+  .page { max-width: 900px; margin: 0 auto; }
+
+  .page-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--on-muted); margin-bottom: 24px;
+    padding-bottom: 10px; border-bottom: 1px solid var(--outline);
+  }
+
+  /* ── Eyebrow ── */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--cta);
+  }
+  .eyebrow-line { display: block; height: 1px; width: 20px; background: var(--cta); }
+
+  /* ══════════════════════════════════════
+     OPTION A — Light panel with step cards
+     ══════════════════════════════════════ */
+  .option-a {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    margin-bottom: 32px;
+  }
+
+  .section-head { margin-bottom: 32px; }
+  .section-title {
+    font-family: var(--font-serif); font-size: 24px; font-weight: 400;
+    color: var(--on-surface); margin: 8px 0 10px; line-height: 1.2;
+  }
+  .section-desc { font-size: 13px; line-height: 1.7; color: var(--on-muted); max-width: 56ch; }
+
+  /* 4-step horizontal grid */
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative;
+  }
+  /* Connector line between steps */
+  .steps-grid::before {
+    content: '';
+    position: absolute; top: 20px; left: calc(12.5% + 12px); right: calc(12.5% + 12px);
+    height: 1px; background: var(--outline); z-index: 0;
+  }
+
+  .step-card {
+    position: relative; padding: 0 12px;
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+
+  .step-number {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--surface-var); border: 1px solid var(--outline);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif); font-size: 16px; color: var(--cta);
+    margin-bottom: 16px; flex-shrink: 0; position: relative; z-index: 1;
+    background: var(--bg);
+  }
+  .step-card:first-child { padding-left: 0; }
+  .step-card:last-child { padding-right: 0; }
+
+  .step-icon {
+    width: 36px; height: 36px; border-radius: var(--radius-md);
+    background: var(--cta-soft); display: flex; align-items: center; justify-content: center;
+    color: var(--cta); margin-bottom: 12px;
+  }
+  .step-label {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--cta); margin-bottom: 6px;
+  }
+  .step-title {
+    font-size: 15px; font-weight: 600; color: var(--on-surface);
+    margin-bottom: 6px; line-height: 1.3;
+  }
+  .step-desc { font-size: 12px; line-height: 1.6; color: var(--on-muted); }
+
+  .step-badge {
+    display: inline-block; margin-top: 10px;
+    font-size: 10px; font-weight: 500; font-family: monospace;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--surface-var); color: var(--on-muted);
+    border: 1px solid var(--outline);
+  }
+
+  /* ══════════════════════════════════════
+     OPTION B — Dark panel, timeline style
+     ══════════════════════════════════════ */
+  .option-b {
+    background: var(--dark-bg);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    margin-bottom: 32px;
+  }
+  .option-b .section-title { color: #fafaf9; }
+  .option-b .section-desc  { color: rgba(255,255,255,0.5); }
+
+  .pipeline-row {
+    display: flex; gap: 0; align-items: stretch;
+    margin-top: 32px; flex-wrap: nowrap; overflow: hidden;
+  }
+
+  .pipe-step {
+    flex: 1; padding: 20px 16px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .pipe-step:last-child { border-right: none; }
+  .pipe-step:first-child { padding-left: 0; }
+  .pipe-step:last-child  { padding-right: 0; }
+
+  .pipe-num {
+    font-family: var(--font-serif); font-size: 11px;
+    color: rgba(255,255,255,0.25); letter-spacing: 0.08em;
+  }
+  .pipe-icon-ring {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: #fbbf24;
+  }
+  .pipe-title { font-size: 14px; font-weight: 600; color: #fafaf9; margin-top: 4px; }
+  .pipe-desc  { font-size: 12px; line-height: 1.6; color: rgba(255,255,255,0.45); }
+  .pipe-tag   {
+    display: inline-block; font-size: 10px; font-weight: 500;
+    font-family: monospace; padding: 2px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.08); width: fit-content;
+  }
+
+  /* Arrow between steps (desktop) */
+  .pipe-arrow {
+    display: flex; align-items: center; padding: 0 4px;
+    color: rgba(255,255,255,0.15); font-size: 16px; flex-shrink: 0;
+    align-self: center; margin-top: -20px;
+  }
+
+  /* ══════════════════════════════════════
+     OPTION C — Numbered rows, minimal list
+     ══════════════════════════════════════ */
+  .option-c {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+    margin-bottom: 32px;
+  }
+
+  .pipeline-list { margin-top: 28px; display: flex; flex-direction: column; gap: 0; }
+
+  .pl-item {
+    display: grid; grid-template-columns: 48px 1fr;
+    gap: 0 16px; align-items: start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--outline);
+  }
+  .pl-item:last-child { border-bottom: none; }
+
+  .pl-num-col {
+    display: flex; flex-direction: column; align-items: center; padding-top: 2px;
+  }
+  .pl-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--cta-soft); border: 1px solid rgba(180,83,9,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--cta);
+  }
+  .pl-line {
+    width: 1px; flex: 1; background: var(--outline);
+    margin-top: 8px; min-height: 20px;
+  }
+  .pl-item:last-child .pl-line { display: none; }
+
+  .pl-content { padding-bottom: 4px; }
+  .pl-title { font-size: 15px; font-weight: 600; color: var(--on-surface); margin-bottom: 4px; }
+  .pl-desc  { font-size: 13px; line-height: 1.65; color: var(--on-muted); }
+  .pl-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .pl-chip  {
+    font-size: 10px; font-weight: 500; font-family: monospace;
+    padding: 2px 8px; border-radius: 4px;
+    background: var(--surface-var); color: var(--on-muted);
+    border: 1px solid var(--outline);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 640px) {
+    .steps-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .steps-grid::before { display: none; }
+    .pipeline-row { flex-direction: column; gap: 0; }
+    .pipe-step { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 0; }
+    .pipe-arrow { display: none; }
+    .option-a, .option-b, .option-c { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-btn" onclick="document.documentElement.dataset.theme=document.documentElement.dataset.theme==='dark'?'light':'dark'">Toggle dark</button>
+
+<div class="page">
+
+  <p class="page-label">Photography Journey — "How the data gets here" section — 3 options</p>
+
+  <!-- ══════════════════════════════════
+       OPTION A: Light card grid with step numbers + icons
+       ══════════════════════════════════ -->
+  <p class="page-label" style="margin-top:0">Option A — Light panel, 4-column step grid</p>
+  <div class="option-a">
+    <div class="section-head">
+      <span class="eyebrow"><span class="eyebrow-line"></span>Behind the data</span>
+      <h2 class="section-title">How this page stays up to date</h2>
+      <p class="section-desc">Every stat you see here is derived from my actual shooting sessions — no manual entry. Here's the pipeline that gets it from camera to screen.</p>
+    </div>
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <div class="step-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <p class="step-label">Shoot</p>
+        <p class="step-title">Camera captures EXIF</p>
+        <p class="step-desc">Each photo embeds metadata — date, focal length, aperture, shutter speed, and GPS — in the file itself.</p>
+        <span class="step-badge">EXIF / XMP</span>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <div class="step-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <p class="step-label">Extract</p>
+        <p class="step-title">Scripts parse & aggregate</p>
+        <p class="step-desc">Node.js scripts read every image file, extract EXIF via <code style="font-size:11px">exifr</code>, and aggregate stats — totals, focal distributions, per-outing breakdowns.</p>
+        <span class="step-badge">exifr · Node.js</span>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <div class="step-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="step-label">Publish</p>
+        <p class="step-title">Written to Firestore</p>
+        <p class="step-desc">A single CLI command pushes the processed stats to Firebase Firestore — one write per outing, no server required.</p>
+        <span class="step-badge">Firebase Firestore</span>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <div class="step-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <p class="step-label">Display</p>
+        <p class="step-title">Live on this page</p>
+        <p class="step-desc">Vue islands read from Firestore at runtime. The numbers update the moment a new outing is published — no site rebuild needed.</p>
+        <span class="step-badge">Vue 3 · Runtime</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       OPTION B: Dark panel, horizontal pipeline with icons
+       ══════════════════════════════════ -->
+  <p class="page-label">Option B — Dark panel, pipeline flow</p>
+  <div class="option-b">
+    <span class="eyebrow" style="color:#fbbf24">
+      <span class="eyebrow-line" style="background:#fbbf24"></span>Behind the data
+    </span>
+    <h2 class="section-title" style="margin:10px 0 8px">How this page stays up to date</h2>
+    <p class="section-desc">Every stat is derived from actual shooting sessions — no manual entry.</p>
+
+    <div class="pipeline-row">
+
+      <div class="pipe-step">
+        <p class="pipe-num">01</p>
+        <div class="pipe-icon-ring">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <p class="pipe-title">Shoot</p>
+        <p class="pipe-desc">Camera embeds EXIF — date, focal length, aperture, shutter, GPS — in each file automatically.</p>
+        <span class="pipe-tag">EXIF / XMP</span>
+      </div>
+
+      <div class="pipe-step">
+        <p class="pipe-num">02</p>
+        <div class="pipe-icon-ring">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <p class="pipe-title">Extract</p>
+        <p class="pipe-desc">Node.js scripts parse each image with <code style="color:rgba(255,255,255,0.5);font-size:11px">exifr</code> and aggregate stats — totals, focal distributions, per-outing data.</p>
+        <span class="pipe-tag">exifr · Node.js</span>
+      </div>
+
+      <div class="pipe-step">
+        <p class="pipe-num">03</p>
+        <div class="pipe-icon-ring">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="pipe-title">Publish</p>
+        <p class="pipe-desc">One CLI command pushes processed stats to Firestore — one write per session, no server needed.</p>
+        <span class="pipe-tag">Firebase Firestore</span>
+      </div>
+
+      <div class="pipe-step">
+        <p class="pipe-num">04</p>
+        <div class="pipe-icon-ring">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <p class="pipe-title">Display</p>
+        <p class="pipe-desc">Vue islands read Firestore at runtime. Stats update the moment a new outing is published.</p>
+        <span class="pipe-tag">Vue 3 · Runtime</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       OPTION C: Light panel, numbered vertical list with chips
+       ══════════════════════════════════ -->
+  <p class="page-label">Option C — Light panel, numbered list with connecting line</p>
+  <div class="option-c">
+    <span class="eyebrow"><span class="eyebrow-line"></span>Behind the data</span>
+    <h2 class="section-title" style="margin:10px 0 8px">How this page stays up to date</h2>
+    <p class="section-desc">Every stat you see is derived directly from my shooting sessions. Here's the four-step pipeline.</p>
+
+    <div class="pipeline-list">
+
+      <div class="pl-item">
+        <div class="pl-num-col">
+          <div class="pl-num">1</div>
+          <div class="pl-line"></div>
+        </div>
+        <div class="pl-content">
+          <p class="pl-title">Shoot — camera captures EXIF metadata</p>
+          <p class="pl-desc">Every photo I take automatically embeds metadata in the file — date and time, focal length, aperture, shutter speed, ISO, and GPS coordinates.</p>
+          <div class="pl-chips"><span class="pl-chip">EXIF</span><span class="pl-chip">XMP</span></div>
+        </div>
+      </div>
+
+      <div class="pl-item">
+        <div class="pl-num-col">
+          <div class="pl-num">2</div>
+          <div class="pl-line"></div>
+        </div>
+        <div class="pl-content">
+          <p class="pl-title">Extract — scripts parse and aggregate</p>
+          <p class="pl-desc">Node.js ingest scripts read every image file, extract EXIF data using <code style="font-size:12px;color:var(--cta)">exifr</code>, and compute aggregates: total photos, outings, focal distributions, and per-session breakdowns.</p>
+          <div class="pl-chips"><span class="pl-chip">Node.js</span><span class="pl-chip">exifr</span><span class="pl-chip">exifr · EXIF parsing</span></div>
+        </div>
+      </div>
+
+      <div class="pl-item">
+        <div class="pl-num-col">
+          <div class="pl-num">3</div>
+          <div class="pl-line"></div>
+        </div>
+        <div class="pl-content">
+          <p class="pl-title">Publish — write to Firebase Firestore</p>
+          <p class="pl-desc">A single CLI command pushes the processed statistics to Firebase Firestore. One write per outing — no server, no manual entry.</p>
+          <div class="pl-chips"><span class="pl-chip">Firebase Firestore</span><span class="pl-chip">CLI</span></div>
+        </div>
+      </div>
+
+      <div class="pl-item">
+        <div class="pl-num-col">
+          <div class="pl-num">4</div>
+          <div class="pl-line"></div>
+        </div>
+        <div class="pl-content">
+          <p class="pl-title">Display — live on this page</p>
+          <p class="pl-desc">Vue islands read directly from Firestore at runtime. The moment a new outing is published, the numbers here update — no site rebuild required.</p>
+          <div class="pl-chips"><span class="pl-chip">Vue 3</span><span class="pl-chip">Firestore SDK</span><span class="pl-chip">Runtime fetch</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>
