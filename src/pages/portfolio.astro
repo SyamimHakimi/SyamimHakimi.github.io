@@ -1,0 +1,11 @@
+---
+/**
+ * Redirect — /portfolio → /experience.
+ * Preserves backward compatibility for any existing links.
+ */
+---
+<meta http-equiv="refresh" content="0; url=/experience" />
+<script>window.location.replace('/experience');</script>
+<noscript>
+  <p>This page has moved. <a href="/experience">Go to Experience →</a></p>
+</noscript>
