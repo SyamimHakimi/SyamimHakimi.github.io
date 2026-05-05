@@ -47,7 +47,7 @@ function yearsLabel(item: ExperienceItem): string | null {
   return `${years}y`;
 }
 
-const expYears = computed(() => {
+const expYears = computed((): number | null => {
   const allDates = [
     ...data.value.experience.platforms,
     ...data.value.experience.protocols,
@@ -57,8 +57,9 @@ const expYears = computed(() => {
     .map((item) => item["date-from"])
     .filter(Boolean)
     .map((d) => new Date(d!).getFullYear());
-  const earliest = allDates.length ? Math.min(...allDates) : 2020;
-  return new Date().getFullYear() - earliest;
+  if (!allDates.length) return null;
+  const earliest = Math.min(...allDates);
+  return Math.max(1, new Date().getFullYear() - earliest);
 });
 
 const heroItems = computed(() => buildPortfolioHeroItems(expYears.value));

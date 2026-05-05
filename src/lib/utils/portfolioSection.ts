@@ -60,13 +60,17 @@ export interface PortfolioHeroItem {
  * @param expYears - Total years of professional experience.
  * @returns Ordered hero highlight items.
  */
-export function buildPortfolioHeroItems(expYears: number): PortfolioHeroItem[] {
-  return [
-    { label: `${expYears}+ yrs experience`, icon: Briefcase, kind: "stat" },
-    { label: "APIs & Integrations",         icon: Link2,     kind: "stat" },
-    { label: "Full-stack",                  icon: Layers3,   kind: "stat" },
-    { label: "FinTech",                     icon: CreditCard, kind: "tag" },
-    { label: "EV Charging",                 icon: Zap,       kind: "tag" },
-    { label: "Oil & Gas",                   icon: Flame,     kind: "tag" },
-  ];
+export function buildPortfolioHeroItems(expYears: number | null): PortfolioHeroItem[] {
+  const items: PortfolioHeroItem[] = [];
+  if (expYears !== null) {
+    items.push({ label: `${expYears}+ yrs experience`, icon: Briefcase, kind: "stat" });
+  }
+  items.push(
+    { label: "APIs & Integrations", icon: Link2,      kind: "stat" },
+    { label: "Full-stack",          icon: Layers3,    kind: "stat" },
+    { label: "FinTech",             icon: CreditCard, kind: "tag"  },
+    { label: "EV Charging",         icon: Zap,        kind: "tag"  },
+    { label: "Oil & Gas",           icon: Flame,      kind: "tag"  },
+  );
+  return items;
 }
