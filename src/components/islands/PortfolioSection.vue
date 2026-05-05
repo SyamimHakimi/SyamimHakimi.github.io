@@ -60,7 +60,8 @@ const expYears = computed((): number | null => {
     .filter((y) => !isNaN(y));
   if (!allDates.length) return null;
   const earliest = Math.min(...allDates);
-  return Math.max(1, new Date().getFullYear() - earliest);
+  const years = new Date().getFullYear() - earliest;
+  return years >= 1 ? years : null;
 });
 
 const heroItems = computed(() => buildPortfolioHeroItems(expYears.value));
