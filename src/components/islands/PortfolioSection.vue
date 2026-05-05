@@ -47,26 +47,9 @@ function yearsLabel(item: ExperienceItem): string | null {
   return `${years}y`;
 }
 
-const pythonSince = computed(() => {
-  const item = data.value.experience.languages.find(
-    (entry) => entry.title === "Python",
-  );
-  return item?.["date-from"] ? new Date(item["date-from"]).getFullYear() : null;
-});
+const expYears = computed(() => new Date().getFullYear() - 2020);
 
-const vueSince = computed(() => {
-  const item = data.value.experience.frameworks.find((entry) =>
-    entry.title.toLowerCase().includes("vue"),
-  );
-  return item?.["date-from"] ? new Date(item["date-from"]).getFullYear() : null;
-});
-
-const heroItems = computed(() =>
-  buildPortfolioHeroItems(
-    pythonSince.value ? new Date().getFullYear() - pythonSince.value : null,
-    vueSince.value ? new Date().getFullYear() - vueSince.value : null,
-  ),
-);
+const heroItems = computed(() => buildPortfolioHeroItems(expYears.value));
 
 const { prefersReducedMotion } = useReducedMotion();
 
