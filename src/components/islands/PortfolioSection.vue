@@ -56,7 +56,8 @@ const expYears = computed((): number | null => {
   ]
     .map((item) => item["date-from"])
     .filter(Boolean)
-    .map((d) => new Date(d!).getFullYear());
+    .map((d) => new Date(d!).getFullYear())
+    .filter((y) => !isNaN(y));
   if (!allDates.length) return null;
   const earliest = Math.min(...allDates);
   return Math.max(1, new Date().getFullYear() - earliest);
