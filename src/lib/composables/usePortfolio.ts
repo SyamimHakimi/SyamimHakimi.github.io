@@ -41,7 +41,7 @@ const dateField = z.preprocess(coerceDate, z.string().optional());
 
 /**
  * Validates a document from `experience/{category}/item` subcollections
- * (categories: `platforms`, `protocols`, `frameworks`, `languages`).
+ * (categories: `platforms`, `protocols`, `ai`, `frameworks`, `languages`).
  * `date-from` / `date-to` accept both plain ISO strings and Firestore Timestamps.
  */
 export const ExperienceItemSchema = z.object({
@@ -92,6 +92,7 @@ export interface PortfolioData {
   experience: {
     platforms: ExperienceItem[];
     protocols: ExperienceItem[];
+    ai: ExperienceItem[];
     frameworks: ExperienceItem[];
     languages: ExperienceItem[];
   };
@@ -127,6 +128,7 @@ export function usePortfolio() {
     experience: {
       platforms: [],
       protocols: [],
+      ai: [],
       frameworks: [],
       languages: [],
     },
@@ -141,6 +143,7 @@ export function usePortfolio() {
       const [
         platformsSnap,
         protocolsSnap,
+        aiSnap,
         frameworksSnap,
         languagesSnap,
         projectSnap,
@@ -148,6 +151,7 @@ export function usePortfolio() {
       ] = await Promise.all([
         experienceQuery("platforms"),
         experienceQuery("protocols"),
+        experienceQuery("ai"),
         experienceQuery("frameworks"),
         experienceQuery("languages"),
         getDoc(doc(db, "projects", PROJECT_DOC_ID)),
@@ -165,6 +169,9 @@ export function usePortfolio() {
             ExperienceItemSchema.parse({ id: d.id, ...d.data() }),
           ),
           protocols: protocolsSnap.docs.map((d) =>
+            ExperienceItemSchema.parse({ id: d.id, ...d.data() }),
+          ),
+          ai: aiSnap.docs.map((d) =>
             ExperienceItemSchema.parse({ id: d.id, ...d.data() }),
           ),
           frameworks: frameworksSnap.docs.map((d) =>

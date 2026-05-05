@@ -47,6 +47,7 @@ const expYears = computed((): number | null => {
   const allDates = [
     ...data.value.experience.platforms,
     ...data.value.experience.protocols,
+    ...data.value.experience.ai,
     ...data.value.experience.frameworks,
     ...data.value.experience.languages,
   ]
