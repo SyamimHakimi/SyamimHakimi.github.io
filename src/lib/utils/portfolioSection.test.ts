@@ -45,22 +45,31 @@ describe("sortExperienceItems", () => {
     expect(result[1]?.id).toBe("inactive");
   });
 
-  it("sorts active items by most recently started first", () => {
+  it("sorts active items by oldest start year first", () => {
     const input = [
-      item("older", "2020-01-01"),
       item("newer", "2023-01-01"),
+      item("older", "2020-01-01"),
     ];
     const result = sortExperienceItems(input);
-    expect(result.map((i) => i.id)).toEqual(["newer", "older"]);
+    expect(result.map((i) => i.id)).toEqual(["older", "newer"]);
   });
 
-  it("sorts inactive items by most recently ended first", () => {
+  it("sorts inactive items by oldest start year first", () => {
     const input = [
-      item("ended-early", "2019-01-01", "2021-06-01"),
-      item("ended-late", "2020-01-01", "2024-12-01"),
+      item("started-late", "2022-01-01", "2024-06-01"),
+      item("started-early", "2019-01-01", "2023-06-01"),
     ];
     const result = sortExperienceItems(input);
-    expect(result.map((i) => i.id)).toEqual(["ended-late", "ended-early"]);
+    expect(result.map((i) => i.id)).toEqual(["started-early", "started-late"]);
+  });
+
+  it("sorts alphabetically by title when start dates are equal", () => {
+    const input = [
+      item("Zebra", "2022-01-01"),
+      item("Apple", "2022-01-01"),
+    ];
+    const result = sortExperienceItems(input);
+    expect(result.map((i) => i.id)).toEqual(["Apple", "Zebra"]);
   });
 
   it("does not mutate the original array", () => {

@@ -48,23 +48,18 @@ export const PORTFOLIO_EXPERIENCE_SECTIONS: PortfolioExperienceSection[] = [
 ];
 
 /**
- * Sorts experience items: active first (most recently started), then inactive
- * by most recently ended.
+ * Sorts experience items: active first, then by oldest date-from ascending,
+ * then alphabetically by title.
  */
 export function sortExperienceItems(items: ExperienceItem[]): ExperienceItem[] {
   return [...items].sort((a, b) => {
     const aActive = !a["date-to"];
     const bActive = !b["date-to"];
     if (aActive !== bActive) return aActive ? -1 : 1;
-    if (aActive) {
-      return (
-        new Date(b["date-from"] ?? 0).getTime() -
-        new Date(a["date-from"] ?? 0).getTime()
-      );
-    }
-    return (
-      new Date(b["date-to"]!).getTime() - new Date(a["date-to"]!).getTime()
-    );
+    const aFrom = new Date(a["date-from"] ?? 0).getTime();
+    const bFrom = new Date(b["date-from"] ?? 0).getTime();
+    if (aFrom !== bFrom) return aFrom - bFrom;
+    return a.title.localeCompare(b.title);
   });
 }
 
