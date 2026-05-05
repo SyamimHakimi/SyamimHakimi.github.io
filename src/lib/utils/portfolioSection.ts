@@ -1,8 +1,9 @@
 import {
-  Boxes,
-  Code2,
+  Briefcase,
   CreditCard,
-  Shield,
+  Flame,
+  Layers3,
+  Link2,
   Zap,
   type LucideIcon,
 } from "lucide-vue-next";
@@ -54,49 +55,22 @@ export interface PortfolioHeroItem {
 }
 
 /**
- * Builds the compact hero summary items shown at the top of the portfolio page.
+ * Builds the compact hero summary items shown at the top of the experience page.
  *
- * @param pythonYears - Years of Python experience.
- * @param vueYears - Years of Vue experience.
+ * @param expYears - Total years of professional experience.
  * @returns Ordered hero highlight items.
  */
-export function buildPortfolioHeroItems(
-  pythonYears: number | null,
-  vueYears: number | null,
-): PortfolioHeroItem[] {
+export function buildPortfolioHeroItems(expYears: number | null): PortfolioHeroItem[] {
   const items: PortfolioHeroItem[] = [];
-
-  if (pythonYears) {
-    items.push({
-      label: `${pythonYears}+ yrs Python`,
-      icon: Code2,
-      kind: "stat",
-    });
+  if (expYears !== null) {
+    items.push({ label: `${expYears}+ yrs experience`, icon: Briefcase, kind: "stat" });
   }
-
-  if (vueYears) {
-    items.push({
-      label: `${vueYears}+ yrs Vue`,
-      icon: Boxes,
-      kind: "stat",
-    });
-  }
-
-  items.push({
-    label: "AWS · Firebase",
-    icon: Shield,
-    kind: "stat",
-  });
-  items.push({
-    label: "FinTech",
-    icon: CreditCard,
-    kind: "tag",
-  });
-  items.push({
-    label: "EV Charging",
-    icon: Zap,
-    kind: "tag",
-  });
-
+  items.push(
+    { label: "APIs & Integrations", icon: Link2,      kind: "stat" },
+    { label: "Full-stack",          icon: Layers3,    kind: "stat" },
+    { label: "FinTech",             icon: CreditCard, kind: "tag"  },
+    { label: "EV Charging",         icon: Zap,        kind: "tag"  },
+    { label: "Oil & Gas",           icon: Flame,      kind: "tag"  },
+  );
   return items;
 }
