@@ -20,7 +20,6 @@ defineProps<{
   itemAnimationDelay: (index: number) => string;
   isActive: (item: ExperienceItem) => boolean;
   durationLabel: (item: ExperienceItem) => string;
-  sinceYear: (iso: string | undefined) => string | null;
 }>();
 </script>
 
@@ -48,7 +47,6 @@ defineProps<{
           :item="item"
           :active="isActive(item)"
           :duration-label="durationLabel(item)"
-          :since-year="compact ? null : sinceYear(item['date-from'])"
         />
       </li>
     </ul>

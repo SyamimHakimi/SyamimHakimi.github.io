@@ -14,16 +14,12 @@ import { useReducedMotion } from "../../lib/composables/useReducedMotion";
 import {
   buildPortfolioHeroItems,
   PORTFOLIO_EXPERIENCE_SECTIONS,
+  sortExperienceItems,
 } from "../../lib/utils/portfolioSection";
 import ErrorAlert from "../ui/ErrorAlert.vue";
 import ExperienceSection from "../ui/ExperienceSection.vue";
 
 const { data, loading, error } = usePortfolio();
-
-function sinceYear(iso: string | undefined): string | null {
-  if (!iso) return null;
-  return String(new Date(iso).getFullYear());
-}
 
 function isActive(item: ExperienceItem): boolean {
   return !item["date-to"];
@@ -32,10 +28,10 @@ function isActive(item: ExperienceItem): boolean {
 function durationLabel(item: ExperienceItem): string {
   const from = item["date-from"];
   if (!from) return "";
-  const year = new Date(from).getFullYear();
-  return isActive(item)
-    ? `Since ${year}`
-    : `${year}–${new Date(item["date-to"]!).getFullYear()}`;
+  const fromYear = new Date(from).getFullYear();
+  if (isActive(item)) return `Since ${fromYear}`;
+  const toYear = new Date(item["date-to"]!).getFullYear();
+  return fromYear === toYear ? String(fromYear) : `${fromYear}–${toYear}`;
 }
 
 /** Years of experience as a compact label, e.g. "6y" or "<1y". */
@@ -203,14 +199,13 @@ function revealDelay(index: number, base = 0): string {
         :key="section.key"
         :title="section.title"
         :description="section.description"
-        :items="data.experience[section.key]"
+        :items="sortExperienceItems(data.experience[section.key])"
         :compact="section.compact"
         :grid-class="section.gridClass"
         :header-animation-delay="revealDelay(0, 80)"
         :item-animation-delay="(index) => revealDelay(index, 120)"
         :is-active="isActive"
         :duration-label="durationLabel"
-        :since-year="sinceYear"
       />
 
       <section
@@ -228,7 +223,7 @@ function revealDelay(index: number, base = 0): string {
         </p>
         <ul class="flex flex-wrap gap-2" role="list">
           <li
-            v-for="(item, i) in data.experience.languages"
+            v-for="(item, i) in sortExperienceItems(data.experience.languages)"
             :key="item.id"
             class="reveal-up"
             :style="{ animationDelay: revealDelay(i, 120) }"
