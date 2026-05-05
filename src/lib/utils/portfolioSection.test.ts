@@ -15,7 +15,7 @@ const item = (id: string, from: string, to?: string) => ({
 describe("portfolioSection config", () => {
   it("keeps the experience sections ordered and defined", () => {
     expect(PORTFOLIO_EXPERIENCE_SECTIONS.map((section) => section.key)).toEqual(
-      ["platforms", "protocols", "frameworks"],
+      ["platforms", "protocols", "ai", "frameworks"],
     );
   });
 
@@ -63,9 +63,9 @@ describe("sortExperienceItems", () => {
     expect(result.map((i) => i.id)).toEqual(["started-early", "started-late"]);
   });
 
-  it("sorts alphabetically by title when start dates are equal", () => {
+  it("sorts alphabetically by title when start years are equal", () => {
     const input = [
-      item("Zebra", "2022-01-01"),
+      item("Zebra", "2022-07-01"),
       item("Apple", "2022-01-01"),
     ];
     const result = sortExperienceItems(input);

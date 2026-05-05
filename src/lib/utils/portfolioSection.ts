@@ -39,6 +39,13 @@ export const PORTFOLIO_EXPERIENCE_SECTIONS: PortfolioExperienceSection[] = [
     gridClass: "sm:grid-cols-2",
   },
   {
+    key: "ai",
+    title: "AI Developer Tools",
+    description:
+      "AI-powered tools I use actively in my engineering workflow.",
+    gridClass: "sm:grid-cols-2",
+  },
+  {
     key: "frameworks",
     title: "Frameworks",
     description: "Frameworks, libraries, and SDKs I use across the stack.",
@@ -48,17 +55,17 @@ export const PORTFOLIO_EXPERIENCE_SECTIONS: PortfolioExperienceSection[] = [
 ];
 
 /**
- * Sorts experience items: active first, then by oldest date-from ascending,
- * then alphabetically by title.
+ * Sorts experience items: active first, then by oldest start year ascending,
+ * then alphabetically by title within the same year.
  */
 export function sortExperienceItems(items: ExperienceItem[]): ExperienceItem[] {
   return [...items].sort((a, b) => {
     const aActive = !a["date-to"];
     const bActive = !b["date-to"];
     if (aActive !== bActive) return aActive ? -1 : 1;
-    const aFrom = new Date(a["date-from"] ?? 0).getTime();
-    const bFrom = new Date(b["date-from"] ?? 0).getTime();
-    if (aFrom !== bFrom) return aFrom - bFrom;
+    const aYear = a["date-from"] ? new Date(a["date-from"]).getFullYear() : 0;
+    const bYear = b["date-from"] ? new Date(b["date-from"]).getFullYear() : 0;
+    if (aYear !== bYear) return aYear - bYear;
     return a.title.localeCompare(b.title);
   });
 }
