@@ -1,32 +1,11 @@
 ---
 /**
- * Portfolio — route `/portfolio`.
- * Island: PortfolioSection.vue (client:visible)
- * Composable: usePortfolio()
+ * Redirect — /portfolio → /experience.
+ * Preserves backward compatibility for any existing links.
  */
-import PageLayout from "../layouts/PageLayout.astro";
-import PortfolioSection from "../components/islands/PortfolioSection.vue";
-import RouteHeader from "../components/ui/RouteHeader.astro";
 ---
-
-<PageLayout
-  title="Portfolio — syamim."
-  description="Syamim Hakimi's portfolio — professional experience, platforms, frameworks, and personal projects."
->
-  <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-    <RouteHeader
-      eyebrow="Portfolio"
-      title="Portfolio"
-      description="Tools, platforms, and experiences that shaped how I build."
-    >
-      <Fragment slot="icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="7" width="20" height="14" rx="2"/>
-          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-        </svg>
-      </Fragment>
-    </RouteHeader>
-
-    <PortfolioSection client:visible />
-  </div>
-</PageLayout>
+<meta http-equiv="refresh" content="0; url=/experience" />
+<script>window.location.replace('/experience');</script>
+<noscript>
+  <p>This page has moved. <a href="/experience">Go to Experience →</a></p>
+</noscript>
