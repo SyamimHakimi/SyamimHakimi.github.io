@@ -1,0 +1,42 @@
+---
+/**
+ * Dark callout strip linking to the Photography Journey page.
+ * Static — no Firestore reads (live stats live exclusively in HomePhotoCanvas).
+ */
+---
+
+<div
+  data-theme="dark"
+  class="relative overflow-hidden rounded-[var(--radius-xl)] bg-[var(--color-background)] px-8 py-7 sm:px-10 sm:py-8"
+>
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <p class="eyebrow-accent mb-2">Photography Journey</p>
+      <p class="max-w-[52ch] text-[14px] leading-relaxed text-white/70">
+        I log every outing — locations, conditions, what worked, what didn't.
+        Stats, gear notes, and my growing archive of shots are all tracked here.
+      </p>
+    </div>
+
+    <a
+      href="/photography"
+      class="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-[13px] font-semibold text-white backdrop-blur-sm transition-colors duration-[150ms] hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+    >
+      Open journal
+      <svg
+        width="13"
+        height="13"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </a>
+  </div>
+</div>

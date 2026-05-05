@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option C — Magazine / Editorial Reframe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #fffbeb;
+    --surface:      #ffffff;
+    --surface-var:  #fef3c7;
+    --on-surface:   #1c1917;
+    --on-muted:     #78716c;
+    --cta:          #b45309;
+    --cta-soft:     rgba(180,83,9,0.10);
+    --outline:      #e7e5e4;
+    --dark-bg:      #1c1917;
+    --dark-surface: #292524;
+    --dark-outline: #3a3633;
+    --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-xl:28px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.05);
+    --ease: cubic-bezier(0.2,0,0,1);
+  }
+  [data-theme="dark"] {
+    --bg:#1c1917; --surface:#292524; --surface-var:#44403c;
+    --on-surface:#fafaf9; --on-muted:#d6d3d1; --cta:#fbbf24;
+    --cta-soft:rgba(251,191,36,0.12); --outline:#57534e;
+    --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-md:0 4px 16px rgba(0,0,0,0.5);
+  }
+
+  body {
+    font-family: "DM Sans", sans-serif;
+    background: var(--bg); color: var(--on-surface);
+    font-size: 14px; line-height: 1.6;
+    min-height: 100vh; transition: background 0.2s, color 0.2s;
+  }
+
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: 9999px; padding: 6px 12px; font-size: 12px; font-weight: 500;
+    cursor: pointer; color: var(--on-muted); box-shadow: var(--shadow-sm);
+    transition: all 0.15s;
+  }
+  .theme-toggle:hover { box-shadow: var(--shadow-md); color: var(--on-surface); }
+  .theme-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cta); }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 11px; font-weight: 500; color: var(--on-muted);
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34,197,94,0.25);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 2px rgba(34,197,94,0.25);}50%{box-shadow:0 0 0 5px rgba(34,197,94,0.10);} }
+
+  /* ── Editorial headline section ── */
+  .editorial-header {
+    padding: 48px 0 36px;
+    border-bottom: 1px solid var(--outline);
+    margin-bottom: 14px;
+  }
+  .ed-identity-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+  }
+  .ed-byline {
+    font-size: 11px; font-weight: 500; color: var(--on-muted);
+    letter-spacing: 0.04em; display: flex; align-items: center; gap: 12px;
+  }
+  .ed-byline-sep { width: 1px; height: 12px; background: var(--outline); }
+  .ed-avail {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--cta-soft); border: 1px solid var(--cta);
+    border-radius: 9999px; padding: 5px 14px;
+    font-size: 11px; font-weight: 600; color: var(--cta);
+  }
+  .ed-avail-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cta); }
+
+  .ed-headline {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--on-surface);
+    margin-bottom: 0;
+  }
+  .ed-headline-line2 {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 400; font-style: italic;
+    line-height: 1.0; letter-spacing: -0.025em;
+    color: var(--cta);
+  }
+  .ed-subheadline {
+    margin-top: 18px;
+    font-size: clamp(14px, 1.5vw, 16px); line-height: 1.7;
+    color: var(--on-muted); max-width: 52ch;
+  }
+  .ed-subheadline strong { color: var(--on-surface); font-weight: 600; }
+
+  .ed-cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--cta); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-family: "DM Sans", sans-serif;
+    font-size: 13px; font-weight: 600; padding: 10px 22px; cursor: pointer;
+    text-decoration: none; transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(180,83,9,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(180,83,9,0.35); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: transparent; color: var(--on-surface);
+    border: 1px solid var(--outline); border-radius: var(--radius-sm);
+    font-family: "DM Sans", sans-serif; font-size: 13px; font-weight: 500;
+    padding: 10px 22px; cursor: pointer; text-decoration: none; transition: all 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--on-surface); background: var(--surface-var); }
+
+  /* ── Asymmetric panel row ── */
+  .panel-row {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 14px;
+    margin-bottom: 14px;
+    min-height: 420px;
+  }
+
+  /* Left: Engineering card */
+  .eng-panel {
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-xl); padding: 32px 34px;
+    display: flex; flex-direction: column; gap: 0;
+    box-shadow: var(--shadow-sm);
+    position: relative; overflow: hidden;
+  }
+  .eng-panel::after {
+    content: '';
+    position: absolute; bottom: -40px; right: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: radial-gradient(circle, var(--cta-soft) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eng-eyebrow {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--cta); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .eng-eyebrow::before { content:''; width:20px; height:1px; background: var(--cta); }
+  .eng-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 26px; font-weight: 400; line-height: 1.2;
+    color: var(--on-surface); margin-bottom: 12px;
+  }
+  .eng-desc { font-size: 13px; line-height: 1.7; color: var(--on-muted); margin-bottom: 22px; flex: 1; }
+
+  .skill-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;
+  }
+  .skill-item {
+    display: flex; flex-direction: column; gap: 2px;
+    background: var(--surface-var); border-radius: var(--radius-md);
+    padding: 10px 12px;
+  }
+  .skill-name { font-size: 12px; font-weight: 600; color: var(--on-surface); }
+  .skill-sub { font-size: 10px; color: var(--on-muted); }
+
+  /* Right: Photo canvas */
+  .photo-canvas {
+    background: var(--dark-bg);
+    border-radius: var(--radius-xl);
+    position: relative; overflow: hidden;
+  }
+  /* Masonry-style photo grid */
+  .photo-masonry {
+    position: absolute; inset: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .photo-tile { border-radius: var(--radius-md); overflow: hidden; position: relative; transition: opacity 0.2s; }
+  .photo-tile:hover { opacity: 0.82; }
+  .photo-tile.tall { grid-row: span 2; }
+  .photo-tile.wide { grid-column: span 2; }
+  .pt-1 { background: linear-gradient(145deg,#3d2c1e,#5c4033); }
+  .pt-2 { background: linear-gradient(145deg,#1a2c1a,#2d4a2d); }
+  .pt-3 { background: linear-gradient(145deg,#1c2433,#2d3d52); }
+  .pt-4 { background: linear-gradient(145deg,#2c1a2e,#4a2d52); }
+  .pt-5 { background: linear-gradient(145deg,#2e2416,#4a3820); }
+  .pt-6 { background: linear-gradient(145deg,#1c2820,#2d4035); }
+  .pt-7 { background: linear-gradient(145deg,#32201e,#502e2c); }
+  .pt-8 { background: linear-gradient(145deg,#1e1c32,#2e2a52); }
+  .pt-9 { background: linear-gradient(145deg,#221c12,#3a2e1a); }
+
+  .canvas-gradient { position: absolute; inset-x: 0; bottom: 0; height: 55%; background: linear-gradient(to top, var(--dark-bg) 15%, rgba(28,25,23,0.7) 55%, transparent); pointer-events: none; }
+  .canvas-overlay { position: absolute; inset-x: 0; bottom: 0; z-index: 10; padding: 26px 30px 30px; }
+
+  .canvas-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #fbbf24; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .canvas-eyebrow-line { width: 20px; height: 1px; background: #fbbf24; }
+  .canvas-title {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: clamp(22px, 2.8vw, 32px); line-height: 1.1;
+    color: #fff; font-weight: 400; margin-bottom: 18px;
+  }
+  .canvas-stats { display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; }
+  .stats-group { display: flex; gap: 18px; }
+  .stat-item {}
+  .stat-num {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 24px; line-height: 1; color: #fff; display: block;
+  }
+  .stat-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.38); display: block; margin-top: 3px; }
+  .skeleton { background: linear-gradient(90deg,#3d3733 25%,#4a4440 50%,#3d3733 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:4px; display:block; }
+  @keyframes shimmer { 0%{background-position:200% 0;}100%{background-position:-200% 0;} }
+
+  .canvas-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #fff;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.07);
+    padding: 7px 14px; border-radius: 9999px; text-decoration: none;
+    backdrop-filter: blur(8px); transition: background 0.15s; white-space: nowrap;
+  }
+  .canvas-link:hover { background: rgba(255,255,255,0.14); }
+
+  /* ── Stats ticker strip ── */
+  .stats-strip {
+    background: var(--dark-bg);
+    border-radius: var(--radius-lg);
+    padding: 16px 24px;
+    margin-bottom: 14px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0;
+  }
+  .strip-stat {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 24px; border-right: 1px solid rgba(255,255,255,0.08);
+  }
+  .strip-stat:first-child { padding-left: 0; }
+  .strip-stat:last-child { border-right: none; }
+  .strip-val {
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 20px; color: #fafaf9; display: block; line-height: 1;
+  }
+  .strip-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-top: 3px; }
+  .strip-divider { flex: 1; }
+  .strip-note { font-size: 11px; color: rgba(255,255,255,0.4); text-align: right; max-width: 28ch; line-height: 1.5; }
+  .strip-note strong { color: rgba(255,255,255,0.7); }
+  .strip-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; color: #fbbf24; text-decoration: none;
+    border: 1px solid rgba(251,191,36,0.2); padding: 5px 12px; border-radius: 9999px;
+    margin-left: 14px; transition: background 0.15s; white-space: nowrap;
+  }
+  .strip-link:hover { background: rgba(251,191,36,0.08); }
+
+  /* ── Chip ── */
+  .chip {
+    display: inline-flex; align-items: center; font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 9999px; border: 1px solid var(--outline);
+    color: var(--on-muted); background: transparent; transition: all 0.15s; cursor: default;
+  }
+  .chip:hover { border-color: var(--cta); color: var(--cta); background: var(--cta-soft); }
+  .chip-cta { background: var(--cta-soft); border-color: var(--cta); color: var(--cta); }
+
+  /* ── Bento grid ── */
+  .section-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--on-muted);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--outline); }
+
+  .bento-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+  .bento-card {
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-xl); padding: 26px 28px;
+    display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--shadow-sm); cursor: pointer;
+    text-decoration: none; color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  }
+  .bento-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--cta); }
+  .bento-card.filled { background: var(--surface-var); }
+  .card-icon-disc {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--cta-soft); color: var(--cta);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card-title { font-family: "DM Serif Display", Georgia, serif; font-size: 18px; font-weight: 400; }
+  .card-desc { font-size: 12px; line-height: 1.65; color: var(--on-muted); flex: 1; }
+  .card-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .card-chip {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; border: 1px solid var(--outline); color: var(--on-muted);
+  }
+  .card-cta {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; color: var(--cta);
+    margin-top: auto; padding-top: 4px; transition: gap 0.15s;
+  }
+  .card-cta:hover { gap: 8px; }
+
+  /* ── Tech note ── */
+  .tech-note {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--outline);
+    border-radius: var(--radius-lg); padding: 12px 18px;
+  }
+  .tech-note-label { font-size: 11px; font-weight: 600; color: var(--cta); display: flex; align-items: center; gap: 5px; }
+  .tech-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-left: auto; }
+  .tech-pill {
+    font-size: 10px; font-weight: 500; padding: 3px 8px;
+    border-radius: 9999px; background: var(--surface-var); color: var(--on-muted);
+    border: 1px solid var(--outline);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .page { padding: 20px 16px; }
+    .editorial-header { padding: 24px 0 24px; }
+    .panel-row { grid-template-columns: 1fr; min-height: auto; }
+    .photo-canvas { min-height: 360px; }
+    .bento-grid { grid-template-columns: 1fr; }
+    .stats-strip { gap: 12px; }
+    .strip-divider { display: none; }
+    .strip-note { text-align: left; }
+    .skill-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── Mobile preview ── */
+  .mobile-preview-label {
+    font-size: 11px; font-weight: 600; color: var(--on-muted); text-transform: uppercase;
+    letter-spacing: 0.08em; text-align: center; margin: 32px 0 12px;
+  }
+  .mobile-frame {
+    max-width: 375px; margin: 0 auto;
+    border: 2px solid var(--outline); border-radius: 28px; overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  svg { vertical-align: middle; }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'">
+  <span class="theme-dot"></span>
+  Toggle dark mode
+</button>
+
+<div class="page">
+
+  <!-- ── EDITORIAL HEADER ── -->
+  <div class="editorial-header">
+    <div class="ed-identity-row">
+      <div class="ed-byline">
+        <span>Syamim Hakimi</span>
+        <span class="ed-byline-sep"></span>
+        <span>Software Engineer</span>
+        <span class="ed-byline-sep"></span>
+        <span>Kuala Lumpur, MY</span>
+      </div>
+      <div class="ed-avail">
+        <span class="ed-avail-dot"></span>
+        Open to freelance
+      </div>
+    </div>
+
+    <h1>
+      <span class="ed-headline">Building software.</span><br>
+      <span class="ed-headline-line2">Chasing light.</span>
+    </h1>
+
+    <p class="ed-subheadline">
+      I'm a <strong>full-stack engineer</strong> building clean, thoughtful software for web and cloud — and a photographer who tracks every outing with a Fujifilm X-T5. This site is both: my engineering work, and my creative journal.
+    </p>
+
+    <div class="ed-cta-row">
+      <a href="#" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        View Portfolio
+      </a>
+      <a href="#" class="btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Get in Touch
+      </a>
+      <a href="#" class="btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Photography Journal
+      </a>
+    </div>
+  </div>
+
+  <!-- ── ASYMMETRIC PANEL ROW ── -->
+  <div class="panel-row">
+
+    <!-- Left: Engineering panel -->
+    <div class="eng-panel">
+      <div class="eng-eyebrow">Engineering</div>
+      <h2 class="eng-title">Full-stack systems, clean code, thoughtful UX.</h2>
+      <p class="eng-desc">
+        From API architecture to the browser — I build end-to-end. Six years of professional engineering across FinTech, EV infrastructure, and web platforms.
+      </p>
+
+      <div class="skill-grid">
+        <div class="skill-item">
+          <span class="skill-name">TypeScript</span>
+          <span class="skill-sub">Primary language</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Vue 3</span>
+          <span class="skill-sub">Frontend framework</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Python</span>
+          <span class="skill-sub">Backend & scripts</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-name">Firebase</span>
+          <span class="skill-sub">Realtime & auth</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;">
+        <span class="chip chip-cta">Astro</span>
+        <span class="chip">System Design</span>
+        <span class="chip">API Design</span>
+        <span class="chip">Mentoring</span>
+      </div>
+
+      <a href="#" class="btn-primary" style="align-self:flex-start;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        See my work
+      </a>
+    </div>
+
+    <!-- Right: Photo canvas -->
+    <div class="photo-canvas">
+      <div class="photo-masonry">
+        <div class="photo-tile pt-1 tall"></div>
+        <div class="photo-tile pt-2"></div>
+        <div class="photo-tile pt-3"></div>
+        <div class="photo-tile pt-4"></div>
+        <div class="photo-tile pt-5"></div>
+        <div class="photo-tile pt-6"></div>
+        <div class="photo-tile pt-7"></div>
+      </div>
+      <div class="canvas-gradient"></div>
+      <div class="canvas-overlay">
+        <div class="canvas-eyebrow">
+          <span class="canvas-eyebrow-line"></span>
+          Photography Journal
+        </div>
+        <h2 class="canvas-title">Me and my Fujifilm X-T5.</h2>
+        <div class="canvas-stats">
+          <div class="stats-group">
+            <div class="stat-item">
+              <span class="skeleton" style="width:44px;height:26px;border-radius:4px;margin-bottom:4px;"></span>
+              <span class="stat-lbl">Photos</span>
+            </div>
+            <div class="stat-item">
+              <span class="skeleton" style="width:32px;height:26px;border-radius:4px;margin-bottom:4px;"></span>
+              <span class="stat-lbl">Outings</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">X-T5</span>
+              <span class="stat-lbl">Camera</span>
+            </div>
+          </div>
+          <a href="#" class="canvas-link">
+            Browse gallery
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-row -->
+
+  <!-- ── STATS TICKER STRIP ── -->
+  <div class="stats-strip">
+    <div class="strip-stat">
+      <span class="skeleton" style="width:40px;height:22px;border-radius:4px;margin-bottom:3px;"></span>
+      <span class="strip-lbl">Photos shot</span>
+    </div>
+    <div class="strip-stat">
+      <span class="skeleton" style="width:32px;height:22px;border-radius:4px;margin-bottom:3px;"></span>
+      <span class="strip-lbl">Outings</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-val">X-T5</span>
+      <span class="strip-lbl">Camera</span>
+    </div>
+    <div class="strip-stat">
+      <span class="strip-val" style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;">Fujifilm</span>
+      <span class="strip-lbl">Brand</span>
+    </div>
+    <div class="strip-divider"></div>
+    <p class="strip-note">
+      <strong>Tracking my photography journey</strong> obsessively — stats update live from Firestore.
+    </p>
+    <a href="#" class="strip-link">
+      See full stats
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+
+  <!-- ── SECTION CARDS ── -->
+  <div class="section-label">Explore</div>
+
+  <div class="bento-grid">
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="card-title">Portfolio</div>
+      <div class="card-desc">Full-stack engineering across web, mobile, and cloud. Built for scale, maintainability, and great UX.</div>
+      <div class="card-chips">
+        <span class="card-chip">TypeScript</span>
+        <span class="card-chip">Vue</span>
+        <span class="card-chip">Firebase</span>
+        <span class="card-chip">Python</span>
+      </div>
+      <div class="card-cta">See my work <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+
+    <a href="#" class="bento-card">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M7 4v6"/><path d="M17 4v6"/><path d="M5 11h14l-1 8H6l-1-8Z"/></svg>
+      </div>
+      <div class="card-title">Services</div>
+      <div class="card-desc">Available for freelance — web development, system design, code reviews, technical mentoring.</div>
+      <div class="card-chips">
+        <span class="card-chip">Web Dev</span>
+        <span class="card-chip">Consulting</span>
+        <span class="card-chip">Mentoring</span>
+      </div>
+      <div class="card-cta">Work with me <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+
+    <a href="#" class="bento-card filled">
+      <div class="card-icon-disc">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="card-title">About me</div>
+      <div class="card-desc">Off the clock — the hobbies, gear, and games that keep me going.</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div><p style="font-size:12px;font-weight:500;">Photography</p><p style="font-size:10px;color:var(--on-muted);">Fujifilm · Film simulations</p></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon-disc" style="width:30px;height:30px;border-radius:8px;flex-shrink:0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div><p style="font-size:12px;font-weight:500;">Boardgames</p><p style="font-size:10px;color:var(--on-muted);">Strategy · Favourites</p></div>
+        </div>
+      </div>
+      <div class="card-cta">More about me <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+    </a>
+  </div>
+
+  <!-- ── TECH NOTE ── -->
+  <div class="tech-note">
+    <div class="tech-note-label">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Behind the scenes
+    </div>
+    <div style="width:1px;height:14px;background:var(--outline);"></div>
+    <span style="font-size:11px;color:var(--on-muted);">All content served live from Firebase Firestore — no redeployment needed</span>
+    <div class="tech-pills">
+      <span class="tech-pill">Astro 6</span>
+      <span class="tech-pill">Vue 3 Islands</span>
+      <span class="tech-pill">Firebase Firestore</span>
+      <span class="tech-pill">TypeScript</span>
+      <span class="tech-pill">Live · No Redeploy</span>
+    </div>
+  </div>
+
+  <!-- ── MOBILE PREVIEW ── -->
+  <div class="mobile-preview-label">↓ Mobile (375px)</div>
+  <div class="mobile-frame">
+    <div style="background:var(--bg);">
+      <!-- Mobile editorial header -->
+      <div style="padding:22px 18px 20px;border-bottom:1px solid var(--outline);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div style="font-size:10px;color:var(--on-muted);">Syamim Hakimi · Software Engineer · KL</div>
+          <div class="ed-avail" style="font-size:9px;padding:4px 10px;">
+            <span class="ed-avail-dot"></span>
+            Freelance
+          </div>
+        </div>
+        <h1 style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1.0;letter-spacing:-0.02em;margin-bottom:2px;">Building software.</h1>
+        <h1 style="font-family:'DM Serif Display',serif;font-size:38px;line-height:1.0;letter-spacing:-0.02em;color:var(--cta);font-style:italic;margin-bottom:14px;">Chasing light.</h1>
+        <p style="font-size:12px;color:var(--on-muted);line-height:1.65;margin-bottom:16px;">Full-stack engineer building for web &amp; cloud. Photography as a side obsession — every outing tracked.</p>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="btn-primary" style="flex:1;justify-content:center;font-size:11px;padding:9px 10px;">View Portfolio</a>
+          <a href="#" class="btn-secondary" style="flex:1;justify-content:center;font-size:11px;padding:9px 10px;">Get in Touch</a>
+        </div>
+      </div>
+      <!-- Mobile photo canvas -->
+      <div style="background:var(--dark-bg);padding:18px;">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;height:160px;margin-bottom:14px;">
+          <div class="photo-tile pt-1" style="border-radius:10px;grid-row:span 2;"></div>
+          <div class="photo-tile pt-2" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-3" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-5" style="border-radius:8px;"></div>
+          <div class="photo-tile pt-6" style="border-radius:8px;"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div style="display:flex;gap:14px;">
+            <div>
+              <span class="skeleton" style="width:32px;height:18px;border-radius:3px;margin-bottom:3px;"></span>
+              <span style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Photos</span>
+            </div>
+            <div>
+              <span class="skeleton" style="width:24px;height:18px;border-radius:3px;margin-bottom:3px;"></span>
+              <span style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Outings</span>
+            </div>
+            <div>
+              <span style="display:block;font-family:'DM Serif Display',serif;font-size:18px;color:#fff;line-height:1;margin-bottom:3px;">X-T5</span>
+              <span style="display:block;font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.3);">Camera</span>
+            </div>
+          </div>
+          <a href="#" style="font-size:10px;font-weight:600;color:#fbbf24;text-decoration:none;display:flex;align-items:center;gap:4px;">
+            Gallery <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+      <!-- Mobile cards -->
+      <div style="padding:16px;">
+        <div style="background:var(--surface);border:1px solid var(--outline);border-radius:14px;padding:16px;margin-bottom:10px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:4px;">Portfolio</p>
+          <p style="font-size:14px;font-family:'DM Serif Display',serif;margin-bottom:4px;">Full-stack Engineering</p>
+          <p style="font-size:11px;color:var(--on-muted);">TypeScript · Vue · Python · Firebase</p>
+        </div>
+        <div style="background:var(--surface-var);border:1px solid var(--outline);border-radius:14px;padding:16px;">
+          <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--cta);margin-bottom:4px;">Services</p>
+          <p style="font-size:14px;font-family:'DM Serif Display',serif;margin-bottom:4px;">Available for Freelance</p>
+          <p style="font-size:11px;color:var(--on-muted);">Web dev · Consulting · Mentoring</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<div style="text-align:center;padding:20px 0 32px;font-size:11px;color:var(--on-muted);">
+  Option C — Magazine / Editorial Reframe · Bold headline unifies both identities
+</div>
+
+</body>
+</html>

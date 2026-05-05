@@ -1,0 +1,73 @@
+---
+/**
+ * Engineering credentials panel for the home page Option C panel row.
+ * Occupies the left (narrower) column of the asymmetric two-panel layout.
+ */
+const skills = [
+  { name: "TypeScript", sub: "Primary language" },
+  { name: "Vue 3",      sub: "Frontend framework" },
+  { name: "Python",     sub: "Backend & scripts" },
+  { name: "Firebase",   sub: "Realtime & auth" },
+] as const;
+
+const chips = ["Astro", "System Design", "API Design", "Mentoring"] as const;
+---
+
+<div class="panel-shell flex flex-col p-8 sm:p-10">
+
+  <!-- Eyebrow -->
+  <p class="eyebrow-accent mb-5 flex items-center gap-2.5">
+    <span class="block h-px w-5 bg-[var(--color-cta)]" aria-hidden="true"></span>
+    Engineering
+  </p>
+
+  <!-- Heading -->
+  <h2
+    class="mb-3 font-serif text-[22px] font-normal leading-snug text-[var(--color-on-surface)]"
+  >
+    Full-stack systems,<br class="hidden sm:block"> clean code, thoughtful UX.
+  </h2>
+
+  <!-- Description -->
+  <p class="mb-7 flex-1 text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]">
+    From API architecture to the last pixel of UI — I build end-to-end.
+    Six years across FinTech, EV infrastructure, and web platforms.
+  </p>
+
+  <!-- 2 × 2 skill grid -->
+  <div class="mb-5 grid grid-cols-2 gap-2.5">
+    {skills.map((skill) => (
+      <div class="rounded-[var(--radius-md)] bg-[var(--color-surface-variant)] px-3 py-2.5">
+        <p class="text-[12px] font-semibold text-[var(--color-on-surface)]">{skill.name}</p>
+        <p class="text-[11px] text-[var(--color-on-surface-variant)]">{skill.sub}</p>
+      </div>
+    ))}
+  </div>
+
+  <!-- Tech chips -->
+  <div class="mb-8 flex flex-wrap gap-1.5">
+    {chips.map((chip) => (
+      <span class="chip">{chip}</span>
+    ))}
+  </div>
+
+  <!-- Primary CTA -->
+  <a href="/portfolio" class="button-primary self-start gap-2">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+    </svg>
+    See my work
+  </a>
+
+</div>
