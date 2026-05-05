@@ -4,6 +4,7 @@
  * Two-line serif headline unifies both identities, followed by
  * identity byline, description, and primary CTAs.
  */
+const yearsExp = new Date().getFullYear() - 2020;
 ---
 
 <header class="border-b border-[var(--color-outline)] pb-10 pt-12 sm:pt-14">
@@ -39,7 +40,7 @@
   <!-- Description -->
   <p class="mb-8 max-w-[52ch] text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
     I'm a <strong class="font-semibold text-[var(--color-on-surface)]">software engineer</strong>
-    specialising in API integration, software solutions, and protocol compliance. This site is both:
+    with {yearsExp}+ years building and integrating software solutions. This site is both:
     my engineering portfolio, and the journal where I track my photography journey.
   </p>
 
