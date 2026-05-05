@@ -3,8 +3,7 @@
  * LandingPhotos — 2×2 grid of random favourite photos for the landing page.
  *
  * Fetches up to 12 favourite photos from Firestore, shuffles them, and
- * displays 4. All cells link to /photography. The last cell carries an
- * additional "More in Gallery" hover overlay.
+ * displays 4. All cells link to /photography.
  *
  * Skeleton UX mirrors GalleryGrid: a grid-level shimmer shows while Firestore
  * loads, then each image cell keeps its own shimmer overlay until the <img>
@@ -153,35 +152,6 @@ const placeholderCount = computed(() =>
             </svg>
           </div>
 
-          <!-- "More in Gallery" overlay — last cell only -->
-          <div
-            v-if="index === 3"
-            class="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-[var(--color-scrim)] opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
-            aria-hidden="true"
-          >
-            <span
-              class="text-center text-[12px] font-semibold leading-tight text-white"
-            >
-              More in<br />Gallery
-            </span>
-            <span class="flex items-center gap-1 text-[11px] text-white/75">
-              View all
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </span>
-          </div>
         </div>
       </a>
 
