@@ -7,7 +7,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-vue-next";
-import type { PortfolioData } from "../composables/usePortfolio";
+import type { ExperienceItem, PortfolioData } from "../composables/usePortfolio";
 
 /**
  * Reusable experience section config consumed by PortfolioSection.
@@ -46,6 +46,27 @@ export const PORTFOLIO_EXPERIENCE_SECTIONS: PortfolioExperienceSection[] = [
     compact: true,
   },
 ];
+
+/**
+ * Sorts experience items: active first (most recently started), then inactive
+ * by most recently ended.
+ */
+export function sortExperienceItems(items: ExperienceItem[]): ExperienceItem[] {
+  return [...items].sort((a, b) => {
+    const aActive = !a["date-to"];
+    const bActive = !b["date-to"];
+    if (aActive !== bActive) return aActive ? -1 : 1;
+    if (aActive) {
+      return (
+        new Date(b["date-from"] ?? 0).getTime() -
+        new Date(a["date-from"] ?? 0).getTime()
+      );
+    }
+    return (
+      new Date(b["date-to"]!).getTime() - new Date(a["date-to"]!).getTime()
+    );
+  });
+}
 
 export interface PortfolioHeroItem {
   label: string;
