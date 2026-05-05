@@ -178,3 +178,66 @@ Run `npm test` before marking any phase REVIEW READY.
 
 GitHub Pages via `.github/workflows/deploy.yml`. Astro builds to `dist/` with
 `output: 'static'` and the `site` + `base` config set for GitHub Pages.
+
+## Mandatory Workflows
+
+### PR Workflow (ALL changes)
+
+Every change must go through a feature branch and PR — direct push to `main` is blocked.
+
+```bash
+# 1. Create feature branch
+git checkout -b feat/<description>
+
+# 2. Commit changes, then run Codex review (MANDATORY gate before PR)
+codex review --base main
+
+# 3. Fix any P1/P2 findings from Codex, then create PR
+node --env-file=.env scripts/agents/create-pr.mjs "title" "feat/<description>" "body"
+
+# 4. Poll CI until green
+node --env-file=.env scripts/agents/check-ci.mjs <PR#>
+
+# 5. Merge once CI passes
+node --env-file=.env scripts/agents/merge-pr.mjs <PR#>
+
+# 6. Sync local main
+git checkout main && git pull origin main
+```
+
+**Never skip the Codex review.** It is a mandatory gate before `create-pr.mjs` for ALL changes.
+
+### UI / Visual Change Workflow
+
+If a task changes how anything **looks, feels, moves, or is interacted with**, this full workflow is required — no shortcuts.
+
+```
+1. Invoke UIUXProMax skill (Skill tool: "ui-ux-pro-max:ui-ux-pro-max")
+2. Run domain search for design guidance:
+     cd "C:\Users\Syamim\.claude\plugins\cache\ui-ux-pro-max-skill\ui-ux-pro-max\2.5.0"
+     py src/ui-ux-pro-max/scripts/search.py "<keywords>" --domain <domain> -n 8
+3. Produce mockup HTML (scripts/mockup.html)
+4. Send to Telegram for approval:
+     npm run ui:preview -- --file scripts/mockup.html --label "Description"
+5. Wait for Syamim's approval — do NOT implement before approval
+6. Implement the approved design
+7. Run Codex review (see PR Workflow above)
+8. Create PR → poll CI → merge
+```
+
+**Do NOT implement UI changes before completing steps 1–5.**
+**Do NOT run UIUXProMax mid-implementation as a post-hoc check — it must come first.**
+
+#### UIUXProMax script path (Windows)
+
+- Script: `C:\Users\Syamim\.claude\plugins\cache\ui-ux-pro-max-skill\ui-ux-pro-max\2.5.0\src\ui-ux-pro-max\scripts\search.py`
+- Always use `py` (not `python3`) — `python3` is not in PATH on this machine
+- Always `cd` to the `2.5.0` directory before running; never guess the path
+- The Skill tool loads the ruleset into context; the Python script runs domain queries — both steps are needed
+
+### Firebase / Firestore Updates
+
+The service account key is at `portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json` (project root).
+Scripts use this file directly — no `GOOGLE_APPLICATION_CREDENTIALS` env var needed.
+Follow the same JWT → OAuth → Firestore REST pattern as `scripts/update-photography-stats.mjs`.
+Always do a dry run first (`node script.mjs`) before writing (`node script.mjs --write`).
