@@ -28,21 +28,20 @@ export const PORTFOLIO_EXPERIENCE_SECTIONS: PortfolioExperienceSection[] = [
     key: "platforms",
     title: "Platforms",
     description:
-      "Cloud infrastructure, payment rails, and developer platforms I've shipped with.",
+      "Third-party services and cloud platforms I've integrated and built on.",
     gridClass: "sm:grid-cols-2 lg:grid-cols-3",
   },
   {
     key: "protocols",
     title: "Protocols",
     description:
-      "Specialised communication standards I've implemented in production.",
+      "Communication standards and integration specs I've implemented in production.",
     gridClass: "sm:grid-cols-2",
   },
   {
     key: "frameworks",
     title: "Frameworks",
-    description:
-      "Backend and frontend frameworks I use to build fast, maintainable products.",
+    description: "Frameworks, libraries, and SDKs I use across the stack.",
     gridClass: "sm:grid-cols-2 lg:grid-cols-3",
     compact: true,
   },
