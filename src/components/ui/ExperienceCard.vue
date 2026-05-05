@@ -7,13 +7,13 @@
  * the compact/full layout split so PortfolioSection does not duplicate the
  * same widget markup across categories.
  */
+import { Calendar } from "lucide-vue-next";
 import type { ExperienceItem } from "../../lib/composables/usePortfolio";
 
 defineProps<{
   item: ExperienceItem;
   active: boolean;
   durationLabel: string;
-  sinceYear?: string | null;
   compact?: boolean;
 }>();
 </script>
@@ -90,9 +90,10 @@ defineProps<{
           </a>
           <span v-if="active" class="active-dot" aria-label="Currently using" />
           <span v-if="active" class="active-label">Active</span>
-          <span v-else-if="sinceYear" class="experience-year-badge">{{
-            sinceYear
-          }}</span>
+          <span v-else-if="durationLabel" class="experience-year-badge">
+            <Calendar :size="9" aria-hidden="true" />
+            {{ durationLabel }}
+          </span>
         </div>
       </div>
       <p class="experience-title">{{ item.title }}</p>
@@ -100,7 +101,10 @@ defineProps<{
         {{ item.description }}
       </p>
       <div v-if="active" class="mt-2.5">
-        <span class="experience-year-badge">{{ durationLabel }}</span>
+        <span class="experience-year-badge">
+          <Calendar :size="9" aria-hidden="true" />
+          {{ durationLabel }}
+        </span>
       </div>
     </template>
   </article>
@@ -163,6 +167,9 @@ defineProps<{
 }
 
 .experience-year-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   font-size: 10px;
   font-weight: 600;
   color: var(--color-on-surface-variant);
