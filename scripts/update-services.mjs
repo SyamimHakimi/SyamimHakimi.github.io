@@ -9,7 +9,9 @@ import { createSign } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import process from "node:process";
 
-const CREDENTIALS_PATH = "portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json";
+const CREDENTIALS_PATH =
+  process.env.GOOGLE_APPLICATION_CREDENTIALS ??
+  "portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json";
 
 // ── Target state ─────────────────────────────────────────────────────────────
 
