@@ -107,6 +107,8 @@ async function patchDocument(accessToken, projectId, docPath, fields) {
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 const write = process.argv.includes("--write");
+const credentialsPath =
+  process.env.GOOGLE_APPLICATION_CREDENTIALS ?? DEFAULT_CREDENTIALS_PATH;
 
 console.log(`Mode: ${write ? "WRITE" : "DRY RUN"}\n`);
 console.log(`Document: profile/${PROFILE_DOC_ID}`);
@@ -121,7 +123,7 @@ if (!write) {
   process.exit(0);
 }
 
-const credentials = await loadServiceAccount(DEFAULT_CREDENTIALS_PATH);
+const credentials = await loadServiceAccount(credentialsPath);
 const accessToken = await fetchAccessToken(credentials);
 await patchDocument(accessToken, credentials.project_id, `profile/${PROFILE_DOC_ID}`, UPDATES);
 console.log("✓ Profile updated in Firestore.");
