@@ -1,12 +1,20 @@
 <script setup lang="ts">
 import {
-  BriefcaseBusiness,
+  ArrowLeftRight,
+  BarChart2,
+  ClipboardList,
+  Code2,
   Database,
-  Layers3,
+  FileText,
+  GitMerge,
+  Globe,
+  KeyRound,
+  Network,
+  Plug,
   ShieldCheck,
-  Sparkles,
-  Workflow,
+  Zap,
 } from "lucide-vue-next";
+import type { Component } from "vue";
 import { computed } from "vue";
 import { useServices } from "../../lib/composables/useServices";
 import {
@@ -19,15 +27,24 @@ import MetricCard from "../ui/MetricCard.vue";
 const { services, loading, error } = useServices();
 const grouped = computed(() => groupServices(services.value));
 
-function iconForService(title: string, groupId: number) {
-  const t = title.toLowerCase();
-  if (t.includes("ux") || t.includes("polish")) return Sparkles;
-  if (t.includes("api") || t.includes("schema")) return Database;
-  if (t.includes("review") || t.includes("hardening")) return ShieldCheck;
-  if (t.includes("workflow") || t.includes("integration")) return Workflow;
-  if (groupId === 1) return BriefcaseBusiness;
-  if (groupId === 2) return Layers3;
-  return ShieldCheck;
+const SERVICE_ICONS: Record<string, Component> = {
+  "Custom Web Application": Globe,
+  "Dashboard & Analytics UI": BarChart2,
+  "Form Engineering & Validation": ClipboardList,
+  "Authentication & Access Control": KeyRound,
+  "REST API Design": Code2,
+  "Third-Party API Integration": Plug,
+  "Database Schema Design": Database,
+  "Data Migration": ArrowLeftRight,
+  "Data Mapping & Transformation": GitMerge,
+  "Business Flow Analysis": Network,
+  "Performance Optimisation": Zap,
+  "Security Review & Implementation": ShieldCheck,
+  "API Documentation & Contracts": FileText,
+};
+
+function iconForService(title: string): Component {
+  return SERVICE_ICONS[title] ?? Code2;
 }
 </script>
 
@@ -39,6 +56,7 @@ function iconForService(title: string, groupId: number) {
         v-for="metric in SERVICES_OVERVIEW_METRICS"
         :key="metric.value"
         :value="metric.value"
+        :eyebrow="metric.short"
         :description="metric.description"
       />
     </div>
@@ -50,16 +68,20 @@ function iconForService(title: string, groupId: number) {
       aria-busy="true"
       aria-label="Loading services"
     >
-      <div v-for="i in 3" :key="i" class="space-y-0">
-        <div class="flex items-center justify-between border-b-2 border-[var(--color-on-surface)] pb-3">
+      <div v-for="i in 3" :key="i" class="space-y-3">
+        <div class="border-b-2 border-[var(--color-on-surface)] pb-3 space-y-2">
           <div class="skeleton-line w-32" />
-          <div class="skeleton-line w-24" />
+          <div class="skeleton-line w-56" />
         </div>
-        <div v-for="j in 3" :key="j" class="flex items-start gap-4 border-b border-[var(--color-outline)] py-4">
-          <div class="skeleton-rect h-8 w-8 shrink-0 rounded-lg" />
-          <div class="flex-1 space-y-2">
-            <div class="skeleton-line w-1/3" />
-            <div class="skeleton-line w-2/3" />
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div
+            v-for="j in 3"
+            :key="j"
+            class="rounded-xl border border-[var(--color-outline)] p-4 space-y-2"
+          >
+            <div class="skeleton-rect h-9 w-9 rounded-lg" />
+            <div class="skeleton-line w-3/4" />
+            <div class="skeleton-line w-full" />
           </div>
         </div>
       </div>
@@ -82,67 +104,46 @@ function iconForService(title: string, groupId: number) {
         :key="id"
         :aria-labelledby="`service-group-title-${id}`"
       >
-        <!-- Group header: thick rule -->
-        <div
-          class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b-2 border-[var(--color-on-surface)] pb-3"
-        >
+        <!-- Group header -->
+        <div class="border-b-2 border-[var(--color-on-surface)] pb-3 mb-4">
           <h2
             :id="`service-group-title-${id}`"
             class="text-[13px] font-bold uppercase tracking-[0.08em] text-[var(--color-on-surface)]"
           >
             {{ meta.title }}
           </h2>
-          <div class="flex items-center gap-3">
-            <span
-              class="text-[11px] font-bold text-[var(--color-cta)]"
-              aria-label="`${groupServices.length} services in this group`"
-            >
-              {{ groupServices.length }}
-              {{ groupServices.length === 1 ? "service" : "services" }}
-            </span>
-            <span
-              class="text-[11px] font-semibold text-[var(--color-on-surface-variant)]"
-            >
-              {{ meta.engagement }}
-            </span>
-          </div>
+          <p class="mt-1.5 text-[12px] leading-relaxed text-[var(--color-on-surface-variant)]">
+            {{ meta.description }}
+          </p>
         </div>
 
-        <!-- Service rows -->
-        <div>
+        <!-- Tile grid: 2-col mobile, 3-col sm+ -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
           <div
             v-for="service in groupServices"
             :key="service.id"
-            class="flex items-start gap-3.5 border-b border-[var(--color-outline)] py-4 last:border-b-0"
+            class="rounded-xl border border-[var(--color-outline)] bg-[var(--color-surface)] p-4"
           >
             <span
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--color-cta)_10%,var(--color-surface))] text-[var(--color-cta)]"
+              class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-[color-mix(in_srgb,var(--color-cta)_10%,var(--color-surface))] text-[var(--color-cta)]"
               aria-hidden="true"
             >
-              <component
-                :is="iconForService(service.title, id)"
-                class="h-3.5 w-3.5"
-              />
+              <component :is="iconForService(service.title)" class="h-4 w-4" />
             </span>
-            <div>
-              <p
-                class="text-[14px] font-semibold leading-snug text-[var(--color-on-surface)]"
-              >
-                {{ service.title }}
-              </p>
-              <p
-                class="mt-0.5 text-[13px] leading-relaxed text-[var(--color-on-surface-variant)]"
-              >
-                {{ service.description }}
-              </p>
-            </div>
+            <p class="text-[13px] font-semibold leading-snug text-[var(--color-on-surface)]">
+              {{ service.title }}
+            </p>
+            <p class="mt-1 text-[11px] leading-relaxed text-[var(--color-on-surface-variant)]">
+              {{ service.description }}
+            </p>
           </div>
         </div>
       </section>
 
       <!-- CTA ─────────────────────────────────────────────────────────── -->
       <section
-        class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[var(--color-outline)] bg-[var(--color-surface)] p-5"
+        class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border p-5"
+        style="background: var(--color-surface-variant); border-color: rgba(180,83,9,0.20);"
         aria-labelledby="services-cta-title"
       >
         <div class="space-y-1">
