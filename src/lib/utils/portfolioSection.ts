@@ -70,6 +70,54 @@ export function sortExperienceItems(items: ExperienceItem[]): ExperienceItem[] {
   });
 }
 
+export interface PortfolioMatrixRow {
+  key: keyof PortfolioData["experience"];
+  title: string;
+  description: string;
+}
+
+export const PORTFOLIO_MATRIX_ROWS: PortfolioMatrixRow[] = [
+  {
+    key: "platforms",
+    title: "Platforms",
+    description: "Cloud & 3rd-party services",
+  },
+  {
+    key: "protocols",
+    title: "Protocols",
+    description: "Integration standards implemented in production",
+  },
+  {
+    key: "ai",
+    title: "AI Developer Tools",
+    description: "Workflow & automation",
+  },
+  {
+    key: "frameworks",
+    title: "Frameworks",
+    description: "Libraries & SDKs across the stack",
+  },
+  {
+    key: "languages",
+    title: "Languages & DBs",
+    description: "Written & queried daily",
+  },
+];
+
+/**
+ * Compact year range for matrix skill tags.
+ * Active: "2023–"  |  Inactive same year: "2023"  |  Inactive: "2022–24"
+ */
+export function matrixYearLabel(item: ExperienceItem): string {
+  const from = item["date-from"];
+  if (!from) return "";
+  const fromYear = new Date(from).getFullYear();
+  if (!item["date-to"]) return `${fromYear}–`;
+  const toYear = new Date(item["date-to"]).getFullYear();
+  if (fromYear === toYear) return String(fromYear);
+  return `${fromYear}–${String(toYear).slice(2)}`;
+}
+
 export interface PortfolioHeroItem {
   label: string;
   icon: LucideIcon;

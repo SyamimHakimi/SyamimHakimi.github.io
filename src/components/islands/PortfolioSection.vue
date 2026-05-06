@@ -4,43 +4,21 @@
  * Island: client:visible
  * Composable: usePortfolio()
  *
- * UI: hero summary strip, experience cards with brand logo + active indicator
- * + year badge, with lightweight CSS entrance stagger.
+ * UI: hero summary strip, skills matrix (all categories in one scannable
+ * table), personal project card. Designed for recruiter readability.
  */
 import { computed } from "vue";
 import { usePortfolio } from "../../lib/composables/usePortfolio";
 import type { ExperienceItem } from "../../lib/composables/usePortfolio";
 import { useReducedMotion } from "../../lib/composables/useReducedMotion";
-import {
-  buildPortfolioHeroItems,
-  PORTFOLIO_EXPERIENCE_SECTIONS,
-  sortExperienceItems,
-} from "../../lib/utils/portfolioSection";
+import { buildPortfolioHeroItems } from "../../lib/utils/portfolioSection";
 import ErrorAlert from "../ui/ErrorAlert.vue";
-import ExperienceSection from "../ui/ExperienceSection.vue";
+import ExperienceMatrix from "../ui/ExperienceMatrix.vue";
 
 const { data, loading, error } = usePortfolio();
 
 function isActive(item: ExperienceItem): boolean {
   return !item["date-to"];
-}
-
-function durationLabel(item: ExperienceItem): string {
-  const from = item["date-from"];
-  if (!from) return "";
-  const fromYear = new Date(from).getFullYear();
-  if (isActive(item)) return `Since ${fromYear}`;
-  const toYear = new Date(item["date-to"]!).getFullYear();
-  return fromYear === toYear ? String(fromYear) : `${fromYear}–${toYear}`;
-}
-
-/** Years of experience as a compact label, e.g. "6y" or "<1y". */
-function yearsLabel(item: ExperienceItem): string | null {
-  if (!item["date-from"]) return null;
-  const years =
-    new Date().getFullYear() - new Date(item["date-from"]).getFullYear();
-  if (years < 1) return "<1y";
-  return `${years}y`;
 }
 
 const expYears = computed((): number | null => {
@@ -72,12 +50,14 @@ function revealDelay(index: number, base = 0): string {
 
 <template>
   <div>
+    <!-- ── Loading skeleton ── -->
     <div
       v-if="loading"
       class="space-y-9"
       aria-busy="true"
       aria-label="Loading portfolio"
     >
+      <!-- Hero strip skeleton -->
       <div
         class="flex flex-wrap items-center gap-3 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
       >
@@ -85,60 +65,39 @@ function revealDelay(index: number, base = 0): string {
         <div class="h-4 w-px bg-[var(--color-outline)]" />
         <div class="skeleton-line" style="width: 72px; animation-delay: 60ms" />
         <div class="h-4 w-px bg-[var(--color-outline)]" />
-        <div
-          class="skeleton-line"
-          style="width: 100px; animation-delay: 120ms"
-        />
+        <div class="skeleton-line" style="width: 100px; animation-delay: 120ms" />
         <div class="h-4 w-px bg-[var(--color-outline)]" />
-        <div
-          class="skeleton-rect h-6 w-20 rounded-full"
-          style="animation-delay: 180ms"
-        />
-        <div
-          class="skeleton-rect h-6 w-24 rounded-full"
-          style="animation-delay: 240ms"
-        />
+        <div class="skeleton-rect h-6 w-20 rounded-full" style="animation-delay: 180ms" />
+        <div class="skeleton-rect h-6 w-24 rounded-full" style="animation-delay: 240ms" />
       </div>
 
+      <!-- Matrix skeleton -->
       <div
-        v-for="(cols, si) in [
-          [3, 100],
-          [1, 100],
-          [5, 58],
-        ]"
-        :key="si"
-        class="space-y-3"
+        class="overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-outline)]"
       >
-        <div class="flex items-center gap-2">
-          <div class="skeleton-line" style="width: 80px; height: 16px" />
-          <div class="skeleton-rect h-[18px] w-5 rounded-full" />
-        </div>
-        <div class="skeleton-line" style="width: 55%" />
         <div
-          class="grid gap-3"
-          :style="`grid-template-columns: repeat(auto-fill, minmax(${si === 2 ? 180 : 260}px, 1fr))`"
+          v-for="(widths, i) in [[90, 110, 80, 95], [70, 88], [100, 75], [80, 95, 70], [84, 66, 92, 78]]"
+          :key="i"
+          class="matrix-skel-row"
         >
-          <div
-            v-for="j in cols[0]"
-            :key="j"
-            class="skeleton-rect"
-            :style="`height:${cols[1]}px;animation-delay:${(j - 1) * 60}ms`"
-          />
+          <div class="matrix-skel-label">
+            <div
+              class="skeleton-line"
+              :style="`width:${i === 0 ? 68 : i === 1 ? 58 : i === 2 ? 96 : i === 3 ? 72 : 88}px;animation-delay:${i * 40}ms`"
+            />
+          </div>
+          <div class="matrix-skel-items">
+            <div
+              v-for="(w, j) in widths"
+              :key="j"
+              class="skeleton-rect h-[26px] rounded-full"
+              :style="`width:${w}px;animation-delay:${i * 40 + j * 30}ms`"
+            />
+          </div>
         </div>
       </div>
 
-      <div class="space-y-3">
-        <div class="skeleton-line" style="width: 160px; height: 16px" />
-        <div class="flex flex-wrap gap-2">
-          <div
-            v-for="w in [82, 100, 74, 92]"
-            :key="w"
-            class="skeleton-rect h-8 rounded-full"
-            :style="`width:${w}px`"
-          />
-        </div>
-      </div>
-
+      <!-- Project card skeleton -->
       <div class="space-y-3" style="max-width: 720px">
         <div class="skeleton-line" style="width: 130px; height: 16px" />
         <div
@@ -148,7 +107,6 @@ function revealDelay(index: number, base = 0): string {
           <div class="skeleton-line" style="width: 120px; height: 20px" />
           <div class="skeleton-line" style="width: 75%" />
           <div class="skeleton-line" style="width: 90%" />
-          <div class="skeleton-line" style="width: 60%" />
           <div class="flex flex-wrap gap-2 pt-1">
             <div
               v-for="w in [64, 52, 72]"
@@ -167,7 +125,8 @@ function revealDelay(index: number, base = 0): string {
       :message="error"
     />
 
-    <div v-else class="space-y-12">
+    <div v-else class="space-y-10">
+      <!-- ── Hero strip (unchanged) ── -->
       <div
         class="reveal-up flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[var(--radius-md)] border border-[var(--color-outline)] bg-[var(--color-surface)] px-5 py-4"
         :style="{ animationDelay: revealDelay(0) }"
@@ -194,69 +153,18 @@ function revealDelay(index: number, base = 0): string {
         </template>
       </div>
 
-      <ExperienceSection
-        v-for="section in PORTFOLIO_EXPERIENCE_SECTIONS"
-        :id="section.key"
-        :key="section.key"
-        :title="section.title"
-        :description="section.description"
-        :items="sortExperienceItems(data.experience[section.key])"
-        :compact="section.compact"
-        :grid-class="section.gridClass"
-        :header-animation-delay="revealDelay(0, 80)"
-        :item-animation-delay="(index) => revealDelay(index, 120)"
-        :is-active="isActive"
-        :duration-label="durationLabel"
-      />
-
-      <section
-        v-if="data.experience.languages.length > 0"
-        aria-label="Languages and databases"
+      <!-- ── Skills matrix ── -->
+      <div
+        class="reveal-up"
+        :style="{ animationDelay: revealDelay(1, 40) }"
       >
-        <div
-          class="reveal-up mb-3 flex items-center gap-2.5"
-          :style="{ animationDelay: revealDelay(0, 80) }"
-        >
-          <h2 class="text-xl">Languages &amp; Databases</h2>
-        </div>
-        <p class="mb-4 text-[13px] text-[var(--color-on-surface-variant)]">
-          What I write and query in day-to-day engineering work.
-        </p>
-        <ul class="flex flex-wrap gap-2" role="list">
-          <li
-            v-for="(item, i) in sortExperienceItems(data.experience.languages)"
-            :key="item.id"
-            class="reveal-up"
-            :style="{ animationDelay: revealDelay(i, 120) }"
-          >
-            <span
-              class="pill pill--soft text-[13px] text-[var(--color-on-surface)]"
-              :class="{ 'opacity-60': !isActive(item) }"
-            >
-              <span
-                v-if="isActive(item)"
-                class="status-dot"
-                aria-label="Currently using"
-              />
-              {{ item.title }}
-              <span
-                v-if="yearsLabel(item)"
-                class="chip-years"
-                aria-hidden="true"
-              >
-                {{ yearsLabel(item) }}
-              </span>
-            </span>
-          </li>
-        </ul>
-        <p
-          class="mt-3 flex items-center gap-1.5 text-[12px] text-[var(--color-on-surface-variant)]"
-        >
-          <span class="status-dot" aria-hidden="true" />
-          Currently using
-        </p>
-      </section>
+        <ExperienceMatrix
+          :experience="data.experience"
+          :is-active="isActive"
+        />
+      </div>
 
+      <!-- ── Personal project ── -->
       <section v-if="data.project" aria-label="Personal projects">
         <div
           class="reveal-up mb-3"
@@ -338,10 +246,29 @@ h2 {
   font-family: "DM Serif Display", serif;
 }
 
-.chip-years {
-  font-size: 10px;
-  font-weight: 600;
-  opacity: 0.5;
-  margin-left: 2px;
+.matrix-skel-row {
+  display: grid;
+  grid-template-columns: 168px 1fr;
+  border-bottom: 1px solid var(--color-outline);
+}
+
+.matrix-skel-row:last-child {
+  border-bottom: none;
+}
+
+.matrix-skel-label {
+  padding: 14px 16px;
+  background: var(--color-surface-variant);
+  border-right: 1px solid var(--color-outline);
+  display: flex;
+  align-items: center;
+}
+
+.matrix-skel-items {
+  padding: 10px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 </style>
