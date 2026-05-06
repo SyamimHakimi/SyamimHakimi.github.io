@@ -23,21 +23,21 @@ const GROUP_META: Record<number, ServiceGroupMeta> = {
   1: {
     title: "Product Delivery",
     description:
-      "For work that needs to get built, refined, and shipped without turning into generic product UI.",
+      "For work that needs to get built and shipped — web apps, dashboards, forms, and access control.",
     engagement: "Project work",
     icon: "build",
   },
   2: {
-    title: "Platform and Data",
+    title: "API, Data & Platform",
     description:
-      "For the structural work underneath the UI: schemas, APIs, runtime content, and delivery systems.",
+      "For the structural work underneath the product: APIs, databases, integrations, and data pipelines.",
     engagement: "Platform build",
     icon: "data",
   },
   3: {
-    title: "Hardening and Review",
+    title: "Review & Hardening",
     description:
-      "For teams that need sharper review, stronger testing posture, or help getting a redesign over the line.",
+      "For tightening existing systems — performance, security, and API contract quality.",
     engagement: "Audit / Review",
     icon: "review",
   },
