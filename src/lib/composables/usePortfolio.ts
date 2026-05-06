@@ -62,7 +62,7 @@ export const ProjectDocumentSchema = z.object({
   subtitle: z.string().optional(),
   description: z.string().optional(),
   link: z.string().optional(),
-  "date-from": dateField,
+  "date-from": dateField.optional(),
 });
 
 /**
