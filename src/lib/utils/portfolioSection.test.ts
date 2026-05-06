@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   buildPortfolioHeroItems,
+  matrixYearLabel,
   PORTFOLIO_EXPERIENCE_SECTIONS,
+  PORTFOLIO_MATRIX_ROWS,
   sortExperienceItems,
 } from "./portfolioSection";
 
@@ -19,6 +21,12 @@ describe("portfolioSection config", () => {
     );
   });
 
+  it("matrix rows include all five categories in order", () => {
+    expect(PORTFOLIO_MATRIX_ROWS.map((r) => r.key)).toEqual([
+      "platforms", "protocols", "ai", "frameworks", "languages",
+    ]);
+  });
+
   it("builds hero items from total experience years", () => {
     const items = buildPortfolioHeroItems(5);
     expect(items[0]?.label).toBe("5+ yrs experience");
@@ -31,6 +39,24 @@ describe("portfolioSection config", () => {
     const items = buildPortfolioHeroItems(null);
     expect(items[0]?.label).toBe("APIs & Integrations");
     expect(items.some((item) => item.label.includes("yrs experience"))).toBe(false);
+  });
+});
+
+describe("matrixYearLabel", () => {
+  it("returns 'YYYY–' for an active item", () => {
+    expect(matrixYearLabel(item("a", "2023-10-01"))).toBe("2023–");
+  });
+
+  it("returns 'YYYY–YY' for inactive spanning different years", () => {
+    expect(matrixYearLabel(item("a", "2022-01-01", "2024-10-01"))).toBe("2022–24");
+  });
+
+  it("returns just the year when start and end year are the same", () => {
+    expect(matrixYearLabel(item("a", "2023-01-01", "2023-12-01"))).toBe("2023");
+  });
+
+  it("returns empty string when date-from is absent", () => {
+    expect(matrixYearLabel({ id: "x", title: "x" })).toBe("");
   });
 });
 
