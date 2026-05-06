@@ -16,7 +16,7 @@ const PROFILE_DOC_ID = "ddIhV8IxV5DjciJY7UxW";
 
 const UPDATES = {
   "Residing Country": "Kuala Lumpur, Malaysia",
-  Hobbies: "Boardgames, Photography",
+  Hobbies: "Party Games, Random Snapshots, Touching Grass",
 };
 
 // ── Firestore helpers ─────────────────────────────────────────────────────────
