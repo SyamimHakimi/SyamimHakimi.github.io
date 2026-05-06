@@ -118,7 +118,7 @@ const sortedGear = computed(() =>
           <SectionHeader
             :icon="Camera"
             title="Photography Gear"
-            subtitle="Grouped by type — the current carry setup for street and travel."
+            subtitle="What's in my bag right now."
           />
 
           <div v-if="data.gear.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
@@ -184,7 +184,7 @@ const sortedGear = computed(() =>
           <SectionHeader
             :icon="Layers3"
             title="Favourite Boardgames"
-            subtitle="A horizontal strip keeps the section tactile without overwhelming the page."
+            subtitle="The ones I keep coming back to."
           />
 
           <div v-if="data.boardgames.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
@@ -263,7 +263,7 @@ const sortedGear = computed(() =>
           <SectionHeader
             :icon="MessageSquare"
             title="Connect"
-            subtitle="Direct links — recognizable platform names first, then a short qualifier."
+            subtitle="Pick whatever works for you."
           />
 
           <div v-if="data.socialMedia.length === 0" class="flex flex-col items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[var(--color-outline)] bg-[var(--color-surface-variant)] py-8 text-center">
