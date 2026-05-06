@@ -16,7 +16,7 @@ const DEFAULT_CREDENTIALS_PATH =
 const PROJECT_ID = "nas-raspberry-pi-2026";
 
 const PROJECT_DATA = {
-  title: "Self-hosted NAS",
+  title: "self-hosted NAS",
   subtitle: "My photo archive",
   description:
     "Cloud storage limits and subscription fees got old fast. Built my own NAS on a Raspberry Pi to keep my photos and files at home — accessible from anywhere via Tailscale, managed through Immich for a proper photo library experience.",
