@@ -164,76 +164,87 @@ function revealDelay(index: number, base = 0): string {
         />
       </div>
 
-      <!-- ── Personal project ── -->
-      <section v-if="data.project" aria-label="Personal projects">
+      <!-- ── Personal projects ── -->
+      <section v-if="data.projects.length > 0" aria-label="Personal projects">
         <div
           class="reveal-up mb-3"
           :style="{ animationDelay: revealDelay(0, 80) }"
         >
-          <h2 class="text-xl">Personal Project</h2>
+          <h2 class="text-xl">Personal Projects</h2>
         </div>
-        <div
-          class="reveal-up card-elevated"
-          style="padding: 24px; max-width: 720px"
-          :style="{ animationDelay: revealDelay(1, 80) }"
-        >
-          <h3
-            class="mt-1 text-[20px] font-normal text-[var(--color-on-surface)]"
+        <div class="space-y-4" style="max-width: 720px">
+          <div
+            v-for="({ project, techstack }, pi) in data.projects"
+            :key="project.id"
+            class="reveal-up card-elevated"
+            style="padding: 24px"
+            :style="{ animationDelay: revealDelay(pi + 1, 80) }"
           >
-            {{ data.project.title }}
-          </h3>
-          <p
-            v-if="data.project.subtitle"
-            class="mt-1 text-[13px] text-[var(--color-on-surface-variant)]"
-          >
-            {{ data.project.subtitle }}
-          </p>
-          <p
-            v-if="data.project.description"
-            class="mt-3 text-[14px] leading-relaxed text-[var(--color-on-surface-variant)]"
-          >
-            {{ data.project.description }}
-          </p>
-          <div v-if="data.techstack.length > 0" class="mt-4">
             <p
-              class="mb-2 text-[11px] font-semibold uppercase tracking-[.06em] text-[var(--color-on-surface-variant)]"
+              v-if="project.subtitle"
+              class="text-[11px] font-semibold uppercase tracking-[.06em] text-[var(--color-on-surface-variant)]"
             >
-              Tech Stack
+              {{ project.subtitle }}
             </p>
-            <ul class="flex flex-wrap gap-1.5" role="list">
-              <li v-for="tech in data.techstack" :key="tech.id">
-                <a
-                  v-if="tech.link"
-                  :href="tech.link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="tag tag-link"
-                >
-                  <img
-                    v-if="tech['img-src']"
-                    :src="`/${tech['img-src']}`"
-                    :alt="tech.title"
-                    class="h-3.5 w-3.5 shrink-0 object-contain"
-                    width="14"
-                    height="14"
-                    aria-hidden="true"
-                  />
-                  {{ tech.title }}
-                </a>
-                <span v-else class="tag">
-                  <img
-                    v-if="tech['img-src']"
-                    :src="`/${tech['img-src']}`"
-                    :alt="tech.title"
-                    class="h-3.5 w-3.5 shrink-0 object-contain"
-                    width="14"
-                    height="14"
-                    aria-hidden="true"
-                  />
-                  {{ tech.title }}
-                </span>
-              </li>
-            </ul>
+            <h3
+              class="mt-1 text-[20px] font-normal text-[var(--color-on-surface)]"
+            >
+              <a
+                v-if="project.link"
+                :href="project.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:underline"
+              >{{ project.title }}</a>
+              <template v-else>{{ project.title }}</template>
+            </h3>
+            <p
+              v-if="project.description"
+              class="mt-3 text-[14px] leading-relaxed text-[var(--color-on-surface-variant)]"
+            >
+              {{ project.description }}
+            </p>
+            <div v-if="techstack.length > 0" class="mt-4">
+              <p
+                class="mb-2 text-[11px] font-semibold uppercase tracking-[.06em] text-[var(--color-on-surface-variant)]"
+              >
+                Tech Stack
+              </p>
+              <ul class="flex flex-wrap gap-1.5" role="list">
+                <li v-for="tech in techstack" :key="tech.id">
+                  <a
+                    v-if="tech.link"
+                    :href="tech.link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="tag tag-link"
+                  >
+                    <img
+                      v-if="tech['img-src']"
+                      :src="`/${tech['img-src']}`"
+                      :alt="tech.title"
+                      class="h-3.5 w-3.5 shrink-0 object-contain"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                    />
+                    {{ tech.title }}
+                  </a>
+                  <span v-else class="tag">
+                    <img
+                      v-if="tech['img-src']"
+                      :src="`/${tech['img-src']}`"
+                      :alt="tech.title"
+                      class="h-3.5 w-3.5 shrink-0 object-contain"
+                      width="14"
+                      height="14"
+                      aria-hidden="true"
+                    />
+                    {{ tech.title }}
+                  </span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
