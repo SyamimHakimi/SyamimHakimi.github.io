@@ -71,7 +71,7 @@ describe("shared service presentation constants", () => {
   it("exposes stable overview metrics for the services hero", () => {
     expect(SERVICES_OVERVIEW_METRICS).toHaveLength(3);
     expect(SERVICES_OVERVIEW_METRICS[0]).toMatchObject({
-      value: "4+ yrs",
+      value: "6+ yrs",
     });
   });
 });

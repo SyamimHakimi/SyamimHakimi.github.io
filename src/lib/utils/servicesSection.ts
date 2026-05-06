@@ -46,7 +46,7 @@ const GROUP_META: Record<number, ServiceGroupMeta> = {
 /** Shared overview metrics used in the services page intro. */
 export const SERVICES_OVERVIEW_METRICS: readonly ServiceOverviewMetric[] = [
   {
-    value: "4+ yrs",
+    value: "6+ yrs",
     short: "experience",
     description:
       "Professional software engineering across product, platform, and review work.",
