@@ -89,13 +89,13 @@ const socialLinks: { icon: LucideComponent; label: string; href: string }[] = [
           <!-- Email hero button -->
           <div class="grid gap-3">
             <a
-              href="mailto:syamim.dev@tunasprism.com.my"
+              href="mailto:sym10115@proton.me"
               class="group inline-flex w-full items-center justify-between gap-3 rounded-2xl bg-[var(--color-cta)] px-5 py-4 text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta)] focus-visible:ring-offset-2 sm:w-auto"
             >
               <span class="flex items-center gap-3">
                 <Mail class="h-[18px] w-[18px] shrink-0" />
                 <span class="text-[14px] font-semibold"
-                  >syamim.dev@tunasprism.com.my</span
+                  >sym10115@proton.me</span
                 >
               </span>
               <ExternalLink
