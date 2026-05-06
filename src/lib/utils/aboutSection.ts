@@ -5,9 +5,9 @@ import type { PhotographyGear } from "../composables/useAboutMe";
  */
 export const PROFILE_INTERESTS = [
   {
-    title: "Software",
+    title: "Sports",
     description:
-      "Frontend-heavy engineering, product polish, and shipping practical systems.",
+      "Anything with friends — the sport matters less than having someone to play it with.",
   },
   {
     title: "Photography",
