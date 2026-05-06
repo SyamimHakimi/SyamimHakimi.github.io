@@ -5,9 +5,9 @@ import type { PhotographyGear } from "../composables/useAboutMe";
  */
 export const PROFILE_INTERESTS = [
   {
-    title: "Sports",
+    title: "Boardgames",
     description:
-      "Anything with friends — the sport matters less than having someone to play it with.",
+      "Games with tension, replayability, and enough interaction to stay memorable.",
   },
   {
     title: "Photography",
@@ -15,9 +15,9 @@ export const PROFILE_INTERESTS = [
       "Street, travel, and everyday scenes with compact gear that stays easy to carry.",
   },
   {
-    title: "Boardgames",
+    title: "Sports",
     description:
-      "Games with tension, replayability, and enough interaction to stay memorable.",
+      "Anything with friends — the sport matters less than having someone to play it with.",
   },
 ] as const;
 
