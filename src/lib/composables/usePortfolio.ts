@@ -1,8 +1,6 @@
 import { ref, onMounted } from "vue";
 import {
-  doc,
   collection,
-  getDoc,
   getDocs,
   query,
   orderBy,
@@ -55,14 +53,16 @@ export const ExperienceItemSchema = z.object({
 });
 
 /**
- * Validates the singleton project document (`projects/XYdqe9OyXNSUEzZ8kqwn`).
- * `subtitle` and `description` are optional display fields.
+ * Validates a document from the `projects` collection.
+ * `date-from` controls display order (newest first); `link` is an optional CTA URL.
  */
 export const ProjectDocumentSchema = z.object({
   id: z.string(),
   title: z.string(),
   subtitle: z.string().optional(),
   description: z.string().optional(),
+  link: z.string().optional(),
+  "date-from": dateField,
 });
 
 /**
@@ -82,10 +82,16 @@ export const TechstackItemSchema = z.object({
 
 /** Validated experience item (platform, protocol, framework, or language). */
 export type ExperienceItem = z.infer<typeof ExperienceItemSchema>;
-/** Validated personal project singleton document. */
+/** Validated personal project document. */
 export type ProjectDocument = z.infer<typeof ProjectDocumentSchema>;
-/** Validated tech stack item from the project's `techstack` subcollection. */
+/** Validated tech stack item from a project's `techstack` subcollection. */
 export type TechstackItem = z.infer<typeof TechstackItemSchema>;
+
+/** A project document together with its ordered tech stack. */
+export interface ProjectWithTechstack {
+  project: ProjectDocument;
+  techstack: TechstackItem[];
+}
 
 /** Aggregated return type for the `usePortfolio` composable. */
 export interface PortfolioData {
@@ -96,13 +102,10 @@ export interface PortfolioData {
     frameworks: ExperienceItem[];
     languages: ExperienceItem[];
   };
-  project: ProjectDocument | null;
-  techstack: TechstackItem[];
+  projects: ProjectWithTechstack[];
 }
 
 // ── Composable ─────────────────────────────────────────────────────────────
-
-const PROJECT_DOC_ID = "XYdqe9OyXNSUEzZ8kqwn";
 
 /** Builds a Firestore query for one experience category, ordered by `date-from`. */
 function experienceQuery(category: string) {
@@ -112,11 +115,11 @@ function experienceQuery(category: string) {
 }
 
 /**
- * Fetches all portfolio content in a single parallel batch:
- * - `experience/{platforms,protocols,frameworks,languages}/item` — ordered by `date-from`
- * - `projects/XYdqe9OyXNSUEzZ8kqwn` — singleton personal project document
- * - `projects/{id}/techstack` — ordered by `sorting`
+ * Fetches all portfolio content in two parallel stages:
+ * - Stage 1: all five experience categories + the full `projects` collection
+ * - Stage 2: each project's `techstack` subcollection (in parallel)
  *
+ * Projects are sorted newest-first by `date-from` (docs without that field sort last).
  * All payloads are validated through their Zod schemas before reaching the UI.
  *
  * @returns `data` — reactive `PortfolioData` object;
@@ -132,8 +135,7 @@ export function usePortfolio() {
       frameworks: [],
       languages: [],
     },
-    project: null,
-    techstack: [],
+    projects: [],
   });
   const loading = ref(true);
   const error = ref<string | null>(null);
@@ -146,22 +148,34 @@ export function usePortfolio() {
         aiSnap,
         frameworksSnap,
         languagesSnap,
-        projectSnap,
-        techstackSnap,
+        projectsSnap,
       ] = await Promise.all([
         experienceQuery("platforms"),
         experienceQuery("protocols"),
         experienceQuery("ai"),
         experienceQuery("frameworks"),
         experienceQuery("languages"),
-        getDoc(doc(db, "projects", PROJECT_DOC_ID)),
-        getDocs(
-          query(
-            collection(db, "projects", PROJECT_DOC_ID, "techstack"),
-            orderBy("sorting"),
+        getDocs(collection(db, "projects")),
+      ]);
+
+      const projectDocs = projectsSnap.docs
+        .map((d) => ProjectDocumentSchema.parse({ id: d.id, ...d.data() }))
+        .sort((a, b) => {
+          const aDate = a["date-from"] ? new Date(a["date-from"]).getTime() : 0;
+          const bDate = b["date-from"] ? new Date(b["date-from"]).getTime() : 0;
+          return bDate - aDate;
+        });
+
+      const techstackSnaps = await Promise.all(
+        projectDocs.map((p) =>
+          getDocs(
+            query(
+              collection(db, "projects", p.id, "techstack"),
+              orderBy("sorting"),
+            ),
           ),
         ),
-      ]);
+      );
 
       data.value = {
         experience: {
@@ -181,15 +195,12 @@ export function usePortfolio() {
             ExperienceItemSchema.parse({ id: d.id, ...d.data() }),
           ),
         },
-        project: projectSnap.exists()
-          ? ProjectDocumentSchema.parse({
-              id: projectSnap.id,
-              ...projectSnap.data(),
-            })
-          : null,
-        techstack: techstackSnap.docs.map((d) =>
-          TechstackItemSchema.parse({ id: d.id, ...d.data() }),
-        ),
+        projects: projectDocs.map((project, i) => ({
+          project,
+          techstack: techstackSnaps[i].docs.map((d) =>
+            TechstackItemSchema.parse({ id: d.id, ...d.data() }),
+          ),
+        })),
       };
     } catch (err) {
       error.value = err instanceof Error ? err.message : String(err);
