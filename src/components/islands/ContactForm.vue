@@ -4,19 +4,19 @@ import DetailTileGrid from "../ui/DetailTileGrid.vue";
 
 const contactNotes = [
   {
-    title: "Best for",
+    title: "Open to",
     description:
-      "Project inquiries, frontend work, product polish, and collaborations with a clear scope.",
+      "Full-time, contract, and project-based work — frontend systems, UI polish, and product delivery.",
   },
   {
-    title: "Reply style",
+    title: "What helps",
     description:
-      "Short, direct replies first. If the project fits, follow-up moves into details quickly.",
+      "Role or project scope, timeline, and what you're building — helps me give a useful first reply.",
   },
   {
-    title: "Useful details",
+    title: "Based in",
     description:
-      "Timeline, rough scope, and what kind of help you need make the first reply faster.",
+      "Kuala Lumpur, Malaysia. Open to remote work and flexible on time zones.",
   },
 ];
 
