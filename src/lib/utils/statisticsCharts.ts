@@ -129,7 +129,7 @@ export function buildNiceAxisScale(maxValue: number): {
 
   for (const candidate of candidates) {
     const nextStep = candidate * magnitude;
-    if (Math.ceil(maxValue / nextStep) <= 6) {
+    if (Math.ceil(maxValue / nextStep) <= 4) {
       step = nextStep;
       break;
     }
