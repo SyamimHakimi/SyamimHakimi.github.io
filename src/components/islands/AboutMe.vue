@@ -194,15 +194,6 @@ const sortedGear = computed(() =>
 
           <template v-else>
           <div
-            class="mb-3 flex flex-wrap items-center justify-between gap-3 text-[var(--color-on-surface-variant)]"
-          >
-            <strong class="text-[11px] font-bold uppercase tracking-[0.1em]">
-              Scroll to browse
-            </strong>
-            <span class="text-xs">Swipe or trackpad-scroll to see more.</span>
-          </div>
-
-          <div
             class="overflow-x-auto pb-1.5 [scrollbar-width:thin] [scrollbar-color:var(--color-outline)_transparent]"
             style="
               display: grid;
@@ -221,10 +212,14 @@ const sortedGear = computed(() =>
             role="list"
             aria-label="Favourite boardgames"
           >
-            <article
+            <a
               v-for="game in data.boardgames"
               :key="game.id"
-              class="rounded-[18px] border border-[var(--color-outline)] p-[18px] [scroll-snap-align:start]"
+              :href="game.link || undefined"
+              :target="game.link ? '_blank' : undefined"
+              rel="noopener noreferrer"
+              class="rounded-[18px] border border-[var(--color-outline)] p-[18px] [scroll-snap-align:start] block transition-shadow duration-150"
+              :class="game.link ? 'cursor-pointer hover:shadow-md' : 'cursor-default'"
               style="
                 background: linear-gradient(
                   180deg,
@@ -251,7 +246,7 @@ const sortedGear = computed(() =>
                   {{ tag }}
                 </span>
               </div>
-            </article>
+            </a>
           </div>
           </template>
         </section>
