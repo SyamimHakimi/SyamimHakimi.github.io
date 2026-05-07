@@ -6,7 +6,7 @@ const contactNotes = [
   {
     title: "Open to",
     description:
-      "Full-time, contract, and project-based work — frontend systems, UI polish, and product delivery.",
+      "Full-time, contract, and project-based work — web application development, API integration, and backend systems.",
   },
   {
     title: "What helps",
@@ -52,15 +52,15 @@ const socialLinks: { icon: LucideComponent; label: string; href: string }[] = [
         <div class="flex flex-wrap gap-2.5">
           <span
             class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
-            >Frontend systems</span
+            >Web Applications</span
           >
           <span
             class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
-            >UI polish</span
+            >API Integration</span
           >
           <span
             class="pill pill--soft min-h-[36px] px-3.5 text-[13px] text-[var(--color-on-surface)]"
-            >Portfolio work</span
+            >Data &amp; Backend</span
           >
         </div>
       </aside>
