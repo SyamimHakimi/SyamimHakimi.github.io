@@ -2,6 +2,7 @@ import { ref, onMounted } from "vue";
 import {
   collection,
   getDocs,
+  getCount,
   query,
   orderBy,
   limit,
@@ -72,6 +73,7 @@ const PAGE_SIZE = 12;
  */
 export function useGallery() {
   const photos = ref<Photo[]>([]);
+  const totalFavourites = ref<number | null>(null);
   const loading = ref(true);
   const loadingMore = ref(false);
   const hasMore = ref(true);
@@ -109,6 +111,16 @@ export function useGallery() {
     } finally {
       loading.value = false;
     }
+
+    // Fetch total count independently so a failure here never blocks the gallery.
+    try {
+      const countSnap = await getCount(
+        query(collection(db, "photos"), where("favourite", "==", true)),
+      );
+      totalFavourites.value = countSnap.data().count;
+    } catch {
+      // Non-critical — count badge simply stays hidden.
+    }
   });
 
   async function loadMore() {
@@ -127,5 +139,5 @@ export function useGallery() {
     }
   }
 
-  return { photos, loading, loadingMore, hasMore, error, loadMore };
+  return { photos, totalFavourites, loading, loadingMore, hasMore, error, loadMore };
 }

@@ -17,7 +17,7 @@ import { computed, ref, watchPostEffect } from "vue";
 import { useGallery } from "../../lib/composables/useGallery";
 import GalleryLightbox from "./GalleryLightbox.vue";
 
-const { photos, loading, loadingMore, hasMore, error, loadMore } = useGallery();
+const { photos, totalFavourites, loading, loadingMore, hasMore, error, loadMore } = useGallery();
 
 // ── Theme filtering (client-side, loaded batch only) ───────────────────────
 const activeTheme = ref<string | null>(null);
@@ -191,9 +191,13 @@ function formatDate(isoDate: string): string {
           <span class="opacity-60">· from {{ photos.length }} loaded</span>
         </span>
         <span v-else>
-          {{ photos.length }} favourite photo{{
-            photos.length !== 1 ? "s" : ""
-          }}
+          {{ photos.length }}
+          <span class="opacity-60">
+            loaded
+            <template v-if="totalFavourites !== null">
+              · {{ totalFavourites }} total favourites
+            </template>
+          </span>
         </span>
       </p>
 
@@ -458,6 +462,7 @@ function formatDate(isoDate: string): string {
 
 .gallery-meta {
   padding: 0.65rem 0.75rem 0.75rem;
+  text-align: left;
 }
 
 .meta-title {
