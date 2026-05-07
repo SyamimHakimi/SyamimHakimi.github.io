@@ -9,14 +9,14 @@ const contactNotes = [
       "Full-time, contract, and project-based work — frontend systems, UI polish, and product delivery.",
   },
   {
-    title: "How I reply",
-    description:
-      "Fast and direct. First reply is short; if there's a fit, details follow quickly.",
-  },
-  {
     title: "What helps",
     description:
       "Role or project scope, timeline, and what you're building — helps me give a useful first reply.",
+  },
+  {
+    title: "Based in",
+    description:
+      "Kuala Lumpur, Malaysia. Open to remote work and flexible on time zones.",
   },
 ];
 
