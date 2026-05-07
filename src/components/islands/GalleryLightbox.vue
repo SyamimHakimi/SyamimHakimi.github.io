@@ -16,6 +16,9 @@ interface Photo {
   recipe?: string;
   lens?: string;
   theme?: string;
+  aperture?: string;
+  shutter_speed?: string;
+  focal_length?: number;
 }
 
 interface Props {
@@ -86,6 +89,7 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("en-MY", {
     month: "short",
     year: "numeric",
+    timeZone: "UTC",
   });
 }
 </script>
@@ -202,7 +206,10 @@ function formatDate(iso: string): string {
               current.recipe ||
               current.lens ||
               current.date ||
-              current.theme
+              current.theme ||
+              current.aperture ||
+              current.shutter_speed ||
+              current.focal_length
             "
             as="div"
             class="lb-meta mt-2.5 w-full"
@@ -230,7 +237,15 @@ function formatDate(iso: string): string {
               <span v-if="current.recipe" class="lb-tag">{{
                 current.recipe
               }}</span>
-              <span v-if="current.lens" class="lb-tag lb-tag--dim">{{
+              <span v-if="current.aperture" class="lb-tag lb-tag--dim">{{
+                current.aperture
+              }}</span>
+              <span v-if="current.shutter_speed" class="lb-tag lb-tag--dim">{{
+                current.shutter_speed
+              }}</span>
+              <span v-if="current.focal_length" class="lb-tag lb-tag--dim">{{
+                current.focal_length }}mm</span>
+              <span v-if="current.lens && !current.aperture && !current.shutter_speed && !current.focal_length" class="lb-tag lb-tag--dim">{{
                 current.lens
               }}</span>
             </div>
