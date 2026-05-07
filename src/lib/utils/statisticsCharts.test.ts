@@ -201,7 +201,7 @@ describe("buildNiceAxisScale", () => {
   });
 
   it("rounds large totals to readable axis intervals", () => {
-    expect(buildNiceAxisScale(8071)).toEqual({ max: 9000, tickAmount: 6 });
+    expect(buildNiceAxisScale(8071)).toEqual({ max: 10000, tickAmount: 4 });
   });
 });
 
@@ -270,7 +270,7 @@ describe("buildCumulativeLineOptions", () => {
     expect(opts.tooltip.y.formatter(42)).toBe("42 total photos");
   });
 
-  it("uses a rounded max and multiple ticks for large totals", () => {
+  it("uses a rounded max and 4 ticks for large totals", () => {
     const opts = buildCumulativeLineOptions(
       { palette, prefersReducedMotion: false },
       [],
@@ -278,8 +278,8 @@ describe("buildCumulativeLineOptions", () => {
       8071,
     ) as { yaxis: { max: number; tickAmount: number } };
 
-    expect(opts.yaxis.max).toBe(9000);
-    expect(opts.yaxis.tickAmount).toBe(6);
+    expect(opts.yaxis.max).toBe(10000);
+    expect(opts.yaxis.tickAmount).toBe(4);
   });
 });
 

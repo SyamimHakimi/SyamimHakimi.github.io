@@ -18,7 +18,6 @@ import {
   buildHeatmapSeries,
   buildFocalLengthOptions,
   buildFocalLengthSeries,
-  buildNiceAxisScale,
   type ChartPalette,
 } from "../../lib/utils/statisticsCharts";
 
@@ -178,10 +177,6 @@ const donutSrSummary = computed(() => {
   return `Focal length distribution — ${parts.join(", ")}.`;
 });
 
-const cumulativeAxisScale = computed(() =>
-  buildNiceAxisScale(Math.max(0, ...(lineData.value.series[0]?.data ?? [0]))),
-);
-
 function revealDelay(index: number, base = 0, step = 60): string {
   return props.prefersReducedMotion ? "0ms" : `${base + index * step}ms`;
 }
@@ -198,10 +193,7 @@ function revealDelay(index: number, base = 0, step = 60): string {
           Photos Over Time
         </p>
         <p class="mb-3 text-[11px] text-[var(--color-on-surface-variant)]">
-          Cumulative total since first shoot, with denser scale steps
-        </p>
-        <p class="mb-2 text-[10px] text-[var(--color-on-surface-variant)]">
-          Scale: 0 to {{ cumulativeAxisScale.max.toLocaleString() }} photos
+          Cumulative total since first shoot
         </p>
         <VueApexCharts
           type="area"
