@@ -109,6 +109,12 @@ watchPostEffect(() => {
 });
 
 const SKELETON_COUNT = 12;
+
+function formatDate(isoDate: string): string {
+  const d = new Date(isoDate);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
+}
 </script>
 
 <template>
@@ -297,18 +303,29 @@ const SKELETON_COUNT = 12;
               </div>
 
               <div class="gallery-meta">
-                <p
-                  v-if="photo.title"
-                  class="truncate text-[12px] font-semibold text-[var(--color-on-surface)]"
-                >
+                <p v-if="photo.title" class="meta-title">
                   {{ photo.title }}
                 </p>
-                <p
-                  v-if="photo.recipe"
-                  class="mt-0.5 truncate text-[11px] text-[var(--color-on-surface-variant)]"
-                >
-                  {{ photo.recipe }}
+                <p v-if="photo.date || photo.theme" class="meta-secondary">
+                  {{ [photo.date ? formatDate(photo.date) : null, photo.theme].filter(Boolean).join(" · ") }}
                 </p>
+                <div
+                  v-if="photo.aperture || photo.shutter_speed || photo.focal_length"
+                  class="meta-exif"
+                  aria-label="Camera settings"
+                >
+                  <template v-if="photo.aperture">
+                    <span class="exif-chip">{{ photo.aperture }}</span>
+                  </template>
+                  <template v-if="photo.shutter_speed">
+                    <span v-if="photo.aperture" class="exif-sep" aria-hidden="true" />
+                    <span class="exif-chip">{{ photo.shutter_speed }}</span>
+                  </template>
+                  <template v-if="photo.focal_length">
+                    <span v-if="photo.aperture || photo.shutter_speed" class="exif-sep" aria-hidden="true" />
+                    <span class="exif-chip">{{ photo.focal_length }}mm</span>
+                  </template>
+                </div>
               </div>
 
               <div
@@ -440,7 +457,57 @@ const SKELETON_COUNT = 12;
 }
 
 .gallery-meta {
-  padding: 0.75rem 0.75rem 0.8rem;
+  padding: 0.65rem 0.75rem 0.75rem;
+}
+
+.meta-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.meta-secondary {
+  margin-top: 3px;
+  font-size: 11px;
+  color: var(--color-on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.35;
+}
+
+.meta-exif {
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.exif-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
+  background: var(--color-surface-variant);
+  border-radius: 4px;
+  padding: 1px 5px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.exif-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-outline);
+  margin: 0 4px;
+  flex-shrink: 0;
 }
 
 @media (min-width: 640px) {

@@ -45,6 +45,8 @@ export const PhotoSchema = z.object({
   title: z.string().optional(),
   link: z.string().optional(),
   favourite: z.boolean().optional(),
+  aperture: z.string().optional(),
+  shutter_speed: z.string().optional(),
 });
 
 // ── Type ───────────────────────────────────────────────────────────────────
