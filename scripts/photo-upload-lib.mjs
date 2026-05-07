@@ -118,6 +118,10 @@ export function buildPhotoDocument(record, upload) {
         : typeof record.focal_length_35mm_label === "string"
           ? Number.parseFloat(record.focal_length_35mm_label)
           : undefined,
+    aperture:
+      typeof record.aperture_label === "string" ? record.aperture_label : undefined,
+    shutter_speed:
+      typeof record.shutter_speed_label === "string" ? record.shutter_speed_label : undefined,
     theme,
     recipe: typeof record.recipe === "string" ? record.recipe : undefined,
     title: typeof record.title === "string" ? record.title : undefined,

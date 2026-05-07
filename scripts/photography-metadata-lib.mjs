@@ -33,6 +33,42 @@ export function apertureLabelFromMetadata(metadata) {
 }
 
 /**
+ * Format a shutter speed in seconds as a human-readable label.
+ *
+ * @param {number | null} value  exposure time in seconds
+ * @returns {string | null}
+ */
+export function shutterSpeedLabelFromValue(value) {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+    return null;
+  }
+
+  if (value >= 1) {
+    return `${Number.isInteger(value) ? value : value.toFixed(1)}s`;
+  }
+
+  // Express as 1/N only when the reciprocal rounds cleanly (within 2% error);
+  // non-standard sub-second values (e.g. 0.4s) fall back to decimal form.
+  const denominator = Math.round(1 / value);
+  if (Math.abs(value - 1 / denominator) / value < 0.02) {
+    return `1/${denominator}s`;
+  }
+  return `${value.toFixed(1)}s`;
+}
+
+/**
+ * Read the shutter speed label from parsed EXIF metadata.
+ *
+ * @param {Record<string, unknown> | null} metadata
+ * @returns {string | null}
+ */
+export function shutterSpeedLabelFromMetadata(metadata) {
+  return shutterSpeedLabelFromValue(
+    typeof metadata?.ExposureTime === "number" ? metadata.ExposureTime : null,
+  );
+}
+
+/**
  * Read the ISO value from parsed EXIF metadata.
  *
  * @param {Record<string, unknown> | null} metadata

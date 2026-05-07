@@ -40,6 +40,10 @@ import {
   SUPPORTED_IMAGE_EXTENSIONS,
   mergeAppendStatistics,
 } from "./photography-stats-lib.mjs";
+import {
+  apertureLabelFromMetadata,
+  shutterSpeedLabelFromMetadata,
+} from "./photography-metadata-lib.mjs";
 
 const DEFAULT_CREDENTIALS_PATH =
   "portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json";
@@ -607,6 +611,8 @@ async function readImageRecord(
         "Model",
         "FocalLength",
         "FocalLengthIn35mmFormat",
+        "FNumber",
+        "ExposureTime",
       ],
     });
   } catch {
@@ -635,6 +641,8 @@ async function readImageRecord(
     captureDate,
     lensLabel: lensLabelFromMetadata(metadata),
     focalLabel: focalLabelFromMetadata(metadata),
+    apertureLabel: apertureLabelFromMetadata(metadata),
+    shutterSpeedLabel: shutterSpeedLabelFromMetadata(metadata),
     themeSuggested: themeSuggestion.label,
     themeSuggestionScore: themeSuggestion.score,
     filePath,
@@ -669,6 +677,8 @@ function toManifestRecord(record, options) {
     month_key: monthKeyFromCaptureDate(record.captureDate),
     lens_label: record.lensLabel,
     focal_length_35mm_label: record.focalLabel,
+    aperture_label: record.apertureLabel,
+    shutter_speed_label: record.shutterSpeedLabel,
     theme_suggested: record.themeSuggested,
     theme_suggestion_score: record.themeSuggestionScore,
     theme_model: record.themeSuggested ? options.themeModel : null,
