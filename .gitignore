@@ -12,6 +12,8 @@ coverage
 
 # UI preview temp files
 scripts/test-mockup.html
+scripts/mockup.html
+scripts/redesign-*.html
 scripts/*.png
 
 # Local agent/tool working directories
