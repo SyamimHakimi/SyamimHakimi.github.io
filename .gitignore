@@ -10,11 +10,8 @@ dist-ssr
 node_modules
 coverage
 
-# UI preview temp files
-scripts/test-mockup.html
-scripts/mockup.html
-scripts/redesign-*.html
-scripts/*.png
+# Developer scripts — local tooling only, not deployed or committed
+/scripts/
 
 # Local agent/tool working directories
 .codex/
@@ -44,10 +41,6 @@ merge-logs*/
 *.njsproj
 *.sln
 *.sw?
-
-# GitHub App private key (never commit)
-scripts/*.pem
-scripts/agents/*.pem
 
 # Firebase service account credentials (never commit — contains private key)
 *firebase-adminsdk*.json

@@ -4,7 +4,7 @@ This directory is the immutable Phase A1 snapshot of the live Firestore content 
 
 ## Generation
 
-- Script: `node --env-file=.env scripts/firestore-export.mjs`
+- Script: `node --env-file=.env scripts/firestore-export.mjs` (local-only — `scripts/` is gitignored)
 - Required environment variable: `GOOGLE_APPLICATION_CREDENTIALS` (set in `.env`)
 - Expected credential: path to a Firebase service account JSON file (never commit the file)
 

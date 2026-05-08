@@ -67,7 +67,7 @@ Claude executes the skill, but both agents treat the approved `ui-ux-pro-max` ou
 as the design source of truth rather than an optional recommendation.
 
 **UI preview workflow:** After `ui-ux-pro-max` produces a design, Claude must:
-1. Save the output as `scripts/<phase>-<component>.html`
+1. Save the output as `scripts/<phase>-<component>.html` (note: `scripts/` is gitignored — these are local-only working files)
 2. Run `npm run ui:preview -- --file scripts/<file>.html --label "<Phase> — <Component>"`
 3. This sends desktop + mobile screenshots to Syamim's Telegram for review
 4. Wait for Syamim's feedback before proceeding to implementation
@@ -161,7 +161,7 @@ GATE 4 — Cross-Agent Local Review + Auto-merge
 
   After merge (either reviewer):
     - Update the Redesign Tracker row in HANDOFF.md to MERGED
-    - Commit the HANDOFF.md update directly to main via `scripts/agents/update-handoff.mjs`
+    - Commit the HANDOFF.md update directly to main via `.github/scripts/agents/update-handoff.mjs`
       or include it in the merge commit
   → Produces: MERGED (branch deleted, HANDOFF.md updated to MERGED)
 ```

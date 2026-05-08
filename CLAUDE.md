@@ -14,8 +14,8 @@ npm run type-check   # TypeScript validation only
 npm run deploy       # Build + deploy to GitHub Pages
 npm run ui:preview   # Screenshot an HTML mockup and send to Syamim's Telegram
                      # Usage: npm run ui:preview -- --file scripts/mockup.html --label "Title"
-node --env-file=.env scripts/firestore-export.mjs  # Re-export Firestore data (Phase A1, one-time)
-                     # Requires GOOGLE_APPLICATION_CREDENTIALS in .env pointing to service account JSON
+                     # (scripts/ is gitignored — mockup.html is a local-only working file)
+node --env-file=.env scripts/firestore-export.mjs  # Re-export Firestore data (Phase A1, one-time — local script, not in git)
 ```
 
 ## Architecture
@@ -193,13 +193,13 @@ git checkout -b feat/<description>
 codex review --base main
 
 # 3. Fix any P1/P2 findings from Codex, then create PR
-node --env-file=.env scripts/agents/create-pr.mjs "title" "feat/<description>" "body"
+node --env-file=.env .github/scripts/agents/create-pr.mjs "title" "feat/<description>" "body"
 
 # 4. Poll CI until green
-node --env-file=.env scripts/agents/check-ci.mjs <PR#>
+node --env-file=.env .github/scripts/agents/check-ci.mjs <PR#>
 
 # 5. Merge once CI passes
-node --env-file=.env scripts/agents/merge-pr.mjs <PR#>
+node --env-file=.env .github/scripts/agents/merge-pr.mjs <PR#>
 
 # 6. Sync local main
 git checkout main && git pull origin main
@@ -239,5 +239,5 @@ If a task changes how anything **looks, feels, moves, or is interacted with**, t
 
 The service account key is at `portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json` (project root).
 Scripts use this file directly — no `GOOGLE_APPLICATION_CREDENTIALS` env var needed.
-Follow the same JWT → OAuth → Firestore REST pattern as `scripts/update-photography-stats.mjs`.
+Follow the same JWT → OAuth → Firestore REST pattern used in the local `scripts/update-photography-stats.mjs`.
 Always do a dry run first (`node script.mjs`) before writing (`node script.mjs --write`).
