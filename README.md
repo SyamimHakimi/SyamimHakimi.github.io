@@ -60,7 +60,7 @@ Firebase client config (public API keys) is committed directly in `src/lib/fireb
 
 ### Photo pipeline
 
-Photography content is managed through a local script pipeline (`scripts/` — gitignored, not committed). Scripts handle uploading photos to Firebase Storage, CLIP-based theme classification, favourite management, and Firestore statistics sync. See `scripts/README.md` for the full workflow and flag reference.
+Photography content is managed through a local script pipeline (`scripts/` — gitignored, not committed). Scripts handle uploading photos to Firebase Storage, CLIP-based theme classification, favourite management, and Firestore statistics sync. The local `scripts/README.md` documents the full 5-step ingest workflow and flag reference (available in the working environment, not on a fresh clone).
 
 ---
 
