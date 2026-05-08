@@ -14,25 +14,15 @@ const DEFAULT_CREDENTIALS_PATH =
 
 const ITEMS_TO_ADD = [
   {
-    collection: "experience/ai/item",
-    id: "1934af05-95b3-4d4f-bc2f-9e545acff874",
+    collection: "experience/frameworks/item",
+    id: "f7a3d2b1-8c4e-4f5a-9b2d-1e6c7a8f3d2b",
     data: {
-      title: "Claude Code",
+      title: "Flutter",
       description:
-        "Anthropic's AI coding assistant used for code generation, refactoring, and agentic task automation directly in the terminal.",
-      link: "https://claude.ai/code",
-      "date-from": "2025-01-31T00:00:00.000Z",
-    },
-  },
-  {
-    collection: "experience/ai/item",
-    id: "b9b7e5e6-c521-4de9-9ddf-a11a89a3b24b",
-    data: {
-      title: "Codex",
-      description:
-        "OpenAI's cloud-based coding agent used for automated code review, pull request analysis, and background engineering tasks.",
-      link: "https://openai.com/codex",
-      "date-from": "2025-01-31T00:00:00.000Z",
+        "Google's UI toolkit for building natively compiled applications across mobile, web, and desktop from a single Dart codebase.",
+      link: "https://flutter.dev/",
+      "date-from": "2022-01-31T00:00:00.000Z",
+      "date-to": "2024-10-31T00:00:00.000Z",
     },
   },
 ];
