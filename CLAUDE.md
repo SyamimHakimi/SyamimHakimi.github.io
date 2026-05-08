@@ -15,7 +15,28 @@ npm run deploy       # Build + deploy to GitHub Pages
 npm run ui:preview   # Screenshot an HTML mockup and send to Syamim's Telegram
                      # Usage: npm run ui:preview -- --file scripts/mockup.html --label "Title"
                      # (scripts/ is gitignored — mockup.html is a local-only working file)
-node --env-file=.env scripts/firestore-export.mjs  # Re-export Firestore data (Phase A1, one-time — local script, not in git)
+```
+
+### Local photo pipeline scripts (gitignored, not in git)
+
+```bash
+# All scripts live in scripts/ — see scripts/README.md for full docs
+
+node scripts/upload-photos.mjs                   # Upload new photos to Firebase Storage + update manifest
+node scripts/upload-photos.mjs --write           # Dry run by default; --write actually uploads
+
+node scripts/classify-favourite-themes.mjs       # CLIP zero-shot theme classification (dry run)
+node scripts/classify-favourite-themes.mjs --write  # Write theme_suggested to manifest + Firestore
+
+node scripts/set-gallery-favourites.mjs          # Sync FAVOURITES list → manifest + Firestore favourite flag
+node scripts/clear-gallery-favourites.mjs        # Clear all favourites (manifest + Firestore) — dry run
+node scripts/clear-gallery-favourites.mjs --write   # Actually clear
+
+node scripts/check-themes.mjs                    # Audit theme assignment status across manifest
+node scripts/wipe-photos.mjs                     # Dry-run wipe of all uploaded photos + Firestore docs
+node scripts/wipe-photos.mjs --write             # DESTRUCTIVE — deletes Storage + Firestore + resets manifest
+
+node scripts/update-photography-stats.mjs        # Recompute + write statistics to Firestore
 ```
 
 ## Architecture
@@ -78,17 +99,27 @@ src/
 │   └── global.css        # Tailwind base + custom design tokens
 export/                   # Firestore export JSON (Phase A1 archive — read-only after A1)
 public/                   # Static assets (images, og-image.jpg, robots.txt)
-scripts/
-├── ui-preview.mjs        # Screenshots an HTML file and sends desktop + mobile to Telegram
-├── firestore-export.mjs  # Re-export Firestore data (one-time, Phase A1)
-├── github-mcp-wrapper.mjs # MCP server wrapper for GitHub API
-└── agents/               # Agent-only automation (not for developer use)
-    ├── ai-review.mjs     # CI-gated auto-merge for phase PRs
-    ├── create-pr.mjs     # Create a GitHub PR via App auth
-    ├── merge-pr.mjs      # Merge a PR via App auth
-    ├── check-ci.mjs      # Poll CI status for a PR
-    ├── update-handoff.mjs # Update HANDOFF.md on main via API
-    └── push-handoff.mjs  # Push HANDOFF.md changes to a branch
+.github/
+├── workflows/            # GitHub Actions CI/CD
+└── scripts/              # Committed automation scripts (CI + agent tooling)
+    ├── ui-preview.mjs    # Screenshots an HTML file and sends desktop + mobile to Telegram
+    ├── ai-review.mjs     # CI-gated auto-merge for phase PRs (fetched by ai-review.yml)
+    └── agents/           # Agent-only PR automation (not for developer use)
+        ├── create-pr.mjs     # Create a GitHub PR via App auth
+        ├── merge-pr.mjs      # Merge a PR via App auth
+        ├── check-ci.mjs      # Poll CI status for a PR
+        ├── update-handoff.mjs # Update HANDOFF.md on main via API
+        └── push-handoff.mjs  # Push HANDOFF.md changes to a branch
+scripts/                  # LOCAL ONLY — gitignored, never committed (see scripts/README.md)
+├── mockup.html           # UI mockup working file (ephemeral)
+├── upload-photos.mjs     # Upload photos to Firebase Storage
+├── classify-favourite-themes.mjs  # CLIP theme classification
+├── set-gallery-favourites.mjs     # Mark/sync favourite photos
+├── clear-gallery-favourites.mjs   # Clear all favourites
+├── check-themes.mjs      # Audit theme assignment status
+├── wipe-photos.mjs       # Destructive wipe of all uploaded photos
+├── update-photography-stats.mjs   # Recompute + write statistics to Firestore
+└── firestore-export.mjs  # One-time Phase A1 Firestore export
 ```
 
 ## Data Model
@@ -235,9 +266,34 @@ If a task changes how anything **looks, feels, moves, or is interacted with**, t
 - Always `cd` to the `2.5.0` directory before running; never guess the path
 - The Skill tool loads the ruleset into context; the Python script runs domain queries — both steps are needed
 
+### Photo Pipeline (local scripts — not in git)
+
+The full 5-step workflow for ingesting new photos. All scripts live in `scripts/` (gitignored).
+See `scripts/README.md` for detailed flag tables and manifest field reference.
+
+```
+1. Upload photos to Firebase Storage + build manifest
+     node scripts/upload-photos.mjs --write
+
+2. Classify themes with CLIP (zero-shot, uses Firebase Storage download_url — no local files)
+     node scripts/classify-favourite-themes.mjs --write
+
+3. Mark favourites (edit FAVOURITES array in script, then sync manifest + Firestore)
+     node scripts/set-gallery-favourites.mjs
+
+4. Recompute and write statistics to Firestore
+     node scripts/update-photography-stats.mjs --write
+
+5. (Optional) Audit theme status
+     node scripts/check-themes.mjs
+```
+
+The manifest (`scripts/photo-manifest.json`, gitignored) is the source of truth for upload state.
+Firestore patches always run BEFORE `saveManifest()` so a failure is retryable.
+
 ### Firebase / Firestore Updates
 
 The service account key is at `portfolio-9e62d-firebase-adminsdk-vkp5a-80f55801a1.json` (project root).
 Scripts use this file directly — no `GOOGLE_APPLICATION_CREDENTIALS` env var needed.
-Follow the same JWT → OAuth → Firestore REST pattern used in the local `scripts/update-photography-stats.mjs`.
+Use the JWT → OAuth → Firestore REST pattern (same as `scripts/update-photography-stats.mjs`).
 Always do a dry run first (`node script.mjs`) before writing (`node script.mjs --write`).

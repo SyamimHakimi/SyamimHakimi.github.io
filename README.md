@@ -58,6 +58,26 @@ cp .env.example .env
 
 Firebase client config (public API keys) is committed directly in `src/lib/firebase.ts` — it is safe to do so for client-side Firebase projects. Only secrets (EmailJS keys, service account credentials) live in `.env`.
 
+### Photo pipeline
+
+Photography content is managed through a local script pipeline (`scripts/` — gitignored, not committed). Scripts handle uploading photos to Firebase Storage, CLIP-based theme classification, favourite management, and Firestore statistics sync. The local `scripts/README.md` documents the full 5-step ingest workflow and flag reference (available in the working environment, not on a fresh clone).
+
+---
+
+## CI / Automation
+
+`.github/scripts/` contains committed automation used by GitHub Actions and the Claude Code agent:
+
+| Script | Purpose |
+|---|---|
+| `ui-preview.mjs` | Screenshots an HTML mockup and sends desktop + mobile previews to Telegram |
+| `ai-review.mjs` | Fetched at runtime by `ai-review.yml` to squash-merge phase PRs after CI passes |
+| `agents/create-pr.mjs` | Create a GitHub PR via App auth |
+| `agents/merge-pr.mjs` | Merge a PR via App auth |
+| `agents/check-ci.mjs` | Poll CI status for a PR |
+| `agents/update-handoff.mjs` | Update `HANDOFF.md` on main via API |
+| `agents/push-handoff.mjs` | Push `HANDOFF.md` changes to a branch |
+
 ---
 
 ## Architecture
