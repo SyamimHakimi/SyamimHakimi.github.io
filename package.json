@@ -10,16 +10,8 @@
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
     "test": "vitest run",
-    "test:export": "node --test scripts/firestore-export.test.mjs",
-    "test:photo-manifest": "node --test scripts/photography-manifest-lib.test.mjs",
-    "test:photo-manifest-edit": "node --test scripts/photo-manifest-edit-lib.test.mjs",
-    "test:photo-stats": "node --test scripts/photography-stats-lib.test.mjs",
-    "test:photo-upload": "node --test scripts/photo-upload-lib.test.mjs",
     "type-check": "astro check",
-    "ui:preview": "node --env-file=.env scripts/ui-preview.mjs",
-    "stats:photography": "node scripts/update-photography-stats.mjs",
-    "upload:photos": "node scripts/upload-photos-from-manifest.mjs",
-    "manifest:photos": "node scripts/update-photo-manifest.mjs"
+    "ui:preview": "node --env-file=.env .github/scripts/ui-preview.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
