@@ -180,6 +180,7 @@ const placeholderCount = computed(() =>
   border-radius: var(--radius-sm);
   background: var(--color-surface);
   text-decoration: none;
+  height: 100%;
 }
 
 .lp-frame {
@@ -187,7 +188,7 @@ const placeholderCount = computed(() =>
   display: flex;
   align-items: center;
   justify-content: center;
-  aspect-ratio: 4 / 5;
+  height: 100%;
   overflow: hidden;
   background: linear-gradient(
     180deg,
@@ -202,5 +203,6 @@ const placeholderCount = computed(() =>
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
 }
 </style>
